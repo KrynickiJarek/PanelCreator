@@ -1,13 +1,11 @@
+import React from 'react';
 import './App.scss';
-import CreatorHeader from "../../components/CreatorHeader/CreatorHeader"
+import MainCreator from "../../components/MainCreator"
 
 function App() {
   return (
     <div className="App">
-      {/*<header className="App-header" >*/}
-      {/*  <h1>Ampio</h1>*/}
-      {/*</header>*/}
-      <CreatorHeader/>
+      <MainCreator/>
     </div>
   );
 }

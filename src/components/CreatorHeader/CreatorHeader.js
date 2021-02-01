@@ -4,7 +4,9 @@ import "./_creatorheader.scss"
 
 const CreatorHeader = () => {
     return (
-        <h1>KREATOR PANELI AMPIO</h1>
+        <>
+            <h1>CreatorHeader - nagłówek </h1>
+        </>
     );
 };
 
