@@ -1,0 +1,17 @@
+.preview_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 40%;
+  border: 1px solid green;
+
+  .panel_box{
+    display: flex;
+    height: 450px;
+    width: 450px;
+    background-color: black;
+  }
+
+}

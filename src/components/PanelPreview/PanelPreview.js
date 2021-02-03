@@ -1,11 +1,12 @@
 import React from 'react';
-import "./_panelpreview.scss"
+import "./PanelPreview.scss"
 
 const PanelPreview = () => {
     return (
-        <>
-            <h1>PanelPreview - kontener do podglądu panelu</h1>
-        </>
+        <div className="preview_container">
+            <h2>PanelPreview - kontener do podglądu panelu</h2>
+            <div className="panel_box" />
+        </div>
     );
 };
 
