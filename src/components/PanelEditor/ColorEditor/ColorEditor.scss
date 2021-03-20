@@ -1,0 +1,31 @@
+.color_table {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    // border: 10px solid pink; //usuń
+
+    justify-content: center;
+    flex-wrap: wrap;
+
+
+    .color_link{
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .color_box{
+            width: 100px;
+            height: 100px;
+            // background-color: red;
+            border: 1px solid black;
+            cursor: pointer;
+
+        }
+        .color_name{
+            font-size: 1rem;
+
+        }
+    }
+}
