@@ -1,3 +1,4 @@
+// eslint-disable-next-line 
 const availableColors = [
     {
         number: "9005",
