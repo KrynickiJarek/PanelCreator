@@ -9,9 +9,11 @@
 
   .panel_box{
     display: flex;
-    height: 450px;
-    width: 450px;
-    background-color: black;
+  }
+
+  .panel_info{
+    display: flex;
+    justify-content: space-between;
   }
 
 }

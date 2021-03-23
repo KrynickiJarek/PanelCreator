@@ -9,10 +9,11 @@ import IconEditor from "./IconEditor/IconEditor"
 import TextEditor from "./TextEditor/TextEditor"
 import FrameEditor from "./FrameEditor/FrameEditor"
 import ColorEditor from "./ColorEditor/ColorEditor"
+import PanelChooser from './PanelChooser/PanelChooser';
 
 
 
-const PanelEditor = ({onColorSet}) => {
+const PanelEditor = ({onModelSet, onColorSet}) => {
 
 
   const { TabPane } = Tabs;
@@ -29,9 +30,9 @@ const PanelEditor = ({onColorSet}) => {
 
       
       <Tabs onChange={callback} type="card" size="large">
-        <TabPane tab="Kolor" key="1">
-          <ColorEditor onColorSet={onColorSet}/>
-                </TabPane>
+      <TabPane tab="Model" key="1">
+          <PanelChooser onModelSet={onModelSet} />
+        </TabPane>
         <TabPane tab="Ikony" key="2">
           <IconEditor />
         </TabPane>
@@ -40,6 +41,9 @@ const PanelEditor = ({onColorSet}) => {
         </TabPane>
         <TabPane tab="Ramki" key="4">
           <FrameEditor />
+        </TabPane>
+        <TabPane tab="Kolor" key="5">
+          <ColorEditor onColorSet={onColorSet} />
         </TabPane>
       </Tabs>
     </div>
