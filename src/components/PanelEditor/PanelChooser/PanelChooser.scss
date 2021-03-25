@@ -1,5 +1,25 @@
-.panel_form{
+.panelChooser_container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start; ///
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 2rem;
+    font-size: 1rem;
+
+    .panel_form{
+        margin-bottom: 1rem;
+        text-align: left;
+        
+        label{
+            margin-right: 0.5rem;
+        }
+    }
+    
+    .panel_list{
+        text-align: left;
+    
+        span {
+            font-weight: bold;
+        }
+    }
 }
