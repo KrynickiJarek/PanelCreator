@@ -31,14 +31,14 @@ $sc: 5;
         width: 1px * $sc; ///może zmień na absolute?
         height: 1px * $sc;
         border-radius: 50%;
-        background-color: white; //usuń? wczytywane
+        background-color: white;
         margin: 2.4px * $sc auto 3.25px * $sc; //odjęte po 0.5px na kropke - powinno być 2,9 i 3,75
       }
       
       .icon_area{
         width: 7.5px * $sc;
         height: 7.5px * $sc;
-        border: 1px solid white; //usuń kolor, wczytywane
+        border: 1px solid white;
         margin: 0 auto;
       }
     }
