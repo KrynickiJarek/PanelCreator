@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import { Tabs } from 'antd';
 import iconCategories from "./iconCategories"
 
@@ -26,15 +25,3 @@ const IconEditor = () => {
 
 export default IconEditor;
 
-=======
-
-const IconEditor = () => {
-    return (
-        <>
-            <h1>IconEditor</h1>
-        </>
-    );
-};
-
-export default IconEditor;
->>>>>>> parent of 9ee0cb0... vertical tabs in iconEditor added
