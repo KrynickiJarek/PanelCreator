@@ -28,13 +28,13 @@ const PanelPreview = ({ chosenModel, chosenColor }) => {
                             className={(chosenModel.dotLocation.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
                             {cell === 1 &&
                                 <>
-                                    <div className="dot" />
-                                    <div className="icon_area" />
+                                    <div className="dot" style={{backgroundColor: chosenColor.iconColor}}/>
+                                    <div className="icon_area" style={{borderColor: chosenColor.iconColor}}/>
                                 </>}
                         </div>
                     )}
                 </div>
-                {chosenModel.lcdScreen && <div className="lcd"/>}
+                {chosenModel.lcdScreen && <div className="lcd" style={{borderColor: chosenColor.iconColor}}/>}
             </div>
 
             <div className="panel_info" style={{ width: parseInt(chosenModel.width) * sc }}>
