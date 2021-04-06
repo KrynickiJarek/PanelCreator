@@ -1,7 +1,11 @@
 import React from 'react';
 import "./PanelPreview.scss"
 
-const PanelPreview = ({ chosenModel, chosenColor }) => {
+import { IconHolder } from './IconHolder';
+
+
+
+const PanelPreview = ({ chosenModel, chosenColor, draggedIcon, onDrop}) => {
 
     const sc = 5;
 
@@ -20,6 +24,10 @@ const PanelPreview = ({ chosenModel, chosenColor }) => {
         <div className="preview_container">
             <h2>Podgląd panelu</h2>
 
+            <div style={{ overflow: 'hidden', clear: 'both' }}>
+            </div>
+
+
             <div className="panel_box"
                 style={chosenModelStyle}>
                 <div className="panel_content" style={contentStyle}>
@@ -28,13 +36,14 @@ const PanelPreview = ({ chosenModel, chosenColor }) => {
                             className={(chosenModel.dotLocation.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
                             {cell === 1 &&
                                 <>
-                                    <div className="dot" style={{backgroundColor: chosenColor.iconColor}}/>
-                                    <div className="icon_area" style={{borderColor: chosenColor.iconColor}}/>
+                                    <div className="dot" style={{ backgroundColor: chosenColor.iconColor }} />
+                                    <IconHolder draggedIcon={draggedIcon} onDrop={onDrop}/>
+                                    {/* <div className="icon_area" style={{ borderColor: chosenColor.iconColor }} /> */}
                                 </>}
                         </div>
                     )}
                 </div>
-                {chosenModel.lcdScreen && <div className="lcd" style={{borderColor: chosenColor.iconColor}}/>}
+                {chosenModel.lcdScreen && <div className="lcd" style={{ borderColor: chosenColor.iconColor }} />}
             </div>
 
             <div className="panel_info" style={{ width: parseInt(chosenModel.width) * sc }}>

@@ -2,11 +2,25 @@ import React from 'react';
 import { Tabs } from 'antd';
 import "./IconEditor.scss"
 import iconCategories from "./iconCategories"
+import { IconToDrag } from './IconToDrag';
 
 const { TabPane } = Tabs;
-// let listOfIcons = [];
+let listOfIcons = [];
 
-const IconEditor = () => {
+
+// export const IconEditor = memo(function IconEditor() {
+
+const IconEditor = ({onIconSet}) => {
+
+
+  // const [iconItem, setIconItem] = useState(null);
+
+
+
+//   const handleDrop = useCallback((item) => {
+//     const { image } = item;
+//     setIconItem(image);
+// }, [dustbins]);
 
   return (
     <div>
@@ -16,7 +30,9 @@ const IconEditor = () => {
             <div className="icons">
               {
                 el.listOfIcons.map(
-                  (image, index) => <img key={index} src={image.default} alt="info" className="icon" />
+                  // (image, index) => <IconToDrag key={index} image={image} onIconSet={onIconSet} />
+                  (image, index) => <IconToDrag key={index} image={image} />
+                  // (image, index) => <img key={index} src={image.default} alt="info" className="icon" />
                 )
               }
             </div>

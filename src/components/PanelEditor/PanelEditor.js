@@ -13,12 +13,11 @@ import PanelChooser from './PanelChooser/PanelChooser';
 
 
 
-const PanelEditor = ({onModelSet, onColorSet}) => {
+const PanelEditor = ({onModelSet, onColorSet, onIconSet}) => {
 
 
   const { TabPane } = Tabs;
   function callback(key) {
-    console.log(key);
   }
 
 
@@ -34,7 +33,7 @@ const PanelEditor = ({onModelSet, onColorSet}) => {
           <PanelChooser onModelSet={onModelSet} />
         </TabPane>
         <TabPane tab="Ikony" key="2">
-          <IconEditor />
+          <IconEditor onIconSet={onIconSet}/>
         </TabPane>
         <TabPane tab="Tekst" key="3">
           <TextEditor />
