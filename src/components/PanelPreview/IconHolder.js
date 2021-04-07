@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { memo } from 'react';
 import { useDrop } from 'react-dnd';
 
 const sc = 5;
-
 
 const style = {
     width: sc * 7.5 + "px",
@@ -11,30 +10,66 @@ const style = {
     margin: "0 auto"
 };
 
-export const IconHolder = ({ draggedIcon , onDrop }) => {
+export const IconHolder = memo(function IconHolder({ lastDroppedItem , onDrop }) {
 
-    // const [chosenIcon, seChosenIcon] = useState(null)
-
-    const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
         drop: onDrop,
-        // drop: console.log("draggedIcon 3 >>>" + draggedIcon),
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
-    }));
-    const isActive = canDrop && isOver;
-    let backgroundColor = 'red';
+    });
+
+    const isActive = isOver && canDrop;
+    let backgroundColor = 'whitesmoke';
     if (isActive) {
-        backgroundColor = 'green';
+        backgroundColor = 'darkgreen';
     }
     else if (canDrop) {
-        backgroundColor = 'blue';
+        backgroundColor = 'darkkhaki';
     }
-    return (<div ref={drop} role={'IconHolder'} style={{ ...style, backgroundColor }}>
-        {/* {isActive ? 'Release to drop' : 'Drag a box here'} */}
-        {isActive, draggedIcon && (<img src={draggedIcon.default} alt="ICON" />)}
-        {/* {isActive, draggedIcon && console.log("draggedIcon >>>" + draggedIcon)} */}
+
+    // return (<div ref={drop} role={'IconHolder'} style={{ ...style, backgroundColor }}>
+    return (<div ref={drop} style={{ ...style, backgroundColor }}>
+        {lastDroppedItem && (<img src={lastDroppedItem.image.default} alt="ICON" />)}
     </div>);
-};
+});
+
+
+// import { memo } from 'react';
+// import { useDrop } from 'react-dnd';
+
+// const sc = 5;
+
+// const style = {
+//     width: sc * 7.5 + "px",
+//     height: sc * 7.5 + "px",
+//     border: "1px dotted white",
+//     margin: "0 auto"
+// };
+
+// export const IconHolder = memo(function IconHolder({ lastDroppedItem , onDrop }) {
+
+//     const [{ isOver, canDrop }, drop] = useDrop({
+//         accept: "icon",
+//         drop: onDrop,
+//         collect: (monitor) => ({
+//             isOver: monitor.isOver(),
+//             canDrop: monitor.canDrop(),
+//         }),
+//     });
+
+//     const isActive = isOver && canDrop;
+//     let backgroundColor = 'whitesmoke';
+//     if (isActive) {
+//         backgroundColor = 'darkgreen';
+//     }
+//     else if (canDrop) {
+//         backgroundColor = 'darkkhaki';
+//     }
+
+//     return (<div ref={drop} role={'IconHolder'} style={{ ...style, backgroundColor }}>
+//         {lastDroppedItem && (<img src={lastDroppedItem.image.default} alt="ICON" />)}
+//     </div>);
+// });
