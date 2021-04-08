@@ -1,3 +1,4 @@
+@use "sass:math";
 $sc: 5;
 
 .preview_container {
@@ -27,19 +28,94 @@ $sc: 5;
       width: 22.4px * $sc;
       height: 24px * $sc;
 
-      .dot{
-        width: 1px * $sc; ///może zmień na absolute?
-        height: 1px * $sc;
+      // .dot{ // stara wersja dot
+      //   width: 1px * $sc; ///może zmień na absolute?
+      //   height: 1px * $sc;
+      //   border-radius: 50%;
+      //   background-color: white;
+      //   margin: 2.4px * $sc auto 3.25px * $sc; //odjęte po 0.5px na kropke - powinno być 2,9 i 3,75
+      // }
+
+      .status_area{
+        // width: 2.5px * $sc; ///może zmień na absolute?
+        // height: 2.5px * $sc;
+        width: round(2.5px * $sc); 
+        height: round(2.5px * $sc);
+        margin: round(1.65px * $sc) auto round(2.5px * $sc); 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .status_area_dropping{
+          position: absolute;
+          width: 225%;
+          height: 225%;
+          border-radius: 50%;
+          padding: 2px;
+          background-clip: content-box;
+          border: 2px dotted rgba(0,0,0,0);
+          animation: spin 5s linear infinite;
+          transition: background-color 0.5s, border-color 0.5s, height 0.3s, width 0.3s;
+        }
+        @keyframes spin { 
+          100% { 
+            transform: rotateZ(360deg);
+          }
+        }
+
+
+      .dot{ 
+        width: round(1.25px * $sc); 
+        height: round(1.25px * $sc); 
         border-radius: 50%;
         background-color: white;
-        margin: 2.4px * $sc auto 3.25px * $sc; //odjęte po 0.5px na kropke - powinno być 2,9 i 3,75
+        transition: 0.3s;
+        z-index: 2;
+        }
+
+        .status_icon{
+        width: round(2.5px * $sc); 
+        height: round(2.5px * $sc); 
+        transition: 0.3s;
+
+        z-index: 2;
+
+        }
+
       }
       
       .icon_area{
         width: 7.5px * $sc;
         height: 7.5px * $sc;
-        border: 1px solid white;
         margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .icon_area_dropping{
+          position: absolute;
+          width: 140%;
+          height: 140%;
+          border-radius: 50%;
+          padding: 2px;
+          background-clip: content-box;
+          border: 2px dotted rgba(0,0,0,0);
+          animation: spin 5s linear infinite;
+          transition: background-color 0.5s, border-color 0.5s, height 0.3s, width 0.3s;
+        }
+        @keyframes spin { 
+          100% { 
+            transform: rotateZ(360deg);
+          }
+        }
+        .icon{
+          width: round(7.5px * $sc); 
+          height: round(7.5px * $sc); 
+        transition: 0.3s;
+
+        }
       }
     }
 

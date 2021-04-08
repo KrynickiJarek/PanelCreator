@@ -1,16 +1,13 @@
 import { memo } from 'react';
 import { useDrop } from 'react-dnd';
+import "./PanelPreview.scss"
+
 
 // const sc = 5;
 
-// const style = {
-    // width: sc * 7.5 + "px",
-    // height: sc * 7.5 + "px",
-    // border: "1px dotted white",
-    // margin: "0 auto"
-// };
 
-export const IconHolder = memo(function IconHolder({ lastDroppedIcon , onDrop, chosenColor}) {
+
+export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot, onDrop, chosenColor }) {
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -28,15 +25,14 @@ export const IconHolder = memo(function IconHolder({ lastDroppedIcon , onDrop, c
         style = {
             backgroundColor: "#4BB543",
             border: "2px dotted #4BB543",
-            width: "200%",
-            height: "200%",
+            width: "400%",
+            height: "400%",
             zIndex: "999"
 
         };
         style2 = {
-            transform: "scale(1.4,1.4)",
+            transform: "scale(2,2)",
             zIndex: "999"
-
         }
     }
     else if (canDrop) {
@@ -46,13 +42,12 @@ export const IconHolder = memo(function IconHolder({ lastDroppedIcon , onDrop, c
         };
     }
 
-
-    return (<div ref={drop} className="icon_area">
-        <div className="icon_area_dropping" style={style} />
-        {lastDroppedIcon && 
-        (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
-        style={chosenColor.iconColor === "white" ? {...style2,filter: "grayscale(100%) invert(1) brightness(10)"}:{...style2,filter: "grayscale(100%) brightness(0)"} }
-        />)}
+    return (<div ref={drop} className="status_area">
+        <div className="status_area_dropping" style={style} />
+        {lastDroppedDot
+            ? (<img src={lastDroppedDot.image.default} alt="ICON" className="status_icon" 
+                style={ chosenColor.iconColor === "white" ? {...style2, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...style2, filter: "grayscale(100%) brightness(0)" }} />)
+            : (<div className="dot" style={{ ...style2, backgroundColor: chosenColor.iconColor }} />)}
     </div>);
 });
 
