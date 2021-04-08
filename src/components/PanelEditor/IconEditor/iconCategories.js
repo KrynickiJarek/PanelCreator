@@ -78,12 +78,13 @@ const iconCategories = [
         name: "Ulubione",
         directory:"ulubione",
         listOfIcons: importAll(require.context("../../../assets/icons/ulubione", true, /\.(svg)$/))
-    },
-    {
-        name: "Własne",
-        directory:"wlasne",
-        listOfIcons: importAll(require.context("../../../assets/icons/wlasne", true, /\.(svg)$/))
     }
+    // ,
+    // {
+    //     name: "Własne",
+    //     directory:"wlasne",
+    //     listOfIcons: importAll(require.context("../../../assets/icons/wlasne", true, /\.(svg)$/))
+    // }
 ];
 
 export default iconCategories
