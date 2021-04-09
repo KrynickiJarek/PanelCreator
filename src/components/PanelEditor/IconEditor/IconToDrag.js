@@ -2,21 +2,24 @@ import { memo } from 'react';
 import { useDrag } from 'react-dnd';
 import "./IconEditor.scss"
 
-const style = {
-};
-export const IconToDrag = memo(function IconToDrag({ image}) {
 
-    const [{ opacity }, drag] = useDrag(() => ({
+export const IconToDrag = memo(function IconToDrag({ image }) {
+
+    const [{ opacity, boxShadow}, drag] = useDrag(() => ({
         type: "icon",
         item: { image },
         collect: (monitor) => ({
-            opacity: monitor.isDragging() ? 0.4 : 1,
+            opacity: monitor.isDragging() && 0.8,
+            boxShadow: !!monitor.isDragging() && "inset 0px 0px 10px 5px rgba(0,0,0,0.5)",
+
         }),
     }), [image]);
 
-    
-    // return (<div ref={drag} role="IconToDrag" style={{ ...style, opacity }}>
-    return (<div ref={drag}  style={{ ...style, opacity }}>
-            <img src={image.default} alt="info" className="icon"/>
-		</div>);
-});
+    return (
+        <>
+            <div className="icon_box" style={{opacity, boxShadow}}>
+                    <img ref={drag} src={image.default} alt="info" className="icon"/>
+            </div>
+        </>
+    )
+})

@@ -2,16 +2,25 @@
     display: flex;
     flex-wrap: wrap;
 
+    .icon_box {
+        height: 80px;
+        width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
 
     .icon {
-        height: 60px;
-        width: 60px;
+        height: 30px;
+        width: 30px;
         margin: 10px;
         filter: grayscale(100%) brightness(0);
         // filter: grayscale(100%) invert(1) brightness(10);
-        cursor: pointer;
+        transform: scale(2,2);
+        cursor: move;
+        }
     }
-
+    
     :hover{
         filter: invert(49%) sepia(48%) saturate(4810%) hue-rotate(190deg) brightness(101%) contrast(101%);
     }

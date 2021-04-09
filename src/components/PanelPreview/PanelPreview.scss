@@ -37,8 +37,6 @@ $sc: 5;
       // }
 
       .status_area{
-        // width: 2.5px * $sc; ///może zmień na absolute?
-        // height: 2.5px * $sc;
         width: round(2.5px * $sc); 
         height: round(2.5px * $sc);
         margin: round(1.65px * $sc) auto round(2.5px * $sc); 
@@ -46,17 +44,18 @@ $sc: 5;
         justify-content: center;
         align-items: center;
         position: relative;
+        transition: 0.3s; 
 
         .status_area_dropping{
           position: absolute;
           width: 225%;
           height: 225%;
           border-radius: 50%;
-          padding: 2px;
+          padding: 1px;
           background-clip: content-box;
-          border: 2px dotted rgba(0,0,0,0);
           animation: spin 5s linear infinite;
-          transition: background-color 0.5s, border-color 0.5s, height 0.3s, width 0.3s;
+          border: 2px dotted rgba(0,0,0,0);
+          transition: background-color 0.5s, border-color 0.5s;
         }
         @keyframes spin { 
           100% { 
@@ -71,16 +70,14 @@ $sc: 5;
         border-radius: 50%;
         background-color: white;
         transition: 0.3s;
-        z-index: 2;
+        z-index: 3;
         }
 
         .status_icon{
         width: round(2.5px * $sc); 
         height: round(2.5px * $sc); 
         transition: 0.3s;
-
-        z-index: 2;
-
+        z-index: 3;
         }
 
       }
@@ -93,17 +90,19 @@ $sc: 5;
         justify-content: center;
         align-items: center;
         position: relative;
+        transition: 0.3s;
+
 
         .icon_area_dropping{
           position: absolute;
           width: 140%;
           height: 140%;
           border-radius: 50%;
-          padding: 2px;
+          padding: 1px;
           background-clip: content-box;
           border: 2px dotted rgba(0,0,0,0);
-          animation: spin 5s linear infinite;
-          transition: background-color 0.5s, border-color 0.5s, height 0.3s, width 0.3s;
+          transition: background-color 0.5s, border-color 0.5s;
+          animation: spin 7s linear infinite;
         }
         @keyframes spin { 
           100% { 
@@ -111,10 +110,10 @@ $sc: 5;
           }
         }
         .icon{
-          width: round(7.5px * $sc); 
-          height: round(7.5px * $sc); 
+        width: round(7.5px * $sc); 
+        height: round(7.5px * $sc); 
         transition: 0.3s;
-
+        z-index: 2;
         }
       }
     }

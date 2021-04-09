@@ -4,13 +4,13 @@ import { useDrop } from 'react-dnd';
 // const sc = 5;
 
 // const style = {
-    // width: sc * 7.5 + "px",
-    // height: sc * 7.5 + "px",
-    // border: "1px dotted white",
-    // margin: "0 auto"
+// width: sc * 7.5 + "px",
+// height: sc * 7.5 + "px",
+// border: "1px dotted white",
+// margin: "0 auto"
 // };
 
-export const IconHolder = memo(function IconHolder({ lastDroppedIcon , onDrop, chosenColor}) {
+export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, chosenColor }) {
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -22,37 +22,35 @@ export const IconHolder = memo(function IconHolder({ lastDroppedIcon , onDrop, c
     });
 
     const isActive = isOver && canDrop;
-    let style = {};
-    let style2 = {};
+    let styleDropping = {};
+    let styleArea = {};
     if (isActive) {
-        style = {
-            backgroundColor: "#4BB543",
-            border: "2px dotted #4BB543",
-            width: "200%",
-            height: "200%",
-            zIndex: "999"
-
+        styleDropping = {
+            // backgroundColor: "#4BB543",
+            backgroundColor: "rgba(75, 181, 67, 1)",
+            border: "2px dotted rgba(75, 181, 67, 1)",
+            zIndex: "2"
         };
-        style2 = {
+        styleArea = {
             transform: "scale(1.4,1.4)",
-            zIndex: "999"
-
+            zIndex: "1",
         }
     }
     else if (canDrop) {
-        style = {
-            backgroundColor: "#F0D500",
-            border: "2px dotted #F0D500",
+        styleDropping = {
+            // backgroundColor: "#F0D500",
+            backgroundColor: "rgba(240, 213, 0, 0.7)",
+            border: "2px dotted rgba(240, 213, 0, 0.7)",
         };
     }
 
 
-    return (<div ref={drop} className="icon_area">
-        <div className="icon_area_dropping" style={style} />
-        {lastDroppedIcon && 
-        (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
-        style={chosenColor.iconColor === "white" ? {...style2,filter: "grayscale(100%) invert(1) brightness(10)"}:{...style2,filter: "grayscale(100%) brightness(0)"} }
-        />)}
+    return (<div ref={drop} className="icon_area" style={styleArea} >
+        <div className="icon_area_dropping" style={styleDropping} />
+        {lastDroppedIcon &&
+            (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
+                style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
+            />)}
     </div>);
 });
 

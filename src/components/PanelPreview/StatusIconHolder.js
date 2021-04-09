@@ -19,35 +19,34 @@ export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot,
     });
 
     const isActive = isOver && canDrop;
-    let style = {};
-    let style2 = {};
+    let styleDropping = {};
+    let styleArea = {};
     if (isActive) {
-        style = {
-            backgroundColor: "#4BB543",
-            border: "2px dotted #4BB543",
-            width: "400%",
-            height: "400%",
-            zIndex: "999"
-
+        styleDropping = {
+            // backgroundColor: "#4BB543",
+            backgroundColor: "rgba(75, 181, 67, 1)",
+            border: "2px dotted rgba(75, 181, 67, 1)",
+            zIndex: "2"
         };
-        style2 = {
-            transform: "scale(2,2)",
-            zIndex: "999"
+        styleArea = {
+            transform: "scale(1.8,1.8)",
+            zIndex: "3",
         }
     }
     else if (canDrop) {
-        style = {
-            backgroundColor: "#F0D500",
-            border: "2px dotted #F0D500",
+        styleDropping = {
+            // backgroundColor: "#F0D500",
+            backgroundColor: "rgba(240, 213, 0, 0.7)",
+            border: "2px dotted rgba(240, 213, 0, 0.7)",
         };
     }
 
-    return (<div ref={drop} className="status_area">
-        <div className="status_area_dropping" style={style} />
+    return (<div ref={drop} className="status_area" style={styleArea}>
+        <div className="status_area_dropping" style={styleDropping} />
         {lastDroppedDot
-            ? (<img src={lastDroppedDot.image.default} alt="ICON" className="status_icon" 
-                style={ chosenColor.iconColor === "white" ? {...style2, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...style2, filter: "grayscale(100%) brightness(0)" }} />)
-            : (<div className="dot" style={{ ...style2, backgroundColor: chosenColor.iconColor }} />)}
+            ? (<img src={lastDroppedDot.image.default} alt="ICON"  className="status_icon" 
+                style={ chosenColor.iconColor === "white" ? {filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />)
+            : (<div className="dot" style={{backgroundColor: chosenColor.iconColor }} />)}
     </div>);
 });
 
