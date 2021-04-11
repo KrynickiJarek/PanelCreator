@@ -2,12 +2,14 @@
     display: flex;
     flex-wrap: wrap;
 
+
     .icon_box {
         height: 80px;
         width: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
+
 
 
     .icon {
@@ -18,6 +20,8 @@
         // filter: grayscale(100%) invert(1) brightness(10);
         transform: scale(2,2);
         cursor: move;
+
+
         }
     }
     

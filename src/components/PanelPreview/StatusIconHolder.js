@@ -23,21 +23,20 @@ export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot,
     let styleArea = {};
     if (isActive) {
         styleDropping = {
-            // backgroundColor: "#4BB543",
             backgroundColor: "rgba(75, 181, 67, 1)",
             border: "2px dotted rgba(75, 181, 67, 1)",
-            zIndex: "2"
         };
         styleArea = {
-            transform: "scale(1.8,1.8)",
-            zIndex: "3",
+            transform: "scale(1.6,1.6)",
+            zIndex: "90",
+
         }
     }
     else if (canDrop) {
         styleDropping = {
-            // backgroundColor: "#F0D500",
-            backgroundColor: "rgba(240, 213, 0, 0.7)",
-            border: "2px dotted rgba(240, 213, 0, 0.7)",
+            backgroundColor: "rgba(240, 213, 0, 1)",
+            border: "2px dotted rgba(240, 213, 0, 1)",
+
         };
     }
 

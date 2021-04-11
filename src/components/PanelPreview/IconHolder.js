@@ -1,16 +1,24 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useDrop } from 'react-dnd';
+import Slash from "../../assets/preview/slash.svg"
+import Holder from "../../assets/preview/holder.svg"
+import Remove from "../../assets/preview/remove.svg"
 
-// const sc = 5;
 
-// const style = {
-// width: sc * 7.5 + "px",
-// height: sc * 7.5 + "px",
-// border: "1px dotted white",
-// margin: "0 auto"
-// };
+import { IconHolderSlashUp } from './IconHolderSlashUp';
+import { IconHolderSlashDown } from './IconHolderSlashDown';
 
-export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, chosenColor }) {
+
+
+export const IconHolder = memo(function IconHolder({
+    chosenColor,
+    lastDroppedIcon, onDrop,
+    lastDroppedSlashUp, onDropSlashUp,
+    lastDroppedSlashDown, onDropSlashDown
+}) {
+
+    let show = false
+    let warning = false
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -24,34 +32,83 @@ export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, ch
     const isActive = isOver && canDrop;
     let styleDropping = {};
     let styleArea = {};
+    let styleHolder = {};
+    let styleSlash = {};
     if (isActive) {
         styleDropping = {
-            // backgroundColor: "#4BB543",
             backgroundColor: "rgba(75, 181, 67, 1)",
             border: "2px dotted rgba(75, 181, 67, 1)",
-            zIndex: "2"
         };
         styleArea = {
-            transform: "scale(1.4,1.4)",
-            zIndex: "1",
-        }
+            transform: "scale(1.25,1.25)",
+            zIndex: "90",
+        };
+        styleSlash = {
+            display: "none",
+        };
+        warning = true;
     }
     else if (canDrop) {
         styleDropping = {
-            // backgroundColor: "#F0D500",
-            backgroundColor: "rgba(240, 213, 0, 0.7)",
-            border: "2px dotted rgba(240, 213, 0, 0.7)",
+            backgroundColor: "rgba(240, 213, 0, 1)",
+            border: "2px dotted rgba(240, 213, 0, 1)",
         };
+
     }
 
 
-    return (<div ref={drop} className="icon_area" style={styleArea} >
-        <div className="icon_area_dropping" style={styleDropping} />
-        {lastDroppedIcon &&
-            (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
-                style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
-            />)}
-    </div>);
+    const [{ isOverToShow }, over] = useDrop({
+        accept: "icon",
+        drop: null,
+        collect: (monitor) => ({
+            isOverToShow: monitor.isOver(),
+        }),
+    });
+    if (isOverToShow) {
+        show = true;
+        styleHolder = {
+            display: "block",
+        };
+        styleSlash = {
+            display: "none",
+        };
+    };
+
+
+
+    const [upActive, setUpActive] = useState(false);
+    const [downActive, setDownActive] = useState(false);
+    // useEffect(() => {
+    // });
+
+
+    return (
+        <div ref={over}>
+            <div ref={drop} className="icon_area" style={styleArea} >
+                <div className="icon_area_dropping" style={styleDropping} />
+                {lastDroppedIcon &&
+                    (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
+                        style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
+                    />)}
+                {!lastDroppedIcon &&
+                    (<img src={Holder} alt="holder" className="holder"
+                        style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
+                    />)}
+
+                {/* {((lastDroppedSlashUp || lastDroppedSlashDown) && !upActive) && */}
+                {(lastDroppedSlashUp || lastDroppedSlashDown) &&
+                    (<img src={Slash} alt="slash" className="slash"
+                        style={chosenColor.iconColor === "white" ? { ...styleSlash, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleSlash, filter: "grayscale(100%) brightness(0)" }}
+                    />)}
+                {(lastDroppedIcon && (upActive || downActive)) &&
+                    (<img src={Remove} alt="remove" className="remove" />)}
+            </div>
+            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)} show={show} warning={warning} />
+            {/* <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} show={show} warning={warning}/> */}
+            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
+            {/* <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} show={show} warning={warning} /> */}
+        </div>
+    );
 });
 
 
@@ -61,16 +118,17 @@ export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, ch
 // import { memo } from 'react';
 // import { useDrop } from 'react-dnd';
 
-// const sc = 5;
+// // const sc = 5;
 
-// const style = {
-//     width: sc * 7.5 + "px",
-//     height: sc * 7.5 + "px",
-//     border: "1px dotted white",
-//     margin: "0 auto"
-// };
+// // const style = {
+// // width: sc * 7.5 + "px",
+// // height: sc * 7.5 + "px",
+// // border: "1px dotted white",
+// // margin: "0 auto"
+// // };
 
-// export const IconHolder = memo(function IconHolder({ lastDroppedItem , onDrop }) {
+// export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, chosenColor, onCanDrop }) {
+// // export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, chosenColor}) {
 
 //     const [{ isOver, canDrop }, drop] = useDrop({
 //         accept: "icon",
@@ -82,16 +140,40 @@ export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, ch
 //     });
 
 //     const isActive = isOver && canDrop;
-//     let backgroundColor = 'whitesmoke';
+//     let styleDropping = {};
+//     let styleArea = {};
 //     if (isActive) {
-//         backgroundColor = 'darkgreen';
+//         styleDropping = {
+//             // backgroundColor: "#4BB543",
+//             backgroundColor: "rgba(75, 181, 67, 1)",
+//             border: "2px dotted rgba(75, 181, 67, 1)",
+//             zIndex: "2"
+//         };
+//         styleArea = {
+//             // transform: "scale(1.4,1.4)",
+//             transform: "scale(1.2,1.2)",
+//             zIndex: "1",
+//         }
+//         onCanDrop(true);
 //     }
 //     else if (canDrop) {
-//         backgroundColor = 'darkkhaki';
+//         styleDropping = {
+//             // backgroundColor: "#F0D500",
+//             backgroundColor: "rgba(240, 213, 0, 1)",
+//             border: "2px dotted rgba(240, 213, 0, 1)",
+//         };
 //     }
 
-//     // return (<div ref={drop} role={'IconHolder'} style={{ ...style, backgroundColor }}>
-//     return (<div ref={drop} style={{ ...style, backgroundColor }}>
-//         {lastDroppedItem && (<img src={lastDroppedItem.image.default} alt="ICON" />)}
+
+//     return (<div ref={drop} className="icon_area" style={styleArea} >
+//     {/* return (<div ref={drop} className="icon_area" style={styleArea} > */}
+//         <div className="icon_area_dropping" style={styleDropping} />
+//         {lastDroppedIcon &&
+//             (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
+//                 style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
+//             />)}
 //     </div>);
 // });
+
+
+

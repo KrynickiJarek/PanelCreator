@@ -8,7 +8,6 @@ $sc: 5;
   align-items: center;
   height: 100%;
   width: 40%;
-  // border: 1px solid green;  //USUŃ
   
 
   .panel_box{
@@ -19,22 +18,13 @@ $sc: 5;
 
 
     .panel_content{
-      // background-color: rgb(162, 192, 160); //USUŃ
       display: flex;
       flex-wrap: wrap;
 
       .cell{
-      // border: 1px dotted red; //USUŃ
       width: 22.4px * $sc;
       height: 24px * $sc;
-
-      // .dot{ // stara wersja dot
-      //   width: 1px * $sc; ///może zmień na absolute?
-      //   height: 1px * $sc;
-      //   border-radius: 50%;
-      //   background-color: white;
-      //   margin: 2.4px * $sc auto 3.25px * $sc; //odjęte po 0.5px na kropke - powinno być 2,9 i 3,75
-      // }
+      position: relative;
 
       .status_area{
         width: round(2.5px * $sc); 
@@ -45,6 +35,8 @@ $sc: 5;
         align-items: center;
         position: relative;
         transition: 0.3s; 
+          z-index: 80; //-----------------------------------------------------------------------------------statusD
+
 
         .status_area_dropping{
           position: absolute;
@@ -56,6 +48,7 @@ $sc: 5;
           animation: spin 5s linear infinite;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
+
         }
         @keyframes spin { 
           100% { 
@@ -70,16 +63,16 @@ $sc: 5;
         border-radius: 50%;
         background-color: white;
         transition: 0.3s;
-        z-index: 3;
+        z-index: 100;//-----------------------------------------------------------------------------------statusI+d
         }
 
         .status_icon{
         width: round(2.5px * $sc); 
         height: round(2.5px * $sc); 
         transition: 0.3s;
-        z-index: 3;
-        }
+        z-index: 100;//-----------------------------------------------------------------------------------statusI+d
 
+        }
       }
       
       .icon_area{
@@ -91,6 +84,7 @@ $sc: 5;
         align-items: center;
         position: relative;
         transition: 0.3s;
+        z-index: 80;//-----------------------------------------------------------------------------------iconD
 
 
         .icon_area_dropping{
@@ -103,6 +97,8 @@ $sc: 5;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
           animation: spin 7s linear infinite;
+
+
         }
         @keyframes spin { 
           100% { 
@@ -113,9 +109,92 @@ $sc: 5;
         width: round(7.5px * $sc); 
         height: round(7.5px * $sc); 
         transition: 0.3s;
-        z-index: 2;
+        z-index: 100;//-----------------------------------------------------------------------------------iconI
         }
+
+        .slash{
+          width: round(7.5px * $sc); 
+          height: round(7.5px * $sc); 
+          transition: 0.3s;
+          z-index: 100;//-----------------------------------------------------------------------------------iconI
+                  
+        }
+        .holder{
+          width: round(7.5px * $sc); 
+          height: round(7.5px * $sc); 
+          display: none;
+          z-index: 100;//-----------------------------------------------------------------------------------iconI
+        }
+
+        .remove{
+          width: round(7.5px * $sc); 
+          height: round(7.5px * $sc);
+          position: absolute;
+          z-index: 100;//-----------------------------------------------------------------------------------iconI
+        }
+        
       }
+      // -----------------------
+      .slash_up_area, .slash_down_area{ 
+        width: 3.75px * $sc;
+        height: 3.75px * $sc;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.3s;  
+         z-index: 80;//-----------------------------------------------------------------------------------slashD
+
+        .icon_area_dropping{
+          position: absolute;
+          width: 160%;
+          height: 160%;
+          border-radius: 50%;
+          padding: 1px;
+          background-clip: content-box;
+          border: 2px dotted rgba(0,0,0,0);
+          transition: background-color 0.5s, border-color 0.5s;
+          animation: spin 7s linear infinite, translate 1s;
+
+        }
+        @keyframes spin { 
+          100% { 
+            transform: rotateZ(360deg);
+          }
+        }
+        .icon{
+        width: round(3.75px * $sc); 
+        height: round(3.75px * $sc); 
+        transition: 0.3s;
+        z-index: 100;//-----------------------------------------------------------------------------------slashI
+        }
+        .holder{
+          width: round(3.75px * $sc); 
+          height: round(3.75px * $sc); 
+          display: none;
+          z-index: 100;//-----------------------------------------------------------------------------------iconI
+        }
+
+        .remove{
+          width: round(3.75px * $sc); 
+          height: round(3.75px * $sc); 
+          position: absolute;
+          z-index: 100;//-----------------------------------------------------------------------------------iconI
+        }
+        }
+
+      .slash_up_area{ 
+        top: ceil(6.65px * $sc);
+        right: 50%;
+
+      }
+
+      .slash_down_area{ 
+        top: ceil(10.5px * $sc);
+        left: 50%;
+      }
+// -------------------
+
     }
 
     .cell:nth-child(3n+2){
@@ -123,12 +202,10 @@ $sc: 5;
     }
 
     .cell_dot9:nth-last-child(-n+3){
-      // background-color: rgba($color: red, $alpha: 0.3); //USUŃ
       height: 22.4px * $sc;
     }
 
     .cell_dot18:nth-last-child(-n+3){
-      // background-color: rgba($color: red, $alpha: 0.3);//USUŃ
       height: 20.8px * $sc;
     }
     }
@@ -141,13 +218,10 @@ $sc: 5;
       top: 25px * $sc;
       left: 30px *$sc;
     }
-
-
   }
 
   .panel_info{
     display: flex;
     justify-content: space-between;
   }
-
 }
