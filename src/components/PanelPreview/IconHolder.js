@@ -14,7 +14,7 @@ export const IconHolder = memo(function IconHolder({
     chosenColor,
     lastDroppedIcon, onDrop,
     lastDroppedSlashUp, onDropSlashUp,
-    lastDroppedSlashDown, onDropSlashDown
+    lastDroppedSlashDown, onDropSlashDown,
 }) {
 
     let show = false
@@ -41,7 +41,7 @@ export const IconHolder = memo(function IconHolder({
         };
         styleArea = {
             transform: "scale(1.25,1.25)",
-            zIndex: "90",
+            zIndex: "2",
         };
         styleSlash = {
             display: "none",
@@ -74,12 +74,12 @@ export const IconHolder = memo(function IconHolder({
         };
     };
 
-
-
     const [upActive, setUpActive] = useState(false);
     const [downActive, setDownActive] = useState(false);
-    // useEffect(() => {
-    // });
+
+    const handleUp = (income) => { //dwa sposoby przekazania zdarzenia przy up i down
+        setUpActive(income)
+    }
 
 
     return (
@@ -89,13 +89,12 @@ export const IconHolder = memo(function IconHolder({
                 {lastDroppedIcon &&
                     (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
                         style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
+                        on
                     />)}
                 {!lastDroppedIcon &&
                     (<img src={Holder} alt="holder" className="holder"
                         style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
                     />)}
-
-                {/* {((lastDroppedSlashUp || lastDroppedSlashDown) && !upActive) && */}
                 {(lastDroppedSlashUp || lastDroppedSlashDown) &&
                     (<img src={Slash} alt="slash" className="slash"
                         style={chosenColor.iconColor === "white" ? { ...styleSlash, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleSlash, filter: "grayscale(100%) brightness(0)" }}
@@ -103,10 +102,8 @@ export const IconHolder = memo(function IconHolder({
                 {(lastDroppedIcon && (upActive || downActive)) &&
                     (<img src={Remove} alt="remove" className="remove" />)}
             </div>
-            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)} show={show} warning={warning} />
-            {/* <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} show={show} warning={warning}/> */}
+            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} show={show} warning={warning} />
             <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
-            {/* <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} show={show} warning={warning} /> */}
         </div>
     );
 });

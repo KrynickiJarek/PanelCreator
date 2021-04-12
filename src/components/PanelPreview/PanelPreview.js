@@ -95,10 +95,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         }));
     }, [droppedIcons, iconHolders]);
 
-
-
-
-    
+   
     return (
         <>
             <div className="preview_container">

@@ -14,7 +14,7 @@ export const IconEditor = memo(function IconEditor() {
 
   return (
     <div>
-      <Tabs defaultActiveKey="1" tabPosition="left" style={{ height: 700 }} tabBarGutter={-10} centered={false}>
+      <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 700 }} tabBarGutter={-10} centered={false}>
         {iconCategories.map((el, i) => (
           <TabPane tab={el.name} key={i} >
             <div className="icons">

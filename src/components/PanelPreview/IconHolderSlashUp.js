@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo} from 'react';
 import { useDrop } from 'react-dnd';
 import UpHolder from "../../assets/preview/upholder.svg"
 import Remove from "../../assets/preview/remove.svg"
@@ -7,10 +7,8 @@ import Remove from "../../assets/preview/remove.svg"
 
 
 export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive , show, warning }) {
-// export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, show, warning }) {
 
-    onUpActive(false) //-------------------------------------------------------------------------------------
-
+    onUpActive(false) 
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -34,12 +32,12 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
         styleArea = {
             transform: "translate(-85%,-85%) scale(1.6,1.6)",
-            zIndex: "90",
+            zIndex: "2",
         };
         styleHolder = {
             display: "block",
         };
-        onUpActive(true) //-------------------------------------------------------------------------------------
+        onUpActive(true) 
     }
     else if (canDrop && show === true) {
         styleDropping = {
@@ -55,22 +53,20 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     }
 
 
-
-
     return (
         <div ref={drop} className="slash_up_area" style={styleArea}>
-            <div className="icon_area_dropping" style={styleDropping} />
+            <div className="slash_icon_area_dropping" style={styleDropping} />
             {lastDroppedSlashUp &&
-                (<img src={lastDroppedSlashUp.image.default} alt="ICON" className="icon"
+                (<img src={lastDroppedSlashUp.image.default} alt="ICON" className="slash_icon"
                     style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
                 />)}
 
             {!lastDroppedSlashUp &&
-                (<img src={UpHolder} alt="upholder" className="holder"
+                (<img src={UpHolder} alt="upholder" className="slash_holder"
                     style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
                 />)}
             {(lastDroppedSlashUp&& warning) &&
-                (<img src={Remove} alt="remove" className="remove"/>)}
+                (<img src={Remove} alt="remove" className="slash_remove"/>)}
         </div>
     );
 });

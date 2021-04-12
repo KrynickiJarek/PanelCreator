@@ -2,30 +2,58 @@
     display: flex;
     flex-wrap: wrap;
 
-
-    .icon_box {
+   .icon_box {
         height: 80px;
         width: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
+        
 
 
+        .icon_drag {
+            background-color: rgba(255,255,255,0.5);
+            height: 30px;
+            width: 30px;
+            transform: scale(2,2);
 
-    .icon {
-        height: 30px;
-        width: 30px;
-        margin: 10px;
-        filter: grayscale(100%) brightness(0);
-        // filter: grayscale(100%) invert(1) brightness(10);
-        transform: scale(2,2);
-        cursor: move;
-
-
-        }
-    }
-    
-    :hover{
-        filter: invert(49%) sepia(48%) saturate(4810%) hue-rotate(190deg) brightness(101%) contrast(101%);
+            .icon {
+                height: 30px;
+                width: 30px;
+                cursor: move;
+                filter: grayscale(100%) brightness(0);
+                }
+                    :hover{
+                        filter: invert(49%) sepia(48%) saturate(4810%) hue-rotate(190deg) brightness(101%) contrast(101%);
+                    }
+        }  
     }
 }
+
+// .icons{
+//     display: flex;
+//     flex-wrap: wrap;
+
+
+//     .icon_box {
+//         height: 80px;
+//         width: 80px;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+
+//     .icon {
+//         height: 30px;
+//         width: 30px;
+//         margin: 10px;
+//         cursor: move;
+//         filter: grayscale(100%) brightness(0);
+//         // transform: scale(2,2) translate(50%, 50%);
+//         transform: scale(2,2);
+//         }
+//     }
+    
+//     :hover{
+//         filter: invert(49%) sepia(48%) saturate(4810%) hue-rotate(190deg) brightness(101%) contrast(101%);
+//     }
+// }

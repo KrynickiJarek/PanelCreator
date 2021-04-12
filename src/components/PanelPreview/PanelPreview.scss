@@ -8,14 +8,11 @@ $sc: 5;
   align-items: center;
   height: 100%;
   width: 40%;
-  
 
   .panel_box{
     display: flex;
     box-sizing: border-box;
     position: relative;
-
-
 
     .panel_content{
       display: flex;
@@ -35,8 +32,7 @@ $sc: 5;
         align-items: center;
         position: relative;
         transition: 0.3s; 
-          z-index: 80; //-----------------------------------------------------------------------------------statusD
-
+        z-index: 1;
 
         .status_area_dropping{
           position: absolute;
@@ -48,30 +44,20 @@ $sc: 5;
           animation: spin 5s linear infinite;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
-
         }
-        @keyframes spin { 
-          100% { 
-            transform: rotateZ(360deg);
-          }
-        }
-
 
       .dot{ 
         width: round(1.25px * $sc); 
         height: round(1.25px * $sc); 
-        border-radius: 50%;
-        background-color: white;
         transition: 0.3s;
-        z-index: 100;//-----------------------------------------------------------------------------------statusI+d
+        z-index: 3;
         }
 
         .status_icon{
         width: round(2.5px * $sc); 
         height: round(2.5px * $sc); 
         transition: 0.3s;
-        z-index: 100;//-----------------------------------------------------------------------------------statusI+d
-
+        z-index: 3;
         }
       }
       
@@ -84,8 +70,7 @@ $sc: 5;
         align-items: center;
         position: relative;
         transition: 0.3s;
-        z-index: 80;//-----------------------------------------------------------------------------------iconD
-
+        z-index: 1;
 
         .icon_area_dropping{
           position: absolute;
@@ -97,44 +82,37 @@ $sc: 5;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
           animation: spin 7s linear infinite;
-
-
         }
-        @keyframes spin { 
-          100% { 
-            transform: rotateZ(360deg);
-          }
-        }
+
         .icon{
         width: round(7.5px * $sc); 
         height: round(7.5px * $sc); 
         transition: 0.3s;
-        z-index: 100;//-----------------------------------------------------------------------------------iconI
+        z-index: 3;
         }
 
         .slash{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
           transition: 0.3s;
-          z-index: 100;//-----------------------------------------------------------------------------------iconI
+          z-index: 3;
                   
         }
         .holder{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
           display: none;
-          z-index: 100;//-----------------------------------------------------------------------------------iconI
+          z-index: 3;
         }
 
         .remove{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc);
           position: absolute;
-          z-index: 100;//-----------------------------------------------------------------------------------iconI
+          z-index: 3;
         }
-        
       }
-      // -----------------------
+
       .slash_up_area, .slash_down_area{ 
         width: 3.75px * $sc;
         height: 3.75px * $sc;
@@ -143,9 +121,9 @@ $sc: 5;
         justify-content: center;
         align-items: center;
         transition: 0.3s;  
-         z-index: 80;//-----------------------------------------------------------------------------------slashD
+         z-index: 1;
 
-        .icon_area_dropping{
+        .slash_icon_area_dropping{
           position: absolute;
           width: 160%;
           height: 160%;
@@ -155,31 +133,28 @@ $sc: 5;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
           animation: spin 7s linear infinite, translate 1s;
-
         }
-        @keyframes spin { 
-          100% { 
-            transform: rotateZ(360deg);
-          }
-        }
-        .icon{
-        width: round(3.75px * $sc); 
-        height: round(3.75px * $sc); 
+        
+        .slash_icon{
+        // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+        // height: round(3.75px * $sc); 
+        width: round(3.50px * $sc); 
+        height: round(3.50px * $sc); 
         transition: 0.3s;
-        z-index: 100;//-----------------------------------------------------------------------------------slashI
+        z-index: 3;
         }
-        .holder{
+        .slash_holder{
           width: round(3.75px * $sc); 
           height: round(3.75px * $sc); 
           display: none;
-          z-index: 100;//-----------------------------------------------------------------------------------iconI
+          z-index: 3;
         }
 
-        .remove{
+        .slash_remove{
           width: round(3.75px * $sc); 
           height: round(3.75px * $sc); 
           position: absolute;
-          z-index: 100;//-----------------------------------------------------------------------------------iconI
+          z-index: 3;
         }
         }
 
@@ -193,8 +168,6 @@ $sc: 5;
         top: ceil(10.5px * $sc);
         left: 50%;
       }
-// -------------------
-
     }
 
     .cell:nth-child(3n+2){
@@ -225,3 +198,229 @@ $sc: 5;
     justify-content: space-between;
   }
 }
+
+@keyframes spin { 
+  100% { 
+    transform: rotateZ(360deg);
+  }
+}
+
+
+
+// @use "sass:math";
+// $sc: 5;
+
+// .preview_container {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: flex-start;
+//   align-items: center;
+//   height: 100%;
+//   width: 40%;
+
+//   .panel_box{
+//     display: flex;
+//     box-sizing: border-box;
+//     position: relative;
+
+//     .panel_content{
+//       display: flex;
+//       flex-wrap: wrap;
+
+//       .cell{
+//       width: 22.4px * $sc;
+//       height: 24px * $sc;
+//       position: relative;
+
+//       .status_area{
+//         width: round(2.5px * $sc); 
+//         height: round(2.5px * $sc);
+//         margin: round(1.65px * $sc) auto round(2.5px * $sc); 
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         position: relative;
+//         transition: 0.3s; 
+//         z-index: 1;
+
+//         .status_area_dropping{
+//           position: absolute;
+//           width: 225%;
+//           height: 225%;
+//           border-radius: 50%;
+//           padding: 1px;
+//           background-clip: content-box;
+//           animation: spin 5s linear infinite;
+//           border: 2px dotted rgba(0,0,0,0);
+//           transition: background-color 0.5s, border-color 0.5s;
+//         }
+
+//         @keyframes spin { 
+//           100% { 
+//             transform: rotateZ(360deg);
+//           }
+//         }
+//       .dot{ 
+//         width: round(1.25px * $sc); 
+//         height: round(1.25px * $sc); 
+//         transition: 0.3s;
+//         z-index: 3;
+//         }
+
+//         .status_icon{
+//         width: round(2.5px * $sc); 
+//         height: round(2.5px * $sc); 
+//         transition: 0.3s;
+//         z-index: 3;
+//         }
+//       }
+      
+//       .icon_area{
+//         width: 7.5px * $sc;
+//         height: 7.5px * $sc;
+//         margin: 0 auto;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         position: relative;
+//         transition: 0.3s;
+//         z-index: 1;
+
+//         .icon_area_dropping{
+//           position: absolute;
+//           width: 140%;
+//           height: 140%;
+//           border-radius: 50%;
+//           padding: 1px;
+//           background-clip: content-box;
+//           border: 2px dotted rgba(0,0,0,0);
+//           transition: background-color 0.5s, border-color 0.5s;
+//           animation: spin 7s linear infinite;
+//         }
+//         @keyframes spin { 
+//           100% { 
+//             transform: rotateZ(360deg);
+//           }
+//         }
+//         .icon{
+//         width: round(7.5px * $sc); 
+//         height: round(7.5px * $sc); 
+//         transition: 0.3s;
+//         z-index: 3;
+//         }
+
+//         .slash{
+//           width: round(7.5px * $sc); 
+//           height: round(7.5px * $sc); 
+//           transition: 0.3s;
+//           z-index: 3;
+                  
+//         }
+//         .holder{
+//           width: round(7.5px * $sc); 
+//           height: round(7.5px * $sc); 
+//           display: none;
+//           z-index: 3;
+//         }
+
+//         .remove{
+//           width: round(7.5px * $sc); 
+//           height: round(7.5px * $sc);
+//           position: absolute;
+//           z-index: 3;
+//         }
+//       }
+//       // -----------------------
+//       .slash_up_area, .slash_down_area{ 
+//         width: 3.75px * $sc;
+//         height: 3.75px * $sc;
+//         position: absolute;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         transition: 0.3s;  
+//          z-index: 1;
+
+//         .icon_area_dropping{
+//           position: absolute;
+//           width: 160%;
+//           height: 160%;
+//           border-radius: 50%;
+//           padding: 1px;
+//           background-clip: content-box;
+//           border: 2px dotted rgba(0,0,0,0);
+//           transition: background-color 0.5s, border-color 0.5s;
+//           animation: spin 7s linear infinite, translate 1s;
+//         }
+
+//         @keyframes spin { 
+//           100% { 
+//             transform: rotateZ(360deg);
+//           }
+//         }
+        
+//         .icon{
+//         // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+//         // height: round(3.75px * $sc); 
+//         width: round(3.50px * $sc); 
+//         height: round(3.50px * $sc); 
+//         transition: 0.3s;
+//         z-index: 3;
+//         }
+//         .holder{
+//           width: round(3.75px * $sc); 
+//           height: round(3.75px * $sc); 
+//           display: none;
+//           z-index: 3;
+//         }
+
+//         .remove{
+//           width: round(3.75px * $sc); 
+//           height: round(3.75px * $sc); 
+//           position: absolute;
+//           z-index: 3;
+//         }
+//         }
+
+//       .slash_up_area{ 
+//         top: ceil(6.65px * $sc);
+//         right: 50%;
+
+//       }
+
+//       .slash_down_area{ 
+//         top: ceil(10.5px * $sc);
+//         left: 50%;
+//       }
+// // -------------------
+
+//     }
+
+//     .cell:nth-child(3n+2){
+//       width: 25.6px * $sc;
+//     }
+
+//     .cell_dot9:nth-last-child(-n+3){
+//       height: 22.4px * $sc;
+//     }
+
+//     .cell_dot18:nth-last-child(-n+3){
+//       height: 20.8px * $sc;
+//     }
+//     }
+
+//     .lcd{
+//       height: 37px *$sc;
+//       width: 30px *$sc;
+//       border: 1px solid white;
+//       position: absolute;
+//       top: 25px * $sc;
+//       left: 30px *$sc;
+//     }
+//   }
+
+//   .panel_info{
+//     display: flex;
+//     justify-content: space-between;
+//   }
+// }

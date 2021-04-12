@@ -38,8 +38,6 @@ export const MainCreator = memo(function MainCreator() {
                 </div>
             </div>
         </DndProvider>
-
-
     );
 });
 
