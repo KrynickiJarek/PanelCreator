@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { useDrop } from 'react-dnd';
+
 import Slash from "../../assets/preview/slash.svg"
 import Holder from "../../assets/preview/holder.svg"
 import Remove from "../../assets/preview/remove.svg"
@@ -7,6 +8,8 @@ import Remove from "../../assets/preview/remove.svg"
 
 import { IconHolderSlashUp } from './IconHolderSlashUp';
 import { IconHolderSlashDown } from './IconHolderSlashDown';
+
+import { ReDrag } from './ReDrag';
 
 
 
@@ -38,10 +41,13 @@ export const IconHolder = memo(function IconHolder({
         styleDropping = {
             backgroundColor: "rgba(75, 181, 67, 1)",
             border: "2px dotted rgba(75, 181, 67, 1)",
+            animation: "spin 7s linear infinite"
+
         };
         styleArea = {
             transform: "scale(1.25,1.25)",
-            zIndex: "2",
+            // zIndex: "2",
+            zIndex: "3",
         };
         styleSlash = {
             display: "none",
@@ -52,6 +58,7 @@ export const IconHolder = memo(function IconHolder({
         styleDropping = {
             backgroundColor: "rgba(240, 213, 0, 1)",
             border: "2px dotted rgba(240, 213, 0, 1)",
+            animation: "spin 7s linear infinite"
         };
 
     }
@@ -87,10 +94,14 @@ export const IconHolder = memo(function IconHolder({
             <div ref={drop} className="icon_area" style={styleArea} >
                 <div className="icon_area_dropping" style={styleDropping} />
                 {lastDroppedIcon &&
-                    (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
-                        style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
-                        on
-                    />)}
+                    // (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
+                    // style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />)
+
+                    < ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} />
+
+
+
+                }
                 {!lastDroppedIcon &&
                     (<img src={Holder} alt="holder" className="holder"
                         style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
@@ -102,8 +113,9 @@ export const IconHolder = memo(function IconHolder({
                 {(lastDroppedIcon && (upActive || downActive)) &&
                     (<img src={Remove} alt="remove" className="remove" />)}
             </div>
-            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} show={show} warning={warning} />
-            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
+                    <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} show={show} warning={warning} />
+                    <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
+            {/* </div> */}
         </div>
     );
 });

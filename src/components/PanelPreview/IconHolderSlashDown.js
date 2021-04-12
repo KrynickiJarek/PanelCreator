@@ -28,10 +28,13 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         styleDropping = {
             backgroundColor: "rgba(75, 181, 67, 1)",
             border: "2px dotted rgba(75, 181, 67, 1)",
+            animation: "spin 5s linear infinite"
+
         };
         styleArea = {
             transform: "translate(85%,85%) scale(1.6,1.6)",
-            zIndex: "2",
+            // zIndex: "2",
+            zIndex: "3",
         };
         styleHolder = {
             display: "block",
@@ -42,6 +45,8 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         styleDropping = {
             backgroundColor: "rgba(240, 213, 0, 1)",
             border: "2px dotted rgba(240, 213, 0, 1)",
+            animation: "spin 5s linear infinite"
+
         };
         styleArea = {
             transform: "translate(85%,85%)",
@@ -54,8 +59,6 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
 
     return (
         <div ref={drop} className="slash_down_area" style={styleArea} >
-
-
             <div className="slash_icon_area_dropping" style={styleDropping} />
             {lastDroppedSlashDown &&
                 (<img src={lastDroppedSlashDown.image.default} alt="ICON" className="slash_icon"

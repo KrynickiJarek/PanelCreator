@@ -29,10 +29,12 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleDropping = {
             backgroundColor: "rgba(75, 181, 67, 1)",
             border: "2px dotted rgba(75, 181, 67, 1)",
+            animation: "spin 5s linear infinite"
         };
         styleArea = {
             transform: "translate(-85%,-85%) scale(1.6,1.6)",
-            zIndex: "2",
+            // zIndex: "2",
+            zIndex: "3",
         };
         styleHolder = {
             display: "block",
@@ -43,6 +45,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleDropping = {
             backgroundColor: "rgba(240, 213, 0, 1)",
             border: "2px dotted rgba(240, 213, 0, 1)",
+            animation: "spin 5s linear infinite"
         };
         styleArea = {
             transform: "translate(-85%,-85%)",

@@ -32,7 +32,7 @@ $sc: 5;
         align-items: center;
         position: relative;
         transition: 0.3s; 
-        z-index: 1;
+        z-index: 2;
 
         .status_area_dropping{
           position: absolute;
@@ -41,7 +41,6 @@ $sc: 5;
           border-radius: 50%;
           padding: 1px;
           background-clip: content-box;
-          animation: spin 5s linear infinite;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
         }
@@ -50,27 +49,27 @@ $sc: 5;
         width: round(1.25px * $sc); 
         height: round(1.25px * $sc); 
         transition: 0.3s;
-        z-index: 3;
+        z-index: 4;
         }
 
         .status_icon{
         width: round(2.5px * $sc); 
         height: round(2.5px * $sc); 
         transition: 0.3s;
-        z-index: 3;
+        z-index: 4;
         }
       }
       
       .icon_area{
-        width: 7.5px * $sc;
-        height: 7.5px * $sc;
+        width: round(7.5px * $sc);
+        height: round(7.5px * $sc);
         margin: 0 auto;
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
         transition: 0.3s;
-        z-index: 1;
+        z-index: 2;
 
         .icon_area_dropping{
           position: absolute;
@@ -81,47 +80,50 @@ $sc: 5;
           background-clip: content-box;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
-          animation: spin 7s linear infinite;
         }
 
-        .icon{
+        .icon{ 
         width: round(7.5px * $sc); 
         height: round(7.5px * $sc); 
         transition: 0.3s;
-        z-index: 3;
+        z-index: 4;
+            //---------------------------------
+        cursor: move;
         }
 
         .slash{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
           transition: 0.3s;
-          z-index: 3;
-                  
+        z-index: 4;
         }
+
         .holder{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
           display: none;
-          z-index: 3;
+        z-index: 4;
         }
-
         .remove{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc);
           position: absolute;
-          z-index: 3;
+        z-index: 4;
         }
       }
-
-      .slash_up_area, .slash_down_area{ 
-        width: 3.75px * $sc;
-        height: 3.75px * $sc;
+        
+        .slash_up_area, .slash_down_area{ 
+        // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+        // height: round(3.75px * $sc); 
+        width: round(3.5px * $sc); 
+        height: round(3.5px * $sc); 
         position: absolute;
         display: flex;
         justify-content: center;
         align-items: center;
         transition: 0.3s;  
-         z-index: 1;
+        // z-index: 1;
+        z-index: 2;
 
         .slash_icon_area_dropping{
           position: absolute;
@@ -132,43 +134,43 @@ $sc: 5;
           background-clip: content-box;
           border: 2px dotted rgba(0,0,0,0);
           transition: background-color 0.5s, border-color 0.5s;
-          animation: spin 7s linear infinite, translate 1s;
         }
         
         .slash_icon{
         // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
         // height: round(3.75px * $sc); 
-        width: round(3.50px * $sc); 
-        height: round(3.50px * $sc); 
-        transition: 0.3s;
-        z-index: 3;
+          width: round(3.5px * $sc); 
+          height: round(3.5px * $sc); 
+          transition: 0.3s;
+          z-index: 4;
         }
         .slash_holder{
           width: round(3.75px * $sc); 
           height: round(3.75px * $sc); 
           display: none;
-          z-index: 3;
+          z-index: 4;
         }
 
         .slash_remove{
           width: round(3.75px * $sc); 
           height: round(3.75px * $sc); 
           position: absolute;
-          z-index: 3;
+          z-index: 4;
         }
         }
 
-      .slash_up_area{ 
-        top: ceil(6.65px * $sc);
-        right: 50%;
+        .slash_up_area{ 
+          top: round(6.65px * $sc);
+          right: 50%;
+          transform: translateX(-(round(0.25px * $sc)));
+        }
 
-      }
-
-      .slash_down_area{ 
-        top: ceil(10.5px * $sc);
-        left: 50%;
-      }
-    }
+       .slash_down_area{ 
+          top: round(10.75px * $sc);
+          left: 50%;
+          transform: translateX(round(0.25px * $sc));
+       }
+       }
 
     .cell:nth-child(3n+2){
       width: 25.6px * $sc;
