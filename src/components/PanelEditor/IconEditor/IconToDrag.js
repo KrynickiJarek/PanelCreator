@@ -18,7 +18,7 @@ export const IconToDrag = memo(function IconToDrag({ image }) {
         <>
             <div className="icon_box" style={{ opacity, boxShadow }}>
                 <div ref={drag} className="icon_drag">
-                    <img src={image.default} alt="info" className="icon" width="30pt" height="30pt" />
+                    <img src={image.default} alt="info" className="icon" width="40pt" height="40pt" />
                 </div>
             </div>
         </>

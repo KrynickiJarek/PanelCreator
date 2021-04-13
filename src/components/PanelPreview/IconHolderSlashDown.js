@@ -8,7 +8,7 @@ import Remove from "../../assets/preview/remove.svg"
 
 export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDroppedSlashDown, onDropSlashDown, chosenColor, onDownActive, show, warning }) {
 
-    onDownActive(false) 
+    onDownActive(false)
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -39,20 +39,24 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         styleHolder = {
             display: "block",
         };
-        onDownActive(true) 
+        onDownActive(true)
     }
     else if (canDrop && show === true) {
         styleDropping = {
             backgroundColor: "rgba(240, 213, 0, 1)",
             border: "2px dotted rgba(240, 213, 0, 1)",
             animation: "spin 5s linear infinite"
-
         };
         styleArea = {
             transform: "translate(85%,85%)",
         };
         styleHolder = {
             display: "block",
+        };
+    }
+    if (!lastDroppedSlashDown && !canDrop && !isActive) {
+        styleArea = {
+            transform: "translate(35%,35%) scale(0.01,0.01)",
         };
     }
 
@@ -70,7 +74,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
                     style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
                 />)}
             {(lastDroppedSlashDown && warning) &&
-                (<img src={Remove} alt="remove" className="slash_remove"/>)}
+                (<img src={Remove} alt="remove" className="slash_remove" />)}
         </div>
     );
 });

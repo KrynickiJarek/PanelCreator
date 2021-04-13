@@ -18,10 +18,14 @@ export const IconHolder = memo(function IconHolder({
     lastDroppedIcon, onDrop,
     lastDroppedSlashUp, onDropSlashUp,
     lastDroppedSlashDown, onDropSlashDown,
+    onReset
 }) {
 
     let show = false
     let warning = false
+
+    const [upActive, setUpActive] = useState(false);
+    const [downActive, setDownActive] = useState(false);
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -31,6 +35,7 @@ export const IconHolder = memo(function IconHolder({
             canDrop: monitor.canDrop(),
         }),
     });
+
 
     const isActive = isOver && canDrop;
     let styleDropping = {};
@@ -42,11 +47,9 @@ export const IconHolder = memo(function IconHolder({
             backgroundColor: "rgba(75, 181, 67, 1)",
             border: "2px dotted rgba(75, 181, 67, 1)",
             animation: "spin 7s linear infinite"
-
         };
         styleArea = {
             transform: "scale(1.25,1.25)",
-            // zIndex: "2",
             zIndex: "3",
         };
         styleSlash = {
@@ -63,7 +66,6 @@ export const IconHolder = memo(function IconHolder({
 
     }
 
-
     const [{ isOverToShow }, over] = useDrop({
         accept: "icon",
         drop: null,
@@ -79,10 +81,10 @@ export const IconHolder = memo(function IconHolder({
         styleSlash = {
             display: "none",
         };
-    };
+    }
 
-    const [upActive, setUpActive] = useState(false);
-    const [downActive, setDownActive] = useState(false);
+
+
 
     const handleUp = (income) => { //dwa sposoby przekazania zdarzenia przy up i down
         setUpActive(income)
@@ -93,12 +95,12 @@ export const IconHolder = memo(function IconHolder({
         <div ref={over}>
             <div ref={drop} className="icon_area" style={styleArea} >
                 <div className="icon_area_dropping" style={styleDropping} />
-                {lastDroppedIcon &&
+                {(lastDroppedIcon) &&
                     // (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
                     // style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />)
 
-                    < ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} />
 
+                    <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset}/>
 
 
                 }
@@ -113,9 +115,8 @@ export const IconHolder = memo(function IconHolder({
                 {(lastDroppedIcon && (upActive || downActive)) &&
                     (<img src={Remove} alt="remove" className="remove" />)}
             </div>
-                    <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} show={show} warning={warning} />
-                    <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
-            {/* </div> */}
+            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} show={show} warning={warning} />
+            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
         </div>
     );
 });

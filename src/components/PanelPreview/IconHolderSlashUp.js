@@ -54,11 +54,18 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
             display: "block",
         };
     }
+    if (!lastDroppedSlashUp && !canDrop && !isActive) {
+        styleArea = {
+            transform: "translate(-35%,-35%) scale(0.01,0.01)",
+        };
+    }
 
 
     return (
         <div ref={drop} className="slash_up_area" style={styleArea}>
-            <div className="slash_icon_area_dropping" style={styleDropping} />
+        {/* <div ref={drop}> */}
+        {/* <> */}
+            <div ref={drop} className="slash_icon_area_dropping" style={styleDropping} />
             {lastDroppedSlashUp &&
                 (<img src={lastDroppedSlashUp.image.default} alt="ICON" className="slash_icon"
                     style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
