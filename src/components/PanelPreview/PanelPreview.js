@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import "./PanelPreview.scss"
 
-import { StatusIconHolder } from './StatusIconHolder';
 import { IconHolder } from './IconHolder';
 
 import update from 'immutability-helper';
@@ -9,6 +8,7 @@ import update from 'immutability-helper';
 export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
 
     const sc = 5;
+    // const sc = 7;
 
     const chosenModelStyle = {};
     chosenModelStyle.backgroundColor = chosenColor.hex;
@@ -41,6 +41,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         }));
     }, [iconHolders]);
 
+    const handleResetDot = useCallback((index, item) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                lastDroppedDot: {
+                    $set: null,
+                }
+            },
+        }));
+    }, [ iconHolders]);
+
     const handleDropIcon = useCallback((index, item) => {
         setIconHolders(update(iconHolders, {
             [index]: {
@@ -69,10 +79,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [ iconHolders]);
 
 
-    
-
-    console.log(iconHolders)
-
 
     const handleDropSlashUp = useCallback((index, item) => {
         setIconHolders(update(iconHolders, {
@@ -86,6 +92,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
             },
         }));
     }, [iconHolders]);
+
+    const handleResetUp = useCallback((index, item) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                lastDroppedSlashUp: {
+                    $set: null,
+                }
+            },
+        }));
+    }, [ iconHolders]);
 
 
     const handleDropSlashDown = useCallback((index, item) => {
@@ -101,8 +117,15 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         }));
     }, [iconHolders]);
 
-
-
+    const handleResetDown = useCallback((index, item) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                lastDroppedSlashDown: {
+                    $set: null,
+                }
+            },
+        }));
+    }, [ iconHolders]);
 
 
 
@@ -119,14 +142,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                 className={(iconHolders.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
                                 {flag === 1 &&
                                     <>
-                                        <StatusIconHolder lastDroppedDot={lastDroppedDot} onDrop={(item) => handleDropDot(index, item)} chosenColor={chosenColor} />
                                         <IconHolder
                                             chosenColor={chosenColor}
+                                            lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
                                             lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
                                             lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
                                             lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
                                             onReset={(item) => handleReset(index, item)}
-
+                                            onResetDot={(item) => handleResetDot(index, item)}
+                                            onResetUp={(item) => handleResetUp(index, item)}
+                                            onResetDown={(item) => handleResetDown(index, item)}
                                         />
                                     </>}
                             </div>

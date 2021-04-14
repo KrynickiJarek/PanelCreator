@@ -1,7 +1,8 @@
-<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+<svg width="99.99999999999999" height="99.99999999999999" xmlns="http://www.w3.org/2000/svg">
  <g id="Layer_1">
   <title>Layer 1</title>
-  <line stroke-width="2" stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="-0.25381" x2="100" y1="99.74619" x1="0" opacity="undefined" fill-opacity="0" fill="none"/>
-  <rect id="svg_4" height="42" width="42" y="5" x="4" opacity="undefined" fill-opacity="0" stroke-opacity="null" stroke-dasharray="null" stroke-width="2" stroke="#000" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="-1.28285" x2="100.38461" y1="98.71715" x1="0.38461" opacity="undefined" fill-opacity="0" fill="none" stroke-width="4"/>
+  <rect id="svg_4" height="42" width="42" y="3.57643" x="3.74026" opacity="undefined" fill-opacity="0" stroke-opacity="null" stroke-dasharray="null" stroke-width="4" stroke="#000" fill="none"/>
  </g>
+
 </svg>

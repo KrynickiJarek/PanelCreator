@@ -1,4 +1,5 @@
-import { memo, useState } from 'react';
+import { memo, useState, useEffect } from 'react';
+// import { memo, useState } from 'react';
 import { useDrop } from 'react-dnd';
 
 import Slash from "../../assets/preview/slash.svg"
@@ -6,6 +7,7 @@ import Holder from "../../assets/preview/holder.svg"
 import Remove from "../../assets/preview/remove.svg"
 
 
+import { StatusIconHolder } from './StatusIconHolder';
 import { IconHolderSlashUp } from './IconHolderSlashUp';
 import { IconHolderSlashDown } from './IconHolderSlashDown';
 
@@ -15,14 +17,19 @@ import { ReDrag } from './ReDrag';
 
 export const IconHolder = memo(function IconHolder({
     chosenColor,
+    lastDroppedDot, onDropDot,
     lastDroppedIcon, onDrop,
     lastDroppedSlashUp, onDropSlashUp,
     lastDroppedSlashDown, onDropSlashDown,
-    onReset
+    onReset, onResetDot, onResetUp, onResetDown
 }) {
 
-    let show = false
     let warning = false
+
+
+    // let show = false
+    const [show, setShow] = useState(false);
+
 
     const [upActive, setUpActive] = useState(false);
     const [downActive, setDownActive] = useState(false);
@@ -40,8 +47,8 @@ export const IconHolder = memo(function IconHolder({
     const isActive = isOver && canDrop;
     let styleDropping = {};
     let styleArea = {};
-    let styleHolder = {};
-    let styleSlash = {};
+    // let styleHolder = {};
+    // let styleSlash = {};
     if (isActive) {
         styleDropping = {
             backgroundColor: "rgba(75, 181, 67, 1)",
@@ -49,12 +56,12 @@ export const IconHolder = memo(function IconHolder({
             animation: "spin 7s linear infinite"
         };
         styleArea = {
-            transform: "scale(1.25,1.25)",
+            transform: "scale(1.4,1.4)",
             zIndex: "3",
         };
-        styleSlash = {
-            display: "none",
-        };
+        // styleSlash = {
+        //     display: "none",
+        // };
         warning = true;
     }
     else if (canDrop) {
@@ -73,15 +80,52 @@ export const IconHolder = memo(function IconHolder({
             isOverToShow: monitor.isOver(),
         }),
     });
-    if (isOverToShow) {
-        show = true;
-        styleHolder = {
-            display: "block",
-        };
-        styleSlash = {
-            display: "none",
-        };
+    // if (isOverToShow) {
+    //     styleHolder = {
+    //         // display: "block",
+    //     };
+    //     styleSlash = {
+    //         // display: "none",
+    //     };
+    //     // show=true
+    // }
+
+    useEffect(() => {
+        if (isOverToShow) {
+            const slashTimeout = setTimeout(() => {
+                setShow(true)
+            }, 400);
+            return () => clearTimeout(slashTimeout);
+        }
+    }, [isOverToShow]);
+
+
+    useEffect(() => {
+        setShow(false)
+    }, [isOverToShow]);
+
+
+    let showNow = false
+    if (isOverToShow && (lastDroppedSlashDown || lastDroppedSlashUp)){
+        showNow = true
     }
+
+    
+    const [showHolder, setShowHolder] = useState(false);
+
+    useEffect(() => {
+        if (isActive) {
+            const holderTimeout = setTimeout(() => {
+                setShowHolder(true)
+            }, 200);
+            return () => clearTimeout(holderTimeout);
+        }
+    }, [isActive]);
+
+    useEffect(() => {
+        setShowHolder(false)
+    }, [isActive]);
+
 
 
 
@@ -92,31 +136,31 @@ export const IconHolder = memo(function IconHolder({
 
 
     return (
-        <div ref={over}>
+        <div ref={over} style={{ height: "100%" }}>
+            <StatusIconHolder lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} />
             <div ref={drop} className="icon_area" style={styleArea} >
                 <div className="icon_area_dropping" style={styleDropping} />
                 {(lastDroppedIcon) &&
-                    // (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
-                    // style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />)
-
-
-                    <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset}/>
-
-
+                    <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} />
                 }
-                {!lastDroppedIcon &&
+                {(!lastDroppedIcon && (show || showHolder)) &&
                     (<img src={Holder} alt="holder" className="holder"
-                        style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
+                        // style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
+                        style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
                     />)}
-                {(lastDroppedSlashUp || lastDroppedSlashDown) &&
+                {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                     (<img src={Slash} alt="slash" className="slash"
-                        style={chosenColor.iconColor === "white" ? { ...styleSlash, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleSlash, filter: "grayscale(100%) brightness(0)" }}
+                        // style={chosenColor.iconColor === "white" ? { ...styleSlash, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleSlash, filter: "grayscale(100%) brightness(0)" }}
+                        style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
                     />)}
-                {(lastDroppedIcon && (upActive || downActive)) &&
+                {(lastDroppedIcon && (upActive || downActive || isActive)) &&
                     (<img src={Remove} alt="remove" className="remove" />)}
             </div>
-            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} show={show} warning={warning} />
-            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} show={show} warning={warning} />
+            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} 
+            show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} />
+
+            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} 
+            show={show} showNow={showNow}  warning={warning} onResetDown={onResetDown} />
         </div>
     );
 });

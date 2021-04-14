@@ -3,17 +3,18 @@ import { useDrop } from 'react-dnd';
 import "./PanelPreview.scss"
 import Dot from "../../assets/preview/dot.svg"
 
+import Remove from "../../assets/preview/remove.svg"
+import { ReDragDot } from './ReDragDot';
 
 
-// const sc = 5;
 
 
 
-export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot, onDrop, chosenColor }) {
+export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot, onDropDot, chosenColor, onResetDot }) {
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
-        drop: onDrop,
+        drop: onDropDot,
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
@@ -31,8 +32,7 @@ export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot,
 
         };
         styleArea = {
-            transform: "scale(1.6,1.6)",
-            // zIndex: "2",
+            transform: "scale(1.8,1.8)",
             zIndex: "3",
         }
     }
@@ -47,10 +47,12 @@ export const StatusIconHolder = memo(function StatusIconHolder({ lastDroppedDot,
     return (<div ref={drop} className="status_area" style={styleArea}>
         <div className="status_area_dropping" style={styleDropping} />
         {lastDroppedDot
-            ? (<img src={lastDroppedDot.image.default} alt="ICON" className="status_icon"
-                style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />)
+            ? <ReDragDot image={lastDroppedDot.image} chosenColor={chosenColor} onResetDot={onResetDot} />
             : (<img src={Dot} alt="dot" className="dot"
                 style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />)}
+
+        {(lastDroppedDot && isActive) &&
+            (<img src={Remove} alt="remove" className="dot_remove" />)}
     </div>);
 });
 
