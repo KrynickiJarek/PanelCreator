@@ -5,20 +5,21 @@ import "./IconEditor.scss"
 
 export const IconToDrag = memo(function IconToDrag({ image }) {
 
-    const [{ opacity, boxShadow }, drag] = useDrag(() => ({
+    const [{ opacity, border }, drag] = useDrag(() => ({
         type: "icon",
         item: { image },
         collect: (monitor) => ({
-            opacity: monitor.isDragging() && 0.8,
-            boxShadow: !!monitor.isDragging() && "inset 0px 0px 10px 5px rgba(24, 144, 255 ,0.5)",
+            opacity: monitor.isDragging() && 0.7,
+            border: !!monitor.isDragging() && "3px solid rgb(236, 105, 92)",
         }),
     }), [image]);
 
     return (
         <>
-            <div className="icon_box" style={{ opacity, boxShadow }}>
+            <div className="icon_box" style={{ border }}>
                 <div ref={drag} className="icon_drag">
-                    <img src={image.default} alt="info" className="icon" width="40pt" height="40pt" />
+                    <img src={image.default} alt="info" className="icon" width="40pt" height="40pt"
+                        style={{ opacity }} />
                 </div>
             </div>
         </>

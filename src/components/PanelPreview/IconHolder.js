@@ -25,9 +25,6 @@ export const IconHolder = memo(function IconHolder({
 }) {
 
     let warning = false
-
-
-    // let show = false
     const [show, setShow] = useState(false);
 
 
@@ -46,31 +43,39 @@ export const IconHolder = memo(function IconHolder({
 
     const isActive = isOver && canDrop;
     let styleDropping = {};
+    let styleDroppingPulse = {};
     let styleArea = {};
-    // let styleHolder = {};
-    // let styleSlash = {};
     if (isActive) {
-        styleDropping = {
-            backgroundColor: "rgba(75, 181, 67, 1)",
-            border: "2px dotted rgba(75, 181, 67, 1)",
-            animation: "spin 7s linear infinite"
+        if (chosenColor.hex !== "#2fa32c") {
+            styleDropping = {
+                backgroundColor: "rgb(40, 167, 69)",
+            };
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+            };
+        } else {
+            styleDropping = {
+                backgroundColor: "rgb( 32, 114, 30)",
+            };
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+            };
         };
         styleArea = {
-            transform: "scale(1.4,1.4)",
+            transform: "scale(1.3,1.3)",
             zIndex: "3",
         };
-        // styleSlash = {
-        //     display: "none",
-        // };
         warning = true;
     }
     else if (canDrop) {
         styleDropping = {
-            backgroundColor: "rgba(240, 213, 0, 1)",
-            border: "2px dotted rgba(240, 213, 0, 1)",
-            animation: "spin 7s linear infinite"
+            backgroundColor: "rgb(255, 193, 7)",
         };
-
+        styleDroppingPulse = {
+            animation: "Ani 2s infinite",
+        };
     }
 
     const [{ isOverToShow }, over] = useDrop({
@@ -80,15 +85,6 @@ export const IconHolder = memo(function IconHolder({
             isOverToShow: monitor.isOver(),
         }),
     });
-    // if (isOverToShow) {
-    //     styleHolder = {
-    //         // display: "block",
-    //     };
-    //     styleSlash = {
-    //         // display: "none",
-    //     };
-    //     // show=true
-    // }
 
     useEffect(() => {
         if (isOverToShow) {
@@ -106,11 +102,11 @@ export const IconHolder = memo(function IconHolder({
 
 
     let showNow = false
-    if (isOverToShow && (lastDroppedSlashDown || lastDroppedSlashUp)){
+    if (isOverToShow && (lastDroppedSlashDown || lastDroppedSlashUp)) {
         showNow = true
     }
 
-    
+
     const [showHolder, setShowHolder] = useState(false);
 
     useEffect(() => {
@@ -127,107 +123,42 @@ export const IconHolder = memo(function IconHolder({
     }, [isActive]);
 
 
-
-
-
     const handleUp = (income) => { //dwa sposoby przekazania zdarzenia przy up i down
         setUpActive(income)
     }
 
 
+
+
+
     return (
         <div ref={over} style={{ height: "100%" }}>
-            <StatusIconHolder lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} />
+            <StatusIconHolder lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} />
             <div ref={drop} className="icon_area" style={styleArea} >
+                <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
                 <div className="icon_area_dropping" style={styleDropping} />
+
                 {(lastDroppedIcon) &&
                     <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} />
                 }
                 {(!lastDroppedIcon && (show || showHolder)) &&
                     (<img src={Holder} alt="holder" className="holder"
-                        // style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
                         style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
                     />)}
                 {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                     (<img src={Slash} alt="slash" className="slash"
-                        // style={chosenColor.iconColor === "white" ? { ...styleSlash, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleSlash, filter: "grayscale(100%) brightness(0)" }}
                         style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
                     />)}
                 {(lastDroppedIcon && (upActive || downActive || isActive)) &&
                     (<img src={Remove} alt="remove" className="remove" />)}
             </div>
-            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp} 
-            show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} />
+            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp}
+                show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} />
 
-            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)} 
-            show={show} showNow={showNow}  warning={warning} onResetDown={onResetDown} />
+            <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
+                show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} />
         </div>
     );
 });
-
-
-
-
-
-// import { memo } from 'react';
-// import { useDrop } from 'react-dnd';
-
-// // const sc = 5;
-
-// // const style = {
-// // width: sc * 7.5 + "px",
-// // height: sc * 7.5 + "px",
-// // border: "1px dotted white",
-// // margin: "0 auto"
-// // };
-
-// export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, chosenColor, onCanDrop }) {
-// // export const IconHolder = memo(function IconHolder({ lastDroppedIcon, onDrop, chosenColor}) {
-
-//     const [{ isOver, canDrop }, drop] = useDrop({
-//         accept: "icon",
-//         drop: onDrop,
-//         collect: (monitor) => ({
-//             isOver: monitor.isOver(),
-//             canDrop: monitor.canDrop(),
-//         }),
-//     });
-
-//     const isActive = isOver && canDrop;
-//     let styleDropping = {};
-//     let styleArea = {};
-//     if (isActive) {
-//         styleDropping = {
-//             // backgroundColor: "#4BB543",
-//             backgroundColor: "rgba(75, 181, 67, 1)",
-//             border: "2px dotted rgba(75, 181, 67, 1)",
-//             zIndex: "2"
-//         };
-//         styleArea = {
-//             // transform: "scale(1.4,1.4)",
-//             transform: "scale(1.2,1.2)",
-//             zIndex: "1",
-//         }
-//         onCanDrop(true);
-//     }
-//     else if (canDrop) {
-//         styleDropping = {
-//             // backgroundColor: "#F0D500",
-//             backgroundColor: "rgba(240, 213, 0, 1)",
-//             border: "2px dotted rgba(240, 213, 0, 1)",
-//         };
-//     }
-
-
-//     return (<div ref={drop} className="icon_area" style={styleArea} >
-//     {/* return (<div ref={drop} className="icon_area" style={styleArea} > */}
-//         <div className="icon_area_dropping" style={styleDropping} />
-//         {lastDroppedIcon &&
-//             (<img src={lastDroppedIcon.image.default} alt="ICON" className="icon"
-//                 style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
-//             />)}
-//     </div>);
-// });
-
 
 

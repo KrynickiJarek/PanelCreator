@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 
 
@@ -13,9 +13,11 @@ export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp }
     }), [image]);
 
 
-    if (isDragging) {
+    useEffect(() => {
+        if (isDragging) {
         onResetUp(image)
-    }
+        } 
+    }, [isDragging, onResetUp, image]);
 
     return (
             < img ref={drag} src={image.default} alt="ICON" className="slash_icon"

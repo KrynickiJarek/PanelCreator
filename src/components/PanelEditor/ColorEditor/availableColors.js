@@ -3,29 +3,29 @@
     {
         RAL: "9005",
         name: "Czarny",
-        hex: "#060707",
+        hex: "#0A0A0A",
         iconColor: "white"
     },
     {
         RAL: "9003",
         name: "Extra biały",
-        hex: "#f3f5f5",
+        hex: "#F4F4F4",
         iconColor: "black"
     },
     {
         RAL: "1013",
         name: "Perłowo biały",
-        hex: "#e8e0ce",
+        hex: "#EAE6CA",
         iconColor: "black"
     },
     {
         RAL: "1014",
         name: "Kość słoniowa",
-        hex: "#ddc8a3",
+        hex: "#E1CC4F",
         iconColor: "black"
     },
     {
-        RAL: "1236",
+        RAL: "1236!!!",
         name: "Jasno brązowy",
         hex: "#9c7e61",
         iconColor: "black"
@@ -33,23 +33,23 @@
     {
         RAL: "9006",
         name: "Srebrny",
-        hex: "#a6abb5",
+        hex: "#A5A5A5",
         iconColor: "black"
     },
     {
         RAL: "7045",
         name: "Popielaty",
-        hex: "#8f949e",
+        hex: "#909090",
         iconColor: "black"
     },
     {
-        RAL: "1603",
+        RAL: "1603!!!",
         name: "Pastelowy niebieski",
         hex: "#d2e7ea",
         iconColor: "black"
     },
     {
-        RAL: "1435",
+        RAL: "1435!!!",
         name: "Niebieski metal",
         hex: "#8da1b3",
         iconColor: "black"
@@ -57,24 +57,24 @@
     {
         RAL: "7035",
         name: "Jasny szary",
-        hex: "#d4d9db",
+        hex: "#D7D7D7",
         iconColor: "black"
     },
     ,
     {
-        RAL: "7012",
+        RAL: "7012!!!",
         name: "Bazaltowy szary",
-        hex: "#4a5459",
+        hex: "#4E5754",
         iconColor: "white"
     },
     {
-        RAL: "1586",
+        RAL: "1586!!!",
         name: "Lśniący czerwony",
         hex: "#b10523",
         iconColor: "white"
     },
     {
-        RAL: "0627",
+        RAL: "0627!!!",
         name: "Brunatny",
         hex: "#9d908f",
         iconColor: "black"
@@ -82,30 +82,30 @@
     {
         RAL: "8017",
         name: "Brązowo czekoladowy",
-        hex: "#2e1c1c",
+        hex: "#45322E",
         iconColor: "white"
     },
     {
         RAL: "4007",
         name: "Fioletowy",
-        hex: "#380a2e",
+        hex: "#4A192C",
         iconColor: "white"
     },
     ,
     {
         RAL: "4006",
         name: "Fuksja",
-        hex: "#910f66",
+        hex: "#A03472",
         iconColor: "white"
     },
     {
         RAL: "5002",
         name: "Błękit marynowy",
-        hex: "#000f75",
+        hex: "#20214F",
         iconColor: "white"
     },
     {
-        RAL: "1164",
+        RAL: "1164!!!",
         name: "Lśniący zielony",
         hex: "#2fa32c",
         iconColor: "white"
@@ -113,13 +113,13 @@
     {
         RAL: "2001",
         name: "Czerwono pomarańczowy",
-        hex: "#b84920",
+        hex: "#C93C20",
         iconColor: "white"
     },
     {
         RAL: "7021",
         name: "Antracytowy",
-        hex: "#1a2129",
+        hex: "#23282B",
         iconColor: "white"
     }
 ];

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo , useEffect} from 'react';
 import { useDrag } from 'react-dnd';
 
 
@@ -12,11 +12,12 @@ export const ReDragDot = memo(function ReDragDot({ image, chosenColor, onResetDo
         }),
     }), [image]);
 
-
-    if (isDragging) {
-        onResetDot(image)
-    }
-
+    useEffect(() => {
+        if (isDragging) {
+            onResetDot(image)
+        } 
+        
+    }, [isDragging, onResetDot, image]);
     return (
             < img ref={drag} src={image.default} alt="ICON" className="status_icon"
                 style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />

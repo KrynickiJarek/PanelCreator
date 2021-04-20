@@ -1,14 +1,18 @@
 import React from 'react';
 import "./CreatorHeader.scss"
 
-import AmpioLogo from "../../assets/ampio_logo.png"
+import AmpioLogo from "../../assets/ampio_logo.svg"
 
 const CreatorHeader = () => {
     return (
         <div className="header_container">
-            <img src={AmpioLogo} alt="Ampio logo" className="ampio_logo"/>
-            <h1>Kreator Paneli</h1>
-        </div>
+            <div className="nav_container">
+                <a href="https://ampio.pl/" className="nav_brand">
+                    <img src={AmpioLogo} alt="Ampio logo" className="nav_logo" />
+                </a>
+                <h1 className="nav_header">KREATOR PANELI</h1>
+            </div>
+        </div >
     );
 };
 

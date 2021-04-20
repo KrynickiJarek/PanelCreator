@@ -8,7 +8,6 @@ import update from 'immutability-helper';
 export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
 
     const sc = 5;
-    // const sc = 7;
 
     const chosenModelStyle = {};
     chosenModelStyle.backgroundColor = chosenColor.hex;
@@ -21,14 +20,23 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     contentStyle.margin = `${chosenModel.marginTopBotton * sc}px ${chosenModel.marginLeftRight * sc}px`
 
     const [iconHolders, setIconHolders] = useState([])
+    const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
+    const [hideAll, setHideAll] = useState(true)
 
     useEffect(() => {
         const tempArr = [];
-        chosenModel.dotLocation.forEach(element => {
-            tempArr.push({ flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null})
-        });
-        setIconHolders(tempArr);
+        setHideAll(false)
+        const modelimeout = setTimeout(() => {
+            setHideAll(true)
+            chosenModel.dotLocation.forEach(element => {
+                tempArr.push({ flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null })
+            });
+            setIconHolders(tempArr);
+            chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
+        }, 300);
+        return () => clearTimeout(modelimeout);
     }, [chosenModel]);
+
 
 
     const handleDropDot = useCallback((index, item) => {
@@ -49,7 +57,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 }
             },
         }));
-    }, [ iconHolders]);
+    }, [iconHolders]);
 
     const handleDropIcon = useCallback((index, item) => {
         setIconHolders(update(iconHolders, {
@@ -65,7 +73,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 },
             },
         }));
-    }, [ iconHolders]);
+    }, [iconHolders]);
 
 
     const handleReset = useCallback((index, item) => {
@@ -76,7 +84,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 }
             },
         }));
-    }, [ iconHolders]);
+    }, [iconHolders]);
 
 
 
@@ -101,7 +109,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 }
             },
         }));
-    }, [ iconHolders]);
+    }, [iconHolders]);
 
 
     const handleDropSlashDown = useCallback((index, item) => {
@@ -125,7 +133,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 }
             },
         }));
-    }, [ iconHolders]);
+    }, [iconHolders]);
 
 
 
@@ -134,32 +142,34 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         <>
             <div className="preview_container">
                 <h2>Podgląd panelu</h2>
-                <div className="panel_box"
-                    style={chosenModelStyle}>
-                    <div className="panel_content" style={contentStyle}>
-                        {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown }, index) =>
-                            <div key={index}
-                                className={(iconHolders.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
-                                {flag === 1 &&
-                                    <>
-                                        <IconHolder
-                                            chosenColor={chosenColor}
-                                            lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
-                                            lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
-                                            lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
-                                            lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
-                                            onReset={(item) => handleReset(index, item)}
-                                            onResetDot={(item) => handleResetDot(index, item)}
-                                            onResetUp={(item) => handleResetUp(index, item)}
-                                            onResetDown={(item) => handleResetDown(index, item)}
-                                        />
-                                    </>}
+                <div className="panel_box" style={chosenModelStyle}>
+                    {hideAll &&
+                        <>
+                            <div className="panel_content" style={contentStyle}>
+                                {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown }, index) =>
+                                    <div key={index}
+                                        className={(iconHolders.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
+                                        {flag === 1 &&
+                                            <>
+                                                <IconHolder
+                                                    chosenColor={chosenColor}
+                                                    lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
+                                                    lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
+                                                    lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
+                                                    lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
+                                                    onReset={(item) => handleReset(index, item)}
+                                                    onResetDot={(item) => handleResetDot(index, item)}
+                                                    onResetUp={(item) => handleResetUp(index, item)}
+                                                    onResetDown={(item) => handleResetDown(index, item)}
+                                                />
+                                            </>}
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                    {chosenModel.lcdScreen && <div className="lcd" style={{ borderColor: chosenColor.iconColor }} />}
+                            {lcdShow && <div className="lcd" style={{ borderColor: chosenColor.iconColor }} />}
+                        </>
+                    }
                 </div>
-
                 <div className="panel_info" style={{ width: parseInt(chosenModel.width) * sc }}>
                     <span>{chosenModel.type}</span>
                     <span>RAL: {chosenColor.RAL}</span>

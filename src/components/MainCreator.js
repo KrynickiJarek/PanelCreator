@@ -1,4 +1,4 @@
-import { useState , memo } from 'react';
+import { useState, memo } from 'react';
 
 import "./MainCreator.scss"
 
@@ -12,7 +12,7 @@ import PanelPreview from "../components/PanelPreview/PanelPreview"
 import availablePanels from "./PanelEditor/PanelChooser/availablePanels"
 import availableColors from "./PanelEditor/ColorEditor/availableColors"
 
-export const MainCreator = memo(function MainCreator() {  
+export const MainCreator = memo(function MainCreator() {
 
     const [chosenColor, setChosenColor] = useState(availableColors[0])
     const [chosenModel, setChosenModel] = useState(availablePanels[0])
@@ -31,10 +31,10 @@ export const MainCreator = memo(function MainCreator() {
 
         <DndProvider backend={HTML5Backend}>
             <div className="main_container">
-                <CreatorHeader />
+                    <CreatorHeader />
                 <div className="content_container">
                     <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} />
-                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} />
+                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor}  chosenColor={chosenColor} chosenModel={chosenModel} />
                 </div>
             </div>
         </DndProvider>

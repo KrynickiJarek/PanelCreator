@@ -1,28 +1,94 @@
-.color_table {
+.color_container{
+    display: flex;
+    flex-direction: column;
+    padding: 55px 55px 0 55px;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    background-color: white;
+    position: absolute;
+
+    
+    .color_header{
+        font-size: 24px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        color: #333333;  
+        align-self: flex-start;
+        position: relative;
+        margin-left: 10px;
+        margin-bottom: 15px;
+    }
+
+    .color_header::before{
+        content: "";
+        position: absolute;
+        top: -24px;
+        width: 30px;
+        height: 8px;
+        background-color: rgb(236, 105, 92);
+    }
+
+    .color_content {
     width: 100%;
     display: flex;
     flex-direction: row;
-
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
 
-
-    .color_link{
-        width: 20%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .color_box{
-            width: 100px;
-            height: 100px;
-            border: 1px solid black;
+        .color_link{
+            width: 130px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 10px;
+            border: 3px solid transparent;
+            transition: 300ms ease;
             cursor: pointer;
+            border-radius: 15px;
 
-        }
-        .color_name{
-            font-size: 1rem;
 
+
+            .color_box{
+                width: 75px;
+                height: 75px;
+                box-shadow: rgba(99, 99, 99, 0.9) 0px 2px 8px 0px;
+                border-radius: 50%;
+                margin: 10px;
+            }
+
+
+            .color_name{
+                font-family: 'Montserrat', sans-serif;
+                font-size: 16px;
+                line-height: 18px;
+                font-weight: 400;
+                margin: 0 10px;
+
+
+            }
+            .color_ral{
+                font-family: 'Montserrat', sans-serif;
+                font-size: 12px;
+                line-height: 16px;
+                margin-bottom: 0;
+            }
         }
-    }
+
+        .color_link:hover{
+            border: 3px solid #EC695C;
+            border-radius: 15px;
+        }
+    }   
 }
+    .color_container::-webkit-scrollbar {
+        width: 12px;
+    }
+   .color_container::-webkit-scrollbar-thumb {
+        background: #ECECEC;
+        background: rgb(217,217,217);
+        border-radius: 10px;
+
+    }

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 
 
@@ -14,9 +14,11 @@ export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onReset
 
 
     
-    if (isDragging) {
+    useEffect(() => {
+        if (isDragging) {
         onResetDown(image)
-    }
+        } 
+    }, [isDragging, onResetDown, image]);
 
 
 

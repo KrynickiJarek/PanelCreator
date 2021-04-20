@@ -4,15 +4,15 @@ import availablePanels from "./availablePanels"
 import { Select } from "antd"
 
 
-const PanelChooser = ({ onModelSet }) => {
+const PanelChooser = ({ onModelSet, chosenModel}) => {
 
     const { Option } = Select;
 
-    const [chosenPanel, setChosenPanel] = useState(availablePanels[0])
+    const [model, setModel] = useState(chosenModel)
 
     const handlePanelChange = (value) => {
         onModelSet(availablePanels.find(panel => panel.type === value));
-        setChosenPanel(availablePanels.find(panel => panel.type === value))
+        setModel(availablePanels.find(panel => panel.type === value))
     };
 
 
@@ -20,7 +20,7 @@ const PanelChooser = ({ onModelSet }) => {
         <div className="panelChooser_container">
             <form className="panel_form">
                 <label>Wybierz model:</label>
-                <Select defaultValue={availablePanels[0].type} style={{ width: 150 }}  value={availablePanels.type}  onChange={handlePanelChange}>
+                <Select defaultValue={model.type} style={{ width: 150 }} value={availablePanels.type} onChange={handlePanelChange}>
                     {availablePanels.map((panel) => <Option key={panel.type}>{panel.type}</Option>)}
                 </Select>
 
@@ -29,11 +29,11 @@ const PanelChooser = ({ onModelSet }) => {
             </form>
 
             <ul className="panel_list">
-                <li>Nazwa panelu: <span>{chosenPanel.type}</span></li>
-                <li>Liczba ikon: <span>{chosenPanel.numberOfDots}</span></li>
-                <li>Wysokość: <span>{chosenPanel.height}</span></li>
-                <li>Szerokość: <span>{chosenPanel.width}</span></li>
-                <li>Wyświetlacz LCD: <span>{(chosenPanel.lcdScreen === true) ? "tak" : "nie"}</span></li>
+                <li>Nazwa panelu: <span>{model.type}</span></li>
+                <li>Liczba ikon: <span>{model.numberOfDots}</span></li>
+                <li>Wysokość: <span>{model.height}</span></li>
+                <li>Szerokość: <span>{model.width}</span></li>
+                <li>Wyświetlacz LCD: <span>{(model.lcdScreen === true) ? "tak" : "nie"}</span></li>
             </ul>
         </div>
     );

@@ -1,19 +1,25 @@
 @use "sass:math";
-// $sc: 7;
 $sc: 5;
 
 .preview_container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   height: 100%;
-  width: 40%;
+  width: 30%;
+  // flex-grow: 1;
+  background-color: #ECECEC;
 
   .panel_box{
     display: flex;
     box-sizing: border-box;
     position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transition: 400ms ease;
+    // transform: scale(2,2);
+    
+
 
     .panel_content{
       display: flex;
@@ -25,8 +31,10 @@ $sc: 5;
       position: relative;
 
       .status_area{
-        width: round(2.5px * $sc); //oryginalne
-        height: round(2.5px * $sc);
+        // width: round(2.5px * $sc); //oryginalne
+        // height: round(2.5px * $sc);     
+        width: 13px;
+        height: 13px;
         margin: round(1.65px * $sc) auto round(2.5px * $sc); 
         display: flex;
         justify-content: center;
@@ -37,20 +45,31 @@ $sc: 5;
 
         .status_area_dropping{
           position: absolute;
-          width: 225%;
-          height: 225%;
+          width: 150%;
+          height: 150%;
           border-radius: 50%;
-          padding: 1px;
           background-clip: content-box;
-          border: 2px dotted rgba(0,0,0,0);
-          transition: background-color 0.5s, border-color 0.5s;
-
+          transition: background-color 0.5s ease;
+          // background-color: rgba(0,255,0,0.2);
 
         }
 
+        .status_area_dropping_pulse{
+          // width: 23.4px;
+          // height: 23.4px;
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          display: block;
+          position: absolute;
+          // background-color: rgba(255,0,0,0.1);
+      }
+
       .dot{ 
-        width: round(1.25px * $sc); 
-        height: round(1.25px * $sc); 
+        // width: round(1.25px * $sc); 
+        // height: round(1.25px * $sc); 
+        width: 6px; 
+        height: 6px; 
         transition: 0.3s;
         z-index: 4;
         }
@@ -75,8 +94,10 @@ $sc: 5;
       }
       
       .icon_area{
-        width: round(7.5px * $sc);
-        height: round(7.5px * $sc);
+        // width: round(7.5px * $sc);
+        // height: round(7.5px * $sc);
+        width: 38px;//-----------------------------------
+        height: 38px;
         margin: 0 auto;
         display: flex;
         justify-content: center;
@@ -87,19 +108,27 @@ $sc: 5;
 
         .icon_area_dropping{
           position: absolute;
-          width: 140%;
-          height: 140%;
+          width: 150%;
+          height: 150%;
           border-radius: 50%;
-          padding: 1px;
           background-clip: content-box;
-          border: 2px dotted rgba(0,0,0,0);
-          transition: background-color 0.5s, border-color 0.5s;
+          transition: background-color 0.5s ease;
+
+          
+              // background-color: rgba(255,0,0,0.2);
         }
 
-
-      // .icon_drag {
-      //   width: round(7.5px * $sc); 
-      //   height: round(7.5px * $sc); 
+        .icon_area_dropping_pulse{
+          width: 65px;
+          height: 65px;
+          border-radius: 50%;
+          display: block;
+          position: absolute;
+          // top:-2px;
+          // left:-2px;
+          // animation: Ani 2s infinite;
+          // background-color: rgba(0,255,255,0.2);
+      }
 
         .icon{ 
         width: round(7.5px * $sc); 
@@ -111,56 +140,61 @@ $sc: 5;
         cursor: move;
         }
 
-      //   .icon:hover{
-      //     filter: invert(49%) sepia(48%) saturate(4810%) hue-rotate(190deg) brightness(101%) contrast(101%);
-      // }
-      // }
-      
         .slash{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
-        transition: 0.3s;
+          // transition: 0.3s;
           z-index: 4;
         }
 
         .holder{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
-          // display: none;
-          transition: 0.3s;
+          // transition: 0.3s;
           z-index: 4;
         }
         .remove{
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc);
           position: absolute;
-          transition: 0.3s;
-         z-index: 4;
+          // transition: 0.3s;
+          z-index: 4;
         }
       }
 
         .slash_up_area, .slash_down_area{ 
         // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
         // height: round(3.75px * $sc); 
-        width: round(3.5px * $sc); 
-        height: round(3.5px * $sc); 
+        // width: round(3.5px * $sc); 
+        // height: round(3.5px * $sc); 
+        width: 18px; 
+        height: 18px; 
         position: absolute;
         display: flex;
         justify-content: center;
         align-items: center;
         transition: 0.3s;  
         z-index: 2;
-        // background-color: rgba(0,222,0,0.2);
 
         .slash_icon_area_dropping{
           position: absolute;
-          width: 180%;
-          height: 180%;
+          width: 150%;
+          height: 150%;
           border-radius: 50%;
-          padding: 1px;
           background-clip: content-box;
-          border: 2px dotted rgba(0,0,0,0);
-          transition: background-color 0.5s, border-color 0.5s;
+          transition: background-color 0.5s ease;
+
+          // background-color: rgba(255,0,0,0.2);
+
+        }
+
+        .slash_icon_area_dropping_pulse{
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          display: block;
+          position: absolute;
+          // background-color: rgba(0,255,255,0.2);
         }
         
         .slash_icon{
@@ -171,8 +205,6 @@ $sc: 5;
           transition: 0.3s;
           z-index: 4;
           cursor: move;
-
-
           width: round(7.5px * $sc); 
           height: round(7.5px * $sc); 
           transform: scale(0.466,0.466);
@@ -244,251 +276,58 @@ $sc: 5;
   }
 }
 
+// @keyframes pulse {
+// 	0% {
+// 		transform: scale(0.95);
+// 		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+// 	}
 
+// 	70% {
+// 		transform: scale(1);
+// 		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+// 	}
 
-// @use "sass:math";
-// // $sc: 7;
-// $sc: 5;
-
-// .preview_container {
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: flex-start;
-//   align-items: center;
-//   height: 100%;
-//   width: 40%;
-
-//   .panel_box{
-//     display: flex;
-//     box-sizing: border-box;
-//     position: relative;
-
-//     .panel_content{
-//       display: flex;
-//       flex-wrap: wrap;
-
-//       .cell{
-//       width: 22.4px * $sc;
-//       height: 24px * $sc;
-//       position: relative;
-
-//       .status_area{
-//         width: round(2.5px * $sc); 
-//         height: round(2.5px * $sc);
-//         margin: round(1.65px * $sc) auto round(2.5px * $sc); 
-//         display: flex;
-//         justify-content: center;
-//         align-items: center;
-//         position: relative;
-//         transition: 0.3s; 
-//         z-index: 2;
-
-//         .status_area_dropping{
-//           position: absolute;
-//           width: 225%;
-//           height: 225%;
-//           border-radius: 50%;
-//           padding: 1px;
-//           background-clip: content-box;
-//           border: 2px dotted rgba(0,0,0,0);
-//           transition: background-color 0.5s, border-color 0.5s;
-//         }
-
-//       .dot{ 
-//         width: round(1.25px * $sc); 
-//         height: round(1.25px * $sc); 
-//         transition: 0.3s;
-//         z-index: 4;
-//         }
-
-//         .status_icon{
-//         // width: round(2.5px * $sc); //oryginalny rozmiar
-//         // height: round(2.5px * $sc); 
-//         transition: 0.3s;
-//         z-index: 4;
-//         width: round(7.5px * $sc); 
-//         height: round(7.5px * $sc); 
-//         transform: scale(0.333,0.333);
-//         cursor: move;
-//       }
-
-//       .dot_remove{
-//         width: round(2.5px * $sc); 
-//         height: round(2.5px * $sc); 
-//         position: absolute;
-//         z-index: 4;
-//       }
-//       }
-      
-//       .icon_area{
-//         width: round(7.5px * $sc);
-//         height: round(7.5px * $sc);
-//         margin: 0 auto;
-//         display: flex;
-//         justify-content: center;
-//         align-items: center;
-//         position: relative;
-//         transition: 0.3s;
-//         z-index: 2;
-
-//         .icon_area_dropping{
-//           position: absolute;
-//           width: 140%;
-//           height: 140%;
-//           border-radius: 50%;
-//           padding: 1px;
-//           background-clip: content-box;
-//           border: 2px dotted rgba(0,0,0,0);
-//           transition: background-color 0.5s, border-color 0.5s;
-//         }
-
-
-//       // .icon_drag {
-//       //   width: round(7.5px * $sc); 
-//       //   height: round(7.5px * $sc); 
-
-//         .icon{ 
-//         width: round(7.5px * $sc); 
-//         width: round(7.5px * $sc); 
-//         height: round(7.5px * $sc); 
-//         height: round(7.5px * $sc); 
-//         transition: 0.3s;
-//         z-index: 4;
-//         cursor: move;
-//         }
-
-//       //   .icon:hover{
-//       //     filter: invert(49%) sepia(48%) saturate(4810%) hue-rotate(190deg) brightness(101%) contrast(101%);
-//       // }
-//       // }
-      
-
-
-
-//         .slash{
-//           width: round(7.5px * $sc); 
-//           height: round(7.5px * $sc); 
-//           z-index: 4;
-//         }
-
-//         .holder{
-//           width: round(7.5px * $sc); 
-//           height: round(7.5px * $sc); 
-//           display: none;
-//           z-index: 4;
-//         }
-//         .remove{
-//           width: round(7.5px * $sc); 
-//           height: round(7.5px * $sc);
-//           position: absolute;
-//          z-index: 4;
-//         }
-//       }
-
-//         .slash_up_area, .slash_down_area{ 
-//         // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
-//         // height: round(3.75px * $sc); 
-//         width: round(3.5px * $sc); 
-//         height: round(3.5px * $sc); 
-//         position: absolute;
-//         display: flex;
-//         justify-content: center;
-//         align-items: center;
-//         transition: 0.3s;  
-//         // transition-delay: 2s; //-------------------------------------------------------
-//         z-index: 2;
-
-//         .slash_icon_area_dropping{
-//           position: absolute;
-//           // width: 160%;
-//           // height: 160%;
-//           width: 180%;
-//           height: 180%;
-//           border-radius: 50%;
-//           padding: 1px;
-//           background-clip: content-box;
-//           border: 2px dotted rgba(0,0,0,0);
-//           transition: background-color 0.5s, border-color 0.5s;
-//         }
-        
-//         .slash_icon{
-//           // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
-//           // height: round(3.75px * $sc); 
-//           // width: round(3.5px * $sc); //oryginalny rozmiar
-//           // height: round(3.5px * $sc); 
-//           transition: 0.3s;
-//           z-index: 4;
-//           cursor: move;
-
-
-//           width: round(7.5px * $sc); 
-//           height: round(7.5px * $sc); 
-//           transform: scale(0.466,0.466);
-
-
-//         }
-//         .slash_holder{
-//           width: round(3.75px * $sc); 
-//           height: round(3.75px * $sc); 
-//           display: none;
-//           z-index: 4;
-//         }
-
-//         .slash_remove{
-//           width: round(3.75px * $sc); 
-//           height: round(3.75px * $sc); 
-//           position: absolute;
-//           z-index: 4;
-//         }
-//         }
-
-//         .slash_up_area{ 
-//           top: round(6.65px * $sc);
-//           right: 50%;
-//           transform: translateX(-(round(0.25px * $sc)));
-//        }
-
-//        .slash_down_area{ 
-//           top: round(10.75px * $sc);
-//           left: 50%;
-//           transform: translateX(round(0.25px * $sc));
-//        }
-//       }
-      
-      
-
-//     .cell:nth-child(3n+2){
-//       width: 25.6px * $sc;
-//     }
-
-//     .cell_dot9:nth-last-child(-n+3){
-//       height: 22.4px * $sc;
-//     }
-
-//     .cell_dot18:nth-last-child(-n+3){
-//       height: 20.8px * $sc;
-//     }
-//     }
-
-//     .lcd{
-//       height: 37px *$sc;
-//       width: 30px *$sc;
-//       border: 1px solid white;
-//       position: absolute;
-//       top: 25px * $sc;
-//       left: 30px *$sc;
-//     }
-//   }
-
-//   .panel_info{
-//     display: flex;
-//     justify-content: space-between;
-//   }
+// 	100% {
+// 		transform: scale(0.95);
+// 		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+// 	}
 // }
+@keyframes Ani{
+    0%{
+      transform:scale(0)
+    }
+    70%{
+      box-shadow:0 0 15px rgba(255, 193, 7,0.5);
+      border:1px solid rgba(255, 193, 7,0.5);
+      transform:scale(1)
+    }
+    100%{
+      box-shadow:0 0 30px rgba(255, 193, 7,0);
+      border:0 solid rgba(255, 193, 7,0);
+      transform:scale(1.2)
+    }
+  }
 
-// @keyframes spin { 
-//   100% { 
-//     transform: rotateZ(360deg);
-//   }
-// }
+
+  // @keyframes Ani{
+  //   0%{
+  //     box-shadow:0 0 0 rgba(255,255,255,0);
+  //     border:1px solid rgba(255,255,255,0);
+  //     transform:scale(0)
+  //   }
+
+  //   70%{
+  //     box-shadow:0 0 50px #fff;
+  //     border:1px solid #fff;
+  //     transform:scale(1)
+  //   }
+
+  //   100%{
+  //     box-shadow:0 0 60px rgba(255,255,255,0);
+  //     border:0 solid rgba(255,255,255,0);
+  //     transform:scale(1.5)
+  //   }
+  // }
+
+
 
