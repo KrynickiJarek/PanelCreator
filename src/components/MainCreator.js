@@ -9,13 +9,13 @@ import CreatorHeader from "../components/CreatorHeader/CreatorHeader"
 import PanelEditor from "../components/PanelEditor/PanelEditor"
 import PanelPreview from "../components/PanelPreview/PanelPreview"
 
-import availablePanels from "./PanelEditor/PanelChooser/availablePanels"
+import availableModels from "./PanelEditor/ModelChooser/availableModels"
 import availableColors from "./PanelEditor/ColorEditor/availableColors"
 
 export const MainCreator = memo(function MainCreator() {
 
     const [chosenColor, setChosenColor] = useState(availableColors[0])
-    const [chosenModel, setChosenModel] = useState(availablePanels[0])
+    const [chosenModel, setChosenModel] = useState(availableModels[0])
 
 
 
@@ -33,8 +33,8 @@ export const MainCreator = memo(function MainCreator() {
             <div className="main_container">
                     <CreatorHeader />
                 <div className="content_container">
-                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} />
                     <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor}  chosenColor={chosenColor} chosenModel={chosenModel} />
+                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} />
                 </div>
             </div>
         </DndProvider>

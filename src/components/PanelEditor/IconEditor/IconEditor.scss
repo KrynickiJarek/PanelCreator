@@ -32,6 +32,7 @@
 
     .icon_content {
     width: 100%;
+    height: 1800px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -41,6 +42,9 @@
         .icons{
             display: flex;
             flex-wrap: wrap;
+            // height: 100%;
+            //  height: 1800px;
+
 
         .icon_box {
                 height: 80px;

@@ -1,10 +1,18 @@
 import React from 'react';
+import "./FrameEditor.scss"
+
 
 const FrameEditor = () => {
     return (
         <>
-            <h1>FrameEditor </h1> 
-            {/* grid na z-index */}
+        <div className="frame_container">
+            <h2 className="frame_header">Wybierz ramki</h2>
+            <div className="frame_content">
+
+            <p>w przygotowaniu</p>
+
+            </div>
+        </div>
         </>
     );
 };

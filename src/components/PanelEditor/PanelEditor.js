@@ -7,7 +7,7 @@ import 'antd/dist/antd.css';
 // import { Tabs } from 'antd';
 
 
-import PanelChooser from './PanelChooser/PanelChooser';
+import ModelChooser from './ModelChooser/ModelChooser';
 import IconEditor from "./IconEditor/IconEditor"
 import TextEditor from "./TextEditor/TextEditor"
 import FrameEditor from "./FrameEditor/FrameEditor"
@@ -114,7 +114,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet , chosenColor, chosenMo
 
         </div>
         <div className="editor_box">
-          {modelShow && <PanelChooser onModelSet={onModelSet} chosenModel={chosenModel} />}
+          {modelShow && <ModelChooser onModelSet={onModelSet} chosenModel={chosenModel} />}
           {colorShow && <ColorEditor onColorSet={onColorSet} chosenColor={chosenColor}/>}
           {iconsShow && <IconEditor onIconSet={onIconSet} />}
           {textShow && <TextEditor />}

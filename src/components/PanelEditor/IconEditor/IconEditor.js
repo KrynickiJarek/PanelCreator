@@ -48,14 +48,16 @@
 //   root: {
 //     flexGrow: 1,
 //     display: "flex",
-//     height: 600
+//     height: 400
 //   },
 //   tabs: {
 //     borderRight: `1px solid ${theme.palette.divider}`
 //   }
 // }));
 
-// export default function IconEditor() {
+// // export default function IconEditor() {
+// export const IconEditor = memo(function IconEditor() {
+
 //   const classes = useStyles();
 //   const [value, setValue] = React.useState(0);
 
@@ -91,7 +93,7 @@
 //             <Tab label="Item Seven" {...a11yProps(6)} /> */}
 //           </Tabs>
 //           {iconCategories.map((el, i) => (
-//             <TabPanel value={el.name} index={i} key={i}>
+//             <TabPanel value={value} index={i} key={i}>
 //               <div className="icons">
 //                 {
 //                   el.listOfIcons.map(
@@ -108,7 +110,8 @@
 
 //   );
 // }
-
+// )
+// export default IconEditor;
 
 import React, { memo } from 'react';
 import { Tabs } from 'antd';
@@ -128,11 +131,12 @@ export const IconEditor = memo(function IconEditor() {
     <div className="icon_container">
       <h2 className="icon_header">Wybierz ikonę</h2>
       <div className="icon_content">
-        <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 700 }} tabBarGutter={-10} centered={false}
+        <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 1000 }} tabBarGutter={-10} centered={false}
+        // <Tabs defaultActiveKey="0" tabPosition="left"  tabBarGutter={-10} centered={false}
         // className="custom-tab">
         >
           {iconCategories.map((el, i) => (
-            <TabPane tab={el.name} key={i} className="custom-tab2">
+            <TabPane tab={el.name} key={i} >
               <div className="icons">
                 {
                   el.listOfIcons.map(
