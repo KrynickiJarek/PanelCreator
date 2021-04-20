@@ -38,14 +38,14 @@
 
 
 
-// import React from 'react';
+import React from 'react';
 
-// const TextEditor = () => {
-//     return (
-//         <>
-//         <h1>TextEditor</h1>
-//         </>
-//     );
-// };
+const TextEditor = () => {
+    return (
+        <>
+        <h1>TextEditor</h1>
+        </>
+    );
+};
 
-// export default TextEditor;
+export default TextEditor;
