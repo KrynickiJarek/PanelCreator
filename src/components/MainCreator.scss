@@ -44,7 +44,8 @@ body{
     height: 480px;
     display: block;
     position: absolute;
-    right: -450px;
+    // right: 450px;
+    left: -350px;
     bottom: -250px;
     z-index: -1;
     background-repeat: no-repeat;

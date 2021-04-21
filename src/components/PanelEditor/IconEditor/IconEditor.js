@@ -12,7 +12,7 @@
 
 
 // function TabPanel(props) {
-//   const { children, value, index, ...other } = props;
+//   const { children, value, index} = props;
 
 //   return (
 //     <div
@@ -20,10 +20,10 @@
 //       hidden={value !== index}
 //       id={`vertical-tabpanel-${index}`}
 //       aria-labelledby={`vertical-tab-${index}`}
-//       {...other}
 //     >
 //       {value === index && (
-//         <Box p={3}>
+//         // <Box p={8}>
+//         <Box >
 //           <Typography>{children}</Typography>
 //         </Box>
 //       )}
