@@ -9,6 +9,7 @@
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
     "antd": "^4.15.2",
+    "craco-less": "^1.17.1",
     "immutability-helper": "^3.1.1",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
@@ -21,9 +22,10 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
