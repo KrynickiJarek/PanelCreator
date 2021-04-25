@@ -1,13 +1,15 @@
 import { memo, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
-import UpHolder from "../../assets/preview/upholder.svg"
-import Remove from "../../assets/preview/remove.svg"
+import "./IconHolder.scss"
 
-import { ReDragUp } from './ReDragUp';
+import UpHolder from "../../../assets/preview/upholder.svg"
+import Remove from "../../../assets/preview/remove.svg"
+
+import { ReDragUp } from './ReDrag/ReDragUp';
 
 
 
-export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow, warning, onResetUp }) {
+export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow, warning, onResetUp, scale }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -24,9 +26,11 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     let styleDroppingPulse = {};
     let styleArea = {};
     let styleHolder = {};
+    let styleScale = {};
+    styleScale.height = `${3.6 * scale}px`;
+    styleScale.width = `${3.6 * scale}px`;
 
-
-    if ((isActive && show)||(isActive && showNow)) {
+    if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
             styleDropping = {
                 backgroundColor: "rgb(40, 167, 69)",
@@ -53,9 +57,10 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
     }
 
-    else if ((canDrop && show)||(canDrop && showNow)) {
+    else if ((canDrop && show) || (canDrop && showNow)) {
         styleDropping = {
-            backgroundColor: "rgb(255, 193, 7)",
+            // backgroundColor: "rgb(255, 193, 7)",
+            backgroundColor: "rgb(236, 105, 92)",
         };
         styleDroppingPulse = {
             animation: "Ani 2s infinite",
@@ -85,19 +90,24 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
 
 
     return (
-        <div ref={drop} className="slash_up_area" style={styleArea}>
+        <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px`}} >
             <div className="slash_icon_area_dropping_pulse" style={styleDroppingPulse} />
             <div ref={drop} className="slash_icon_area_dropping" style={styleDropping} />
-            {lastDroppedSlashUp &&
-                <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} />
+            { lastDroppedSlashUp &&
+    <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} />
             }
-            {!lastDroppedSlashUp &&
-                (<img src={UpHolder} alt="upholder" className="slash_holder"
-                    style={chosenColor.iconColor === "white" ? { ...styleHolder, filter: "grayscale(100%) invert(1) brightness(10)" } : { ...styleHolder, filter: "grayscale(100%) brightness(0)" }}
-                />)}
-            {(lastDroppedSlashUp && (warning || isActive)) &&
-                (<img src={Remove} alt="remove" className="slash_remove" />)}
-        </div>
+{
+    !lastDroppedSlashUp &&
+    (<img src={UpHolder} alt="upholder" className="slash_holder"
+        style={chosenColor.iconColor === "white" ? { ...styleHolder, ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
+        : { ...styleHolder, ...styleScale, filter: "grayscale(100%) brightness(0)" }}
+    />)
+}
+{
+    (lastDroppedSlashUp && (warning || isActive)) &&
+    (<img src={Remove} alt="remove" className="slash_remove" style={styleScale}/>)
+}
+        </div >
     );
 });
 

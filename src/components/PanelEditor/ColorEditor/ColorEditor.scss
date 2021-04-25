@@ -35,6 +35,9 @@
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: wrap;
+    // transform: scale(1.2);
+    // margin: 70px;
+
 
         .color_link{
             width: 130px;
@@ -87,7 +90,6 @@
         width: 12px;
     }
    .color_container::-webkit-scrollbar-thumb {
-        background: #ECECEC;
         background: rgb(217,217,217);
         border-radius: 10px;
 

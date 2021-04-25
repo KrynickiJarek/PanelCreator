@@ -131,7 +131,8 @@ export const IconEditor = memo(function IconEditor() {
     <div className="icon_container">
       <h2 className="icon_header">Wybierz ikonę</h2>
       <div className="icon_content">
-        <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 1000 }} tabBarGutter={-10} centered={false}
+        <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 1000 }} tabBarGutter={-5} centered={false}
+        type="card"
         // <Tabs defaultActiveKey="0" tabPosition="left"  tabBarGutter={-10} centered={false}
         // className="custom-tab">
         >

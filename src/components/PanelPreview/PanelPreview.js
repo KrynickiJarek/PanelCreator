@@ -1,23 +1,68 @@
 import { useState, useEffect, useCallback, memo } from 'react';
+import update from 'immutability-helper';
+
 import "./PanelPreview.scss"
 
-import { IconHolder } from './IconHolder';
+import Resize from "../../assets/scale/resize.svg"
+import Zoomin from "../../assets/scale/zoomin.svg"
+import Zoomout from "../../assets/scale/zoomout.svg"
 
-import update from 'immutability-helper';
+import { IconHolder } from './IconHolder/IconHolder';
+
 
 export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
 
-    const sc = 5;
+    const [sc, setSc] = useState(5);
+
+    const handleZoomOut = () => {
+        (sc > 4) && setSc(prev => prev - 0.5)
+    }
+    const handleResize = () => {
+        setSc(5)
+    }
+
+    const handleZoomIn = () => {
+        (sc < 8) && setSc(prev => prev + 0.5)
+    }
+
+    const [selected, setSelected] = useState(false) //-------------------------------------------------------------------------------selected
+    const handleClearSelected = ()=>{
+        setSelected(prev=>!prev);
+        // console.log(selected)
+    }
+
 
     const chosenModelStyle = {};
     chosenModelStyle.backgroundColor = chosenColor.hex;
     chosenModelStyle.height = `${parseInt(chosenModel.height) * sc}px`;
     chosenModelStyle.width = `${parseInt(chosenModel.width) * sc}px`;
+    chosenModelStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
 
     const contentStyle = {};
     contentStyle.height = `${parseInt(chosenModel.height) * sc - (chosenModel.marginTopBotton * 2 * sc)}px`;
     contentStyle.width = `${parseInt(chosenModel.width) * sc - (chosenModel.marginLeftRight * 2 * sc)}px`;
     contentStyle.margin = `${chosenModel.marginTopBotton * sc}px ${chosenModel.marginLeftRight * sc}px`
+    contentStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+
+
+    const cellStyle = {};
+    cellStyle.position = "relative";
+    cellStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+    // cellStyle.backgroundColor = "rgba(255,0,0,0.2)";
+
+    const resizeStyle = {};
+    resizeStyle.height = `${(parseInt(chosenModel.height) * sc) + 50}px`;
+    resizeStyle.width = `${(parseInt(chosenModel.width) * sc) + 50}px`;
+    resizeStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+
+    const lcdStyle = {};
+    lcdStyle.height = `${37 * sc}px`;
+    lcdStyle.width = `${30 * sc}px`;
+    lcdStyle.top = `${25 * sc}px`;
+    lcdStyle.left = `${30 * sc}px`;
+    lcdStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+
+
 
     const [iconHolders, setIconHolders] = useState([])
     const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
@@ -139,43 +184,77 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
     return (
-        <>
+        <div className="panelpreview_container">
             <div className="preview_container">
-                <h2>Podgląd panelu</h2>
-                <div className="panel_box" style={chosenModelStyle}>
-                    {hideAll &&
-                        <>
-                            <div className="panel_content" style={contentStyle}>
-                                {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown }, index) =>
-                                    <div key={index}
-                                        className={(iconHolders.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
-                                        {flag === 1 &&
-                                            <>
-                                                <IconHolder
-                                                    chosenColor={chosenColor}
-                                                    lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
-                                                    lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
-                                                    lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
-                                                    lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
-                                                    onReset={(item) => handleReset(index, item)}
-                                                    onResetDot={(item) => handleResetDot(index, item)}
-                                                    onResetUp={(item) => handleResetUp(index, item)}
-                                                    onResetDown={(item) => handleResetDown(index, item)}
-                                                />
-                                            </>}
-                                    </div>
-                                )}
-                            </div>
-                            {lcdShow && <div className="lcd" style={{ borderColor: chosenColor.iconColor }} />}
-                        </>
-                    }
+                <div className="preview_top">
+                    <h2>PODGLĄD PANELU</h2>
                 </div>
-                <div className="panel_info" style={{ width: parseInt(chosenModel.width) * sc }}>
+                <div className="panel_container">
+                    <div className="resize_container" style={resizeStyle}>
+                        <div className="panel_box" style={chosenModelStyle}>
+                            <div className="panel_content" style={contentStyle}>
+                                {hideAll &&
+                                    <>
+                                        {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown }, index) =>
+                                            <div key={index}
+                                                style={
+                                                    ((index + 2) % 3 === 0) ?
+                                                        (
+                                                            (iconHolders.length <= 9) ?
+                                                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${25.6 * sc}px`, height: `${22.4 * sc}px` } : { ...cellStyle, width: `${25.6 * sc}px`, height: `${24 * sc}px` })
+                                                                : ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${25.6 * sc}px`, height: `${20.8 * sc}px` } : { ...cellStyle, width: `${25.6 * sc}px`, height: `${24 * sc}px` })
+                                                        )
+                                                        : (
+                                                            (iconHolders.length <= 9) ?
+                                                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${22.4 * sc}px`, height: `${22.4 * sc}px` } : { ...cellStyle, width: `${22.4 * sc}px`, height: `${24 * sc}px` })
+                                                                : ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${22.4 * sc}px`, height: `${20.8 * sc}px` } : { ...cellStyle, width: `${22.4 * sc}px`, height: `${24 * sc}px` })
+                                                        )}>
+                                                {flag === 1 &&
+                                                    <>
+                                                        <IconHolder
+                                                            chosenColor={chosenColor}
+                                                            lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
+                                                            lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
+                                                            lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
+                                                            lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
+                                                            onReset={(item) => handleReset(index, item)}
+                                                            onResetDot={(item) => handleResetDot(index, item)}
+                                                            onResetUp={(item) => handleResetUp(index, item)}
+                                                            onResetDown={(item) => handleResetDown(index, item)}
+                                                            scale={sc}
+                                                            onClearSelected={handleClearSelected} //-------------------------------------------------------------------------------selected
+                                                        />
+                                                    </>}
+                                            </div>
+                                        )}
+                                        {lcdShow && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
+                                    </>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="preview_bottom">
                     <span>{chosenModel.type}</span>
+                    <div className="scale_container">
+                        <div className="scale_box">
+                            <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut} />
+                        </div>
+                        <div className="scale_box">
+                            <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} />
+
+                        </div>
+                        <div className="scale_box">
+                            <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn} />
+
+                        </div>
+                    </div>
                     <span>RAL: {chosenColor.RAL}</span>
                 </div>
             </div>
-        </>
+            <div className="preview_side">
+            </div>
+        </div>
     );
 });
 

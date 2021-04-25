@@ -1,8 +1,15 @@
 import { memo, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
+import "./../IconHolder.scss"
 
 
-export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onResetDown }) {
+
+
+export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onResetDown, scale }) {
+    
+    let styleScale = {};
+    styleScale.height = `${7.5 * scale}px`;
+    styleScale.width = `${7.5 * scale}px`;
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "icon",
@@ -24,6 +31,7 @@ export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onReset
 
     return (
             < img ref={drag} src={image.default} alt="ICON" className="slash_icon"
-                style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }} />
+                style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
+                : {...styleScale,  filter: "grayscale(100%) brightness(0)" }} />
     )
 })

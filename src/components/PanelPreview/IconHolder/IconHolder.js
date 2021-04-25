@@ -1,17 +1,16 @@
 import { memo, useState, useEffect } from 'react';
-// import { memo, useState } from 'react';
 import { useDrop } from 'react-dnd';
+import "./IconHolder.scss"
 
-import Slash from "../../assets/preview/slash.svg"
-import Holder from "../../assets/preview/holder.svg"
-import Remove from "../../assets/preview/remove.svg"
+import Slash from "../../../assets/preview/slash.svg"
+import Holder from "../../../assets/preview/holder.svg"
+import Remove from "../../../assets/preview/remove.svg"
 
-
-import { StatusIconHolder } from './StatusIconHolder';
+import { IconHolderStatus } from './IconHolderStatus';
 import { IconHolderSlashUp } from './IconHolderSlashUp';
 import { IconHolderSlashDown } from './IconHolderSlashDown';
 
-import { ReDrag } from './ReDrag';
+import { ReDrag } from './ReDrag/ReDrag';
 
 
 
@@ -21,15 +20,18 @@ export const IconHolder = memo(function IconHolder({
     lastDroppedIcon, onDrop,
     lastDroppedSlashUp, onDropSlashUp,
     lastDroppedSlashDown, onDropSlashDown,
-    onReset, onResetDot, onResetUp, onResetDown
+    onReset, onResetDot, onResetUp, onResetDown,
+    scale,
+    onClearSelected //-------------------------------------------------------------------------------selected
 }) {
 
     let warning = false
     const [show, setShow] = useState(false);
 
-
     const [upActive, setUpActive] = useState(false);
     const [downActive, setDownActive] = useState(false);
+
+    const [clickState, setClickState] = useState(false)  //-------------------------------------------------------------------------------selected
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -45,6 +47,9 @@ export const IconHolder = memo(function IconHolder({
     let styleDropping = {};
     let styleDroppingPulse = {};
     let styleArea = {};
+    let styleScale = {};
+    styleScale.height = `${7.5 * scale}px`;
+    styleScale.width = `${7.5 * scale}px`;
     if (isActive) {
         if (chosenColor.hex !== "#2fa32c") {
             styleDropping = {
@@ -69,9 +74,11 @@ export const IconHolder = memo(function IconHolder({
         };
         warning = true;
     }
-    else if (canDrop) {
+    else if (canDrop || clickState) {
+        // setClickState(false);//-------------------------------------------------------------------------------selected---usuń
         styleDropping = {
-            backgroundColor: "rgb(255, 193, 7)",
+            // backgroundColor: "rgb(255, 193, 7)",
+            backgroundColor: "rgb(236, 105, 92)",
         };
         styleDroppingPulse = {
             animation: "Ani 2s infinite",
@@ -123,40 +130,40 @@ export const IconHolder = memo(function IconHolder({
     }, [isActive]);
 
 
-    const handleUp = (income) => { //dwa sposoby przekazania zdarzenia przy up i down
-        setUpActive(income)
+    const handleClickIcon = ()=>{ //-------------------------------------------------------------------------------selected
+        setClickState(prev=>!prev);
+        onClearSelected();
     }
-
-
-
 
 
     return (
         <div ref={over} style={{ height: "100%" }}>
-            <StatusIconHolder lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} />
-            <div ref={drop} className="icon_area" style={styleArea} >
+            <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale} />
+            <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea }}  >
                 <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
                 <div className="icon_area_dropping" style={styleDropping} />
 
                 {(lastDroppedIcon) &&
-                    <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} />
+                    <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale}  onClickIcon={handleClickIcon}/>
                 }
                 {(!lastDroppedIcon && (show || showHolder)) &&
                     (<img src={Holder} alt="holder" className="holder"
-                        style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
+                        style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
+                            : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                     />)}
                 {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                     (<img src={Slash} alt="slash" className="slash"
-                        style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)" } : { filter: "grayscale(100%) brightness(0)" }}
+                        style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
+                            : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                     />)}
                 {(lastDroppedIcon && (upActive || downActive || isActive)) &&
-                    (<img src={Remove} alt="remove" className="remove" />)}
+                    (<img src={Remove} alt="remove" className="remove" style={styleScale}/>)}
             </div>
-            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={handleUp}
-                show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} />
+            <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
+                show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} />
 
             <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
-                show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} />
+                show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} />
         </div>
     );
 });
