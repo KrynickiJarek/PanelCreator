@@ -1,5 +1,3 @@
-@use "sass:math"; //-------------------------------------------------------------------------------------------------------------usuń
-$sc: 5;//-------------------------------------------------------------------------------------------------------------usuń
 
 .panelpreview_container {
   display: flex;
@@ -27,9 +25,6 @@ $sc: 5;//-----------------------------------------------------------------------
     height: 100%;
     width: 100%;
     background-color: #ECECEC;
-    // border: 1px dashed red;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
-    // overflow-y: auto;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
-    // overflow-x: auto;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
 
     .preview_top{
       background-color: #ec695c;
@@ -92,29 +87,20 @@ $sc: 5;//-----------------------------------------------------------------------
       align-items: center;
       height: 100%;
       width: 100%;
-      overflow-y: auto;
-      overflow-x: auto;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
-      position: relative; //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
-      border: 1px dashed blue;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
-      // padding: 20px;
-      // margin: 20px;
+      overflow-y: overlay; // nie działa w Firefox!!
+      overflow-x: overlay;
+      position: relative;
+      // border: 1px dashed blue;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
 
 
       .resize_container {
         display: flex;
         justify-content: center;
         align-items: center;
-        // height: 100%;
-        // width: 100%;
         position: absolute;
         top: 0;
-        // left: 0;
-        // top: 50%;
-        // left: 50%;
-        // transform: translate(-50%,-50%);
-        // margin: 50px;
-        // background-color: green;
-        border: 1px dashed red;
+        left: 0;
+        // border: 1px dashed red;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
 
         .panel_box{
           display: flex;
@@ -142,20 +128,18 @@ $sc: 5;//-----------------------------------------------------------------------
     }
 
     .panel_container::-webkit-scrollbar {
-      width: 12px;
+      width: 10px;
+      height: 10px;
     }
     .panel_container::-webkit-scrollbar-thumb {
-      // background: #ec695c;
-      background: #3f4141;
+      background: rgba(236, 105, 92,0.5);
       border-radius: 10px;
+    }
+    .panel_container::-webkit-scrollbar-corner{
+      background: transparent;
     }
   }
 }
-
-
-
-
-
   
   
   // @use "sass:math";

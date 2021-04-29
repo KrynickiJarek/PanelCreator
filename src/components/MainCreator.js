@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { useState, memo} from 'react';
 
 import "./MainCreator.scss"
 
@@ -16,6 +16,7 @@ export const MainCreator = memo(function MainCreator() {
 
     const [chosenColor, setChosenColor] = useState(availableColors[0])
     const [chosenModel, setChosenModel] = useState(availableModels[0])
+    const [dragging, setDragging] = useState(false)
 
 
 
@@ -27,14 +28,23 @@ export const MainCreator = memo(function MainCreator() {
         setChosenModel(chosenModel);
     }
 
+    const handleDragging = (income) => {
+        setDragging(income);
+        console.log(dragging)
+    }
+
+
+
     return (
 
         <DndProvider backend={HTML5Backend}>
             <div className="main_container">
-                    <CreatorHeader />
+                <CreatorHeader />
                 <div className="content_container">
-                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor}  chosenColor={chosenColor} chosenModel={chosenModel} />
-                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} />
+                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} chosenColor={chosenColor} chosenModel={chosenModel} onDragging={handleDragging} />
+                    {/* <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor}  chosenColor={chosenColor} chosenModel={chosenModel} /> */}
+                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} dragging={dragging} />
+                    {/* <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor}/> */}
                 </div>
             </div>
         </DndProvider>

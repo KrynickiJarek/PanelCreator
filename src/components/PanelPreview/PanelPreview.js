@@ -8,9 +8,10 @@ import Zoomin from "../../assets/scale/zoomin.svg"
 import Zoomout from "../../assets/scale/zoomout.svg"
 
 import { IconHolder } from './IconHolder/IconHolder';
+// import { checkPropTypes } from 'prop-types'; ///------WTF???
 
 
-export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
+export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor, dragging }) {
 
     const [sc, setSc] = useState(5);
 
@@ -25,42 +26,60 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         (sc < 8) && setSc(prev => prev + 0.5)
     }
 
-    const [selected, setSelected] = useState(false) //-------------------------------------------------------------------------------selected
-    const handleClearSelected = ()=>{
-        setSelected(prev=>!prev);
-        // console.log(selected)
-    }
-
 
     const chosenModelStyle = {};
     chosenModelStyle.backgroundColor = chosenColor.hex;
     chosenModelStyle.height = `${parseInt(chosenModel.height) * sc}px`;
     chosenModelStyle.width = `${parseInt(chosenModel.width) * sc}px`;
-    chosenModelStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+    chosenModelStyle.transition = "400ms ease";
 
     const contentStyle = {};
     contentStyle.height = `${parseInt(chosenModel.height) * sc - (chosenModel.marginTopBotton * 2 * sc)}px`;
     contentStyle.width = `${parseInt(chosenModel.width) * sc - (chosenModel.marginLeftRight * 2 * sc)}px`;
     contentStyle.margin = `${chosenModel.marginTopBotton * sc}px ${chosenModel.marginLeftRight * sc}px`
-    contentStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+    contentStyle.transition = "400ms ease";
 
 
     const cellStyle = {};
     cellStyle.position = "relative";
-    cellStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
-    // cellStyle.backgroundColor = "rgba(255,0,0,0.2)";
+    cellStyle.transition = "400ms ease";
 
     const resizeStyle = {};
-    resizeStyle.height = `${(parseInt(chosenModel.height) * sc) + 50}px`;
-    resizeStyle.width = `${(parseInt(chosenModel.width) * sc) + 50}px`;
-    resizeStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+    resizeStyle.transition = "400ms ease";
+
+
+    const [panelContainerHeight, setPanelContainerHeight] = useState(null)
+    const [panelContainerWidth, setPanelContainerWidth] = useState(null)
+    useEffect(() => {
+        setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
+        setPanelContainerWidth(document.querySelector(".panel_container").clientWidth)
+    }, [panelContainerHeight, panelContainerWidth]);
+
+    if (!panelContainerHeight || (panelContainerHeight < (parseInt(chosenModel.height) * sc))) {
+        resizeStyle.height = `${(parseInt(chosenModel.height) * sc) + 50}px`;
+    } else {
+        resizeStyle.height = "100%";
+    }
+
+    if (!panelContainerWidth || (panelContainerWidth < (parseInt(chosenModel.width) * sc))) {
+        resizeStyle.width = `${(parseInt(chosenModel.width) * sc) + 50}px`;
+    } else {
+        resizeStyle.width = "100%";
+    }
+
+    // window.addEventListener('resize', handleResize)
+
+
+
+
+
 
     const lcdStyle = {};
     lcdStyle.height = `${37 * sc}px`;
     lcdStyle.width = `${30 * sc}px`;
     lcdStyle.top = `${25 * sc}px`;
     lcdStyle.left = `${30 * sc}px`;
-    lcdStyle.transition = "400ms ease"; //-----------------------------------------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!płynna zmiana
+    lcdStyle.transition = "400ms ease";
 
 
 
@@ -74,7 +93,12 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         const modelimeout = setTimeout(() => {
             setHideAll(true)
             chosenModel.dotLocation.forEach(element => {
-                tempArr.push({ flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null })
+                tempArr.push({
+                    flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+
+                    selectedDot: false, selected: false, selectedUp: false, selectedDown: false
+
+                })
             });
             setIconHolders(tempArr);
             chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
@@ -83,8 +107,79 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [chosenModel]);
 
 
+    // useEffect(() => {
+    //     const copyArr = iconHolders;
+    //     copyArr.forEach((el) => {
+    //             el.selectedDot = false;
+    //             el.selected = false;
+    //             el.selectedUp = false;
+    //             el.selectedDown = false;
+    //     })
+    //     setIconHolders(copyArr)
+    //     // console.log(dragging)
+    //     // console.log(iconHolders)
+    // }, [dragging, iconHolders]);
+
+    const handleDragTest = () => {//----------------------------------------------???
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
+        console.log("noi")
+
+        // setIconHolders(update(iconHolders, {
+        //     [1]: {
+        //         selected: {
+        //             $set: null,
+        //         }
+        //     },
+        // }));
+    };
+
+
+    // const handleReset = useCallback((index, item) => {
+    //     const copyArr = iconHolders;
+    //     copyArr.forEach((el) => {
+    //         el.selectedDot = false;
+    //         el.selected = false;
+    //         el.selectedUp = false;
+    //         el.selectedDown = false;
+    //     })
+    //     setIconHolders(copyArr)
+    //     setIconHolders(update(iconHolders, {
+    //         [index]: {
+    //             lastDroppedIcon: {
+    //                 $set: null,
+    //             }
+    //         },
+    //     }));
+    // }, [iconHolders]);
+
+
+
+
+
+
+
+
+
+
+
+
 
     const handleDropDot = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedDot: {
@@ -95,6 +190,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleResetDot = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedDot: {
@@ -105,6 +208,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleDropIcon = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedIcon: {
@@ -122,6 +233,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
     const handleReset = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedIcon: {
@@ -131,9 +250,36 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         }));
     }, [iconHolders]);
 
+    // const handleReset = () => { //----usuń
+    //     const copyArr = iconHolders;
+    //     copyArr.forEach((el) => {
+    //         el.selectedDot = false;
+    //         el.selected = false;
+    //         el.selectedUp = false;
+    //         el.selectedDown = false;
+    //     })
+    //     setIconHolders(copyArr)
+
+    //     setIconHolders(update(iconHolders, {
+    //         [1]: {
+    //             lastDroppedIcon: {
+    //                 $set: null,
+    //             }
+    //         },
+    //     }));
+    // };
+
 
 
     const handleDropSlashUp = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedSlashUp: {
@@ -147,6 +293,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleResetUp = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedSlashUp: {
@@ -158,6 +312,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
     const handleDropSlashDown = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedSlashDown: {
@@ -171,10 +333,120 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleResetDown = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
         setIconHolders(update(iconHolders, {
             [index]: {
                 lastDroppedSlashDown: {
                     $set: null,
+                }
+            },
+        }));
+    }, [iconHolders]);
+
+
+    //--------------------------------------------------------------------------------------SELECTY
+    const handleSelect = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el, i) => {
+            if (i === index) {
+                el.selectedDot = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            } else {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            }
+        })
+        setIconHolders(copyArr)
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                selected: {
+                    $set: !iconHolders[index].selected,
+                }
+            },
+        }));
+    }, [iconHolders]);
+
+
+
+    const handleSelectDot = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el, i) => {
+            if (i === index) {
+                el.selected = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            } else {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            }
+        })
+        setIconHolders(copyArr)
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                selectedDot: {
+                    $set: !iconHolders[index].selectedDot,
+                }
+            },
+        }));
+    }, [iconHolders]);
+
+
+    const handleSelectDown = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el, i) => {
+            if (i === index) {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedUp = false;
+            } else {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            }
+        })
+        setIconHolders(copyArr)
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                selectedDown: {
+                    $set: !iconHolders[index].selectedDown,
+                }
+            },
+        }));
+    }, [iconHolders]);
+
+
+    const handleSelectUp = useCallback((index, item) => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el, i) => {
+            if (i === index) {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedDown = false;
+            } else {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            }
+        })
+        setIconHolders(copyArr)
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                selectedUp: {
+                    $set: !iconHolders[index].selectedUp,
                 }
             },
         }));
@@ -195,7 +467,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                             <div className="panel_content" style={contentStyle}>
                                 {hideAll &&
                                     <>
-                                        {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown }, index) =>
+                                        {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown, }, index) =>
                                             <div key={index}
                                                 style={
                                                     ((index + 2) % 3 === 0) ?
@@ -222,7 +494,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                             onResetUp={(item) => handleResetUp(index, item)}
                                                             onResetDown={(item) => handleResetDown(index, item)}
                                                             scale={sc}
-                                                            onClearSelected={handleClearSelected} //-------------------------------------------------------------------------------selected
+                                                            // onClearSelected={handleClearSelected} //-------------------------------------------------------------------------------selected
+                                                            onSelect={(item) => handleSelect(index, item)}
+                                                            onSelectDot={(item) => handleSelectDot(index, item)}
+                                                            onSelectUp={(item) => handleSelectUp(index, item)}
+                                                            onSelectDown={(item) => handleSelectDown(index, item)}
+                                                            selectedDot={selectedDot}
+                                                            selected={selected}
+                                                            selectedUp={selectedUp}
+                                                            selectedDown={selectedDown}
+                                                            onDragTest={handleDragTest}
                                                         />
                                                     </>}
                                             </div>

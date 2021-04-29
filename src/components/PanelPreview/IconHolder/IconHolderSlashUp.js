@@ -9,7 +9,7 @@ import { ReDragUp } from './ReDrag/ReDragUp';
 
 
 
-export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow, warning, onResetUp, scale }) {
+export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow, warning, onResetUp, scale, onSelectUp, selectedUp }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -71,6 +71,19 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleHolder = {
             display: "block",
         };
+    } else if (selectedUp) {
+        styleDropping = {
+            // backgroundColor: "rgb(255, 193, 7)",
+            backgroundColor: "rgb(236, 105, 92)",
+            // transform: "scale(1.001)",
+        };
+        styleDroppingPulse = {
+            animation: "Ani 2s infinite",
+        }
+        styleArea = {
+            transform: "translate(-53%,-53%) scale(1.8,1.8)",
+            zIndex: "3",
+        };
     }
 
     if (!lastDroppedSlashUp && !show && !showNow && !isActive) {
@@ -90,23 +103,23 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
 
 
     return (
-        <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px`}} >
+        <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px` }} >
             <div className="slash_icon_area_dropping_pulse" style={styleDroppingPulse} />
             <div ref={drop} className="slash_icon_area_dropping" style={styleDropping} />
             { lastDroppedSlashUp &&
-    <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} />
+                <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} />
             }
-{
-    !lastDroppedSlashUp &&
-    (<img src={UpHolder} alt="upholder" className="slash_holder"
-        style={chosenColor.iconColor === "white" ? { ...styleHolder, ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
-        : { ...styleHolder, ...styleScale, filter: "grayscale(100%) brightness(0)" }}
-    />)
-}
-{
-    (lastDroppedSlashUp && (warning || isActive)) &&
-    (<img src={Remove} alt="remove" className="slash_remove" style={styleScale}/>)
-}
+            {
+                !lastDroppedSlashUp &&
+                (<img src={UpHolder} alt="upholder" className="slash_holder"
+                    style={chosenColor.iconColor === "white" ? { ...styleHolder, ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
+                        : { ...styleHolder, ...styleScale, filter: "grayscale(100%) brightness(0)" }}
+                />)
+            }
+            {
+                (lastDroppedSlashUp && (warning || isActive)) &&
+                (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)
+            }
         </div >
     );
 });

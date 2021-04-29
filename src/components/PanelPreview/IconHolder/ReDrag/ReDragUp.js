@@ -3,7 +3,7 @@ import { useDrag } from 'react-dnd';
 import "./../IconHolder.scss"
 
 
-export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, scale }) {
+export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, scale, onSelectUp }) {
 
     let styleScale = {};
     styleScale.height = `${7.5 * scale}px`;
@@ -27,6 +27,7 @@ export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, 
     return (
         < img ref={drag} src={image.default} alt="ICON" className="slash_icon"
             style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
-            : {...styleScale,  filter: "grayscale(100%) brightness(0)" }} />
+            : {...styleScale,  filter: "grayscale(100%) brightness(0)" }} 
+            onClick={()=>onSelectUp()}/>
     )
 })

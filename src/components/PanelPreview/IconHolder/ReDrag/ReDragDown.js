@@ -5,7 +5,7 @@ import "./../IconHolder.scss"
 
 
 
-export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onResetDown, scale }) {
+export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onResetDown, scale, onSelectDown }) {
     
     let styleScale = {};
     styleScale.height = `${7.5 * scale}px`;
@@ -32,6 +32,7 @@ export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onReset
     return (
             < img ref={drag} src={image.default} alt="ICON" className="slash_icon"
                 style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" } 
-                : {...styleScale,  filter: "grayscale(100%) brightness(0)" }} />
+                : {...styleScale,  filter: "grayscale(100%) brightness(0)" }} 
+                onClick={()=>onSelectDown()}/>
     )
 })
