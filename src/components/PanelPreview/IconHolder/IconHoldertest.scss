@@ -1,0 +1,775 @@
+.status_area_dropping_ani{
+  position: absolute;
+  left: 50%;
+  top:0;
+  transform: translateX(-50%);
+  transition: transform 0.3s, height 0.4s ease, width 0.4s ease;
+  border-radius: 50%;
+  // background-color: rgba(255,255,0,0.2);
+}
+
+.status_area_dropping_pulse{
+  display: block;
+  position: absolute;
+  transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  // background-color: rgba(0,0,0,0.3);
+
+}
+
+.status_area_dropping{
+  position: absolute;
+  left: 50%;
+  top:0;
+  transform: translateX(-50%) scale(1.6);
+  transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
+  border-radius: 50%;
+}
+
+.status_area{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: 0.3s; 
+  z-index: 2;
+  // background-color: rgba(255,255,0,0.2);
+  // background-color: rgba(255,255,0,0.2);
+
+//-----------------------------
+
+
+
+  // .status_area_dropping_pulse{
+  //   // width: 23.4px;
+  //   // height: 23.4px;
+  //   // width: 26px;
+  //   // height: 26px;
+  //   // width: 225%;//----------------------------------------------------------------------------------------------------------------------SKALIBRUJ
+  //   // height: 225%;
+  //   border-radius: 50%;
+  //   display: block;
+  //   position: absolute;
+  //   // background-color: rgba(255,0,0,0.1);
+  //   width: 220%;//----------------------------------------------------------------------------------------------------------------------SKALIBRUJ
+  //   height: 220%;
+  // }
+
+  // .status_area_dropping{
+  //   position: absolute;
+  //   width: 160%;
+  //   height: 160%;
+  //   // width: 17.5px;
+  //   // height: 17.5px;
+  //   border-radius: 50%;
+  //   // background-clip: content-box;
+  //   transition: background-color 0.5s ease;
+  //   // background-color: rgba(0,255,0,0.2);
+  //   // top: 0;
+  //   // left: 0;
+  //   // transform: translate(-50%,-50%);
+  // }
+
+  .dot{ 
+    // width: round(1.25px * $sc); 
+    // height: round(1.25px * $sc); 
+    // width: 6px; 
+    // height: 6px; 
+    transition: 0.3s;
+    z-index: 4;
+  }
+
+  .status_icon{
+    // width: round(2.5px * $sc); //oryginalny rozmiar
+    // height: round(2.5px * $sc); 
+    transition: 0.3s;
+    z-index: 4;
+    // width: round(7.5px * $sc); 
+    // height: round(7.5px * $sc); 
+    // width: 38px; 
+    // height: 38px; 
+    transform: scale(0.333); //----------------------------------------------------------------------------------------------------------------------SKALIBRUJ!!--------------
+    cursor: pointer;
+  }
+
+  .dot_remove{
+    // width: round(2.5px * $sc); 
+    // height: round(2.5px * $sc); 
+    // width: 12px; 
+    // height: 12px; 
+    position: absolute;
+    z-index: 4;
+  }
+}
+
+.icon_area{
+  // width: round(7.5px * $sc);
+  // height: round(7.5px * $sc);
+  // width: 38px;//-----------------------------------
+  // height: 38px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: 0.3s;
+  z-index: 2;
+
+  .icon_area_dropping_pulse{
+    // width: 65px;
+    // height: 65px;
+    width: 175%;//----------------------------------------------------------------------------------------------------------------------SKALIBRUJ
+    height: 175%;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    // background-color: rgba(255,0,0,0.2);
+  }
+
+  .icon_area_dropping{
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    border-radius: 50%;
+    // background-clip: content-box;
+    transition: background-color 0.5s ease;
+    // background-color: rgba(255,0,0,0.2);
+  }
+
+  .icon{ 
+    // width: round(7.5px * $sc); 
+    // height: round(7.5px * $sc); 
+    // width: 38px;
+    // height: 38px;
+    transition: 0.3s;
+    z-index: 4;
+    cursor: pointer;
+  }
+
+  .slash{
+    // width: round(7.5px * $sc); 
+    // height: round(7.5px * $sc); 
+    // width: 38px;
+    // height: 38px;
+    // transition: 0.3s;
+    z-index: 4;
+  }
+  
+  .holder{
+    // width: round(7.5px * $sc); 
+    // height: round(7.5px * $sc); 
+    // width: 38px;
+    // height: 38px;
+    // transition: 0.3s;
+    z-index: 4;
+  }
+
+  .remove{
+    // width: round(7.5px * $sc); 
+    // height: round(7.5px * $sc); 
+    // width: 38px;
+    // height: 38px;
+    position: absolute;
+    // transition: 0.3s;
+    z-index: 4;
+  }
+}
+
+.slash_up_area, .slash_down_area{ 
+  // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+  // height: round(3.75px * $sc); 
+  // width: round(3.5px * $sc); 
+  // height: round(3.5px * $sc); 
+  // width: 18px; 
+  // height: 18px; 
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;  
+  z-index: 2;
+
+  .slash_icon_area_dropping_pulse{
+    // width: 35px;
+    // height: 35px;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    // background-color: rgba(0,255,255,0.2);
+  }
+
+  .slash_icon_area_dropping{
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    border-radius: 50%;
+    // background-clip: content-box;
+    transition: background-color 0.5s ease;
+    // background-color: rgba(255,0,0,0.2);
+  }
+
+  .slash_icon{
+    // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+    // height: round(3.75px * $sc); 
+    // width: round(3.5px * $sc); //oryginalny rozmiar
+    // height: round(3.5px * $sc); 
+    transition: 0.3s;
+    z-index: 4;
+    cursor: pointer;
+    // width: round(7.5px * $sc); 
+    // height: round(7.5px * $sc); 
+    // width: 38px;
+    // height: 38px;
+    transform: scale(0.466);
+  }
+
+  .slash_holder{
+    // width: round(3.75px * $sc); 
+    // height: round(3.75px * $sc);
+    // width: 19px; 
+    // height: 19px;  
+    display: none;
+    z-index: 4;
+  }
+  .slash_remove{
+    // width: round(3.75px * $sc); 
+    // height: round(3.75px * $sc);
+    // width: 19px; 
+    // height: 19px;  
+    position: absolute;
+    z-index: 4;
+  }
+}
+
+.slash_up_area{ 
+    // top: round(6.65px * $sc);
+    right: 50%;
+    // transform: translateX(-(round(0.25px * $sc)));
+}
+
+.slash_down_area{ 
+    // top: round(10.75px * $sc);
+    left: 50%;
+    // transform: translateX(round(0.25px * $sc));
+}
+
+
+
+@keyframes Ani{
+  0%{
+    transform: scale(0); 
+  }
+  70%{
+    // box-shadow:0 0 15px rgba(255, 193, 7,0.5);
+    // border:1px solid rgba(255, 193, 7,0.5);
+    box-shadow:0 0 15px rgba(236, 105, 92,0.5);
+    border:1px solid rgba(236, 105, 92,0.5);
+    transform:scale(1);
+  }
+  100%{
+    box-shadow:0 0 30px rgba(255, 193, 7,0);
+    border:0 solid rgba(255, 193, 7,0);
+    transform:scale(1.2);
+  }
+}
+
+
+
+// @use "sass:math"; //-------------------------------------------------------------------------------------------------------------usuń
+// $sc: 5;//-------------------------------------------------------------------------------------------------------------usuń
+
+
+// .status_area{
+//   // width: round(2.5px * $sc); //oryginalne
+//   // height: round(2.5px * $sc);     
+//   width: 13px;
+//   height: 13px;
+//   // margin: round(1.65px * $sc) auto round(2.5px * $sc); 
+//   margin: 8px auto 12px; 
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   position: relative;
+//   transition: 0.3s; 
+//   z-index: 2;
+
+//   .status_area_dropping_pulse{
+//     // width: 23.4px;
+//     // height: 23.4px;
+//     width: 26px;
+//     height: 26px;
+//     border-radius: 50%;
+//     display: block;
+//     position: absolute;
+//     // background-color: rgba(255,0,0,0.1);
+//   }
+
+//   .status_area_dropping{
+//     position: absolute;
+//     width: 150%;
+//     height: 150%;
+//     border-radius: 50%;
+//     background-clip: content-box;
+//     transition: background-color 0.5s ease;
+//     // background-color: rgba(0,255,0,0.2);
+//   }
+
+//   .dot{ 
+//     // width: round(1.25px * $sc); 
+//     // height: round(1.25px * $sc); 
+//     width: 6px; 
+//     height: 6px; 
+//     transition: 0.3s;
+//     z-index: 4;
+//   }
+
+//   .status_icon{
+//     // width: round(2.5px * $sc); //oryginalny rozmiar
+//     // height: round(2.5px * $sc); 
+//     transition: 0.3s;
+//     z-index: 4;
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     width: 38px; 
+//     height: 38px; 
+//     transform: scale(0.333,0.333);
+//     cursor: move;
+//   }
+
+//   .dot_remove{
+//     // width: round(2.5px * $sc); 
+//     // height: round(2.5px * $sc); 
+//     width: 12px; 
+//     height: 12px; 
+//     position: absolute;
+//     z-index: 4;
+//   }
+// }
+
+// .icon_area{
+//   // width: round(7.5px * $sc);
+//   // height: round(7.5px * $sc);
+//   width: 38px;//-----------------------------------
+//   height: 38px;
+//   margin: 0 auto;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   position: relative;
+//   transition: 0.3s;
+//   z-index: 2;
+
+//   .icon_area_dropping_pulse{
+//     width: 65px;
+//     height: 65px;
+//     border-radius: 50%;
+//     display: block;
+//     position: absolute;
+//     // top:-2px;
+//     // left:-2px;
+//     // animation: Ani 2s infinite;
+//     // background-color: rgba(0,255,255,0.2);
+//   }
+
+//   .icon_area_dropping{
+//     position: absolute;
+//     width: 150%;
+//     height: 150%;
+//     border-radius: 50%;
+//     background-clip: content-box;
+//     transition: background-color 0.5s ease;
+//     // background-color: rgba(255,0,0,0.2);
+//   }
+
+//   .icon{ 
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     width: 38px;
+//     height: 38px;
+//     transition: 0.3s;
+//     z-index: 4;
+//     cursor: move;
+//   }
+
+//   .slash{
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     width: 38px;
+//     height: 38px;
+//     // transition: 0.3s;
+//     z-index: 4;
+//   }
+  
+//   .holder{
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     width: 38px;
+//     height: 38px;
+//     // transition: 0.3s;
+//     z-index: 4;
+//   }
+
+//   .remove{
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     width: 38px;
+//     height: 38px;
+//     position: absolute;
+//     // transition: 0.3s;
+//     z-index: 4;
+//   }
+// }
+
+// .slash_up_area, .slash_down_area{ 
+//   // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+//   // height: round(3.75px * $sc); 
+//   // width: round(3.5px * $sc); 
+//   // height: round(3.5px * $sc); 
+//   width: 18px; 
+//   height: 18px; 
+//   position: absolute;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   transition: 0.3s;  
+//   z-index: 2;
+
+//   .slash_icon_area_dropping_pulse{
+//     width: 35px;
+//     height: 35px;
+//     border-radius: 50%;
+//     display: block;
+//     position: absolute;
+//     // background-color: rgba(0,255,255,0.2);
+//   }
+
+//   .slash_icon_area_dropping{
+//     position: absolute;
+//     width: 150%;
+//     height: 150%;
+//     border-radius: 50%;
+//     background-clip: content-box;
+//     transition: background-color 0.5s ease;
+//     // background-color: rgba(255,0,0,0.2);
+//   }
+
+//   .slash_icon{
+//     // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+//     // height: round(3.75px * $sc); 
+//     // width: round(3.5px * $sc); //oryginalny rozmiar
+//     // height: round(3.5px * $sc); 
+//     transition: 0.3s;
+//     z-index: 4;
+//     cursor: move;
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     width: 38px;
+//     height: 38px;
+//     transform: scale(0.466,0.466);
+//   }
+
+//   .slash_holder{
+//     // width: round(3.75px * $sc); 
+//     // height: round(3.75px * $sc);
+//     width: 19px; 
+//     height: 19px;  
+//     display: none;
+//     z-index: 4;
+//   }
+//   .slash_remove{
+//     // width: round(3.75px * $sc); 
+//     // height: round(3.75px * $sc);
+//     width: 19px; 
+//     height: 19px;  
+//     position: absolute;
+//     z-index: 4;
+//   }
+// }
+
+// .slash_up_area{ 
+//     top: round(6.65px * $sc);
+//     right: 50%;
+//     transform: translateX(-(round(0.25px * $sc)));
+// }
+
+// .slash_down_area{ 
+//     top: round(10.75px * $sc);
+//     left: 50%;
+//     transform: translateX(round(0.25px * $sc));
+// }
+
+
+
+// @keyframes Ani{
+//   0%{
+//     transform:scale(0)
+//   }
+//   70%{
+//     box-shadow:0 0 15px rgba(255, 193, 7,0.5);
+//     border:1px solid rgba(255, 193, 7,0.5);
+//     transform:scale(1)
+//   }
+//   100%{
+//     box-shadow:0 0 30px rgba(255, 193, 7,0);
+//     border:0 solid rgba(255, 193, 7,0);
+//     transform:scale(1.2)
+//   }
+// }
+
+
+// // @use "sass:math"; //-------------------------------------------------------------------------------------------------------------usuń
+// // $sc: 5;//-------------------------------------------------------------------------------------------------------------usuń
+
+
+// .status_area{
+//   // width: round(2.5px * $sc); //oryginalne
+//   // height: round(2.5px * $sc);     
+//   // width: 13px;
+//   // height: 13px;
+//   // margin: round(1.65px * $sc) auto round(2.5px * $sc); 
+//   // margin: 8px auto 12px; 
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   position: relative;
+//   transition: 0.3s; 
+//   z-index: 2;
+
+//   .status_area_dropping_pulse{
+//     // width: 23.4px;
+//     // height: 23.4px;
+//     // width: 26px;
+//     // height: 26px;
+//     // width: 225%;//----------------------------------------------------------------------------------------------------------------------SKALIBRUJ
+//     // height: 225%;
+//     border-radius: 50%;
+//     display: block;
+//     position: absolute;
+//     // background-color: rgba(255,0,0,0.1);
+//     width: 220%;//----------------------------------------------------------------------------------------------------------------------SKALIBRUJ
+//     height: 220%;
+//   }
+
+//   .status_area_dropping{
+//     position: absolute;
+//     width: 160%;
+//     height: 160%;
+//     // width: 17.5px;
+//     // height: 17.5px;
+//     border-radius: 50%;
+//     // background-clip: content-box;
+//     transition: background-color 0.5s ease;
+//     // background-color: rgba(0,255,0,0.2);
+//     // top: 0;
+//     // left: 0;
+//     // transform: translate(-50%,-50%);
+//   }
+
+//   .dot{ 
+//     // width: round(1.25px * $sc); 
+//     // height: round(1.25px * $sc); 
+//     // width: 6px; 
+//     // height: 6px; 
+//     transition: 0.3s;
+//     z-index: 4;
+//   }
+
+//   .status_icon{
+//     // width: round(2.5px * $sc); //oryginalny rozmiar
+//     // height: round(2.5px * $sc); 
+//     transition: 0.3s;
+//     z-index: 4;
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     // width: 38px; 
+//     // height: 38px; 
+//     transform: scale(0.333); //----------------------------------------------------------------------------------------------------------------------SKALIBRUJ!!--------------
+//     cursor: pointer;
+//   }
+
+//   .dot_remove{
+//     // width: round(2.5px * $sc); 
+//     // height: round(2.5px * $sc); 
+//     // width: 12px; 
+//     // height: 12px; 
+//     position: absolute;
+//     z-index: 4;
+//   }
+// }
+
+// .icon_area{
+//   // width: round(7.5px * $sc);
+//   // height: round(7.5px * $sc);
+//   // width: 38px;//-----------------------------------
+//   // height: 38px;
+//   margin: 0 auto;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   position: relative;
+//   transition: 0.3s;
+//   z-index: 2;
+
+//   .icon_area_dropping_pulse{
+//     // width: 65px;
+//     // height: 65px;
+//     width: 175%;//----------------------------------------------------------------------------------------------------------------------SKALIBRUJ
+//     height: 175%;
+//     border-radius: 50%;
+//     display: block;
+//     position: absolute;
+//     // background-color: rgba(255,0,0,0.2);
+//   }
+
+//   .icon_area_dropping{
+//     position: absolute;
+//     width: 150%;
+//     height: 150%;
+//     border-radius: 50%;
+//     // background-clip: content-box;
+//     transition: background-color 0.5s ease;
+//     // background-color: rgba(255,0,0,0.2);
+//   }
+
+//   .icon{ 
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     // width: 38px;
+//     // height: 38px;
+//     transition: 0.3s;
+//     z-index: 4;
+//     cursor: pointer;
+//   }
+
+//   .slash{
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     // width: 38px;
+//     // height: 38px;
+//     // transition: 0.3s;
+//     z-index: 4;
+//   }
+  
+//   .holder{
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     // width: 38px;
+//     // height: 38px;
+//     // transition: 0.3s;
+//     z-index: 4;
+//   }
+
+//   .remove{
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     // width: 38px;
+//     // height: 38px;
+//     position: absolute;
+//     // transition: 0.3s;
+//     z-index: 4;
+//   }
+// }
+
+// .slash_up_area, .slash_down_area{ 
+//   // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+//   // height: round(3.75px * $sc); 
+//   // width: round(3.5px * $sc); 
+//   // height: round(3.5px * $sc); 
+//   // width: 18px; 
+//   // height: 18px; 
+//   position: absolute;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   transition: 0.3s;  
+//   z-index: 2;
+
+//   .slash_icon_area_dropping_pulse{
+//     // width: 35px;
+//     // height: 35px;
+//     width: 200%;
+//     height: 200%;
+//     border-radius: 50%;
+//     display: block;
+//     position: absolute;
+//     // background-color: rgba(0,255,255,0.2);
+//   }
+
+//   .slash_icon_area_dropping{
+//     position: absolute;
+//     width: 150%;
+//     height: 150%;
+//     border-radius: 50%;
+//     // background-clip: content-box;
+//     transition: background-color 0.5s ease;
+//     // background-color: rgba(255,0,0,0.2);
+//   }
+
+//   .slash_icon{
+//     // width: round(3.75px * $sc); //cała ćwiartka, zmiejszone dla efektu wizualnego
+//     // height: round(3.75px * $sc); 
+//     // width: round(3.5px * $sc); //oryginalny rozmiar
+//     // height: round(3.5px * $sc); 
+//     transition: 0.3s;
+//     z-index: 4;
+//     cursor: pointer;
+//     // width: round(7.5px * $sc); 
+//     // height: round(7.5px * $sc); 
+//     // width: 38px;
+//     // height: 38px;
+//     transform: scale(0.466);
+//   }
+
+//   .slash_holder{
+//     // width: round(3.75px * $sc); 
+//     // height: round(3.75px * $sc);
+//     // width: 19px; 
+//     // height: 19px;  
+//     display: none;
+//     z-index: 4;
+//   }
+//   .slash_remove{
+//     // width: round(3.75px * $sc); 
+//     // height: round(3.75px * $sc);
+//     // width: 19px; 
+//     // height: 19px;  
+//     position: absolute;
+//     z-index: 4;
+//   }
+// }
+
+// .slash_up_area{ 
+//     // top: round(6.65px * $sc);
+//     right: 50%;
+//     // transform: translateX(-(round(0.25px * $sc)));
+// }
+
+// .slash_down_area{ 
+//     // top: round(10.75px * $sc);
+//     left: 50%;
+//     // transform: translateX(round(0.25px * $sc));
+// }
+
+
+
+// @keyframes Ani{
+//   0%{
+//     transform:scale(0)
+//   }
+//   70%{
+//     // box-shadow:0 0 15px rgba(255, 193, 7,0.5);
+//     box-shadow:0 0 15px rgba(236, 105, 92,0.5);
+//     // border:1px solid rgba(255, 193, 7,0.5);
+//     border:1px solid rgba(236, 105, 92,0.5);
+//     transform:scale(1);
+//   }
+//   100%{
+//     box-shadow:0 0 30px rgba(255, 193, 7,0);
+//     border:0 solid rgba(255, 193, 7,0);
+//     transform:scale(1.2)
+//   }
+// }

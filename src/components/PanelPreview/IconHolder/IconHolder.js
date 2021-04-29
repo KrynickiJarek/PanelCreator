@@ -52,6 +52,7 @@ export const IconHolder = memo(function IconHolder({
 
     const isActive = isOver && canDrop;
     let styleDropping = {};
+    let styleDroppingAni = {};
     let styleDroppingPulse = {};
     let styleArea = {};
     let styleScale = {};
@@ -61,6 +62,7 @@ export const IconHolder = memo(function IconHolder({
         if (chosenColor.hex !== "#2fa32c") {
             styleDropping = {
                 backgroundColor: "rgb(40, 167, 69)",
+                transform: "translateX(-50%) scale(2)",
             };
             styleDroppingPulse = {
                 animation: "Ani 2s infinite",
@@ -69,6 +71,7 @@ export const IconHolder = memo(function IconHolder({
         } else {
             styleDropping = {
                 backgroundColor: "rgb( 32, 114, 30)",
+                transform: "translateX(-50%) scale(2)",
             };
             styleDroppingPulse = {
                 animation: "Ani 2s infinite",
@@ -76,20 +79,25 @@ export const IconHolder = memo(function IconHolder({
             };
         };
         styleArea = {
-            transform: "scale(1.3,1.3)",
+            transform: "scale(1.3)",
             zIndex: "3",
         };
+        styleDroppingAni = {
+            transform: "translateX(-50%) scale(2.25)",
+        }
         warning = true;
     }
     else if (canDrop || selected) {
-        // setClickState(false);//-------------------------------------------------------------------------------selected---usuń
         styleDropping = {
-            // backgroundColor: "rgb(255, 193, 7)",
             backgroundColor: "rgb(236, 105, 92)",
+            transform: "translateX(-50%) scale(1.45)",
         };
         styleDroppingPulse = {
             animation: "Ani 2s infinite",
         };
+        styleDroppingAni = {
+            transform: "translateX(-50%) scale(1.75)",
+        }
     }
 
     const [{ isOverToShow }, over] = useDrop({
@@ -145,12 +153,13 @@ export const IconHolder = memo(function IconHolder({
     return (
         <div ref={over} style={{ height: "100%" }}>
             <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale} onSelectDot={onSelectDot} selectedDot={selectedDot} />
-            <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea }}  >
+            <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0`}}>
                 <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
-                <div className="icon_area_dropping" style={styleDropping} />
+            </div>
+            <div className="icon_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${6.65 * scale}px auto 0`}} />
+            <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea }}  >
 
                 {(lastDroppedIcon) &&
-                    // <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale}  onClickIcon={handleClickIcon}/>
                     <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale} onSelect={onSelect} />
                 }
                 {(!lastDroppedIcon && (show || showHolder)) &&

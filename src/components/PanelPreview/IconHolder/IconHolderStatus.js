@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useDrop } from 'react-dnd';
-import "./IconHolder.scss"
+import "./IconHolderStatus.scss"
 
 import Dot from "../../../assets/preview/dot.svg"
 import Remove from "../../../assets/preview/remove.svg"
@@ -75,6 +75,9 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
         styleDroppingPulse = {
             animation: "Ani 2s infinite",
         };
+        styleDroppingAni = {
+            transform: "translateX(-50%) scale(0.6)",
+        }
 
     } else if (selectedDot) {
         styleDropping = {
@@ -91,14 +94,12 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2)",
         }
-        
     }
 
     return (
         <>
-            <div className="status_area_dropping_ani" style={{ ...styleDroppingAni, height : `${5.5 * scale}px`, width : `${5.5 * scale}px`, margin: `${0.15 * scale}px auto ${2.5 * scale}px` }}>
-                {/* <div className="status_area_dropping_pulse" style={{ ...styleScale, ...styleDroppingPulse, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }} /> */}
-                <div className="status_area_dropping_pulse" style={{ ...styleDroppingPulse}}/>
+            <div className="status_area_dropping_ani" style={{ ...styleDroppingAni, height : `${5.5 * scale}px`, width : `${5.5 * scale}px`, margin: `${0.15 * scale}px auto 0` }}>
+                <div className="status_area_dropping_pulse" style={styleDroppingPulse}/>
             </div>
             <div className="status_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }} />
             <div ref={drop} className="status_area" style={{ ...styleScale, ...styleArea, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }}>

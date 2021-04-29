@@ -1,4 +1,4 @@
-.icon_area_dropping_ani{
+.status_area_dropping_ani{
   position: absolute;
   left: 50%;
   top:0;
@@ -6,7 +6,7 @@
   transition: transform 0.3s, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
 
-  .icon_area_dropping_pulse{
+  .status_area_dropping_pulse{
     display: block;
     position: absolute;
     transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
@@ -16,42 +16,36 @@
   }
 }
 
-.icon_area_dropping{
+.status_area_dropping{
   position: absolute;
   left: 50%;
   top:0;
-  transform: translateX(-50%) scale(1.45);
+  transform: translateX(-50%) scale(1.6);
   transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
-  // background-color: rgba(255,255,0,0.5); //----------------------------------------------------------------------------usuń
 }
 
-.icon_area{
-  margin: 0 auto;
+.status_area{
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  transition: 0.3s;
+  transition: 0.3s; 
   z-index: 2;
-  // background-color: rgba(255,0,0,0.5); //----------------------------------------------------------------------------usuń
 
-
-  .icon{ 
+  .dot{ 
     transition: 0.3s;
     z-index: 4;
+  }
+
+  .status_icon{
+    transition: 0.3s;
+    z-index: 4;
+    transform: scale(0.333); 
     cursor: pointer;
   }
 
-  .slash{
-    z-index: 4;
-  }
-  
-  .holder{
-    z-index: 4;
-  }
-
-  .remove{
+  .dot_remove{
     position: absolute;
     z-index: 4;
   }
@@ -62,8 +56,6 @@
     transform: scale(0); 
   }
   70%{
-    // box-shadow:0 0 15px rgba(255, 193, 7,0.5);
-    // border:1px solid rgba(255, 193, 7,0.5);
     box-shadow:0 0 15px rgba(236, 105, 92,0.5);
     border:1px solid rgba(236, 105, 92,0.5);
     transform:scale(1);
@@ -74,4 +66,3 @@
     transform:scale(1.2);
   }
 }
-
