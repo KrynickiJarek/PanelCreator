@@ -54,7 +54,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
             transform: "translate(52%, 125%) scale(2.2)",
         };
         styleArea = {
-            transform: "translate(108%,108%) scale(1.8,1.8)",
+            transform: "translate(108%,108%) scale(1.8)",
             zIndex: "3",
         };
         styleHolder = {

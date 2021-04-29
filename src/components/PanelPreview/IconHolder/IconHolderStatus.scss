@@ -31,23 +31,23 @@
   align-items: center;
   position: relative;
   transition: 0.3s; 
-  z-index: 2;
+  z-index: 5;
 
   .dot{ 
     transition: 0.3s;
-    z-index: 4;
+    z-index: 10;
   }
 
   .status_icon{
     transition: 0.3s;
-    z-index: 4;
+    z-index: 10;
     transform: scale(0.333); 
     cursor: pointer;
   }
 
   .dot_remove{
     position: absolute;
-    z-index: 4;
+    z-index: 10;
   }
 }
 
@@ -66,3 +66,73 @@
     transform:scale(1.2);
   }
 }
+
+
+// .status_area_dropping_ani{
+//   position: absolute;
+//   left: 50%;
+//   top:0;
+//   transform: translateX(-50%);
+//   transition: transform 0.3s, height 0.4s ease, width 0.4s ease;
+//   border-radius: 50%;
+
+//   .status_area_dropping_pulse{
+//     display: block;
+//     position: absolute;
+//     transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
+//     border-radius: 50%;
+//     width: 100%;
+//     height: 100%;
+//   }
+// }
+
+// .status_area_dropping{
+//   position: absolute;
+//   left: 50%;
+//   top:0;
+//   transform: translateX(-50%) scale(1.6);
+//   transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
+//   border-radius: 50%;
+// }
+
+// .status_area{
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   position: relative;
+//   transition: 0.3s; 
+//   z-index: 2;
+
+//   .dot{ 
+//     transition: 0.3s;
+//     z-index: 4;
+//   }
+
+//   .status_icon{
+//     transition: 0.3s;
+//     z-index: 4;
+//     transform: scale(0.333); 
+//     cursor: pointer;
+//   }
+
+//   .dot_remove{
+//     position: absolute;
+//     z-index: 4;
+//   }
+// }
+
+// @keyframes Ani{
+//   0%{
+//     transform: scale(0); 
+//   }
+//   70%{
+//     box-shadow:0 0 15px rgba(236, 105, 92,0.5);
+//     border:1px solid rgba(236, 105, 92,0.5);
+//     transform:scale(1);
+//   }
+//   100%{
+//     box-shadow:0 0 30px rgba(255, 193, 7,0);
+//     border:0 solid rgba(255, 193, 7,0);
+//     transform:scale(1.2);
+//   }
+// }

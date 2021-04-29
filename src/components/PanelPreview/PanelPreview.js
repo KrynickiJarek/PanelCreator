@@ -120,16 +120,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     //     // console.log(iconHolders)
     // }, [dragging, iconHolders]);
 
-    const handleDragTest = () => {//----------------------------------------------???
-        const copyArr = iconHolders;
-        copyArr.forEach((el) => {
-            el.selectedDot = false;
-            el.selected = false;
-            el.selectedUp = false;
-            el.selectedDown = false;
-        })
-        setIconHolders(copyArr)
-        console.log("noi")
+    // const handleDragTest = () => {//----------------------------------------------???
+        // const copyArr = iconHolders;
+        // copyArr.forEach((el) => {
+        //     el.selectedDot = false;
+        //     el.selected = false;
+        //     el.selectedUp = false;
+        //     el.selectedDown = false;
+        // })
+        // setIconHolders(copyArr)
+        // console.log("noi")
 
         // setIconHolders(update(iconHolders, {
         //     [1]: {
@@ -138,7 +138,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         //         }
         //     },
         // }));
-    };
+    // };
 
 
     // const handleReset = useCallback((index, item) => {
@@ -503,7 +503,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                             selected={selected}
                                                             selectedUp={selectedUp}
                                                             selectedDown={selectedDown}
-                                                            onDragTest={handleDragTest}
+                                                            // onDragTest={handleDragTest}
                                                         />
                                                     </>}
                                             </div>

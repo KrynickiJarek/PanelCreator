@@ -35,38 +35,48 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
             styleDropping = {
                 backgroundColor: "rgb(40, 167, 69)",
                 transform: "translateX(-50%) scale(3.2)",
+            // zIndex: "10",
+
             };
             styleDroppingPulse = {
                 animation: "Ani 2s infinite",
                 filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+            // zIndex: "10",
+
             };
         } else {
             styleDropping = {
                 backgroundColor: "rgb( 32, 114, 30)",
                 transform: "translateX(-50%) scale(3.2)",
+            // zIndex: "10",
+
             };
             styleDroppingPulse = {
                 animation: "Ani 2s infinite",
                 filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+            // zIndex: "10",
             };
         };
         styleArea = {
-            transform: "scale(2)",
+            transform: "scale(2.2)",
             zIndex: "3",
-        }
+        };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2)",
-        }
+            // zIndex: "10",////////////////////////-----------------!!!!!!!!!!!!!
+        };
+
     }
     else if ((canDrop && lastDroppedDot) || (canDrop && show)) {
+    // else if (canDrop) {
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
         };
         styleDroppingPulse = {
             animation: "Ani 2s infinite",
         };
-
-    } else if (canDrop && !lastDroppedDot) {
+    }
+     else if (canDrop && !lastDroppedDot) {
         styleDot = {
             filter: "invert(47%) sepia(92%) saturate(1130%) hue-rotate(326deg) brightness(100%) contrast(86%)",
             height: `${1.25 * scale}px`,
@@ -77,9 +87,13 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
         };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(0.6)",
+        };
+        styleArea = {//--------------------------------------------
+            transform: "scale(2)",
+            // zIndex: "3",
         }
-
-    } else if (selectedDot) {
+    } 
+    else if (selectedDot) {
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translateX(-50%) scale(3.2)",
@@ -98,11 +112,11 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
 
     return (
         <>
-            <div className="status_area_dropping_ani" style={{ ...styleDroppingAni, height : `${5.5 * scale}px`, width : `${5.5 * scale}px`, margin: `${0.15 * scale}px auto 0` }}>
+            <div   className="status_area_dropping_ani" style={{ ...styleDroppingAni, height : `${5.5 * scale}px`, width : `${5.5 * scale}px`, margin: `${0.15 * scale}px auto 0` }}>
                 <div className="status_area_dropping_pulse" style={styleDroppingPulse}/>
             </div>
             <div className="status_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }} />
-            <div ref={drop} className="status_area" style={{ ...styleScale, ...styleArea, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }}>
+            <div ref={drop}  className="status_area" style={{ ...styleScale, ...styleArea, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }}>
                 {lastDroppedDot
                     ? <ReDragDot image={lastDroppedDot.image} chosenColor={chosenColor} onResetDot={onResetDot} scale={scale} onSelectDot={onSelectDot} />
                     : (<img src={Dot} alt="dot" className="dot"

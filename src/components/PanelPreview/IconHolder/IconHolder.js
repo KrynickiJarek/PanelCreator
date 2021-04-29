@@ -25,7 +25,7 @@ export const IconHolder = memo(function IconHolder({
     // onClearSelected //-------------------------------------------------------------------------------selected
     onSelect, onSelectDot, onSelectUp, onSelectDown,
     selected, selectedDot, selectedUp, selectedDown,
-    onDragTest
+    // onDragTest
 }) {
 
     let warning = false
@@ -43,11 +43,11 @@ export const IconHolder = memo(function IconHolder({
         }),
     });
 
-    useEffect(() => { //-------------------------------------------------------------------------------selected
-        if (canDrop) {
-            onDragTest()
-        }
-    }, [canDrop, onDragTest]);
+    // useEffect(() => { //-------------------------------------------------------------------------------selected
+    //     if (canDrop) {
+    //         onDragTest()
+    //     }
+    // }, [canDrop, onDragTest]);
 
 
     const isActive = isOver && canDrop;
