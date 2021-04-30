@@ -31,8 +31,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     let styleScale = {};
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
-    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
-
+    let styleZIndex = {}; 
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -59,7 +58,6 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
         styleArea = {
             transform: "translate(-110%,-110%) scale(1.8)",
-            // zIndex: "3",
         };
         styleHolder = {
             display: "block",
@@ -99,7 +97,6 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
         styleArea = {
             transform: "translate(-55%,-55%) scale(1.8)",
-            // zIndex: "3", ///------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
         };
         styleZIndex = {
             zIndex: "99",

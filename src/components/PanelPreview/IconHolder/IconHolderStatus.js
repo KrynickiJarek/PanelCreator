@@ -29,9 +29,7 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
     let styleScale = {};
     styleScale.height = `${2.5 * scale}px`;
     styleScale.width = `${2.5 * scale}px`;
-
-    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
-
+    let styleZIndex = {};
 
     if (isActive) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -55,11 +53,9 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
         };
         styleArea = {
             transform: "scale(2.2)",
-            // zIndex: "3",
         };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2)",
-            // zIndex: "10",////////////////////////-----------------!!!!!!!!!!!!!
         };
         styleZIndex = {
             zIndex: "99",

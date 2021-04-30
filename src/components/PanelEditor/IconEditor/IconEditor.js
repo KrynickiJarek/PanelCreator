@@ -123,7 +123,7 @@ import { IconToDrag } from './IconToDrag';
 const { TabPane } = Tabs;
 
 
-export const IconEditor = memo(function IconEditor({onDragging}) {
+export const IconEditor = memo(function IconEditor() {
 
 
 
@@ -141,7 +141,7 @@ export const IconEditor = memo(function IconEditor({onDragging}) {
               <div className="icons">
                 {
                   el.listOfIcons.map(
-                    (image, index) => <IconToDrag key={index} image={image} onDragging={onDragging}/>
+                    (image, index) => <IconToDrag key={index} image={image}/>
                   )
                 }
               </div>

@@ -19,15 +19,11 @@ export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onReset
         }),
     }), [image]);
 
-
-    
     useEffect(() => {
         if (isDragging) {
         onResetDown(image)
         } 
     }, [isDragging, onResetDown, image]);
-
-
 
     return (
             < img ref={drag} src={image.default} alt="ICON" className="slash_icon"

@@ -1,10 +1,7 @@
-// import React from 'react';
 import { useState } from 'react';
-
 import "./PanelEditor.scss"
 
-import 'antd/dist/antd.css';
-// import { Tabs } from 'antd';
+import 'antd/dist/antd.css'; //----------?
 
 
 import ModelChooser from './ModelChooser/ModelChooser';
@@ -24,7 +21,7 @@ import FrameFill from "../../assets/editornav/frame_fill.svg"
 import Color from "../../assets/editornav/color.svg"
 import ColorFill from "../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ onModelSet, onColorSet, onIconSet , chosenColor, chosenModel, onDragging }) => {
+const PanelEditor = ({ onModelSet, onColorSet, onIconSet , chosenColor, chosenModel }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -116,7 +113,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet , chosenColor, chosenMo
         <div className="editor_box">
           {modelShow && <ModelChooser onModelSet={onModelSet} chosenModel={chosenModel} />}
           {colorShow && <ColorEditor onColorSet={onColorSet} chosenColor={chosenColor}/>}
-          {iconsShow && <IconEditor onIconSet={onIconSet} onDragging={onDragging}/>}
+          {iconsShow && <IconEditor onIconSet={onIconSet}/>}
           {textShow && <TextEditor />}
           {frameShow && <FrameEditor />}
         </div>

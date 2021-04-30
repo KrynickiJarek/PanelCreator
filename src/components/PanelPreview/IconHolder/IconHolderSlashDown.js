@@ -30,8 +30,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
     let styleScale = {};
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
-    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
-
+    let styleZIndex = {}; 
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -58,7 +57,6 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         };
         styleArea = {
             transform: "translate(108%,108%) scale(1.8)",
-            // zIndex: "3",
         };
         styleHolder = {
             display: "block",
@@ -97,7 +95,6 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         };
         styleArea = {
             transform: "translate(48%,48%) scale(1.8)",
-            // zIndex: "3",///------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
         };
         styleZIndex = {
             zIndex: "99",

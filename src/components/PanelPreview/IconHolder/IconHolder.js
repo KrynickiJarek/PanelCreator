@@ -25,7 +25,7 @@ export const IconHolder = memo(function IconHolder({
     // onClearSelected //-------------------------------------------------------------------------------selected
     onSelect, onSelectDot, onSelectUp, onSelectDown,
     selected, selectedDot, selectedUp, selectedDown,
-    // onDragTest
+    // onDrag
 }) {
 
     let warning = false
@@ -37,6 +37,7 @@ export const IconHolder = memo(function IconHolder({
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
         drop: onDrop,
+        // canDrop: onDrag(),
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
@@ -58,9 +59,7 @@ export const IconHolder = memo(function IconHolder({
     let styleScale = {};
     styleScale.height = `${7.5 * scale}px`;
     styleScale.width = `${7.5 * scale}px`;
-
-
-    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
+    let styleZIndex = {};
 
     if (isActive) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -85,11 +84,9 @@ export const IconHolder = memo(function IconHolder({
         };
         styleArea = {
             transform: "scale(1.3)",
-            // zIndex: "11",
         };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2.25)",
-            // zIndex: "11",
         }
         styleZIndex = {
             zIndex: "99",
@@ -158,11 +155,7 @@ export const IconHolder = memo(function IconHolder({
     return (
         <div ref={over} style={{ height: "100%" }}>
             <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale} onSelectDot={onSelectDot} selectedDot={selectedDot} />
-
-
-
             <div style={styleZIndex}>
-
                 <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
                     <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
                 </div>
@@ -185,9 +178,7 @@ export const IconHolder = memo(function IconHolder({
                     {(lastDroppedIcon && (upActive || downActive || isActive)) &&
                         (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
                 </div>
-
             </div>
-
             <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
                 show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} />
 
