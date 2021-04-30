@@ -5,6 +5,9 @@
   transform: translateX(-50%);
   transition: transform 0.3s, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
+  
+
 
   .status_area_dropping_pulse{
     display: block;
@@ -23,6 +26,7 @@
   transform: translateX(-50%) scale(1.6);
   transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
 }
 
 .status_area{
@@ -31,23 +35,23 @@
   align-items: center;
   position: relative;
   transition: 0.3s; 
-  z-index: 5;
+  z-index: inherit;
 
   .dot{ 
     transition: 0.3s;
-    z-index: 10;
+    z-index: inherit;
   }
 
   .status_icon{
     transition: 0.3s;
-    z-index: 10;
+    z-index: inherit;
     transform: scale(0.333); 
     cursor: pointer;
   }
 
   .dot_remove{
     position: absolute;
-    z-index: 10;
+    z-index: inherit;
   }
 }
 
@@ -66,7 +70,6 @@
     transform:scale(1.2);
   }
 }
-
 
 // .status_area_dropping_ani{
 //   position: absolute;
@@ -101,23 +104,23 @@
 //   align-items: center;
 //   position: relative;
 //   transition: 0.3s; 
-//   z-index: 2;
+//   z-index: 5;
 
 //   .dot{ 
 //     transition: 0.3s;
-//     z-index: 4;
+//     z-index: 10;
 //   }
 
 //   .status_icon{
 //     transition: 0.3s;
-//     z-index: 4;
+//     z-index: 10;
 //     transform: scale(0.333); 
 //     cursor: pointer;
 //   }
 
 //   .dot_remove{
 //     position: absolute;
-//     z-index: 4;
+//     z-index: 10;
 //   }
 // }
 
@@ -136,3 +139,4 @@
 //     transform:scale(1.2);
 //   }
 // }
+

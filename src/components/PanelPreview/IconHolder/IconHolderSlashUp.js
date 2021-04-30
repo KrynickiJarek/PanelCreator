@@ -31,6 +31,8 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     let styleScale = {};
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
+    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
+
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -57,10 +59,13 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
         styleArea = {
             transform: "translate(-110%,-110%) scale(1.8)",
-            zIndex: "3",
+            // zIndex: "3",
         };
         styleHolder = {
             display: "block",
+        };
+        styleZIndex = {
+            zIndex: "99",
         };
     }
 
@@ -74,7 +79,6 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translate(-152%, -90%)",
-            zIndex: "0",
         };
         styleArea = {
             transform: "translate(-110%,-110%)",
@@ -95,16 +99,18 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
         styleArea = {
             transform: "translate(-55%,-55%) scale(1.8)",
-            zIndex: "3",
+            // zIndex: "3", ///------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
         };
-
+        styleZIndex = {
+            zIndex: "99",
+        };
     }
     if (!lastDroppedSlashUp && !show && !showNow && !isActive) {
         styleArea = {
             transform: "translate(-35%,-35%) scale(0.01)",
         };
         styleDroppingAni = {
-            transform: "translate(-106.666%, -40%) scale(0.01)", 
+            transform: "translate(-106.666%, -40%) scale(0.01)",
         };
         styleDropping = {
             transform: "translate(-106.666%, -40%) scale(0.01)",
@@ -120,7 +126,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     }, [isActive, onUpActive]);
 
     return (
-        <>
+        <div style={styleZIndex}>
             <div className="slash_up_area_dropping_ani" style={{ ...styleDroppingAni, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
                 <div className="slash_area_dropping_pulse" style={styleDroppingPulse} />
             </div>
@@ -142,7 +148,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
                     (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)
                 }
             </div >
-        </>
+        </div >
     );
 });
 

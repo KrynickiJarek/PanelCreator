@@ -4,6 +4,7 @@
   top:0;
   transition: transform 0.3s, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
 
   .slash_area_dropping_pulse{
     display: block;
@@ -22,6 +23,7 @@
   transform: translate(-19%, 55%);
   transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
 }
 
 .slash_up_area_dropping{
@@ -31,8 +33,8 @@
   transform: translate(-83.333%, -16.666%);
   transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
 }
-
 
 .slash_up_area, .slash_down_area{ 
   position: absolute;
@@ -40,24 +42,22 @@
   justify-content: center;
   align-items: center;
   transition: 0.3s;  
-  z-index: 5;
-
-
+  z-index: inherit;
 
   .slash_icon{
     transition: 0.3s;
-    z-index: 10;
+    z-index: inherit;
     cursor: pointer;
     transform: scale(0.466);
   }
 
   .slash_holder{
     display: none;
-    z-index: 10;
+    z-index: inherit;
   }
   .slash_remove{
     position: absolute;
-    z-index: 10;
+    z-index: inherit;
   }
 }
 
@@ -136,24 +136,24 @@
 //   justify-content: center;
 //   align-items: center;
 //   transition: 0.3s;  
-//   z-index: 2;
+//   z-index: 5;
 
 
 
 //   .slash_icon{
 //     transition: 0.3s;
-//     z-index: 4;
+//     z-index: 10;
 //     cursor: pointer;
 //     transform: scale(0.466);
 //   }
 
 //   .slash_holder{
 //     display: none;
-//     z-index: 4;
+//     z-index: 10;
 //   }
 //   .slash_remove{
 //     position: absolute;
-//     z-index: 4;
+//     z-index: 10;
 //   }
 // }
 
@@ -188,3 +188,4 @@
 //     transform:scale(1.2);
 //   }
 // }
+

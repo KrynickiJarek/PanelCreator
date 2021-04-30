@@ -5,6 +5,7 @@
   transform: translateX(-50%);
   transition: transform 0.3s, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
 
   .icon_area_dropping_pulse{
     display: block;
@@ -23,6 +24,9 @@
   transform: translateX(-50%) scale(1.45);
   transition: transform 0.3s, background-color 0.5s ease, height 0.4s ease, width 0.4s ease;
   border-radius: 50%;
+  z-index: inherit;
+
+
 }
 
 .icon_area{
@@ -32,25 +36,27 @@
   align-items: center;
   position: relative;
   transition: 0.3s;
-  z-index: 5;
+  z-index: inherit;
+
 
   .icon{ 
     transition: 0.3s;
-    z-index: 4;
+    z-index: inherit;
+
     cursor: pointer;
   }
 
   .slash{
-    z-index: 10;
+    z-index: inherit;
   }
   
   .holder{
-    z-index: 10;
+    z-index: inherit;
   }
 
   .remove{
     position: absolute;
-    z-index: 10;
+    z-index: inherit;
   }
 }
 
@@ -69,7 +75,6 @@
     transform:scale(1.2);
   }
 }
-
 
 
 // .icon_area_dropping_ani{
@@ -106,7 +111,7 @@
 //   align-items: center;
 //   position: relative;
 //   transition: 0.3s;
-//   z-index: 2;
+//   z-index: 5;
 
 //   .icon{ 
 //     transition: 0.3s;
@@ -115,16 +120,16 @@
 //   }
 
 //   .slash{
-//     z-index: 4;
+//     z-index: 10;
 //   }
   
 //   .holder{
-//     z-index: 4;
+//     z-index: 10;
 //   }
 
 //   .remove{
 //     position: absolute;
-//     z-index: 4;
+//     z-index: 10;
 //   }
 // }
 
@@ -143,4 +148,5 @@
 //     transform:scale(1.2);
 //   }
 // }
+
 

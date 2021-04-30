@@ -1,6 +1,6 @@
 import { memo, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
-import "./../IconHolder.scss"
+import "./../IconHolderSlash.scss"
 
 
 export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, scale, onSelectUp }) {

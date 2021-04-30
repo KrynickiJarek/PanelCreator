@@ -58,6 +58,10 @@ export const IconHolder = memo(function IconHolder({
     let styleScale = {};
     styleScale.height = `${7.5 * scale}px`;
     styleScale.width = `${7.5 * scale}px`;
+
+
+    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
+
     if (isActive) {
         if (chosenColor.hex !== "#2fa32c") {
             styleDropping = {
@@ -75,16 +79,21 @@ export const IconHolder = memo(function IconHolder({
             };
             styleDroppingPulse = {
                 animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+
             };
         };
         styleArea = {
             transform: "scale(1.3)",
-            zIndex: "3",
+            // zIndex: "11",
         };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2.25)",
+            // zIndex: "11",
         }
+        styleZIndex = {
+            zIndex: "99",
+        };
         warning = true;
     }
     else if (canDrop || selected) {
@@ -145,36 +154,40 @@ export const IconHolder = memo(function IconHolder({
     }, [isActive]);
 
 
-    // const handleClickIcon = ()=>{ //-------------------------------------------------------------------------------selected
-    //     setClickState(prev=>!prev);
-    // }
-
 
     return (
         <div ref={over} style={{ height: "100%" }}>
             <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale} onSelectDot={onSelectDot} selectedDot={selectedDot} />
-            <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0`}}>
-                <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
-            </div>
-            <div className="icon_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${6.65 * scale}px auto 0`}} />
-            <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea }}  >
 
-                {(lastDroppedIcon) &&
-                    <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale} onSelect={onSelect} />
-                }
-                {(!lastDroppedIcon && (show || showHolder)) &&
-                    (<img src={Holder} alt="holder" className="holder"
-                        style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
-                            : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
-                    />)}
-                {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
-                    (<img src={Slash} alt="slash" className="slash"
-                        style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
-                            : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
-                    />)}
-                {(lastDroppedIcon && (upActive || downActive || isActive)) &&
-                    (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
+
+
+            <div style={styleZIndex}>
+
+                <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
+                    <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
+                </div>
+                <div className="icon_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${6.65 * scale}px auto 0` }} />
+                <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea }}  >
+
+                    {(lastDroppedIcon) &&
+                        <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale} onSelect={onSelect} />
+                    }
+                    {(!lastDroppedIcon && (show || showHolder)) &&
+                        (<img src={Holder} alt="holder" className="holder"
+                            style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
+                        />)}
+                    {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
+                        (<img src={Slash} alt="slash" className="slash"
+                            style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
+                        />)}
+                    {(lastDroppedIcon && (upActive || downActive || isActive)) &&
+                        (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
+                </div>
+
             </div>
+
             <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
                 show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} />
 

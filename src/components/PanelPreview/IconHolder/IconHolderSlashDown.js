@@ -2,6 +2,7 @@ import { memo, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import "./IconHolderSlash.scss"
 
+
 import DownHolder from "../../../assets/preview/downholder.svg"
 import Remove from "../../../assets/preview/remove.svg"
 
@@ -29,6 +30,8 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
     let styleScale = {};
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
+    let styleZIndex = {}; //------------------------------------------------------------------------------------------------------------------------------------proooszę
+
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -55,10 +58,13 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         };
         styleArea = {
             transform: "translate(108%,108%) scale(1.8)",
-            zIndex: "3",
+            // zIndex: "3",
         };
         styleHolder = {
             display: "block",
+        };
+        styleZIndex = {
+            zIndex: "99",
         };
     }
     else if ((canDrop && show) || (canDrop && showNow)) {
@@ -91,7 +97,10 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         };
         styleArea = {
             transform: "translate(48%,48%) scale(1.8)",
-            zIndex: "3",
+            // zIndex: "3",///------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        };
+        styleZIndex = {
+            zIndex: "99",
         };
     }
     if (!lastDroppedSlashDown && !show && !showNow && !isActive) {
@@ -99,7 +108,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
             transform: "translate(35%,35%) scale(0.01,0.01)",
         };
         styleDroppingAni = {
-            transform: "translate(-10%, 65%) scale(0.01)", 
+            transform: "translate(-10%, 65%) scale(0.01)",
         };
         styleDropping = {
             transform: "translate(-10%, 65%) scale(0.01)",
@@ -115,7 +124,8 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
     }, [isActive, onDownActive]);
 
     return (
-        <>
+        <div style={styleZIndex}>
+
             <div className="slash_down_area_dropping_ani" style={{ ...styleDroppingAni, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
                 <div className="slash_area_dropping_pulse" style={styleDroppingPulse} />
             </div>
@@ -132,7 +142,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
                 {(lastDroppedSlashDown && (warning || isActive)) &&
                     (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)}
             </div>
-        </>
+        </div>
     );
 });
 

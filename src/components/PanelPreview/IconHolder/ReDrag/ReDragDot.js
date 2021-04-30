@@ -1,6 +1,6 @@
 import { memo, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
-import "./../IconHolder.scss"
+import "./../IconHolderStatus"
 
 
 
