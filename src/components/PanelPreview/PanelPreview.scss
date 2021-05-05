@@ -4,17 +4,39 @@
   height: 100%; 
   width: 40%;//____________________________________________________________________________________________________________zedytuj
   background-color: #ECECEC;
-  // border: 1px dashed green;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
 
   .preview_side{
     background-color: #3f4141;
     height: 100%;
-    width: 60px;
+    width: 80px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
+    .side_box{
+      width: 50px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.4s ease;
+
+      .side_icon{
+        height: 50px;
+        width: 50px;
+      }
+
+      span{
+        color: #ec695c;
+        font-size: 12px;
+        line-height: 13px;
+        margin: 5px 0;
+        cursor: default;
+      }
+    }
   }
 
   .preview_container {
@@ -49,11 +71,22 @@
       justify-content: space-between;
       align-items: center;
       background-color: #ec695c;
-    
-      span{
-        color: white;
-        margin: 10px;
+      
+      .bottom_info_model, .bottom_info_ral{
+          height: 40px;
+          width: 120px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          color: white;
+          margin: 10px;
+          cursor: default;
       }
+
+      .bottom_info_ral{
+        justify-content: flex-end;
+      }
+
 
       .scale_container{
         height: 40px;
@@ -90,8 +123,6 @@
       overflow-y: overlay; // nie działa w Firefox!!
       overflow-x: overlay;
       position: relative;
-      // border: 1px dashed blue;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
-
 
       .resize_container {
         display: flex;
@@ -100,28 +131,75 @@
         position: absolute;
         top: 0;
         left: 0;
-        // border: 1px dashed red;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~roboczo
 
         .panel_box{
           display: flex;
           box-sizing: border-box;
           position: relative;
           box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-          // border: 1px dashed orangered;
-          // margin: 120px;
+
+          .visualization_frame{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+          }
+
+          .visualization_glass{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: 0.4s ease;
+            box-shadow: rgba(0, 0, 0, 0.55) 10px 5px 20px;
+            // z-index: 999;
+          }
+
+          .logo_pure{
+            position: absolute;
+            transition: 0.4s ease;
+          }
 
           .panel_content{
             display: flex;
             flex-wrap: wrap;
           
             .lcd{
-              // height: 37px *$sc;
-              // width: 30px *$sc;
               border: 1px solid white;
               position: absolute;
-              // top: 25px * $sc;
-              // left: 30px *$sc;
             } 
+            .lcd_visual{
+              position: absolute;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              align-items: center;
+              
+              .lcd_icon_box{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+
+                .lcd_icon{
+                  filter: grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 6px rgba(255, 255, 255, 1));
+                  cursor: default;
+                  transition: 0.4s ease;
+                }
+              }
+
+              .lcd_clock{
+                color: white;
+                text-shadow: 0 0 4px rgba(255, 255, 255, 1);
+                font-family:  'Montserrat', sans-serif;
+                font-weight: 500;
+                margin: 0;
+                cursor: default;
+                transition: 0.4s ease;
+              }
+            }
           }
         }
       }

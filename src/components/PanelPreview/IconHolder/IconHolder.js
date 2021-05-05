@@ -22,10 +22,12 @@ export const IconHolder = memo(function IconHolder({
     lastDroppedSlashDown, onDropSlashDown,
     onReset, onResetDot, onResetUp, onResetDown,
     scale,
-    // onClearSelected //-------------------------------------------------------------------------------selected
     onSelect, onSelectDot, onSelectUp, onSelectDown,
     selected, selectedDot, selectedUp, selectedDown,
-    // onDrag
+    onDrag,
+    animations, clear,
+    rotateRight, rotateLeft,
+    visual
 }) {
 
     let warning = false
@@ -37,19 +39,17 @@ export const IconHolder = memo(function IconHolder({
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
         drop: onDrop,
-        // canDrop: onDrag(),
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
     });
 
-    // useEffect(() => { //-------------------------------------------------------------------------------selected
-    //     if (canDrop) {
-    //         onDragTest()
-    //     }
-    // }, [canDrop, onDragTest]);
-
+    useEffect(() => { //-------------------------------------------------------------------------------selected
+        if (canDrop) {
+            onDrag()
+        }
+    }, [canDrop, onDrag]);
 
     const isActive = isOver && canDrop;
     let styleDropping = {};
@@ -67,20 +67,23 @@ export const IconHolder = memo(function IconHolder({
                 backgroundColor: "rgb(40, 167, 69)",
                 transform: "translateX(-50%) scale(2)",
             };
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
-            };
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                };
+            }
         } else {
             styleDropping = {
                 backgroundColor: "rgb( 32, 114, 30)",
                 transform: "translateX(-50%) scale(2)",
             };
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
-
-            };
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                };
+            }
         };
         styleArea = {
             transform: "scale(1.3)",
@@ -98,11 +101,13 @@ export const IconHolder = memo(function IconHolder({
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translateX(-50%) scale(1.45)",
         };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
-        };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(1.75)",
+        }
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
         }
     }
 
@@ -152,9 +157,12 @@ export const IconHolder = memo(function IconHolder({
 
 
 
+
+
     return (
         <div ref={over} style={{ height: "100%" }}>
-            <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale} onSelectDot={onSelectDot} selectedDot={selectedDot} />
+            <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale}
+                onSelectDot={onSelectDot} selectedDot={selectedDot} animations={animations} clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
             <div style={styleZIndex}>
                 <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
                     <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
@@ -163,7 +171,8 @@ export const IconHolder = memo(function IconHolder({
                 <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea }}  >
 
                     {(lastDroppedIcon) &&
-                        <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale} onSelect={onSelect} />
+                        <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale} onSelect={onSelect} selected={selected}
+                            clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
                     }
                     {(!lastDroppedIcon && (show || showHolder)) &&
                         (<img src={Holder} alt="holder" className="holder"
@@ -172,18 +181,21 @@ export const IconHolder = memo(function IconHolder({
                         />)}
                     {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                         (<img src={Slash} alt="slash" className="slash"
-                            style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
-                                : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
+                            style={!visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
+                                : chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                    : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                         />)}
                     {(lastDroppedIcon && (upActive || downActive || isActive)) &&
                         (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
                 </div>
             </div>
             <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
-                show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} />
+                show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} animations={animations}
+                clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
 
             <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
-                show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} />
+                show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} animations={animations}
+                clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
         </div>
     );
 });

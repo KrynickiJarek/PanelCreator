@@ -9,7 +9,8 @@ import Remove from "../../../assets/preview/remove.svg"
 import { ReDragDown } from './ReDrag/ReDragDown';
 
 
-export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDroppedSlashDown, onDropSlashDown, chosenColor, onDownActive, show, showNow, warning, onResetDown, scale, onSelectDown, selectedDown }) {
+export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDroppedSlashDown, onDropSlashDown, chosenColor, onDownActive, show, showNow,
+    warning, onResetDown, scale, onSelectDown, selectedDown, animations, clear, rotateRight, rotateLeft, visual }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -30,26 +31,30 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
     let styleScale = {};
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
-    let styleZIndex = {}; 
+    let styleZIndex = {};
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
-            };
             styleDropping = {
                 backgroundColor: "rgb(40, 167, 69)",
                 transform: "translate(52%, 125%) scale(1.8)",
+            };
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                };
             };
         } else {
             styleDropping = {
                 backgroundColor: "rgb(40, 167, 69)",
                 transform: "translate(52%, 125%) scale(1.8)",
             };
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                };
             };
         };
         styleDroppingAni = {
@@ -69,9 +74,6 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         styleDroppingAni = {
             transform: "translate(52%, 125%) scale(1.25)",
         };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
-        };
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translate(52%, 125%)",
@@ -82,12 +84,14 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         styleHolder = {
             display: "block",
         };
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
+        };
     } else if (selectedDown) {
         styleDroppingAni = {
             transform: "translate(13%, 87%) scale(2.2)",
-        };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
         };
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
@@ -99,16 +103,24 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
         styleZIndex = {
             zIndex: "99",
         };
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
+        };
     }
     if (!lastDroppedSlashDown && !show && !showNow && !isActive) {
         styleArea = {
-            transform: "translate(35%,35%) scale(0.01,0.01)",
+            // transform: "translate(35%,35%) scale(0.01)",
+            transform: "translate(50%,50%) scale(0.01)",
         };
         styleDroppingAni = {
-            transform: "translate(-10%, 65%) scale(0.01)",
+            // transform: "translate(-10%, 65%) scale(0.01)",
+            transform: "translate(10%, 95%) scale(0.01)",
         };
         styleDropping = {
-            transform: "translate(-10%, 65%) scale(0.01)",
+            // transform: "translate(-10%, 65%) scale(0.01)",
+            transform: "translate(10%, 95%) scale(0.01)",
         };
     }
 
@@ -129,7 +141,8 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
             <div className="slash_down_area_dropping" style={{ ...styleDropping, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }} />
             <div ref={drop} className="slash_down_area" style={{ ...styleScale, ...styleArea, top: `${10.75 * scale}px` }} >
                 {lastDroppedSlashDown &&
-                    <ReDragDown image={lastDroppedSlashDown.image} chosenColor={chosenColor} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} />
+                    <ReDragDown image={lastDroppedSlashDown.image} chosenColor={chosenColor} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} 
+                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}/>
                 }
                 {!lastDroppedSlashDown &&
                     (<img src={DownHolder} alt="downholder" className="slash_holder"

@@ -10,7 +10,8 @@ import { ReDragUp } from './ReDrag/ReDragUp';
 
 
 
-export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow, warning, onResetUp, scale, onSelectUp, selectedUp }) {
+export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow,
+    warning, onResetUp, scale, onSelectUp, selectedUp, animations, clear, rotateRight, rotateLeft , visual}) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -31,26 +32,30 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     let styleScale = {};
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
-    let styleZIndex = {}; 
+    let styleZIndex = {};
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
-            };
             styleDropping = {
                 backgroundColor: "rgb(40, 167, 69)",
                 transform: "translate(-152%, -90%) scale(1.8)",
+            };
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                };
             };
         } else {
             styleDropping = {
                 backgroundColor: "rgb( 32, 114, 30)",
                 transform: "translate(-152%, -90%) scale(1.8)",
             };
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+                };
             };
         };
         styleDroppingAni = {
@@ -71,9 +76,6 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleDroppingAni = {
             transform: "translate(-152%, -90%) scale(1.25)",
         };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
-        };
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translate(-152%, -90%)",
@@ -84,12 +86,14 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleHolder = {
             display: "block",
         };
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
+        };
     } else if (selectedUp) {
         styleDroppingAni = {
             transform: "translate(-116.666%, -53.333%) scale(2.2)",
-        };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
         };
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
@@ -101,16 +105,24 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         styleZIndex = {
             zIndex: "99",
         };
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
+        };
     }
     if (!lastDroppedSlashUp && !show && !showNow && !isActive) {
         styleArea = {
-            transform: "translate(-35%,-35%) scale(0.01)",
+            // transform: "translate(-35%,-35%) scale(0.01)",
+            transform: "translate(-50%,-50%) scale(0.01)",
         };
         styleDroppingAni = {
-            transform: "translate(-106.666%, -40%) scale(0.01)",
+            // transform: "translate(-106.666%, -40%) scale(0.01)",
+            transform: "translate(-116.666%, -50%) scale(0.01)",
         };
         styleDropping = {
-            transform: "translate(-106.666%, -40%) scale(0.01)",
+            // transform: "translate(-106.666%, -40%) scale(0.01)",
+            transform: "translate(-116.666%, -50%) scale(0.01)",
         };
     }
 
@@ -131,7 +143,8 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
             <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px` }} >
 
                 {lastDroppedSlashUp &&
-                    <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} />
+                    <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} 
+                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}/>
                 }
                 {
                     !lastDroppedSlashUp &&

@@ -1,15 +1,33 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import update from 'immutability-helper';
+import moment from 'moment';
 
 import "./PanelPreview.scss"
+
+import GlassSmall from "../../assets/preview/glasssmall.png"
+import LogoPure from "../../assets/preview/logopure.svg"
 
 import Resize from "../../assets/scale/resize.svg"
 import Zoomin from "../../assets/scale/zoomin.svg"
 import Zoomout from "../../assets/scale/zoomout.svg"
 
-import { IconHolder } from './IconHolder/IconHolder';
-// import { checkPropTypes } from 'prop-types'; ///------WTF???
+import Visual from "../../assets/side/visual.svg"
+import Clearall from "../../assets/side/clearall.svg"
+import Clear from "../../assets/side/clear.svg"
+import Anim from "../../assets/side/anim.svg"
+import Rotateright from "../../assets/side/rotateright.svg"
+import Rotateleft from "../../assets/side/rotateleft.svg"
 
+
+import LCDPause from "../../assets/lcd/pause.svg"
+import LCDPlay from "../../assets/lcd/play.svg"
+import LCDPlus from "../../assets/lcd/plus.svg"
+import LCDMinus from "../../assets/lcd/minus.svg"
+
+
+
+
+import { IconHolder } from './IconHolder/IconHolder';
 
 export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
 
@@ -48,6 +66,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     resizeStyle.transition = "400ms ease";
 
 
+    const [visual, setVisual] = useState(true)
+    const [animations, setAnimations] = useState(true)
+    const [isAnySelected, setIsAnySelected] = useState(false)
+    const [clear, setClear] = useState(false)
+    const [rotateRight, setRotateRight] = useState(false)
+    const [rotateLeft, setRotateLeft] = useState(false)
+
+
     const [panelContainerHeight, setPanelContainerHeight] = useState(null)
     const [panelContainerWidth, setPanelContainerWidth] = useState(null)
     useEffect(() => {
@@ -70,9 +96,12 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     // window.addEventListener('resize', handleResize)
 
 
-
-
-
+    const logoStyle = {};
+    logoStyle.height = `${3.9 * sc}px`;
+    logoStyle.width = `${15.9 * sc}px`;
+    logoStyle.bottom = `${5 * sc}px`;
+    logoStyle.right = `${5 * sc}px`;
+    logoStyle.filter = "invert(79%) sepia(5%) saturate(8%) hue-rotate(322deg) brightness(84%) contrast(83%)";
 
     const lcdStyle = {};
     lcdStyle.height = `${37 * sc}px`;
@@ -81,13 +110,25 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     lcdStyle.left = `${30 * sc}px`;
     lcdStyle.transition = "400ms ease";
 
+    const lcdIconStyle = {};
+    lcdIconStyle.height = `${7 * sc}px`;
+    lcdIconStyle.width = `${7 * sc}px`;
 
+
+    const [time, setTime] = useState(moment().format('HH:mm'));
+    useEffect(() => {
+        const intervalID = setInterval(() => {
+            setTime(moment().format('HH:mm'));
+        }, 5000)
+        return () => clearInterval(intervalID);
+    }, [time])
 
     const [iconHolders, setIconHolders] = useState([])
     const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
     const [hideAll, setHideAll] = useState(true)
 
     useEffect(() => {
+        setVisual(true)
         const tempArr = [];
         setHideAll(false)
         const modelimeout = setTimeout(() => {
@@ -104,60 +145,25 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         return () => clearTimeout(modelimeout);
     }, [chosenModel]);
 
-
-    // useEffect(() => {
-    //     const copyArr = iconHolders;
-    //     copyArr.forEach((el) => {
-    //             el.selectedDot = false;
-    //             el.selected = false;
-    //             el.selectedUp = false;
-    //             el.selectedDown = false;
-    //     })
-    //     setIconHolders(copyArr)
-    //     // console.log(dragging)
-    //     // console.log(iconHolders)
-    // }, [dragging, iconHolders]);
-
-    // const handleDragTest = () => {//----------------------------------------------???
-    //     const copyArr = iconHolders;
-    //     copyArr.forEach((el) => {
-    //         el.selectedDot = false;
-    //         el.selected = false;
-    //         el.selectedUp = false;
-    //         el.selectedDown = false;
-    //     })
-    //     setIconHolders(copyArr)
-    //     console.log("noi")
-
-    //     setIconHolders(update(iconHolders, {
-    //         [1]: {
-    //             selected: {
-    //                 $set: false,
-    //             }
-    //         },
-    //     }));
-    // };
-
-
-    // const handleDrag = useCallback((index, item) => {
-        // console.log("NOW")
-        // setIconHolders(update(iconHolders, {
-        //     [index]: {
-        //         selectedDot: {
-        //             $set: false,
-        //         },
-        //         selected: {
-        //             $set: false,
-        //         },
-        //         selectedUp: {
-        //             $set: false,
-        //         },
-        //         selectedDown: {
-        //             $set: false,
-        //         }
-        //     },
-        // }));
-    // }, [iconHolders]);
+    const handleDrag = useCallback((index, item) => {
+        // console.log("NOW")//------------------------powoduje częste przeładowanie
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                selectedDot: {
+                    $set: false,
+                },
+                selected: {
+                    $set: false,
+                },
+                selectedUp: {
+                    $set: false,
+                },
+                selectedDown: {
+                    $set: false,
+                }
+            },
+        }));
+    }, [iconHolders]);
 
     const handleDropDot = useCallback((index, item) => {
         const copyArr = iconHolders;
@@ -178,6 +184,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleResetDot = useCallback((index, item) => {
+        setClear(false)
         const copyArr = iconHolders;
         copyArr.forEach((el) => {
             el.selectedDot = false;
@@ -221,6 +228,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
     const handleReset = useCallback((index, item) => {
+        setClear(false)
+        // console.log("TERAZ")//////////////////---------------
         const copyArr = iconHolders;
         copyArr.forEach((el) => {
             el.selectedDot = false;
@@ -262,6 +271,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleResetUp = useCallback((index, item) => {
+        setClear(false)
         const copyArr = iconHolders;
         copyArr.forEach((el) => {
             el.selectedDot = false;
@@ -302,6 +312,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
     const handleResetDown = useCallback((index, item) => {
+        setClear(false)
         const copyArr = iconHolders;
         copyArr.forEach((el) => {
             el.selectedDot = false;
@@ -422,6 +433,57 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
 
+    const handleVisual = () => {
+        setVisual(prev => !prev)
+    }
+
+    const handleClearAll = () => {
+        const tempArr = [];
+        setHideAll(false)
+        const modelimeout = setTimeout(() => {
+            setHideAll(true)
+            chosenModel.dotLocation.forEach(element => {
+                tempArr.push({
+                    flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+                    selectedDot: false, selected: false, selectedUp: false, selectedDown: false
+                })
+            });
+            setIconHolders(tempArr);
+            chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
+        }, 300);
+        return () => clearTimeout(modelimeout);
+    }
+
+    useEffect(() => {
+        setIsAnySelected(false)
+        iconHolders.forEach((el) => {
+            if (el.selectedDot || el.selected || el.selectedUp || el.selectedDown || el.selectedDot) {
+                setIsAnySelected(true)
+            }
+        })
+    }, [iconHolders, isAnySelected]);
+
+
+    const handleClear = () => {
+        if (isAnySelected) {
+            setClear(true)
+        }
+        setIsAnySelected(false)
+    }
+
+    const handleAnimation = () => {
+        setAnimations(prev => !prev)
+    }
+
+    const handleRotateRight = () => {
+        setRotateRight(prev => !prev)
+    }
+
+    const handleRotateLeft = () => {
+        setRotateLeft(prev => !prev)
+    }
+
+
 
 
     return (
@@ -430,9 +492,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 <div className="preview_top">
                     <h2>PODGLĄD PANELU</h2>
                 </div>
-                <div className="panel_container">
+                <div className="panel_container"  >
                     <div className="resize_container" style={resizeStyle}>
                         <div className="panel_box" style={chosenModelStyle}>
+                            <div className="visualization_frame" style={!visual ? { border: "4px groove #6f6f6f" } : {}} />
+                            {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
+                            <img src={GlassSmall} alt="visualization" className="visualization_glass" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
+                            <div className="visualization_frame" style={!visual ? { border: "2px solid #545454" } : {}} />
+                            <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                             <div className="panel_content" style={contentStyle}>
                                 {hideAll &&
                                     <>
@@ -471,12 +538,31 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                             selected={selected}
                                                             selectedUp={selectedUp}
                                                             selectedDown={selectedDown}
-                                                            // onDrag={(item) => handleDrag(index, item)}
+                                                            onDrag={(item) => handleDrag(index, item)}
+                                                            animations={animations}
+                                                            clear={clear}
+                                                            rotateRight={rotateRight}
+                                                            rotateLeft={rotateLeft}
+                                                            visual={visual}
                                                         />
                                                     </>}
                                             </div>
                                         )}
-                                        {lcdShow && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
+                                        {(lcdShow && visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
+                                        {(lcdShow && !visual) &&
+                                            <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
+                                                <div className="lcd_icon_box">
+                                                    < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
+                                                    < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
+                                                </div>
+
+                                                <p className="lcd_clock" style={{ fontSize: `${5 * sc}px` }}>{time}</p>
+
+                                                <div className="lcd_icon_box">
+                                                    < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
+                                                    < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
+                                                </div>
+                                            </div>}
                                     </>
                                 }
                             </div>
@@ -484,24 +570,54 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     </div>
                 </div>
                 <div className="preview_bottom">
-                    <span>{chosenModel.type}</span>
+                    <div className="bottom_info_model">
+                        <span>{chosenModel.type}</span>
+                    </div>
                     <div className="scale_container">
                         <div className="scale_box">
-                            <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut} />
+                            <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut}
+                                style={sc === 4 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}} />
                         </div>
                         <div className="scale_box">
                             <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} />
-
                         </div>
                         <div className="scale_box">
-                            <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn} />
-
+                            <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn}
+                                style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}} />
                         </div>
                     </div>
-                    <span>RAL: {chosenColor.RAL}</span>
+                    <div className="bottom_info_ral">
+                        <span>RAL: {chosenColor.RAL}</span>
+                    </div>
+
                 </div>
             </div>
             <div className="preview_side">
+
+                <div className="side_box">
+                    <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
+                    {visual ? <span>Widok wizuali-<br />zacji</span> : <span>Widok schematy-<br />czny</span>}
+                </div>
+                <div className="side_box">
+                    <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
+                    {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
+                </div>
+                <div className="side_box">
+                    <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll} />
+                    <span>Usuń wszystkie ikony</span>
+                </div>
+                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                    <img src={Clear} alt="clear" className="side_icon" onClick={handleClear} />
+                    <span>Usuń zaznaczoną ikonę</span>
+                </div>
+                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                    <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                    <span>Obróć o 90° w prawo</span>
+                </div>
+                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                    <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                    <span >Obróć o 90° w lewo</span>
+                </div>
             </div>
         </div>
     );

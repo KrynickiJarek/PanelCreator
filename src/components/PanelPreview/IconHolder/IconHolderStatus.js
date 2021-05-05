@@ -7,7 +7,7 @@ import Remove from "../../../assets/preview/remove.svg"
 
 import { ReDragDot } from './ReDrag/ReDragDot';
 
-export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot, onDropDot, chosenColor, onResetDot, show, scale, onSelectDot, selectedDot }) {
+export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot, onDropDot, chosenColor, onResetDot, show, scale, onSelectDot, selectedDot, animations, clear, rotateRight, rotateLeft, visual}) {
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -37,18 +37,22 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
                 backgroundColor: "rgb(40, 167, 69)",
                 transform: "translateX(-50%) scale(3.2)",
             };
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+                };
             };
         } else {
             styleDropping = {
                 backgroundColor: "rgb( 32, 114, 30)",
                 transform: "translateX(-50%) scale(3.2)",
             };
-            styleDroppingPulse = {
-                animation: "Ani 2s infinite",
-                filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+            if (animations) {
+                styleDroppingPulse = {
+                    animation: "Ani 2s infinite",
+                    filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)",
+                };
             };
         };
         styleArea = {
@@ -65,8 +69,10 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
         };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
         };
     }
     else if (canDrop && !lastDroppedDot) {
@@ -75,11 +81,13 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
             height: `${1.25 * scale}px`,
             width: `${1.25 * scale}px`,
         };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
-        };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(0.6)",
+        };
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
         };
     }
     else if (selectedDot) {
@@ -87,9 +95,7 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translateX(-50%) scale(3.2)",
         };
-        styleDroppingPulse = {
-            animation: "Ani 2s infinite",
-        };
+
         styleArea = {
             transform: "scale(2)",
         };
@@ -99,6 +105,11 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
         styleZIndex = {
             zIndex: "99",
         };
+        if (animations) {
+            styleDroppingPulse = {
+                animation: "Ani 2s infinite",
+            };
+        };
     }
 
     return (
@@ -107,16 +118,17 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
                 <div className="status_area_dropping_pulse" style={styleDroppingPulse} />
             </div>
             <div className="status_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }} />
-                {/* <div ref={drop} className="status_area" style={{ ...styleScale, ...styleArea, margin: `${1.65 * scale}px auto ${2.5 * scale}px` }}> */}
-                <div ref={drop} className="status_area" style={{ ...styleArea,height: `${3.8 * scale}px`, width: `${3.8 * scale}px`, margin: `${1 * scale}px auto ${1.85 * scale}px` }}>
-                    {lastDroppedDot
-                        ? <ReDragDot image={lastDroppedDot.image} chosenColor={chosenColor} onResetDot={onResetDot} scale={scale} onSelectDot={onSelectDot} />
-                        : (<img src={Dot} alt="dot" className="dot"
-                            style={chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)", ...styleDot }
-                                : { filter: "grayscale(100%) brightness(0)", ...styleDot }} />)}
-                    {(lastDroppedDot && isActive) &&
-                        (<img src={Remove} alt="remove" className="dot_remove" style={styleScale} />)}
-                </div>
+            <div ref={drop} className="status_area" style={{ ...styleArea, height: `${3.8 * scale}px`, width: `${3.8 * scale}px`, margin: `${1 * scale}px auto ${1.85 * scale}px` }}>
+                {lastDroppedDot
+                    ? <ReDragDot image={lastDroppedDot.image} chosenColor={chosenColor} onResetDot={onResetDot} scale={scale} onSelectDot={onSelectDot} selectedDot={selectedDot} 
+                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}/>
+                    : (<img src={Dot} alt="dot" className="dot"
+            style={!visual ? { filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 3px rgba(255, 255, 255, 0.7))" , ...styleDot}
+                        : chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)", ...styleDot }
+                            : { filter: "grayscale(100%) brightness(0)", ...styleDot }} />)}
+                {(lastDroppedDot && isActive) &&
+                    (<img src={Remove} alt="remove" className="dot_remove" style={styleScale} />)}
+            </div>
         </div>
     )
 });
