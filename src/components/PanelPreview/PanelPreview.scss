@@ -144,6 +144,8 @@
             left: 0;
             width: 100%;
             height: 100%;
+            // box-shadow: rgba(0, 0, 0, 0.5) 5px 5px 20px; //-------------------------??
+            // color: rgba($color: #000000, $alpha: 1.0)
           }
 
           .visualization_glass{
@@ -153,8 +155,25 @@
             width: 100%;
             height: 100%;
             transition: 0.4s ease;
-            box-shadow: rgba(0, 0, 0, 0.55) 10px 5px 20px;
-            // z-index: 999;
+            // box-shadow: rgba(0, 0, 0, 0.55) 10px 5px 20px; //-------------------??
+            //--------------------------------------------------eksperymenty
+            clip-path: polygon(0 0, 67% 0, 41% 100%, 0% 100%);
+            background-image:
+            radial-gradient(
+              circle at top left,
+              rgba(255,255,255,0.55),
+              rgba(255,255,255,0),
+            );
+          }
+          .visualization_glass_bis{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: 0.4s ease;
+            clip-path: polygon(67% 0, 100% 0, 100% 100%, 41% 100%);
+            background-color: rgba(200,200,200,0.08);
           }
 
           .logo_pure{
@@ -174,22 +193,10 @@
               position: absolute;
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
+              // justify-content: space-between;
+              justify-content: center;
               align-items: center;
               
-              .lcd_icon_box{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 100%;
-
-                .lcd_icon{
-                  filter: grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 6px rgba(255, 255, 255, 1));
-                  cursor: default;
-                  transition: 0.4s ease;
-                }
-              }
-
               .lcd_clock{
                 color: white;
                 text-shadow: 0 0 4px rgba(255, 255, 255, 1);

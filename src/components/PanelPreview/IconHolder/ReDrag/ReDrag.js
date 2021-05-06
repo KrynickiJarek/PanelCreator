@@ -53,6 +53,7 @@ export const ReDrag = memo(function ReDrag({ image, chosenColor, onReset, scale,
     return (
         < img ref={drag} src={image.default} alt="ICON" className="icon"
             style={!visual ? { ...styleScale, ...styleTurn, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
+            // style={!visual ? { ...styleScale, ...styleTurn, filter: "invert(87%) sepia(56%) saturate(1476%) hue-rotate(183deg) brightness(101%) contrast(112%) drop-shadow( 0 0 4px rgba(207, 232, 255, 1))" }
                 : chosenColor.iconColor === "white" ? { ...styleScale, ...styleTurn, filter: "grayscale(100%) invert(1) brightness(10)" }
                     : { ...styleScale, ...styleTurn, filter: "grayscale(100%) brightness(0)" }}
             onClick={() => onSelect()} />

@@ -4,7 +4,6 @@ import moment from 'moment';
 
 import "./PanelPreview.scss"
 
-import GlassSmall from "../../assets/preview/glasssmall.png"
 import LogoPure from "../../assets/preview/logopure.svg"
 
 import Resize from "../../assets/scale/resize.svg"
@@ -17,13 +16,6 @@ import Clear from "../../assets/side/clear.svg"
 import Anim from "../../assets/side/anim.svg"
 import Rotateright from "../../assets/side/rotateright.svg"
 import Rotateleft from "../../assets/side/rotateleft.svg"
-
-
-import LCDPause from "../../assets/lcd/pause.svg"
-import LCDPlay from "../../assets/lcd/play.svg"
-import LCDPlus from "../../assets/lcd/plus.svg"
-import LCDMinus from "../../assets/lcd/minus.svg"
-
 
 
 
@@ -116,9 +108,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
     const [time, setTime] = useState(moment().format('HH:mm'));
+    const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
     useEffect(() => {
         const intervalID = setInterval(() => {
             setTime(moment().format('HH:mm'));
+            setDate(moment().format('YYYY-MM-DD'));
         }, 5000)
         return () => clearInterval(intervalID);
     }, [time])
@@ -495,10 +489,15 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 <div className="panel_container"  >
                     <div className="resize_container" style={resizeStyle}>
                         <div className="panel_box" style={chosenModelStyle}>
-                            <div className="visualization_frame" style={!visual ? { border: "4px groove #6f6f6f" } : {}} />
+                            {/* <div className="visualization_frame" style={!visual ? { border: "4px groove #6f6f6f", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px"} : {opacity: "0" }} /> */}
+                            <div className="visualization_frame" style={!visual ? { border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px"} : {opacity: "0" }} />
+                            <div className="visualization_frame" style={!visual ? { border: `4px groove white`, opacity: "0.2"} : {opacity: "0" }} />
                             {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-                            <img src={GlassSmall} alt="visualization" className="visualization_glass" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
-                            <div className="visualization_frame" style={!visual ? { border: "2px solid #545454" } : {}} />
+                            <div className="visualization_glass" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
+                            <div className="visualization_glass_bis" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
+                            {/* <div className="visualization_frame" style={!visual ? { border: "2px outset #d4d4d4", opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px"} : {opacity: "0" }} /> */}
+                            <div className="visualization_frame" style={!visual ? { border: "2px outset #d4d4d4", opacity: "0.8"} : {opacity: "0" }} />
+                            {/* <div className="visualization_frame" style={!visual ? { border: `2px solid ${chosenColor.hex}`, opacity: "1" } : {}} /> */}
                             <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                             <div className="panel_content" style={contentStyle}>
                                 {hideAll &&
@@ -551,17 +550,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                         {(lcdShow && visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
                                         {(lcdShow && !visual) &&
                                             <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
-                                                <div className="lcd_icon_box">
-                                                    < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
-                                                    < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
-                                                </div>
-
-                                                <p className="lcd_clock" style={{ fontSize: `${5 * sc}px` }}>{time}</p>
-
-                                                <div className="lcd_icon_box">
-                                                    < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
-                                                    < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
-                                                </div>
+                                                <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
+                                                <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
                                             </div>}
                                     </>
                                 }
