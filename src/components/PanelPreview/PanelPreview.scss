@@ -176,6 +176,16 @@
             background-color: rgba(200,200,200,0.08);
           }
 
+          .visualization_glass_white{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: 0.4s ease;
+            background-color: rgba(200,200,200,0.22);
+          }
+
           .logo_pure{
             position: absolute;
             transition: 0.4s ease;

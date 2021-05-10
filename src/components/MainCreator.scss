@@ -8,6 +8,7 @@
 
 body{
   overflow-x: hidden;
+  width: 100vw;
 }
   
 .main_container {
@@ -15,7 +16,7 @@ body{
   flex-direction: column;
   height: 100vh;
   min-height: 800px;//---------------------------dobierz 
-  width: 100vw;
+  width: 100%; //--było 100vw
   // overflow: hidden;
   // border: 1px dashed green; //-----------------------------------usuń
 
@@ -44,7 +45,6 @@ body{
     height: 480px;
     display: block;
     position: absolute;
-    // right: 450px;
     left: -350px;
     bottom: -250px;
     z-index: -1;

@@ -112,16 +112,67 @@
 // }
 // )
 // export default IconEditor;
+//-----------------------------------------------------------------------------------------------------------------------------------antd
+// import React, { memo } from 'react';
+// import { Tabs } from 'antd';
+// import "./IconEditor.scss"
+// import iconCategories from "./iconCategories"
+// import { IconToDrag } from './IconToDrag';
+
+
+// const { TabPane } = Tabs;
+
+
+// export const IconEditor = memo(function IconEditor() {
+
+
+
+//   return (
+//     <div className="icon_container">
+//       <h2 className="icon_header">Wybierz ikonę</h2>
+//       <div className="icon_content">
+//         <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 1000 }} tabBarGutter={-5} centered={false}
+//         type="card"
+//         // <Tabs defaultActiveKey="0" tabPosition="left"  tabBarGutter={-10} centered={false}
+//         // className="custom-tab">
+//         >
+//           {iconCategories.map((el, i) => (
+//             <TabPane tab={el.name} key={i} >
+//               <div className="icons">
+//                 {
+//                   el.listOfIcons.map(
+//                     (image, index) => <IconToDrag key={index} image={image}/>
+//                   )
+//                 }
+//               </div>
+//             </TabPane>
+//           ))}
+//         </Tabs>
+//       </div>
+//     </div>
+//   );
+// })
+
+// export default IconEditor;
+
+
+
+//----------------------------------------------------------------------bootstrap
+
 
 import React, { memo } from 'react';
-import { Tabs } from 'antd';
 import "./IconEditor.scss"
-import iconCategories from "./iconCategories"
+
 import { IconToDrag } from './IconToDrag';
+import iconCategories from "./iconCategories"
 
 
-const { TabPane } = Tabs;
 
+// import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+// import Row from 'react-bootstrap/Row'
+// import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav'
 
 export const IconEditor = memo(function IconEditor() {
 
@@ -131,27 +182,67 @@ export const IconEditor = memo(function IconEditor() {
     <div className="icon_container">
       <h2 className="icon_header">Wybierz ikonę</h2>
       <div className="icon_content">
-        <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 1000 }} tabBarGutter={-5} centered={false}
-        type="card"
-        // <Tabs defaultActiveKey="0" tabPosition="left"  tabBarGutter={-10} centered={false}
-        // className="custom-tab">
-        >
+        {/* 
+        <Tabs defaultActiveKey="Bezpieczeństwo" mountOnEnter variant="pills">
+
           {iconCategories.map((el, i) => (
-            <TabPane tab={el.name} key={i} >
+            <Tab eventKey={el.name} title={el.name} key={i} >
               <div className="icons">
                 {
                   el.listOfIcons.map(
-                    (image, index) => <IconToDrag key={index} image={image}/>
+                    (image, index) => <IconToDrag key={index} image={image} />
                   )
                 }
               </div>
-            </TabPane>
+            </Tab>
           ))}
-        </Tabs>
+        </Tabs> */}
+
+        <Tab.Container defaultActiveKey="Bezpieczeństwo" mountOnEnter>
+          {/* <Row> */}
+
+            {/* <Col sm={2}> */}
+            <div className="nav_col">
+            
+              <Nav variant="pills" className="flex-column">
+                {iconCategories.map((el, i) => (
+                  <Nav.Item key={i} >
+                    <Nav.Link eventKey={el.name}>{el.name}</Nav.Link>
+                  </Nav.Item>
+                ))}
+              </Nav>
+            {/* </Col> */}
+            </div>
+
+
+
+            {/* <Col sm={10}> */}
+            <div className="content_col">
+
+                <Tab.Content>
+              {iconCategories.map((el, i) => (
+                  <Tab.Pane eventKey={el.name} key={i}>
+                    <div className="icons">
+                      {
+                        el.listOfIcons.map(
+                          (image, index) => <IconToDrag key={index} image={image} />
+                        )
+                      }
+                    </div>
+                  </Tab.Pane>
+              ))}
+                </Tab.Content>
+            {/* </Col> */}
+            </div>
+
+          {/* </Row> */}
+        </Tab.Container>
+
+
       </div>
     </div>
+
   );
 })
 
 export default IconEditor;
-

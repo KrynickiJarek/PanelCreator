@@ -1,10 +1,11 @@
 .icon_container{
     display: flex;
     flex-direction: column;
-    padding: 55px 55px 0 55px;
+    padding: 55px 25px 0 55px;
+    // padding: 55px 55px 0 55px;
     height: 100%;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: overlay;
     background-color: white;
     position: absolute;
 
@@ -16,7 +17,7 @@
         color: #333333;  
         align-self: flex-start;
         position: relative;
-        margin-left: 10px;
+        // margin-left: 10px;
         margin-bottom: 15px;
     }
 
@@ -32,18 +33,17 @@
 
     .icon_content {
     width: 100%;
-    height: 1800px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-
+    // height: 1800px;
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: flex-start;
+    // flex-wrap: wrap;
+        display: flex;
 
         .icons{
             display: flex;
             flex-wrap: wrap;
-            // height: 100%;
-            //  height: 1800px;
+            margin-bottom: 20px;
 
 
         .icon_box {
@@ -88,20 +88,75 @@
 }
 
 
-.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: rgb(236, 105, 92);
- }
+// .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+//     color: rgb(236, 105, 92);
+//  }
 
- .ant-tabs-left > .ant-tabs-nav .ant-tabs-tab{
-    padding-left: 10px;
+//  .ant-tabs-left > .ant-tabs-nav .ant-tabs-tab{
+//     padding-left: 10px;
+// }
+//  .ant-tabs-tab-btn{
+//     font-family: 'Montserrat', sans-serif;
+//     color: #333333;  
+//     margin-left: 0;
+// }
+
+
+.nav_col{
+    width: 180px;
+    min-width: 180px;
+    height: 100%;
 }
- .ant-tabs-tab-btn{
+
+.content_col{
+    width: 70%;
+    height: 100%;
+    flex-grow: 1;
+    margin-left: 25px;
+}
+
+.nav-pills .nav-link.active{
+    background: none;
+    color: black;
     font-family: 'Montserrat', sans-serif;
-    color: #333333;  
-    margin-left: 0;
+    font-weight: 700;
+    border: 3px solid rgb(236, 105, 92);
+    border-radius: 0;
+    text-align: left;
+    // padding: 8px;
+    margin-bottom: 5px;
+    position: relative;
+
 }
 
- 
+.nav-pills .nav-link.active::before{
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 30px;
+        height: 8px;
+        background-color: rgb(236, 105, 92);
+    }
+
+.nav-pills .nav-link {
+    background: none;
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    border: 3px solid white;
+    border-radius: 0;
+    text-align: left;
+    // padding: 8px;
+    margin-bottom: 5px;
+
+}
+.nav-pills .nav-link:hover{
+    border: 3px solid rgb(236, 105, 92);
+}
+
+
+
 
   
 // .icon_container{

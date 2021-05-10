@@ -21,7 +21,9 @@ export const IconToDrag = memo(function IconToDrag({ image }) {
                 {/* <div className="icon_drag"> */}
                     <img src={image.default} alt="info" className="icon" width="40pt" height="40pt"
                     // <img ref={drag} src={image.default} alt="info" className="icon" width="40pt" height="40pt"
-                        style={{ opacity }} />
+                        style={{ opacity }} 
+                        // onLoad={console.log("załadowano")}/>
+                        />
                 </div>
             </div>
         </>

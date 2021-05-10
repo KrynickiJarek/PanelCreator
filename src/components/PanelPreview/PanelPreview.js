@@ -14,6 +14,7 @@ import Visual from "../../assets/side/visual.svg"
 import Clearall from "../../assets/side/clearall.svg"
 import Clear from "../../assets/side/clear.svg"
 import Anim from "../../assets/side/anim.svg"
+import Animoff from "../../assets/side/animoff.svg"
 import Rotateright from "../../assets/side/rotateright.svg"
 import Rotateleft from "../../assets/side/rotateleft.svg"
 
@@ -490,13 +491,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     <div className="resize_container" style={resizeStyle}>
                         <div className="panel_box" style={chosenModelStyle}>
                             {/* <div className="visualization_frame" style={!visual ? { border: "4px groove #6f6f6f", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px"} : {opacity: "0" }} /> */}
-                            <div className="visualization_frame" style={!visual ? { border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px"} : {opacity: "0" }} />
-                            <div className="visualization_frame" style={!visual ? { border: `4px groove white`, opacity: "0.2"} : {opacity: "0" }} />
+                            <div className="visualization_frame" style={!visual ? { border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { opacity: "0" }} />
+                            <div className="visualization_frame" style={!visual ? { border: `4px groove white`, opacity: "0.2" } : { opacity: "0" }} />
                             {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
                             <div className="visualization_glass" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
                             <div className="visualization_glass_bis" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
+                            <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { opacity: "1" } : { opacity: "0" }} />
                             {/* <div className="visualization_frame" style={!visual ? { border: "2px outset #d4d4d4", opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px"} : {opacity: "0" }} /> */}
-                            <div className="visualization_frame" style={!visual ? { border: "2px outset #d4d4d4", opacity: "0.8"} : {opacity: "0" }} />
+                            <div className="visualization_frame" style={!visual ? { border: "2px outset #d4d4d4", opacity: "0.8" } : { opacity: "0" }} />
                             {/* <div className="visualization_frame" style={!visual ? { border: `2px solid ${chosenColor.hex}`, opacity: "1" } : {}} /> */}
                             <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                             <div className="panel_content" style={contentStyle}>
@@ -589,7 +591,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     {visual ? <span>Widok wizuali-<br />zacji</span> : <span>Widok schematy-<br />czny</span>}
                 </div>
                 <div className="side_box">
-                    <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
+                    {animations ?
+                        <img src={Animoff} alt="animationoff" className="side_icon" onClick={handleAnimation} />
+                        : <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
+                    }
                     {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
                 </div>
                 <div className="side_box">
