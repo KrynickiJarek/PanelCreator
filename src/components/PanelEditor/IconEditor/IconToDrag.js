@@ -1,9 +1,16 @@
-import { memo} from 'react';
+import { memo, useState} from 'react';
 import { useDrag } from 'react-dnd';
 import "./IconEditor.scss"
+import Favorite from "../../../assets/favorite.svg"
+
 
 
 export const IconToDrag = memo(function IconToDrag({ image }) {
+
+
+    const [favorite, setFavorite] = useState(false)
+
+
 
     const [{ opacity, border }, drag] = useDrag(() => ({
         type: "icon",
@@ -14,16 +21,19 @@ export const IconToDrag = memo(function IconToDrag({ image }) {
         }),
     }), [image]);
 
+    const handleClick = () => {
+        setFavorite(prev=>!prev)
+    }
+
     return (
         <>
-            <div className="icon_box" style={{ border }}>
+            <div className="icon_box" style={{ border }} >
+                {/* {favorite && <img src={Favorite} alt="favorite" className="favorite_icon" />} */}
+                <img src={Favorite} alt="favorite" className="favorite_icon" style={favorite?{opacity: "1"}:{opacity: "0"}} />
                 <div ref={drag} className="icon_drag">
-                {/* <div className="icon_drag"> */}
                     <img src={image.default} alt="info" className="icon" width="40pt" height="40pt"
-                    // <img ref={drag} src={image.default} alt="info" className="icon" width="40pt" height="40pt"
-                        style={{ opacity }} 
-                        // onLoad={console.log("załadowano")}/>
-                        />
+                        style={{ opacity }}
+                        onClick={handleClick}/>
                 </div>
             </div>
         </>

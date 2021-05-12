@@ -33,12 +33,7 @@
 
     .icon_content {
     width: 100%;
-    // height: 1800px;
-    // display: flex;
-    // flex-direction: row;
-    // justify-content: flex-start;
-    // flex-wrap: wrap;
-        display: flex;
+    display: flex;
 
         .icons{
             display: flex;
@@ -55,6 +50,20 @@
                 border: 3px solid white;
                 border-radius: 10px;       
                 transition: border-color 300ms ease;
+                
+                position: relative;
+
+                .favorite_icon{
+                    position: absolute;
+                    height: 20px;
+                    width: 20px;
+                    top: 0;
+                    right: 0;
+                    z-index: 99;
+                    // display: none;
+                    opacity: 0;
+                    transition: 0.15s ease;
+                }
                 
                 .icon_drag {
                     background-color: rgba(255,255,255,0.1);
@@ -123,7 +132,6 @@
     border: 3px solid rgb(236, 105, 92);
     border-radius: 0;
     text-align: left;
-    // padding: 8px;
     margin-bottom: 5px;
     position: relative;
 
@@ -133,10 +141,12 @@
         content: "";
         position: absolute;
         right: 0;
-        top: 0;
-        width: 30px;
-        height: 8px;
-        background-color: rgb(236, 105, 92);
+        top: 50%;
+        height: 15px;
+        width: 20px;
+        background-image:  url("../../../assets/arrows.svg");
+        transform: translate(-50%,-50%);
+        background-repeat: no-repeat;
     }
 
 .nav-pills .nav-link {
@@ -147,7 +157,6 @@
     border: 3px solid white;
     border-radius: 0;
     text-align: left;
-    // padding: 8px;
     margin-bottom: 5px;
 
 }

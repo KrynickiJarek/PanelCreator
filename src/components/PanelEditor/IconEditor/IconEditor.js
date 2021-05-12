@@ -168,10 +168,7 @@ import iconCategories from "./iconCategories"
 
 
 
-// import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
-// import Row from 'react-bootstrap/Row'
-// import Col from 'react-bootstrap/Col'
 import Nav from 'react-bootstrap/Nav'
 
 export const IconEditor = memo(function IconEditor() {
@@ -182,28 +179,8 @@ export const IconEditor = memo(function IconEditor() {
     <div className="icon_container">
       <h2 className="icon_header">Wybierz ikonę</h2>
       <div className="icon_content">
-        {/* 
-        <Tabs defaultActiveKey="Bezpieczeństwo" mountOnEnter variant="pills">
-
-          {iconCategories.map((el, i) => (
-            <Tab eventKey={el.name} title={el.name} key={i} >
-              <div className="icons">
-                {
-                  el.listOfIcons.map(
-                    (image, index) => <IconToDrag key={index} image={image} />
-                  )
-                }
-              </div>
-            </Tab>
-          ))}
-        </Tabs> */}
-
         <Tab.Container defaultActiveKey="Bezpieczeństwo" mountOnEnter>
-          {/* <Row> */}
-
-            {/* <Col sm={2}> */}
             <div className="nav_col">
-            
               <Nav variant="pills" className="flex-column">
                 {iconCategories.map((el, i) => (
                   <Nav.Item key={i} >
@@ -211,14 +188,8 @@ export const IconEditor = memo(function IconEditor() {
                   </Nav.Item>
                 ))}
               </Nav>
-            {/* </Col> */}
             </div>
-
-
-
-            {/* <Col sm={10}> */}
             <div className="content_col">
-
                 <Tab.Content>
               {iconCategories.map((el, i) => (
                   <Tab.Pane eventKey={el.name} key={i}>
@@ -232,10 +203,7 @@ export const IconEditor = memo(function IconEditor() {
                   </Tab.Pane>
               ))}
                 </Tab.Content>
-            {/* </Col> */}
             </div>
-
-          {/* </Row> */}
         </Tab.Container>
 
 
