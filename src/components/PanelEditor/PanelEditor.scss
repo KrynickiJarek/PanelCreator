@@ -68,7 +68,13 @@
 
 }
 
-a{
-    outline: none;
-    border: 0;
-}
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none;
+ }
+
+
+.nav-link {
+    outline: none !important;
+    box-shadow: none;
+ }
