@@ -4,6 +4,9 @@ import moment from 'moment';
 
 import "./PanelPreview.scss"
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+
 import LogoPure from "../../assets/preview/logopure.svg"
 
 import Resize from "../../assets/scale/resize.svg"
@@ -479,7 +482,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }
 
 
-
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            Simple tooltip
+        </Tooltip>
+    );
 
     return (
         <div className="panelpreview_container">
@@ -609,10 +616,23 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
                     <span>Obróć o 90° w prawo</span>
                 </div>
-                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                {/* <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
                     <span >Obróć o 90° w lewo</span>
-                </div>
+                </div> */}
+
+                <OverlayTrigger
+                    arrowProps
+                    placement="left"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                        <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                        <span >Obróć o 90° w lewo</span>
+                    </div>
+                </OverlayTrigger>
+
             </div>
         </div>
     );

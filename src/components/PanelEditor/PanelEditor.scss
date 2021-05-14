@@ -19,6 +19,12 @@
         align-items: center;
         margin: 30px 50px;
 
+        .nav-link {
+            outline: none !important;
+            box-shadow: none;
+            padding: 0;
+         }
+
         .editor_button{
             height: 90px; 
             width: 90px; 
@@ -68,13 +74,19 @@
 
 }
 
-.btn:focus,.btn:active {
-    outline: none !important;
-    box-shadow: none;
- }
+// .btn:focus,.btn:active {
+//     outline: none !important;
+//     box-shadow: none;
+//  }
 
+// .nav-link {
+//     outline: none !important;
+//     box-shadow: none;
+//  }
 
-.nav-link {
-    outline: none !important;
-    box-shadow: none;
- }
+// .nav-link {
+//         outline: none !important;
+//         box-shadow: none;
+//         padding: 0;
+//      }
+    

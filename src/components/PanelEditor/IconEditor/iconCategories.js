@@ -74,11 +74,11 @@ const iconCategories = [
         directory:"numery",
         listOfIcons: importAll(require.context("../../../assets/icons/numery", true, /\.(svg)$/))
     },
-    {
-        name: "Ulubione",
-        directory:"ulubione",
-        listOfIcons: importAll(require.context("../../../assets/icons/ulubione", true, /\.(svg)$/))
-    }
+    // {
+    //     name: "Ulubione",
+    //     directory:"ulubione",
+    //     listOfIcons: importAll(require.context("../../../assets/icons/ulubione", true, /\.(svg)$/))
+    // }
     // ,
     // {
     //     name: "Własne",

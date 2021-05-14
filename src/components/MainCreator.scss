@@ -8,6 +8,7 @@
 
 body{
   overflow-x: hidden;
+  overflow-y: auto;
   width: 100vw;
 }
   
@@ -16,7 +17,8 @@ body{
   flex-direction: column;
   height: 100vh;
   min-height: 800px;//---------------------------dobierz 
-  width: 100%; //--było 100vw
+  // width: 100vw;
+  // width: 100%; //--było 100vw
   // overflow: hidden;
   // border: 1px dashed green; //-----------------------------------usuń
 

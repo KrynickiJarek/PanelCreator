@@ -160,50 +160,111 @@
 //----------------------------------------------------------------------bootstrap
 
 
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import "./IconEditor.scss"
+
+import Favorite from "../../../assets/favorite.svg"
 
 import { IconToDrag } from './IconToDrag';
 import iconCategories from "./iconCategories"
 
-
-
 import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav'
 
+
+
+
 export const IconEditor = memo(function IconEditor() {
+
+  const [favoriteIcons, setFavoriteIcons] = useState([])
+  const [rerender, setRerender] = useState(false)
+
+  const handleFavorite = (image) => {
+    const tempArr = favoriteIcons;
+    if (tempArr.indexOf(image) === -1) {
+      tempArr.push(image)
+    }
+    else {
+      tempArr.splice((tempArr.indexOf(image)), 1)
+    }
+    setFavoriteIcons(tempArr)
+  }
+
+  const handleRemoveFavorite = (image) => {
+    const tempArr = favoriteIcons;
+    tempArr.splice((tempArr.indexOf(image)), 1)
+    setFavoriteIcons(tempArr)
+    setRerender(prev => !prev)
+  }
+
+  const handleClick = () => {
+    setRerender(prev => !prev)
+  }
+  useEffect(() => {
+  }, [rerender])
+
+
 
 
 
   return (
     <div className="icon_container">
-      <h2 className="icon_header">Wybierz ikonę</h2>
+      <h2 className="icon_header">Ikony</h2>
       <div className="icon_content">
-        <Tab.Container defaultActiveKey="Bezpieczeństwo" mountOnEnter>
-            <div className="nav_col">
-              <Nav variant="pills" className="flex-column">
-                {iconCategories.map((el, i) => (
-                  <Nav.Item key={i} >
-                    <Nav.Link eventKey={el.name}>{el.name}</Nav.Link>
-                  </Nav.Item>
-                ))}
-              </Nav>
-            </div>
-            <div className="content_col">
-                <Tab.Content>
+        <Tab.Container defaultActiveKey="ulubione" mountOnEnter>
+          <div className="nav_col">
+            <Nav variant="pills" className="flex-column">
+              <Nav.Link eventKey="ulubione" onClick={handleClick}>
+                <img src={Favorite} alt="favorite" className="favorite_nav" />
+                Ulubione
+              </Nav.Link>
               {iconCategories.map((el, i) => (
-                  <Tab.Pane eventKey={el.name} key={i}>
-                    <div className="icons">
-                      {
-                        el.listOfIcons.map(
-                          (image, index) => <IconToDrag key={index} image={image} />
-                        )
-                      }
-                    </div>
-                  </Tab.Pane>
+                <Nav.Link key={i} eventKey={el.name}>{el.name}</Nav.Link>
               ))}
-                </Tab.Content>
-            </div>
+            </Nav>
+          </div>
+          <div className="content_col">
+            <Tab.Content>
+              <Tab.Pane eventKey="ulubione">
+                <div className="icons">
+                  <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsce na panelu. Kliknij ikonę aby dodać ją do Ulubionych.</p>
+                  {(favoriteIcons.length === 0) ?
+                    <>
+                      <p className="instruction">W tym miejscu pojawią się ikony zaznaczone jako Ulubione
+                    <img src={Favorite} alt="favorite" className="favorite_instruction" />
+                      </p>
+
+
+
+                    </>
+
+
+                    : favoriteIcons.map((image, index) =>
+                      <IconToDrag key={index} image={image}
+                        addToFavorite={(image) => handleFavorite(image)}
+                        removeFavorite={(image) => handleRemoveFavorite(image)}
+                        isInFavorite={true}
+                        favoriteIcons={favoriteIcons} />)}
+                </div>
+              </Tab.Pane>
+              {iconCategories.map((el, i) => (
+                <Tab.Pane eventKey={el.name} key={i}>
+                  <div className="icons">
+                    {
+                      el.listOfIcons.map(
+                        (image, index) => <IconToDrag key={index} image={image}
+                          addToFavorite={(image) => handleFavorite(image)}
+                          removeFavorite={(image) => handleRemoveFavorite(image)}
+                          isInFavorite={false}
+                          favoriteIcons={favoriteIcons} />
+
+                      )
+                    }
+                  </div>
+                </Tab.Pane>
+              ))}
+            </Tab.Content>
+          </div>
         </Tab.Container>
 
 
