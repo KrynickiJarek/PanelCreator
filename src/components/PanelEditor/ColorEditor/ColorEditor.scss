@@ -36,8 +36,6 @@
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: wrap;
-    // transform: scale(1.2);
-    // margin: 70px;
 
 
         .color_link{
@@ -83,7 +81,7 @@
 
         .color_link:hover{
             border: 3px solid #EC695C;
-            border-radius: 15px;
+            // border-radius: 15px;
         }
     }   
 }

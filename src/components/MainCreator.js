@@ -16,6 +16,8 @@ export const MainCreator = memo(function MainCreator() {
 
     const [chosenColor, setChosenColor] = useState(availableColors[0])
     const [chosenModel, setChosenModel] = useState(availableModels[0])
+    const [chosenTab, setChosenTab] = useState("model") 
+    const [chosenFont, setChosenFont] = useState(null)
 
     const handleSetColor = (chosenColor) => {
         setChosenColor(chosenColor);
@@ -25,14 +27,27 @@ export const MainCreator = memo(function MainCreator() {
         setChosenModel(chosenModel);
     }
 
+    const handleSetTab = (chosenTab) => {
+        setChosenTab(chosenTab);
+    }
+
+    const handleSetFont = (chosenFont) => {
+        setChosenFont(chosenFont);
+    }
+
+    
+
+
+
     return (
 
         <DndProvider backend={HTML5Backend}>
             <div className="main_container">
                 <CreatorHeader />
                 <div className="content_container">
-                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} chosenColor={chosenColor} chosenModel={chosenModel} />
-                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} />
+                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} onTabSet={handleSetTab} onFontSet={handleSetFont}
+                     chosenColor={chosenColor} chosenModel={chosenModel} />
+                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}/>
                 </div>
             </div>
         </DndProvider>

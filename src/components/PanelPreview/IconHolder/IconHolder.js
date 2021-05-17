@@ -27,7 +27,8 @@ export const IconHolder = memo(function IconHolder({
     onDrag,
     animations, clear,
     rotateRight, rotateLeft,
-    visual
+    visual,
+    chosenTab
 }) {
 
     let warning = false
@@ -96,7 +97,7 @@ export const IconHolder = memo(function IconHolder({
         };
         warning = true;
     }
-    else if (canDrop || selected) {
+    else if (canDrop || (selected && chosenTab === "icons")) {
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translateX(-50%) scale(1.45)",
@@ -160,9 +161,9 @@ export const IconHolder = memo(function IconHolder({
 
 
     return (
-        <div ref={over} style={{ height: "100%" }}>
+        <div ref={over} style={{ height: "100%", width: "100%", position: "absolute" }}>
             <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale}
-                onSelectDot={onSelectDot} selectedDot={selectedDot} animations={animations} clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
+                onSelectDot={onSelectDot} selectedDot={selectedDot} animations={animations} clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab}/>
             <div style={styleZIndex}>
                 <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
                     <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
@@ -191,11 +192,11 @@ export const IconHolder = memo(function IconHolder({
             </div>
             <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
                 show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} animations={animations}
-                clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
+                clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab}/>
 
             <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
                 show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} animations={animations}
-                clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
+                clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab}/>
         </div>
     );
 });

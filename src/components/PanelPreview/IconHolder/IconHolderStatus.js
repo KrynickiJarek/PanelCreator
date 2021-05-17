@@ -7,7 +7,8 @@ import Remove from "../../../assets/preview/remove.svg"
 
 import { ReDragDot } from './ReDrag/ReDragDot';
 
-export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot, onDropDot, chosenColor, onResetDot, show, scale, onSelectDot, selectedDot, animations, clear, rotateRight, rotateLeft, visual}) {
+export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot, onDropDot, chosenColor, onResetDot, show, scale, 
+    onSelectDot, selectedDot, animations, clear, rotateRight, rotateLeft, visual, chosenTab}) {
 
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: "icon",
@@ -78,8 +79,8 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
     else if (canDrop && !lastDroppedDot) {
         styleDot = {
             filter: "invert(47%) sepia(92%) saturate(1130%) hue-rotate(326deg) brightness(100%) contrast(86%)",
-            height: `${1.25 * scale}px`,
-            width: `${1.25 * scale}px`,
+            height: `${1 * scale}px`,
+            width: `${1 * scale}px`,
         };
         styleDroppingAni = {
             transform: "translateX(-50%) scale(0.6)",
@@ -90,7 +91,7 @@ export const IconHolderStatus = memo(function IconHolderStatus({ lastDroppedDot,
             };
         };
     }
-    else if (selectedDot) {
+    else if (selectedDot&& chosenTab === "icons") {
         styleDropping = {
             backgroundColor: "rgb(236, 105, 92)",
             transform: "translateX(-50%) scale(3.2)",

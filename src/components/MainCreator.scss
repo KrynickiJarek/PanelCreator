@@ -8,8 +8,7 @@
 
 body{
   overflow-x: hidden;
-  overflow-y: auto;
-  width: 100vw;
+  width: 100%; //--było 100vw
 }
   
 .main_container {
@@ -19,7 +18,6 @@ body{
   min-height: 800px;//---------------------------dobierz 
   // width: 100vw;
   // width: 100%; //--było 100vw
-  // overflow: hidden;
   // border: 1px dashed green; //-----------------------------------usuń
 
 

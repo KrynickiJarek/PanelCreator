@@ -11,7 +11,7 @@ import { ReDragUp } from './ReDrag/ReDragUp';
 
 
 export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow,
-    warning, onResetUp, scale, onSelectUp, selectedUp, animations, clear, rotateRight, rotateLeft , visual}) {
+    warning, onResetUp, scale, onSelectUp, selectedUp, animations, clear, rotateRight, rotateLeft, visual, chosenTab }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -91,7 +91,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
                 animation: "Ani 2s infinite",
             };
         };
-    } else if (selectedUp) {
+    } else if (selectedUp && chosenTab === "icons") {
         styleDroppingAni = {
             transform: "translate(-116.666%, -53.333%) scale(2.2)",
         };
@@ -143,8 +143,8 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
             <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px` }} >
 
                 {lastDroppedSlashUp &&
-                    <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} 
-                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}/>
+                    <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp}
+                        clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
                 }
                 {
                     !lastDroppedSlashUp &&

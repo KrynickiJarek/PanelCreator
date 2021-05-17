@@ -1,5 +1,46 @@
 @import "./styles/_reset.scss";
 
+
+ @font-face { 
+  font-family: "Calibri"; 
+  src: local("Calibri"),
+  url("fonts/Calibri.woff2") format("woff2"),
+  url("fonts/Calibri.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Calibri-bold" ; 
+  src: local("Calibri-bold"),
+  url("fonts/Calibri-bold.woff2") format("woff2"),
+  url("fonts/Calibri-bold.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Helvetica"; 
+  src: local("Helvetica"),
+  url("fonts/Helvetica.woff2") format("woff2"),
+  url("fonts/Helvetica.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Helvetica-bold" ; 
+  src: local("Helvetica-bold"),
+  url("fonts/Helvetica-bold.woff2") format("woff2"),
+  url("fonts/Helvetica-bold.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Arial"; 
+  src: local("Arial"),
+  url("fonts/Arial.woff2") format("woff2"),
+  url("fonts/Arial.woff") format("woff");
+ } 
+
+
+
+
+ 
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import React, {useState} from 'react';
 import "./ColorEditor.scss"
 import availableColors from "./availableColors"
 
@@ -28,3 +28,28 @@ const ColorEditor = ({ onColorSet, chosenColor }) => {
 };
 
 export default ColorEditor;
+
+
+
+// textStyle.backgroundColor = "transparent";
+// textStyle.color = chosenColor.iconColor;
+// textStyle.border = "2px solid transparent"
+// // textStyle.borderRadius = `${1.8 * sc}px`;
+// textStyle.borderRadius = `${0.9 * sc}px`;
+// textStyle.fontSize = `${2 * sc}px`
+// textStyle.lineHeight = `${2 * sc}px`;
+// textStyle.height = `${3.6 * sc}px`;
+// textStyle.width = `${16 * sc}px`;
+
+
+
+// .text_input{
+//     // transition: 0.4s ease;
+//     transition: color 0s, border 0.4s ease, width 0.4s ease, height 0.4s ease, top 0.4s ease;
+//     text-align: center;
+//     position: absolute;
+//     // position: relative;
+//     transform: translateX(-50%);
+//     padding: 0;
+//     font-weight: 700;
+//   }

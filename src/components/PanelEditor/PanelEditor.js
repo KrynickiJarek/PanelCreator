@@ -24,7 +24,7 @@ import FrameFill from "../../assets/editornav/frame_fill.svg"
 import Color from "../../assets/editornav/color.svg"
 import ColorFill from "../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenModel }) => {
+const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenModel, onTabSet, onFontSet }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -47,6 +47,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
     setTextShow(false)
     setFrameShow(false)
     setColorShow(false)
+    onTabSet("model")
   }
   const handleClickIcons = () => {
     setIconsHover(true)
@@ -55,6 +56,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
     setTextShow(false)
     setFrameShow(false)
     setColorShow(false)
+    onTabSet("icons")
   }
   const handleClickText = () => {
     setTextHover(true)
@@ -63,6 +65,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
     setTextShow(true)
     setFrameShow(false)
     setColorShow(false)
+    onTabSet("text")
   }
   const handleClickFrame = () => {
     setFrameHover(true)
@@ -71,6 +74,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
     setTextShow(false)
     setFrameShow(true)
     setColorShow(false)
+    onTabSet("frame")
   }
   const handleClickColor = () => {
     setColorHover(true)
@@ -79,7 +83,10 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
     setTextShow(false)
     setFrameShow(false)
     setColorShow(true)
+    onTabSet("color")
   }
+
+
 
 
 
@@ -115,7 +122,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
               <div className="editor_button" onMouseOver={() => { setTextHover(true) }} onMouseLeave={() => { setTextHover(false) }} onClick={handleClickText}>
                 <img src={Text} alt="text" className="button_icon" />
                 {(textHover || textShow) && <img src={TextFill} alt="text" className="button_icon_hover" />}
-                <p className="button_text" style={textShow ? { fontWeight: "700" } : {}}>Tekst</p>
+                <p className="button_text" style={textShow ? { fontWeight: "700" } : {}}>Napisy</p>
               </div>
             </Nav.Link>
 
@@ -139,7 +146,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
               <IconEditor onIconSet={onIconSet} />
             </Tab.Pane>
             <Tab.Pane eventKey="text">
-              <TextEditor />
+              <TextEditor onFontSet={onFontSet}/>
             </Tab.Pane>
             <Tab.Pane eventKey="frame">
               <FrameEditor />

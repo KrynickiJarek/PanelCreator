@@ -4,8 +4,8 @@ import moment from 'moment';
 
 import "./PanelPreview.scss"
 
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
+// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+// import Tooltip from 'react-bootstrap/Tooltip'
 
 import LogoPure from "../../assets/preview/logopure.svg"
 
@@ -15,17 +15,27 @@ import Zoomout from "../../assets/scale/zoomout.svg"
 
 import Visual from "../../assets/side/visual.svg"
 import Clearall from "../../assets/side/clearall.svg"
+import Clearallicons from "../../assets/side/clearallicons.svg"
 import Clear from "../../assets/side/clear.svg"
 import Anim from "../../assets/side/anim.svg"
 import Animoff from "../../assets/side/animoff.svg"
 import Rotateright from "../../assets/side/rotateright.svg"
 import Rotateleft from "../../assets/side/rotateleft.svg"
+import Textborder from "../../assets/side/textborder.svg"
+import Textupoff from "../../assets/side/textupoff.svg"
+import Textupon from "../../assets/side/textupon.svg"
+import Clearalltext from "../../assets/side/clearalltext.svg"
+import Setonefont from "../../assets/side/setonefont.svg"
+// import Submitinput from "../../assets/preview/submitinput.svg"
+// import Submitinputdark from "../../assets/preview/submitinputdark.svg"
+
+
 
 
 
 import { IconHolder } from './IconHolder/IconHolder';
 
-export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
+export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor, chosenTab, chosenFont }) {
 
     const [sc, setSc] = useState(5);
 
@@ -61,6 +71,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     const resizeStyle = {};
     resizeStyle.transition = "400ms ease";
 
+    const [rerender, setRerender] = useState(false)
+
+    useEffect(() => {
+    }, [rerender])
 
     const [visual, setVisual] = useState(true)
     const [animations, setAnimations] = useState(true)
@@ -68,6 +82,9 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     const [clear, setClear] = useState(false)
     const [rotateRight, setRotateRight] = useState(false)
     const [rotateLeft, setRotateLeft] = useState(false)
+
+    const [showTextBorder, setShowTextBorder] = useState(true)
+    const [textUpOff, setTextUpOff] = useState(true)
 
 
     const [panelContainerHeight, setPanelContainerHeight] = useState(null)
@@ -110,6 +127,77 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     lcdIconStyle.height = `${7 * sc}px`;
     lcdIconStyle.width = `${7 * sc}px`;
 
+    // const textStyle = {}; //-------------------------------------------------------------------------------------------------------------TEXT
+    // textStyle.backgroundColor = "transparent";
+    // textStyle.color = chosenColor.iconColor;
+    // textStyle.border = "2px solid transparent"
+    // // textStyle.borderRadius = `${1.8 * sc}px`;
+    // textStyle.borderRadius = `${0.9 * sc}px`;
+    // textStyle.fontSize = `${2 * sc}px`
+    // textStyle.lineHeight = `${2 * sc}px`;
+    // textStyle.height = `${3.6 * sc}px`;
+    // textStyle.width = `${16 * sc}px`;
+
+    const autoResizeInputStyle = {}; //-------------------------------------------------------------------------------------------------------------TEXT
+    autoResizeInputStyle.fontSize = `${2 * sc}px`;
+    autoResizeInputStyle.lineHeight = `${2 * sc}px`;
+    autoResizeInputStyle.height = `${3.6 * sc}px`;
+    autoResizeInputStyle.width = `${10 * sc}px`;
+    // autoResizeInputStyle.border = "2px solid red"
+    autoResizeInputStyle.transition = "0.4s ease";
+    autoResizeInputStyle.position = "absolute";
+    autoResizeInputStyle.display = "inline-grid";
+    autoResizeInputStyle.alignItems = "center";
+    autoResizeInputStyle.justifyItems = "center";
+
+    const textStyle = {};
+    textStyle.backgroundColor = "transparent";
+    textStyle.color = chosenColor.iconColor;
+    textStyle.border = "2px solid transparent"
+    textStyle.borderRadius = `${0.9 * sc}px`;
+    textStyle.fontSize = `${2 * sc}px`
+    textStyle.lineHeight = `${2 * sc}px`;
+    textStyle.height = `${3.6 * sc}px`;
+    textStyle.gridArea = "1 / 1 / 2 / 2";
+    textStyle.width = "100%";
+
+
+
+
+    if ((chosenTab === "text") && showTextBorder) {
+        textStyle.border = "2px solid rgb(236, 105, 92)"
+        //     textStyle.zIndex = "1"
+        // } else {
+        //     textStyle.zIndex = "0"
+    }
+
+    if (!visual) {
+        textStyle.color = "white";
+        textStyle.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
+    }
+
+
+
+    function showBorder(e) {
+        if ((chosenTab === "text") && !showTextBorder) {
+            e.target.style.border = "2px solid rgb(236, 105, 92)"
+        }
+    }
+
+    // function showActiveBorder(e) {
+    //     if (chosenTab === "text" ){
+    //         e.target.style.border = "2px solid rgb(32, 114, 30)"
+    //     }
+    // }
+
+    function hideBorder(e) {
+        if ((chosenTab === "text") && !showTextBorder) {
+            e.target.style.border = "2px solid transparent"
+        }
+    }
+
+
+
 
     const [time, setTime] = useState(moment().format('HH:mm'));
     const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
@@ -129,39 +217,54 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         setVisual(true)
         const tempArr = [];
         setHideAll(false)
-        const modelimeout = setTimeout(() => {
+        const modeltimeout = setTimeout(() => {
             setHideAll(true)
             chosenModel.dotLocation.forEach(element => {
                 tempArr.push({
                     flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
-                    selectedDot: false, selected: false, selectedUp: false, selectedDown: false
+                    selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
+                    textUp: "", fontUp: null, textDown: "", fontDown: null, //-----------------------------------------------------
+
                 })
             });
             setIconHolders(tempArr);
             chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
         }, 300);
-        return () => clearTimeout(modelimeout);
+        return () => clearTimeout(modeltimeout);
     }, [chosenModel]);
 
-    const handleDrag = useCallback((index, item) => {
-        // console.log("NOW")//------------------------powoduje częste przeładowanie
-        setIconHolders(update(iconHolders, {
-            [index]: {
-                selectedDot: {
-                    $set: false,
-                },
-                selected: {
-                    $set: false,
-                },
-                selectedUp: {
-                    $set: false,
-                },
-                selectedDown: {
-                    $set: false,
-                }
-            },
-        }));
-    }, [iconHolders]);
+    // const handleDrag = useCallback((index, item) => { //---zastąpione poniżej
+    //     // console.log("NOW")//------------------------powoduje częste przeładowanie
+    //     setIconHolders(update(iconHolders, {
+    //         [index]: {
+    //             selectedDot: {
+    //                 $set: false,
+    //             },
+    //             selected: {
+    //                 $set: false,
+    //             },
+    //             selectedUp: {
+    //                 $set: false,
+    //             },
+    //             selectedDown: {
+    //                 $set: false,
+    //             }
+    //         },
+    //     }));
+    // }, [iconHolders]);
+
+
+    const handleDrag = () => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
+        setRerender(prev => !prev)
+    }
 
     const handleDropDot = useCallback((index, item) => {
         const copyArr = iconHolders;
@@ -227,7 +330,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
     const handleReset = useCallback((index, item) => {
         setClear(false)
-        // console.log("TERAZ")//////////////////---------------
         const copyArr = iconHolders;
         copyArr.forEach((el) => {
             el.selectedDot = false;
@@ -329,7 +431,24 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }, [iconHolders]);
 
 
-    //--------------------------------------------------------------------------------------SELECTY
+    //--------------------------------------------------------------------------------------SELECTY+
+
+    useEffect(() => {
+        if (chosenTab !== "icons") {
+            const copyArr = iconHolders;
+            copyArr.forEach((el) => {
+                el.selectedDot = false;
+                el.selected = false;
+                el.selectedUp = false;
+                el.selectedDown = false;
+            })
+            setIconHolders(copyArr)
+            setIsAnySelected(false)
+            setRerender(prev => !prev)
+        }
+    }, [chosenTab, iconHolders]);
+
+
     const handleSelect = useCallback((index, item) => {
         const copyArr = iconHolders;
         copyArr.forEach((el, i) => {
@@ -438,18 +557,35 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     const handleClearAll = () => {
         const tempArr = [];
         setHideAll(false)
-        const modelimeout = setTimeout(() => {
+        const modeltimeout = setTimeout(() => {
             setHideAll(true)
             chosenModel.dotLocation.forEach(element => {
                 tempArr.push({
                     flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
-                    selectedDot: false, selected: false, selectedUp: false, selectedDown: false
+                    selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
+                    textUp: "", fontUp: null, textDown: "", fontDown: null,
                 })
             });
             setIconHolders(tempArr);
             chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
         }, 300);
-        return () => clearTimeout(modelimeout);
+        return () => clearTimeout(modeltimeout);
+    }
+
+    const handleClearAllIcons = () => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.lastDroppedDot = null;
+            el.lastDroppedIcon = null;
+            el.lastDroppedSlashUp = null;
+            el.lastDroppedSlashDown = null;
+            el.selectedDot = false;
+            el.selected = false;
+            el.selectedUp = false;
+            el.selectedDown = false;
+        })
+        setIconHolders(copyArr)
+        setRerender(prev => !prev)
     }
 
     useEffect(() => {
@@ -481,12 +617,131 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         setRotateLeft(prev => !prev)
     }
 
+    const handleTextBorder = () => {
+        setShowTextBorder(prev => !prev)
+    }
 
-    const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-            Simple tooltip
-        </Tooltip>
-    );
+    const handleTextUpOff = () => {
+        setTextUpOff(prev => !prev)
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.textUp = "";
+            el.fontUp = null;
+        })
+        setIconHolders(copyArr)
+    }
+
+    const handleClearAllText = () => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.textUp = "";
+            el.fontUp = null;
+            el.textDown = "";
+            el.fontDown = null;
+        })
+        setIconHolders(copyArr)
+        setRerender(prev => !prev)
+    }
+
+
+
+    // const renderTooltip = (props) => (
+    //     <Tooltip id="button-tooltip" {...props}>
+    //         Simple tooltip
+    //     </Tooltip>
+    // );
+
+    const handleChangeTextUp = useCallback((index, text) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                textUp: {
+                    $set: text.target.value.toUpperCase(),
+                }
+            },
+        }));
+    }, [iconHolders]);
+
+
+    const handleChangeTextDown = useCallback((index, text) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                textDown: {
+                    $set: text.target.value.toUpperCase(),
+                }
+            },
+        }));
+    }, [iconHolders]);
+
+    const handleChangeFontDown = useCallback((index) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                fontDown: {
+                    $set: chosenFont,
+                }
+            },
+        }));
+    }, [iconHolders, chosenFont]);
+
+    const handleChangeFontUp = useCallback((index) => {
+        setIconHolders(update(iconHolders, {
+            [index]: {
+                fontUp: {
+                    $set: chosenFont,
+                }
+            },
+        }));
+    }, [iconHolders, chosenFont]);
+
+
+
+    const handleSetOneFont = () => {
+        const copyArr = iconHolders;
+        copyArr.forEach((el) => {
+            el.fontUp = chosenFont;
+            el.fontDown = chosenFont;
+        })
+        setIconHolders(copyArr)
+        setRerender(prev => !prev)
+    }
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // .addEventListener('keyup', function (event) {
+        //     if (event.code === 'Enter') {
+        //         event.preventDefault();
+        //         document.querySelector('form').submit();
+        //     }
+        // });
+    };
+
+    // if (chosenTab === "text") {
+    //     document.querySelector('.text_input')
+    //         .addEventListener('keyup', function (event) {
+    //             if (event.code === 'Enter') {
+    //                 event.preventDefault();
+    //                 document.querySelector('form').submit();
+    //             }
+    //         });
+    // }
+
+
+    const [isFocusedInputIndex, setFocusedInputIndex] = useState(null)
+    const [isFocusedInputSide, setFocusedInputSide] = useState(null)
+
+    const handleFocusInput = (index, side) => {
+        setFocusedInputIndex(index)
+        setFocusedInputSide(side)
+    }
+
+    const handleBlurInput = (index, side) => {
+        setFocusedInputIndex(null)
+        setFocusedInputSide(null)
+    }
+
+
+
+
 
     return (
         <div className="panelpreview_container">
@@ -511,7 +766,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                             <div className="panel_content" style={contentStyle}>
                                 {hideAll &&
                                     <>
-                                        {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown, }, index) =>
+                                        {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown,
+
+                                            textUp, fontUp, textDown, fontDown,
+
+                                        }, index) =>
                                             <div key={index}
                                                 style={
                                                     ((index + 2) % 3 === 0) ?
@@ -527,6 +786,133 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                         )}>
                                                 {flag === 1 &&
                                                     <>
+                                                        {/* <div className="text_box" style={chosenTab !== "icons" ? { zIndex: "999" } : { zIndex: "0" }}> !!! przy ramkach zmodyfikuj to */}
+                                                        <div className="text_box" style={chosenTab !== "icons" ? { zIndex: "999" } : { zIndex: "0" }}>
+
+
+                                                            {textUpOff &&
+
+                                                                <div style={{ ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }}>
+                                                                    {/* <input className="text_input"
+                                                                        type="text"
+                                                                        style={{ ...textStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }}
+                                                                        disabled={chosenTab !== "text" && true}
+                                                                        onMouseOver={showBorder}
+                                                                        onMouseLeave={hideBorder}
+                                                                        value={textUp}
+                                                                        onChange={(text) => handleChangeTextUp(index, text)}
+                                                                        onClick={() => handleChangeFontUp(index)}
+                                                                    /> */}
+                                                                    <input className="text_input"
+                                                                        type="text"
+                                                                        maxLength="25"
+                                                                        style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
+                                                                            (
+                                                                                (chosenColor.hex !== "#2fa32c") ? {
+                                                                                    ...textStyle, fontFamily: fontUp,
+                                                                                    border: "2px solid rgb(40, 167, 69)"
+                                                                                } :
+                                                                                    {
+                                                                                        ...textStyle, fontFamily: fontUp,
+                                                                                        border: "2px solid rgb(32, 114, 30)"
+                                                                                    }
+                                                                            )
+                                                                            : { ...textStyle, fontFamily: fontUp }}
+                                                                        disabled={chosenTab !== "text" && true}
+                                                                        onMouseOver={showBorder}
+                                                                        onMouseLeave={hideBorder}
+                                                                        value={textUp}
+                                                                        onChange={(text) => handleChangeTextUp(index, text)}
+                                                                        onClick={() => handleChangeFontUp(index)}
+                                                                        onFocus={() => { handleFocusInput(index, "up") }}
+                                                                        onBlur={handleBlurInput}
+                                                                    />
+                                                                    <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                                                        {textUp}
+                                                                    </span>
+                                                                </div>
+                                                            }
+
+                                                            <form onSubmit={handleSubmit}>
+
+                                                                <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
+                                                                    {/* <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown , border: "1px solid red"}}> */}
+                                                                    <input className="text_input"
+                                                                        type="text"
+                                                                        maxLength="25"
+                                                                        style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
+                                                                            (
+                                                                                (chosenColor.hex !== "#2fa32c") ? {
+                                                                                    ...textStyle, fontFamily: fontDown,
+                                                                                    border: "2px solid rgb(40, 167, 69)"
+                                                                                } :
+                                                                                    {
+                                                                                        ...textStyle, fontFamily: fontDown,
+                                                                                        border: "2px solid rgb(32, 114, 30)"
+                                                                                    }
+                                                                            )
+                                                                            : { ...textStyle, fontFamily: fontDown }}
+                                                                        disabled={chosenTab !== "text" && true}
+                                                                        onMouseOver={showBorder}
+                                                                        onMouseLeave={hideBorder}
+                                                                        value={textDown}
+                                                                        onChange={(text) => handleChangeTextDown(index, text)}
+                                                                        onClick={() => handleChangeFontDown(index)}
+                                                                        onFocus={() => { handleFocusInput(index, "down") }}
+                                                                        onBlur={handleBlurInput}
+                                                                    />
+                                                                    <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                                                        {textDown}
+                                                                    </span>
+
+                                                                    {/* {(isFocusedInputIndex === index && isFocusedInputSide === "down") &&
+
+                                                                        <input type="image" src={Submitinput} alt="submitinput"
+                                                                            style={{
+                                                                                height: `${3.6 * sc}px`,
+                                                                                width: `${3.6 * sc}px`,
+                                                                                // position: "absolute",
+                                                                                transform: "translate(75%,-50%)"
+                                                                            }}
+                                                                        />
+                                                                    } */}
+
+
+                                                                </div>
+
+                                                            </form>
+
+
+
+
+
+                                                            {/* <input type="image" src={Submitinput} alt="submitinput"
+                                                                  style={{height: `${3.6 * sc}px`,width: `${3.6 * sc}px` }}
+                                                                  /> */}
+
+
+                                                            {/* <input type="submit" value="Wyślij" /> */}
+                                                            {/* </form> */}
+
+
+                                                            {/* <input className="text_input"
+                                                                    type="text"
+                                                                    maxlength="20"
+                                                                    style={{ ...textStyle, top: `${14.35 * sc}px`, fontFamily: fontDown,
+                                                                
+                                                                    gridArea: '1 / 1 / 2 / 2',
+                                                                    width: '100%',
+                                                                }}
+                                                                    disabled={chosenTab !== "text" && true}
+                                                                    onMouseOver={showBorder}
+                                                                    onMouseLeave={hideBorder}
+                                                                    value={textDown}
+                                                                    onChange={(text) => handleChangeTextDown(index, text)}
+                                                                    onClick={() => handleChangeFontDown(index)}
+                                                                /> */}
+
+                                                        </div>
+
                                                         <IconHolder
                                                             chosenColor={chosenColor}
                                                             lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
@@ -546,12 +932,14 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                             selected={selected}
                                                             selectedUp={selectedUp}
                                                             selectedDown={selectedDown}
-                                                            onDrag={(item) => handleDrag(index, item)}
+                                                            onDrag={handleDrag}
+                                                            // onDrag={(item) => handleDrag(index, item)}
                                                             animations={animations}
                                                             clear={clear}
                                                             rotateRight={rotateRight}
                                                             rotateLeft={rotateLeft}
                                                             visual={visual}
+                                                            chosenTab={chosenTab}
                                                         />
                                                     </>}
                                             </div>
@@ -588,7 +976,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     <div className="bottom_info_ral">
                         <span>RAL: {chosenColor.RAL}</span>
                     </div>
-
                 </div>
             </div>
             <div className="preview_side">
@@ -597,31 +984,66 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
                     {visual ? <span>Widok wizuali-<br />zacji</span> : <span>Widok schematy-<br />czny</span>}
                 </div>
-                <div className="side_box">
-                    {animations ?
-                        <img src={Animoff} alt="animationoff" className="side_icon" onClick={handleAnimation} />
-                        : <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
-                    }
-                    {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
-                </div>
+
                 <div className="side_box">
                     <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll} />
-                    <span>Usuń wszystkie ikony</span>
+                    <span>Zresetuj wszystko</span>
                 </div>
-                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Clear} alt="clear" className="side_icon" onClick={handleClear} />
-                    <span>Usuń zaznaczoną ikonę</span>
-                </div>
-                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-                    <span>Obróć o 90° w prawo</span>
-                </div>
-                {/* <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-                    <span >Obróć o 90° w lewo</span>
-                </div> */}
+                {chosenTab === "icons" &&
+                    <>
+                        <div className="side_box">
+                            {animations ?
+                                <img src={Animoff} alt="animationoff" className="side_icon" onClick={handleAnimation} />
+                                : <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
+                            }
+                            {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
+                        </div>
+                        <div className="side_box">
+                            <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={handleClearAllIcons} />
+                            <span>Usuń wszystkie ikony</span>
+                        </div>
+                        <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                            <img src={Clear} alt="clear" className="side_icon" onClick={handleClear} />
+                            <span>Usuń zaznaczoną ikonę</span>
+                        </div>
+                        <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                            <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                            <span>Obróć o 90° w prawo</span>
+                        </div>
+                        <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                            <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                            <span >Obróć o 90° w lewo</span>
+                        </div>
+                    </>
+                }
+                {chosenTab === "text" &&
+                    <>
+                        <div className="side_box">
+                            <img src={Textborder} alt="textborder" className="side_icon" onClick={handleTextBorder} />
+                            <span>Pokaż granice</span>
+                        </div>
 
-                <OverlayTrigger
+                        <div className="side_box">
+                            {textUpOff ?
+                                <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff} />
+                                :
+                                <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff} />}
+                            {textUpOff ? <span>Wyłącz i usuń opisy nad ikonami</span> : <span>Włącz opisy nad ikonami</span>}
+                        </div>
+
+                        <div className="side_box">
+                            <img src={Clearalltext} alt="clearalltext" className="side_icon" onClick={handleClearAllText} />
+                            <span>Usuń wszystkie opisy</span>
+                        </div>
+
+                        <div className="side_box">
+                            <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
+                            <span>Wybrany font dla wszystkich opisów</span>
+                        </div>
+
+                    </>
+                }
+                {/* <OverlayTrigger
                     arrowProps
                     placement="left"
                     delay={{ show: 250, hide: 400 }}
@@ -631,7 +1053,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                         <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
                         <span >Obróć o 90° w lewo</span>
                     </div>
-                </OverlayTrigger>
+                </OverlayTrigger> */}
 
             </div>
         </div>

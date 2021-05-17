@@ -10,7 +10,7 @@ import { ReDragDown } from './ReDrag/ReDragDown';
 
 
 export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDroppedSlashDown, onDropSlashDown, chosenColor, onDownActive, show, showNow,
-    warning, onResetDown, scale, onSelectDown, selectedDown, animations, clear, rotateRight, rotateLeft, visual }) {
+    warning, onResetDown, scale, onSelectDown, selectedDown, animations, clear, rotateRight, rotateLeft, visual, chosenTab }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -89,7 +89,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
                 animation: "Ani 2s infinite",
             };
         };
-    } else if (selectedDown) {
+    } else if (selectedDown&& chosenTab === "icons") {
         styleDroppingAni = {
             transform: "translate(13%, 87%) scale(2.2)",
         };
