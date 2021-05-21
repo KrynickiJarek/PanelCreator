@@ -4,7 +4,6 @@ import "./TextEditor.scss"
 
 const TextEditor = ({ onFontSet }) => {
 
-    // const [font, setFont] = useState(null)
     const [font, setFont] = useState("Calibri-bold")
 
     return (
@@ -19,7 +18,7 @@ const TextEditor = ({ onFontSet }) => {
                         : { fontFamily: "Calibri-bold" }}
                         onClick={() => { setFont("Calibri-bold"); onFontSet("Calibri-bold") }} >
                         {((font === "Calibri-bold") || !font) && <div className="font_chosen" />}
-                        < p className="font_name" style={{ fontSize: "24px" }}>Calibri-bold</p>
+                        < p className="font_name" style={{ fontSize: "24px" }}>Calibri bold</p>
                         < p className="font_example" style={{ fontSize: "14px" }}>Przykładowy tekst napisany fontem Calibri-bold</p>
                     </div>
 
@@ -35,7 +34,7 @@ const TextEditor = ({ onFontSet }) => {
                         : { fontFamily: "Helvetica-bold" }}
                         onClick={() => { setFont("Helvetica-bold"); onFontSet("Helvetica-bold") }} >
                         {font === "Helvetica-bold" && <div className="font_chosen"/>}
-                        < p className="font_name" style={{ fontSize: "24px" }}>Helvetica Bold</p>
+                        < p className="font_name" style={{ fontSize: "24px" }}>Helvetica bold</p>
                         < p className="font_example" style={{ fontSize: "14px" }}>Przykładowy tekst napisany fontem Helvetica Bold</p>
                     </div>
 

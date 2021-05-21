@@ -23,18 +23,18 @@ const ModelChooser = ({ onModelSet, chosenModel }) => {
                 <p>(wersja robocza)</p>
                 <form className="panel_form">
                     <label>Wybierz model:</label>
-                    <Select defaultValue={model.type} style={{ width: 150 }} value={availableModels.type} onChange={handlePanelChange}>
+                    <Select defaultValue={model.type} style={{ width: 200 }} value={availableModels.type} onChange={handlePanelChange}>
                         {availableModels.map((panel) => <Option key={panel.type}>{panel.type}</Option>)}
                     </Select>
                 </form>
 
-                <ul className="panel_list">
+                {/* <ul className="panel_list">
                     <li>Nazwa panelu: <span>{model.type}</span></li>
                     <li>Liczba ikon: <span>{model.numberOfDots}</span></li>
                     <li>Wysokość: <span>{model.height}</span></li>
                     <li>Szerokość: <span>{model.width}</span></li>
                     <li>Wyświetlacz LCD: <span>{(model.lcdScreen === true) ? "tak" : "nie"}</span></li>
-                </ul>
+                </ul> */}
             </div>
         </div >
     );

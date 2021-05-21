@@ -2,8 +2,13 @@
 .panelpreview_container {
   display: flex;
   height: 100%; 
-  width: 40%;//____________________________________________________________________________________________________________zedytuj
+  min-width: 30%;
+  max-width: 50%;
   background-color: #ECECEC;
+  transition: 1000ms ease-in-out;
+  transition-delay: 800ms;
+
+  // transition: 1500ms linear;
 
   .preview_side{
     background-color: #3f4141;
@@ -141,23 +146,17 @@
 
           .visualization_frame{
             position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
             height: 100%;
+            width: 100%;
+            transition: 0.4s ease; 
             // box-shadow: rgba(0, 0, 0, 0.5) 5px 5px 20px; //-------------------------??
-            // color: rgba($color: #000000, $alpha: 1.0)
           }
 
           .visualization_glass{
             position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
             height: 100%;
-            transition: 0.4s ease;
-            // box-shadow: rgba(0, 0, 0, 0.55) 10px 5px 20px; //-------------------??
-            //--------------------------------------------------eksperymenty
+            width: 100%;
+            transition: 0.4s ease; //-------------------------------
             clip-path: polygon(0 0, 67% 0, 41% 100%, 0% 100%);
             background-image:
             radial-gradient(
@@ -168,28 +167,25 @@
           }
           .visualization_glass_bis{
             position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
             height: 100%;
-            transition: 0.4s ease;
+            width: 100%;
+            transition: 0.4s ease; //-------------------------------
             clip-path: polygon(67% 0, 100% 0, 100% 100%, 41% 100%);
             background-color: rgba(200,200,200,0.08);
           }
 
           .visualization_glass_white{
             position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
             height: 100%;
-            transition: 0.4s ease;
-            background-color: rgba(200,200,200,0.22);
+            width: 100%;
+            transition: 0.4s ease; //-------------------------------
+            // background-color: rgba(200,200,200,0.22);
+            background-color: rgba(200,200,200,0.27);
           }
 
           .logo_pure{
             position: absolute;
-            transition: 0.4s ease;
+            transition: 0.4s ease; //-------------------------------
           }
 
           .panel_content{
@@ -204,9 +200,21 @@
               position: absolute;
               display: flex;
               flex-direction: column;
-              // justify-content: space-between;
-              justify-content: center;
+              justify-content: space-between;
               align-items: center;
+
+              .lcd_icon_box{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+
+                .lcd_icon{
+                  filter: grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 6px rgba(255, 255, 255, 1));
+                  cursor: default;
+                  transition: 0.4s ease;
+                }
+              }
               
               .lcd_clock{
                 color: white;
@@ -218,6 +226,15 @@
                 transition: 0.4s ease;
               }
             }
+
+            .universal_icons{
+              position: absolute;
+
+              .universal_icon{
+              position: absolute;
+              cursor: default;
+              }
+            }  
             
             .text_box{
               width: 100%;
@@ -225,16 +242,13 @@
               position: absolute;
 
               .text_input{
-                transition: color 0s, border 0.4s ease, width 0.4s ease, height 0.4s ease, top 0.4s ease;
+                // transition: color 0s, border 0.4s ease, width 0.4s ease, height 0.4s ease, top 0.4s ease;
+                transition: 0.4s ease;
                 text-align: center;
                 position: absolute;
                 transform: translateX(-50%);
                 padding: 0;
               }
-              // .text_input:focus{
-              //   border: 2px solid rgb(32, 114, 30) !important;
-              // }
-
             }
           }
         }

@@ -11,7 +11,8 @@ import { ReDragUp } from './ReDrag/ReDragUp';
 
 
 export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow,
-    warning, onResetUp, scale, onSelectUp, selectedUp, animations, clear, rotateRight, rotateLeft, visual, chosenTab }) {
+    warning, onResetUp, scale, onSelectUp, selectedUp, animations, clear, rotateRight, rotateLeft, visual, chosenTab, chosenModel,
+    showRemoveIcon, showRemoveIcons }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -141,7 +142,6 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
             </div>
             <div className="slash_up_area_dropping" style={{ ...styleDropping, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }} />
             <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px` }} >
-
                 {lastDroppedSlashUp &&
                     <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp}
                         clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
@@ -154,7 +154,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
                     />)
                 }
                 {
-                    (lastDroppedSlashUp && (warning || isActive)) &&
+                    (lastDroppedSlashUp && (warning || isActive || showRemoveIcons || (showRemoveIcon && selectedUp))) &&
                     (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)
                 }
             </div >

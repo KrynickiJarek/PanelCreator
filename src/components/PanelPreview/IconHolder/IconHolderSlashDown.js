@@ -10,7 +10,8 @@ import { ReDragDown } from './ReDrag/ReDragDown';
 
 
 export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDroppedSlashDown, onDropSlashDown, chosenColor, onDownActive, show, showNow,
-    warning, onResetDown, scale, onSelectDown, selectedDown, animations, clear, rotateRight, rotateLeft, visual, chosenTab }) {
+    warning, onResetDown, scale, onSelectDown, selectedDown, animations, clear, rotateRight, rotateLeft, visual, chosenTab, chosenModel,
+     showRemoveIcon, showRemoveIcons }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -89,7 +90,7 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
                 animation: "Ani 2s infinite",
             };
         };
-    } else if (selectedDown&& chosenTab === "icons") {
+    } else if (selectedDown && chosenTab === "icons") {
         styleDroppingAni = {
             transform: "translate(13%, 87%) scale(2.2)",
         };
@@ -134,22 +135,21 @@ export const IconHolderSlashDown = memo(function IconHolderSlashDown({ lastDropp
 
     return (
         <div style={styleZIndex}>
-
             <div className="slash_down_area_dropping_ani" style={{ ...styleDroppingAni, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
                 <div className="slash_area_dropping_pulse" style={styleDroppingPulse} />
             </div>
             <div className="slash_down_area_dropping" style={{ ...styleDropping, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }} />
             <div ref={drop} className="slash_down_area" style={{ ...styleScale, ...styleArea, top: `${10.75 * scale}px` }} >
                 {lastDroppedSlashDown &&
-                    <ReDragDown image={lastDroppedSlashDown.image} chosenColor={chosenColor} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} 
-                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}/>
+                    <ReDragDown image={lastDroppedSlashDown.image} chosenColor={chosenColor} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown}
+                        clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
                 }
                 {!lastDroppedSlashDown &&
                     (<img src={DownHolder} alt="downholder" className="slash_holder"
                         style={chosenColor.iconColor === "white" ? { ...styleHolder, ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                             : { ...styleHolder, ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                     />)}
-                {(lastDroppedSlashDown && (warning || isActive)) &&
+                {(lastDroppedSlashDown && (warning || isActive || showRemoveIcons  || (showRemoveIcon && selectedDown))) &&
                     (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)}
             </div>
         </div>
