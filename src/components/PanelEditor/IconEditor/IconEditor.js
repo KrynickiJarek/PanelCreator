@@ -234,10 +234,7 @@ export const IconEditor = memo(function IconEditor() {
                     <img src={Favorite} alt="favorite" className="favorite_instruction" />
                       </p>
 
-
-
                     </>
-
 
                     : favoriteIcons.map((image, index) =>
                       <IconToDrag key={index} image={image}

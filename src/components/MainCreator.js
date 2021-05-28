@@ -18,6 +18,8 @@ export const MainCreator = memo(function MainCreator() {
     const [chosenModel, setChosenModel] = useState(availableModels[0])
     const [chosenTab, setChosenTab] = useState("model") 
     const [chosenFont, setChosenFont] = useState("Calibri-bold")
+    const [chosenFrameFont, setChosenFrameFont] = useState("Calibri-bold")
+    const [chosenFrameShape, setChosenFrameShape] = useState("sharp")
 
     const handleSetColor = (chosenColor) => {
         setChosenColor(chosenColor);
@@ -35,14 +37,25 @@ export const MainCreator = memo(function MainCreator() {
         setChosenFont(chosenFont);
     }
 
+    const handleFrameFontSet = (chosenFrameFont) => {
+        setChosenFrameFont(chosenFrameFont);
+    }
+
+    const handleFrameShapeSet = (chosenFrameShape) => {
+        setChosenFrameShape(chosenFrameShape);
+    }
+
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="main_container">
                 <CreatorHeader />
                 <div className="content_container">
                     <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} onTabSet={handleSetTab} onFontSet={handleSetFont}
+                    onFrameFontSet={handleFrameFontSet} onFrameShapeSet={handleFrameShapeSet}
                      chosenColor={chosenColor} chosenModel={chosenModel} />
-                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}/>
+                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}
+                    chosenFrameFont={chosenFrameFont} chosenFrameShape={chosenFrameShape}
+                    />
                 </div>
             </div>
         </DndProvider>

@@ -66,7 +66,7 @@ const availablePanels = [
         height: 90,
         width: 90,
         lcdScreen: {
-            lcdType: "slide",
+            lcdType: "noslide",
             lcdHeight: 42.2,
             lcdWidth: 31.8,
             lcdTop: 22.15,
@@ -177,7 +177,7 @@ const availablePanels = [
         height: 160,
         width: 90,
         lcdScreen: {
-            lcdType: "noslide",
+            lcdType: "slide",
             lcdHeight:42.2,
             lcdWidth: 31.8,
             lcdTop: 18.9,

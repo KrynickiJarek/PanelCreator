@@ -270,6 +270,44 @@
 }
 
 
+.border_top1{
+ border-top: 2px solid white;
+}
+.border_top0{
+  // border-top: 2px solid transparent !important;
+  border-top: none;
+
+}
+.border_left1{
+ border-left: 2px solid white;
+}
+.border_left0{
+  // border-left: 2px solid transparent !important;
+  border-left: none;
+}
+.border_bottom1{
+  border-bottom: 2px solid white;
+ }
+ .border_bottom0{
+  //  border-bottom: 2px solid transparent !important;
+   border-bottom: none;
+ }
+ .border_right1{
+  border-right: 2px solid white;
+ }
+ .border_right0{
+  // border-right: 2px solid transparent !important;
+  border-right: none;
+ }
+
+ .frame_change{
+   height: 70%;
+   width: 70%;
+   top: 15%;
+   left: 15%;
+   position: absolute;
+   transition: 200ms ease;
+  }
 
 
   

@@ -89,15 +89,15 @@ export const IconHolder = memo(function IconHolder({
                 };
             }
         };
-        if (chosenModel.type === "MDOT-18 poziomyxxx") {
-            styleArea = {
-                transform: "scale(1.3) rotate(90deg)",
-            };
-        } else {
+        // if (chosenModel.type === "MDOT-18 poziomyxxx") {
+        //     styleArea = {
+        //         transform: "scale(1.3) rotate(90deg)",
+        //     };
+        // } else {
             styleArea = {
                 transform: "scale(1.3)",
             };
-        }
+        // }
 
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2.25)",
