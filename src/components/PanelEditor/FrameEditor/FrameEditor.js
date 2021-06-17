@@ -4,7 +4,7 @@ import Roundframe from "../../../assets/frame/roundframe.svg"
 import Sharpframe from "../../../assets/frame/sharpframe.svg"
 
 
-const FrameEditor = ({ onFrameFontSet, onFrameShapeSet }) => {
+const FrameEditor = ({ onFrameFontSet, onFrameShapeSet, onAddNewFrame }) => {
 
 
 
@@ -24,17 +24,30 @@ const FrameEditor = ({ onFrameFontSet, onFrameShapeSet }) => {
                         <div className="frame_shape_link" style={((frameShape === "sharp") || !frameShape) ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
                             onClick={() => { setFrameShape("sharp"); onFrameShapeSet("sharp") }} >
                             {((frameShape === "sharp") || !frameShape) && <div className="frame_chosen" />}
-                            < p className="shape_name">Ostre<br/>narożniki</p>
+                            < p className="shape_name">Ostre<br />narożniki</p>
                             <img src={Sharpframe} alt="sharpframe" className="shape_image" />
                         </div>
 
                         <div className="frame_shape_link" style={frameShape === "round" ? { border: "3px solid #EC695C" } : {}}
                             onClick={() => { setFrameShape("round"); onFrameShapeSet("round") }} >
                             {frameShape === "round" && <div className="frame_chosen" />}
-                            < p className="shape_name">Zaokrąglone<br/>narożniki</p>
+                            < p className="shape_name">Zaokrąglone<br />narożniki</p>
                             <img src={Roundframe} alt="roundframe" className="shape_image" />
                         </div>
                     </div>
+
+
+
+                    <p className="instruction_normal">(w przygotowaniu)</p>
+
+
+                    <div style={{border: "3px solid #EC695C", cursor: "pointer", fontWeight: "900", padding: "10px", margin: "10px"}}
+                        onClick={()=>onAddNewFrame()} >
+                                ZATWIERDŹ
+                    </div>
+
+
+
 
                     <p className="instruction_normal">(w przygotowaniu)Wybierz font, a następnie dodaj opisy ramki.</p>
 

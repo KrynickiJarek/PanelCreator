@@ -31,7 +31,9 @@ export const IconHolder = memo(function IconHolder({
     chosenTab,
     showRemoveIcon,
     showRemoveIcons,
-    chosenModel
+    chosenModel,
+    singleFrame,
+    chosenFrameShape
 }) {
 
     let warning = false
@@ -64,6 +66,8 @@ export const IconHolder = memo(function IconHolder({
     styleScale.height = `${7.5 * scale}px`;
     styleScale.width = `${7.5 * scale}px`;
     let styleZIndex = {};
+    let styleSignleFrame = {};
+    let styleSignleFrameResize = {};
 
     if (isActive) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -89,15 +93,9 @@ export const IconHolder = memo(function IconHolder({
                 };
             }
         };
-        // if (chosenModel.type === "MDOT-18 poziomyxxx") {
-        //     styleArea = {
-        //         transform: "scale(1.3) rotate(90deg)",
-        //     };
-        // } else {
-            styleArea = {
-                transform: "scale(1.3)",
-            };
-        // }
+        styleArea = {
+            transform: "scale(1.3)",
+        };
 
         styleDroppingAni = {
             transform: "translateX(-50%) scale(2.25)",
@@ -145,6 +143,35 @@ export const IconHolder = memo(function IconHolder({
     }, [isOverToShow]);
 
 
+
+    if (singleFrame && chosenFrameShape === "sharp") {
+        styleSignleFrame = {
+            border: `2px solid ${chosenColor.iconColor}`,
+            borderRadius: "0px",
+        }
+        styleSignleFrameResize = {
+            transform: "scale(0.75)",
+        }
+    } else if (singleFrame && chosenFrameShape === "round") {
+        styleSignleFrame = {
+            border: `2px solid ${chosenColor.iconColor}`,
+            borderRadius: `${scale}px`,
+        }
+        styleSignleFrameResize = {
+            transform: "scale(0.75)",
+        }
+    } else if (!singleFrame && chosenFrameShape === "round") {
+        styleSignleFrame = {
+            border: "2px solid transparent",
+            borderRadius: `${scale}px`
+        }
+    } else {
+        styleSignleFrame = {
+            border: "2px solid transparent"
+        }
+    }
+
+
     let showNow = false
     if (isOverToShow && (lastDroppedSlashDown || lastDroppedSlashUp)) {
         showNow = true
@@ -172,18 +199,19 @@ export const IconHolder = memo(function IconHolder({
 
     return (
         <>
-                <div ref={over} style={(chosenModel.type !== "MDOT-18 poziomy")?{ height: "100%", width: "100%", position: "absolute"}
-                :{ height: "100%", width: "100%", position: "absolute", transform:"rotate(90deg)",  transformOrigin:`center ${10.4 * scale}px`, transition: "0.4s ease"}}>
-                    <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale}
-                        onSelectDot={onSelectDot} selectedDot={selectedDot} animations={animations} clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft}
-                        visual={visual} chosenTab={chosenTab} chosenModel={chosenModel} showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} />
-                    <div style={styleZIndex}>
-                        <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
-                            <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
-                        </div>
-                        <div className="icon_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${6.65 * scale}px auto 0` }} />
-                        <div ref={drop} className="icon_area" style={(chosenModel.type === "MDOT-18 poziomyxxx") ?
-                            { transform: "rotate(90deg)", ...styleScale, ...styleArea } : { ...styleScale, ...styleArea }}  >
+            <div ref={over} style={(chosenModel.type !== "MDOT-18 poziomy") ? { height: "100%", width: "100%", position: "absolute" }
+                : { height: "100%", width: "100%", position: "absolute", transform: "rotate(90deg)", transformOrigin: `center ${10.4 * scale}px`, transition: "0.4s ease" }}>
+                <IconHolderStatus lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} chosenColor={chosenColor} onResetDot={onResetDot} show={show} scale={scale}
+                    onSelectDot={onSelectDot} selectedDot={selectedDot} animations={animations} clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft}
+                    visual={visual} chosenTab={chosenTab} chosenModel={chosenModel} showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} />
+                <div style={styleZIndex}>
+
+                    <div className="icon_area_dropping_ani" style={{ ...styleDroppingAni, height: `${7.5 * scale}px`, width: `${7.5 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
+                        <div className="icon_area_dropping_pulse" style={styleDroppingPulse} />
+                    </div>
+                    <div className="icon_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${6.65 * scale}px auto 0` }} />
+                    <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea, ...styleSignleFrame }} >
+                        <div className="icon_area" style={styleSignleFrameResize}>
 
                             {(lastDroppedIcon) &&
                                 <ReDrag image={lastDroppedIcon.image} chosenColor={chosenColor} onReset={onReset} scale={scale} onSelect={onSelect} selected={selected}
@@ -202,18 +230,23 @@ export const IconHolder = memo(function IconHolder({
                                 />)}
                             {(lastDroppedIcon && (upActive || downActive || isActive || showRemoveIcons || (showRemoveIcon && selected))) &&
                                 (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
+
                         </div>
                     </div>
-                    <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
-                        show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} animations={animations}
-                        clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab} chosenModel={chosenModel}
-                        showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} />
-
-                    <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
-                        show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} animations={animations}
-                        clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab} chosenModel={chosenModel}
-                        showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} />
                 </div>
+                {/* <div className="icon_area" style={styleSignleFrameResize}> */}
+
+                <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
+                    show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} animations={animations}
+                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab} chosenModel={chosenModel}
+                    showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame}/>
+
+                <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
+                    show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} animations={animations}
+                    clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab} chosenModel={chosenModel}
+                    showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame}/>
+            </div>
+            {/* </div> */}
         </>
 
 

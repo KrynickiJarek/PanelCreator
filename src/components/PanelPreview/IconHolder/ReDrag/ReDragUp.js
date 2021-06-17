@@ -3,7 +3,7 @@ import { useDrag } from 'react-dnd';
 import "./../IconHolderSlash.scss"
 
 
-export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, scale, onSelectUp, selectedUp, clear, rotateRight, rotateLeft, visual }) {
+export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, scale, onSelectUp, selectedUp, clear, rotateRight, rotateLeft, visual, singleFrame }) {
 
     let styleScale = {};
     styleScale.height = `${7.5 * scale}px`;
@@ -12,6 +12,18 @@ export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, 
     const [turn, setTurn] = useState(0)
     let styleTurn = {};
     styleTurn.transform = `rotate(${turn}deg) scale(0.466)`
+
+    if (singleFrame && !selectedUp) {
+        styleTurn = {
+            transform: `rotate(${turn}deg) scale(0.35)`,
+            marginLeft: `${0.88 * scale}px`,
+            marginTop: `${0.88 * scale}px`
+        }
+    } else if (singleFrame && selectedUp) {
+        styleTurn = {
+            transform: `rotate(${turn}deg) scale(0.35)`,
+        }
+    }
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "icon",

@@ -5,15 +5,35 @@ import "./../IconHolderSlash.scss"
 
 
 
-export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onResetDown, scale, onSelectDown, selectedDown, clear, rotateRight, rotateLeft, visual }) {
+export const ReDragDown = memo(function ReDragDown({ image, chosenColor, onResetDown, scale, onSelectDown, selectedDown, clear, rotateRight, rotateLeft, visual, singleFrame }) {
 
     let styleScale = {};
     styleScale.height = `${7.5 * scale}px`;
     styleScale.width = `${7.5 * scale}px`;
 
+    // if (singleFrame) {
+    //     styleScale = {
+    //         transform: "scale(0.5)",
+    //         // transformOrigin: "top left",
+    //     }
+    // }
+
     const [turn, setTurn] = useState(0)
     let styleTurn = {};
     styleTurn.transform = `rotate(${turn}deg) scale(0.466)`
+
+    if (singleFrame && !selectedDown) {
+        styleTurn = {
+            transform: `rotate(${turn}deg) scale(0.35)`,
+            marginRight: `${0.88 * scale}px`,
+            marginBottom: `${0.88 * scale}px`
+        }
+    } else if (singleFrame && selectedDown) {
+        styleTurn = {
+            transform: `rotate(${turn}deg) scale(0.35)`,
+        }
+    }
+
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "icon",

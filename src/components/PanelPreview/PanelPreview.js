@@ -53,7 +53,7 @@ import Rightuni from "../../assets/lcd/rightuni.svg"
 
 import { IconHolder } from './IconHolder/IconHolder';
 
-export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor, chosenTab, chosenFont, chosenFrameFont, chosenFrameShape }) {
+export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor, chosenTab, chosenFont, chosenFrameFont, chosenFrameShape, addNewFrame }) {
 
     const [sc, setSc] = useState(5);
 
@@ -72,12 +72,18 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     const [newFrame, setNewFrame] = useState([]) //----------------------------------------------------------------FRAME
     const [newFrameChange, setNewFrameChange] = useState([]) //----------------------------------------------------------------FRAME
     const [tempFrame, setTempFrame] = useState([]) //----------------------------------------------------------------FRAME
-    // const [newFrameMemo, setNewFrameMemo] = useState([]) //----------------------------------------------------------------FRAME
+    const [frameHolders, setFrameHolders] = useState([]) //----------------------------------------------------------------FRAME
+    // const [selectedFrameShape, setSelectedFrameShape] = useState(chosenFrameShape) //----------------------------------------------------------------FRAME
 
     const [rerender, setRerender] = useState(false)
 
     useEffect(() => {
     }, [rerender])
+
+    // useEffect(() => {//----------------------------------------------------------------FRAME
+    //     setSelectedFrameShape(chosenFrameShape)
+    //     setRerender(prev => !prev)
+    // }, [chosenFrameShape])
 
 
     let frameCellStyle = {}//----------------------------------------------------------------FRAME
@@ -107,1195 +113,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }
 
     let frameTempStyle = {}
-    frameTempStyle.height = "100%";
-    frameTempStyle.width = "100%";
+    // frameTempStyle.height = "100%";
+    // frameTempStyle.width = "100%";
     frameTempStyle.position = "absolute";
     frameTempStyle.transition = "width 400ms ease, height 400ms ease, border-color 400ms ease, border-width 0s";
-
-    // if (chosenColor.iconColor){
-    //     frameTempStyle.borderColor = chosenColor.iconColor;
-    // } 
-
-    // // frameTempStyle.border = "2px solid transparent";
-
-
-
-
-
-
-
-    const handleFrameOver = ((index) => {
-        const copyArr = newFrame;
-        const copyArrChange = newFrameChange;
-
-        if (copyArr[index] === 1) {
-            copyArrChange[index] = "a";
-
-            //poziomo: automatyczne zaznaczenie środkowego kiedy lewy był zaznaczony i zaznacza się prawy
-            if (((index % 3) === 2) && copyArr[index - 2] === "s" && copyArr[index - 1] !== 0) {
-                copyArrChange[index - 1] = "a";
-            }
-            //poziomo: automatyczne zaznaczenie środkowego kiedy prawy był zaznaczony i zaznacza się lewy
-            if ((index % 3 === 0) && copyArr[index + 2] === "s" && copyArr[index + 1] !== 0) {
-                copyArrChange[index + 1] = "a";
-            }
-            //pionowo: automatyczne zaznaczenie pośrednich kiedy wyżej był zaznaczony i zaznacza się nizszy
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === index % 3 && copyArr[i] === "s" && i + 3 < index) {
-                    for (let j = i; j < index; j++) {
-                        if (j % 3 === index % 3) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                }
-            }
-            //pionowo: automatyczne zaznaczenie pośrednich kiedy niżej był zaznaczony i zaznacza się wyższy
-            for (let i = copyArr.length; i > index; i--) {
-                if (i % 3 === index % 3 && copyArr[i] === "s" && i - 3 > index) {
-                    for (let j = i; j > index; j--) {
-                        if (j % 3 === index % 3) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne prawe
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
-                    for (let j = i; j < index; j++) {
-                        copyArrChange[j] = "a"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe ------------------------------xxxx
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
-                    for (let j = i + 2; j >= index - 2; j--) {
-                        copyArrChange[j] = "a"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, tylko prawy zaznaczony
-            for (let i = 2; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 0) {
-                    for (let j = i - 2; j < index + 2; j++) {
-                        copyArrChange[j] = "a"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, prawy i środkowy zaznaczony  
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && copyArr[i + 1] === "s" && i % 3 === 1 && index % 3 === 0) {
-                    for (let j = i - 1; j < index + 2; j++) {
-                        copyArrChange[j] = "a"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, zaznaczony tylko środkowy rząd ---przeanalizowane
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && i % 3 === 1 && index % 3 === 0) {
-                    for (let j = i - 1; j < index + 2; j++) {
-                        if (j % 3 !== 2) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, środek, zaznaczony tylko prawy rząd
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 2 && index % 3 === 1) {
-                    for (let j = i - 1; j < index + 1; j++) {
-                        if (j % 3 !== 0) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, środek, zaznaczony tylko lewy rząd
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
-                    for (let j = i + 1; j >= index - 1; j--) {
-                        if (j % 3 !== 2) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne lewe
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 - 2 === index % 3) {
-                    for (let j = i; j > index; j--) {
-                        copyArrChange[j] = "a"
-                    }
-                }
-            }
-
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe----
-            for (let i = copyArr.length - 1; i > index; i--) {
-                if (copyArr[i] === "s" && copyArr[i - 1] === "s" && i % 3 === 1 && index % 3 === 2) {
-                    for (let j = i + 1; j > index - 2; j--) {
-                        copyArrChange[j] = "a"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, zaznaczony tylko środkowy rząd
-            for (let i = copyArr.length - 1; i > index; i--) {
-                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 1 && index % 3 === 2) {
-                    for (let j = i + 1; j > index - 2; j--) {
-                        if (j % 3 !== 0) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
-                    for (let j = i; j < index; j++) {
-                        if (j % 3 !== 2)
-                            copyArrChange[j] = "a"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 0) {
-                    for (let j = i; j > index; j--)
-                        if (j % 3 !== 2)
-                            copyArrChange[j] = "a"
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, sąsiednie prawe
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 2) {
-                    for (let j = i; j < index; j++)
-                        if (j % 3 !== 0)
-                            copyArrChange[j] = "a"
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie prawe
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 1) {
-                    for (let j = i; j > index; j--)
-                        if (j % 3 !== 0)
-                            copyArrChange[j] = "a"
-                }
-            }
-            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    for (let j = i + 3; j < index; j++) {
-                        copyArrChange[j] = "a"
-                    }
-                    if (index % 3 === 0) {
-                        copyArrChange[index + 1] = "a"
-                        copyArrChange[index + 2] = "a"
-                    }
-                    if (index % 3 === 1) {
-                        copyArrChange[index + 1] = "a"
-                    }
-                }
-            }
-            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy ,
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s" && copyArr[i - 2] === "s") {
-                    for (let j = i - 3; j > index; j--) {
-                        copyArrChange[j] = "a"
-                    }
-                    if (index % 3 === 2) {
-                        copyArrChange[index - 1] = "a"
-                        copyArrChange[index - 2] = "a"
-                    }
-                    if (index % 3 === 1) {
-                        copyArrChange[index - 1] = "a"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s") {
-                    for (let j = i + 3; j < index; j++) {
-                        if (j % 3 !== 2) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                    if (index % 3 === 0) {
-                        copyArrChange[index + 1] = "a"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy wyższy  był zaznaczony i zaznacza się niższy,
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i - 1] === "s") {
-                    for (let j = i - 3; j > index; j--) {
-                        if (j % 3 !== 2) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        copyArrChange[index - 1] = "a"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i + 1] === "s") {
-                    for (let j = i + 3; j < index; j++) {
-                        if (j % 3 !== 0) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        copyArrChange[index + 1] = "a"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy,
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s") {
-                    for (let j = i - 3; j > index; j--) {
-                        if (j % 3 !== 0) {
-                            copyArrChange[j] = "a"
-                        }
-                    }
-                    if (index % 3 === 2) {
-                        copyArrChange[index - 1] = "a"
-                    }
-                }
-            }
-            // dodawanie prawej kolumny, dwie lewe zaznaczone, środek zaznaczony: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 3] === "s" && copyArr[i + 4] === "s" && index % 3 === 2) {
-                    for (let j = copyArr.length - 1; j > i; j--) {
-                        if (j % 3 === 1 && copyArr[j] === "s" && index <= j + 1 && index >= i + 2) {
-                            for (let k = j + 1; k > i + 2; k--) {
-                                if (k % 3 === 2) {
-                                    copyArrChange[k] = "a"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie środkowej kolumny, lewa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
-                    for (let j = copyArr.length - 2; j > i; j--) {
-                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 1 && index >= i + 1) {
-                            for (let k = j + 1; k > i + 1; k--) {
-                                if (k % 3 === 1) {
-                                    copyArrChange[k] = "a"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie środkowej i prawej kolumny, lewa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 2) {
-                    for (let j = copyArr.length; j > i; j--) {
-                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 2 && index >= i + 2) {
-                            for (let k = j + 2; k > i + 1; k--) {
-                                copyArrChange[k] = "a"
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie środkowej kolumny, prawa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
-                    for (let j = copyArr.length; j > i; j--) {
-                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 1 && index >= i - 1) {
-                            for (let k = j - 1; k >= i - 1; k--) {
-                                if (k % 3 === 1) {
-                                    copyArrChange[k] = "a"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie lewej i środkowej kolumny, prawa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 0) {
-                    for (let j = copyArr.length; j > i; j--) {
-                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 2 && index >= i - 2) {
-                            for (let k = j - 1; k >= i - 2; k--) {
-                                copyArrChange[k] = "a"
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (let i = 0; i < copyArr.length; i++) {
-                if (copyArr[i] === "s") {
-                    copyArrChange[i] = 0
-                }
-            }
-
-
-
-
-        } else if (copyArr[index] === "s") {
-            copyArrChange[index] = "r";
-
-            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, cała góra zaznaczona
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === 0 && i < index - 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    if (copyArr[index + 3] !== "s" && index % 3 === 0) {
-                        for (let j = index; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (copyArr[index + 3] !== "s" && index % 3 === 2) {
-                        for (let j = index - 2; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        for (let j = index - 1; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, cała szerokość zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 5] === "s") {
-                    if (index % 3 === 0) {
-                        for (let j = index; j < index + 3; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        for (let j = index - 1; j < index + 2; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (index % 3 === 2) {
-                        for (let j = index - 2; j < index + 1; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, lewa i środek zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 2) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, prawa i środek zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 0) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-
-
-
-            //dwa lewe zaznaczone
-            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa lewe zaznaczone
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
-                    if (copyArr[index + 3] !== "s" && index % 3 === 0) {
-                        for (let j = index; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (copyArr[index + 3] !== "s" && index % 3 === 1) {
-                        for (let j = index - 1; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa prawe zaznaczone
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
-                    if (copyArr[index + 3] !== "s" && index % 3 === 1) {
-                        for (let j = index; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (copyArr[index + 3] !== "s" && index % 3 === 2) {
-                        for (let j = index - 1; j < copyArr.length; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa lewe zaznaczone
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i + 2] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
-                    if (index % 3 === 0) {
-                        for (let j = index; j < index + 2; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        for (let j = index - 1; j < index + 1; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa prawe zaznaczone
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && copyArr[i - 1] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
-                    if (index % 3 === 1) {
-                        for (let j = index; j < index + 2; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                    if (index % 3 === 2) {
-                        for (let j = index - 1; j < index + 1; j++) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-
-            //automatyczne usuwanie prawej kolumny - naciśnięcie na środek, lewa zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 1) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, środkowa zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 2) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, środek zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 0) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            // automatyczne usuwanie lewej kolumny - naciśnięcie na środkową, prawa zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 1) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-
-
-
-            // automatyczne usuwanie prawej komórki - zaznaczony jeden rząd
-            if ((index % 3 === 1) && copyArr[index - 1] === "s" && copyArr[index + 1] === "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
-                copyArrChange[index + 1] = "r"
-            }
-
-
-
-            // automatyczne usuwanie dolnych komórek - zaznaczona lewa kolumna
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 0 && i < index && copyArr[i] === "s" && copyArr[i + 1] !== "s") {
-                    for (let j = copyArr.length - 1; j > index; j--) {
-                        if (j % 3 === 0) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            // automatyczne usuwanie dolnych komórek - zaznaczona środkowa kolumna
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && index % 3 === 1 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s") {
-                    for (let j = copyArr.length - 1; j > index; j--) {
-                        if (j % 3 === 1) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-            // automatyczne usuwanie dolnych komórek - zaznaczona prawa kolumna
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 2 && index % 3 === 2 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s") {
-                    for (let j = copyArr.length - 1; j > index; j--) {
-                        if (j % 3 === 2) {
-                            copyArrChange[j] = "r"
-                        }
-                    }
-                }
-            }
-
-
-            for (let i = 0; i < copyArr.length; i++) {
-                if (copyArr[i] !== "s") {
-                    copyArrChange[i] = 0
-                }
-            }
-        }
-
-
-
-        setNewFrameChange(copyArrChange);
-        setRerender(prev => !prev)
-    });
-
-    const handleFrameLeave = ((index) => {
-        const arrNewFrameChange = [];
-        chosenModel.dotLocation.forEach(element => {
-            arrNewFrameChange.push(element)
-        });
-        setNewFrameChange(arrNewFrameChange);
-        setRerender(prev => !prev)
-    });
-    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    const handleFrameClick = ((index) => {
-        const copyArr = newFrame;
-        const copyTempArr = tempFrame;
-        if (copyArr[index] === 1) {
-            copyArr[index] = "s";
-
-            //poziomo: automatyczne zaznaczenie środkowego kiedy lewy był zaznaczony i zaznacza się prawy
-            if (((index % 3) === 2) && copyArr[index - 2] === "s" && copyArr[index - 1] !== 0) {
-                copyArr[index - 1] = "s";
-            }
-            //poziomo: automatyczne zaznaczenie środkowego kiedy prawy był zaznaczony i zaznacza się lewy
-            if ((index % 3 === 0) && copyArr[index + 2] === "s" && copyArr[index + 1] !== 0) {
-                copyArr[index + 1] = "s";
-            }
-            //pionowo: automatyczne zaznaczenie pośrednich kiedy wyżej był zaznaczony i zaznacza się nizszy
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === index % 3 && copyArr[i] === "s" && i + 3 < index) {
-                    copyArr[i + 3] = "s"
-                }
-            }
-            //pionowo: automatyczne zaznaczenie pośrednich kiedy niżej był zaznaczony i zaznacza się wyższy -----------------------------------------analiza
-            for (let i = copyArr.length; i > index; i--) {
-                if (i % 3 === index % 3 && copyArr[i] === "s" && i - 3 > index) {
-                    copyArr[i - 3] = "s"
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne prawe
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
-                    for (let j = i; j < index; j++) {
-                        copyArr[j] = "s"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe ------------------------------xxxx
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
-                    for (let j = i + 2; j > index - 2; j--) {
-                        copyArr[j] = "s"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, tylko prawy zaznaczony
-            for (let i = 2; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 0) {
-                    for (let j = i - 2; j < index + 2; j++) {
-                        copyArr[j] = "s"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, prawy i środkowy zaznaczony  
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && copyArr[i + 1] === "s" && i % 3 === 1 && index % 3 === 0) {
-                    for (let j = i - 1; j < index + 2; j++) {
-                        copyArr[j] = "s"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, zaznaczony tylko środkowy rząd
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && i % 3 === 1 && index % 3 === 0) {
-                    for (let j = i - 1; j < index + 2; j++) {
-                        if (j % 3 !== 2) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, środek, zaznaczony tylko prawy rząd
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 2 && index % 3 === 1) {
-                    for (let j = i - 1; j < index + 1; j++) {
-                        if (j % 3 !== 0) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, środek, zaznaczony tylko lewy rząd
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
-                    for (let j = i + 1; j > index - 1; j--) {
-                        if (j % 3 !== 2) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne lewe
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 - 2 === index % 3) {
-                    for (let j = i; j > index; j--) {
-                        copyArr[j] = "s"
-                    }
-                }
-            }
-
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe----
-            for (let i = copyArr.length - 1; i > index; i--) {
-                if (copyArr[i] === "s" && copyArr[i - 1] === "s" && i % 3 === 1 && index % 3 === 2) {
-                    for (let j = i + 1; j > index - 2; j--) {
-                        copyArr[j] = "s"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, zaznaczony tylko środkowy rząd
-            for (let i = copyArr.length - 1; i > index; i--) {
-                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 1 && index % 3 === 2) {
-                    for (let j = i + 1; j > index - 2; j--) {
-                        if (j % 3 !== 0) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
-                    for (let j = i; j < index; j++) {
-                        if (j % 3 !== 2)
-                            copyArr[j] = "s"
-                    }
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 0) {
-                    for (let j = i; j > index; j--)
-                        if (j % 3 !== 2)
-                            copyArr[j] = "s"
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, sąsiednie prawe
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 2) {
-                    for (let j = i; j < index; j++)
-                        if (j % 3 !== 0)
-                            copyArr[j] = "s"
-                }
-            }
-            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie prawe
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 1) {
-                    for (let j = i; j > index; j--)
-                        if (j % 3 !== 0)
-                            copyArr[j] = "s"
-                }
-            }
-            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    for (let j = i + 3; j < index; j++) {
-                        copyArr[j] = "s"
-                    }
-                    if (index % 3 === 0) {
-                        copyArr[index + 1] = "s"
-                        copyArr[index + 2] = "s"
-                    }
-                    if (index % 3 === 1) {
-                        copyArr[index + 1] = "s"
-                    }
-                }
-            }
-            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy ,
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s" && copyArr[i - 2] === "s") {
-                    for (let j = i - 3; j > index; j--) {
-                        copyArr[j] = "s"
-                    }
-                    if (index % 3 === 2) {
-                        copyArr[index - 1] = "s"
-                        copyArr[index - 2] = "s"
-                    }
-                    if (index % 3 === 1) {
-                        copyArr[index - 1] = "s"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s") {
-                    for (let j = i + 3; j < index; j++) {
-                        if (j % 3 !== 2) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                    if (index % 3 === 0) {
-                        copyArr[index + 1] = "s"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy wyższy  był zaznaczony i zaznacza się niższy,
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i - 1] === "s") {
-                    for (let j = i - 3; j > index; j--) {
-                        if (j % 3 !== 2) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        copyArr[index - 1] = "s"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
-            for (let i = 0; i < index; i++) {
-                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i + 1] === "s") {
-                    for (let j = i + 3; j < index; j++) {
-                        if (j % 3 !== 0) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        copyArr[index + 1] = "s"
-                    }
-                }
-            }
-            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy,
-            for (let i = copyArr.length; i > index; i--) {
-                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s") {
-                    for (let j = i - 3; j > index; j--) {
-                        if (j % 3 !== 0) {
-                            copyArr[j] = "s"
-                        }
-                    }
-                    if (index % 3 === 2) {
-                        copyArr[index - 1] = "s"
-                    }
-                }
-            }
-            // dodawanie prawej kolumny, dwie lewe zaznaczone, środek zaznaczony: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 3] === "s" && copyArr[i + 4] === "s" && index % 3 === 2) {
-                    for (let j = copyArr.length - 1; j > i; j--) {
-                        if (j % 3 === 1 && copyArr[j] === "s" && index <= j + 1 && index >= i + 2) {
-                            for (let k = j + 1; k > i + 2; k--) {
-                                if (k % 3 === 2) {
-                                    copyArr[k] = "s"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie środkowej kolumny, lewa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
-                    for (let j = copyArr.length - 2; j > i; j--) {
-                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 1 && index >= i + 1) {
-                            for (let k = j + 1; k > i + 1; k--) {
-                                if (k % 3 === 1) {
-                                    copyArr[k] = "s"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie środkowej i prawej kolumny, lewa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 2) {
-                    for (let j = copyArr.length; j > i; j--) {
-                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 2 && index >= i + 2) {
-                            for (let k = j + 2; k > i + 1; k--) {
-                                copyArr[k] = "s"
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie środkowej kolumny, prawa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
-                    for (let j = copyArr.length; j > i; j--) {
-                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 1 && index >= i - 1) {
-                            for (let k = j - 1; k >= i - 1; k--) {
-                                if (k % 3 === 1) {
-                                    copyArr[k] = "s"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // dodawanie lewej i środkowej kolumny, prawa zaznaczona: 
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 0) {
-                    for (let j = copyArr.length; j > i; j--) {
-                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 2 && index >= i - 2) {
-                            for (let k = j - 1; k >= i - 2; k--) {
-                                copyArr[k] = "s"
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-
-
-
-        } else if (copyArr[index] === "s") {
-            copyArr[index] = 1;
-
-            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, cała góra zaznaczona
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === 0 && i < index - 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    if (copyArr[index + 3] !== "s" && index % 3 === 0) {
-                        for (let j = index; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (copyArr[index + 3] !== "s" && index % 3 === 2) {
-                        for (let j = index - 2; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        for (let j = index - 1; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, cała szerokość zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 5] === "s") {
-                    if (index % 3 === 0) {
-                        for (let j = index; j < index + 3; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        for (let j = index - 1; j < index + 2; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (index % 3 === 2) {
-                        for (let j = index - 2; j < index + 1; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, lewa i środek zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 2) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, prawa i środek zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 0) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-
-
-
-            //dwa lewe zaznaczone
-            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa lewe zaznaczone
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
-                    if (copyArr[index + 3] !== "s" && index % 3 === 0) {
-                        for (let j = index; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (copyArr[index + 3] !== "s" && index % 3 === 1) {
-                        for (let j = index - 1; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa prawe zaznaczone
-            for (let i = 0; i < index; i++) {
-                if (i % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
-                    if (copyArr[index + 3] !== "s" && index % 3 === 1) {
-                        for (let j = index; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (copyArr[index + 3] !== "s" && index % 3 === 2) {
-                        for (let j = index - 1; j < copyArr.length; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa lewe zaznaczone
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && copyArr[i + 2] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
-                    if (index % 3 === 0) {
-                        for (let j = index; j < index + 2; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (index % 3 === 1) {
-                        for (let j = index - 1; j < index + 1; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa prawe zaznaczone
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && copyArr[i - 1] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
-                    if (index % 3 === 1) {
-                        for (let j = index; j < index + 2; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                    if (index % 3 === 2) {
-                        for (let j = index - 1; j < index + 1; j++) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-
-            //automatyczne usuwanie prawej kolumny - naciśnięcie na środek, lewa zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 1) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, środkowa zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 2) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, środek zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 0) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            // automatyczne usuwanie lewej kolumny - naciśnięcie na środkową, prawa zaznaczona
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
-                    for (let j = i; j < copyArr.length; j++) {
-                        if (j % 3 === 1) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-
-
-
-            // automatyczne usuwanie prawej komórki - zaznaczony jeden rząd
-            if ((index % 3 === 1) && copyArr[index - 1] === "s" && copyArr[index + 1] === "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
-                copyArr[index + 1] = 1
-            }
-
-
-
-            // automatyczne usuwanie dolnych komórek - zaznaczona lewa kolumna
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 0 && index % 3 === 0 && i < index && copyArr[i] === "s" && copyArr[i + 1] !== "s") {
-                    for (let j = copyArr.length - 1; j > index; j--) {
-                        if (j % 3 === 0) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            // automatyczne usuwanie dolnych komórek - zaznaczona środkowa kolumna
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 1 && index % 3 === 1 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s") {
-                    for (let j = copyArr.length - 1; j > index; j--) {
-                        if (j % 3 === 1) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-            // automatyczne usuwanie dolnych komórek - zaznaczona prawa kolumna
-            for (let i = 0; i < copyArr.length; i++) {
-                if (i % 3 === 2 && index % 3 === 2 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s") {
-                    for (let j = copyArr.length - 1; j > index; j--) {
-                        if (j % 3 === 2) {
-                            copyArr[j] = 1
-                        }
-                    }
-                }
-            }
-        }
-
-        for (let i = 0; i < copyArr.length; i++) {
-            if (copyArr[i] !== "s") {
-                copyTempArr[i].t = 0
-                copyTempArr[i].r = 0
-                copyTempArr[i].b = 0
-                copyTempArr[i].l = 0
-            }
-
-            if (copyArr[i] === "s" && copyArr[i - 3] !== "s") {
-                copyTempArr[i].t = 1
-            }
-            if (copyArr[i] === "s" && copyArr[i - 3] === "s") {
-                copyTempArr[i].t = 0
-            }
-            if (copyArr[i] === "s" && copyArr[i + 3] !== "s") {
-                copyTempArr[i].b = 1
-            }
-            if (copyArr[i] === "s" && copyArr[i + 3] === "s") {
-                copyTempArr[i].b = 0
-            }
-
-
-            if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 !== 0) {
-                copyTempArr[i].l = 1
-            } else if (copyArr[i] === "s" && i % 3 === 0) {
-                copyTempArr[i].l = 1
-            }
-            if (copyArr[i] === "s" && copyArr[i - 1] === "s" && i % 3 !== 0) {
-                copyTempArr[i].l = 0
-            }
-
-            if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && i % 3 !== 2) {
-                copyTempArr[i].r = 1
-            } else if (copyArr[i] === "s" && i % 3 === 2) {
-                copyTempArr[i].r = 1
-            }
-            if (copyArr[i] === "s" && copyArr[i + 1] === "s" && i % 3 !== 2) {
-                copyTempArr[i].r = 0
-            }
-
-
-
-
-
-            if (copyTempArr[i].t === 1 && copyTempArr[i].l === 1) {
-                copyTempArr[i].rtl = 3
-            }
-            if (copyTempArr[i].t === 1 && copyTempArr[i].r === 1) {
-                copyTempArr[i].rtr = 3
-            }
-            if (copyTempArr[i].b === 1 && copyTempArr[i].r === 1) {
-                copyTempArr[i].rbr = 3
-            }
-            if (copyTempArr[i].b === 1 && copyTempArr[i].l === 1) {
-                copyTempArr[i].rbl = 3
-            }
-
-            if (copyTempArr[i].t === 1 && copyTempArr[i].l !== 1) {
-                copyTempArr[i].rtl = 0
-            }
-            if (copyTempArr[i].t !== 1 && copyTempArr[i].l === 1) {
-                copyTempArr[i].rtl = 0
-            }
-            if (copyTempArr[i].t === 1 && copyTempArr[i].r !== 1) {
-                copyTempArr[i].rtr = 0
-            }
-            if (copyTempArr[i].t !== 1 && copyTempArr[i].r === 1) {
-                copyTempArr[i].rtr = 0
-            }
-            if (copyTempArr[i].b === 1 && copyTempArr[i].r !== 1) {
-                copyTempArr[i].rbr = 0
-            }
-            if (copyTempArr[i].b !== 1 && copyTempArr[i].r === 1) {
-                copyTempArr[i].rbr = 0
-            }
-            if (copyTempArr[i].b === 1 && copyTempArr[i].l !== 1) {
-                copyTempArr[i].rbl = 0
-            }
-            if (copyTempArr[i].b !== 1 && copyTempArr[i].l === 1) {
-                copyTempArr[i].rbl = 0
-            }
-
-
-        }
-
-
-        const arrNewFrameChange = [];
-        chosenModel.dotLocation.forEach(element => {
-            arrNewFrameChange.push(element)
-        });
-        setNewFrameChange(arrNewFrameChange);
-
-
-        setNewFrame(copyArr);
-        setTempFrame(copyTempArr);
-        // setNewFrameMemo(copyArr);
-        setRerender(prev => !prev)
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1528,7 +349,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 arrIconHolders.push({
                     flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
                     selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
-                    textUp: "", fontUp: null, textDown: "", fontDown: null,
+                    textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrame: false
                 })
             });
             chosenModel.dotLocation.forEach(element => {
@@ -1543,11 +364,13 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     rtl: 0, rtr: 0, rbr: 0, rbl: 0,
                     t: 0, r: 0, b: 0, l: 0,
                     textUp: "", frameFont: null,
+                    shape: null,
                 })
             });
             setNewFrame(arrNewFrame)//----------------------------------------------------------------FRAME
-            setNewFrameChange(arrNewFrameChange)//----------------------------------------------------------------FRAME???
+            setNewFrameChange(arrNewFrameChange)//----------------------------------------------------------------FRAME
             setTempFrame(arrTempFrame)//----------------------------------------------------------------FRAME
+            setFrameHolders([])//----------------------------------------------------------------FRAME
             setIconHolders(arrIconHolders);
             chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
             (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
@@ -1888,10 +711,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 tempArr.push({
                     flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
                     selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
-                    textUp: "", fontUp: null, textDown: "", fontDown: null,
+                    textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrame: false
                 })
             });
             setIconHolders(tempArr);
+            setFrameHolders([])//----------------------------------------------------------------FRAME
             chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
         }, 300);
         return () => clearTimeout(modeltimeout);
@@ -2083,7 +907,1710 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         }
     }, [iconHolders]);
 
+    const handleFrameOver = ((index) => {
+        const copyArr = newFrame;
+        const copyArrChange = newFrameChange;
 
+        if (copyArr[index] === 1) {
+            copyArrChange[index] = "a";
+
+            //poziomo: automatyczne zaznaczenie środkowego kiedy lewy był zaznaczony i zaznacza się prawy
+            if (((index % 3) === 2) && copyArr[index - 2] === "s" && copyArr[index - 1] !== 0) {
+                copyArrChange[index - 1] = "a";
+            }
+            //poziomo: automatyczne zaznaczenie środkowego kiedy prawy był zaznaczony i zaznacza się lewy
+            if ((index % 3 === 0) && copyArr[index + 2] === "s" && copyArr[index + 1] !== 0) {
+                copyArrChange[index + 1] = "a";
+            }
+            //pionowo: automatyczne zaznaczenie pośrednich kiedy wyżej był zaznaczony i zaznacza się nizszy
+            for (let i = 0; i < index; i++) {
+                if (i % 3 === index % 3 && copyArr[i] === "s" && i + 3 < index) {
+                    for (let j = i; j < index; j++) {
+                        if (j % 3 === index % 3) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                }
+            }
+            //pionowo: automatyczne zaznaczenie pośrednich kiedy niżej był zaznaczony i zaznacza się wyższy
+            for (let i = copyArr.length; i > index; i--) {
+                if (i % 3 === index % 3 && copyArr[i] === "s" && i - 3 > index) {
+                    for (let j = i; j >= index; j--) {
+                        if (j % 3 === index % 3) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne prawe
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
+                    for (let j = i; j <= index; j++) {
+                        copyArrChange[j] = "a"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
+                    for (let j = i + 2; j >= index - 2; j--) {
+                        copyArrChange[j] = "a"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, tylko prawy zaznaczony
+            for (let i = 2; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 0) {
+                    for (let j = i - 2; j <= index + 2; j++) {
+                        copyArrChange[j] = "a"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, prawy i środkowy zaznaczony  
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && copyArr[i + 1] === "s" && i % 3 === 1 && index % 3 === 0) {
+                    for (let j = i - 1; j <= index + 2; j++) {
+                        copyArrChange[j] = "a"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, zaznaczony tylko środkowy rząd
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && i % 3 === 1 && index % 3 === 0) {
+                    for (let j = i - 1; j < index + 2; j++) {
+                        if (j % 3 !== 2) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, środek, zaznaczony tylko prawy rząd
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 2 && index % 3 === 1) {
+                    for (let j = i - 1; j < index + 2; j++) {
+                        if (j % 3 !== 0) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, środek, zaznaczony tylko lewy rząd
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
+                    for (let j = i + 1; j >= index - 1; j--) {
+                        if (j % 3 !== 2) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne lewe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 - 2 === index % 3) {
+                    for (let j = i; j > index; j--) {
+                        copyArrChange[j] = "a"
+                    }
+                }
+            }
+
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe----
+            for (let i = copyArr.length - 1; i > index; i--) {
+                if (copyArr[i] === "s" && copyArr[i - 1] === "s" && i % 3 === 1 && index % 3 === 2) {
+                    for (let j = i + 1; j > index - 2; j--) {
+                        copyArrChange[j] = "a"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, zaznaczony tylko środkowy rząd
+            for (let i = copyArr.length - 1; i > index; i--) {
+                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 1 && index % 3 === 2) {
+                    for (let j = i + 1; j > index - 2; j--) {
+                        if (j % 3 !== 0) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
+                    for (let j = i; j < index; j++) {
+                        if (j % 3 !== 2)
+                            copyArrChange[j] = "a"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 0) {
+                    for (let j = i; j > index; j--)
+                        if (j % 3 !== 2)
+                            copyArrChange[j] = "a"
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, sąsiednie prawe
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 2) {
+                    for (let j = i; j < index; j++)
+                        if (j % 3 !== 0)
+                            copyArrChange[j] = "a"
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie prawe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 1) {
+                    for (let j = i; j > index; j--)
+                        if (j % 3 !== 0)
+                            copyArrChange[j] = "a"
+                }
+            }
+            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                    for (let j = i + 3; j < index; j++) {
+                        copyArrChange[j] = "a"
+                    }
+                    if (index % 3 === 0) {
+                        copyArrChange[index + 1] = "a"
+                        copyArrChange[index + 2] = "a"
+                    }
+                    if (index % 3 === 1) {
+                        copyArrChange[index + 1] = "a"
+                    }
+                }
+            }
+            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy ,
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s" && copyArr[i - 2] === "s") {
+                    for (let j = i - 3; j > index; j--) {
+                        copyArrChange[j] = "a"
+                    }
+                    if (index % 3 === 2) {
+                        copyArrChange[index - 1] = "a"
+                        copyArrChange[index - 2] = "a"
+                    }
+                    if (index % 3 === 1) {
+                        copyArrChange[index - 1] = "a"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s") {
+                    for (let j = i + 3; j < index; j++) {
+                        if (j % 3 !== 2) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                    if (index % 3 === 0) {
+                        copyArrChange[index + 1] = "a"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy wyższy  był zaznaczony i zaznacza się niższy,
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i - 1] === "s") {
+                    for (let j = i - 3; j > index; j--) {
+                        if (j % 3 !== 2) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        copyArrChange[index - 1] = "a"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i + 1] === "s") {
+                    for (let j = i + 3; j < index; j++) {
+                        if (j % 3 !== 0) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        copyArrChange[index + 1] = "a"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy,
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s") {
+                    for (let j = i - 3; j > index; j--) {
+                        if (j % 3 !== 0) {
+                            copyArrChange[j] = "a"
+                        }
+                    }
+                    if (index % 3 === 2) {
+                        copyArrChange[index - 1] = "a"
+                    }
+                }
+            }
+            // dodawanie prawej kolumny, dwie lewe zaznaczone, środek zaznaczony: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 3] === "s" && copyArr[i + 4] === "s" && index % 3 === 2) {
+                    for (let j = copyArr.length - 1; j > i; j--) {
+                        if (j % 3 === 1 && copyArr[j] === "s" && index <= j + 1 && index >= i + 2) {
+                            for (let k = j + 1; k > i + 2; k--) {
+                                if (k % 3 === 2) {
+                                    copyArrChange[k] = "a"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie środkowej kolumny, lewa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
+                    for (let j = copyArr.length - 2; j > i; j--) {
+                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 1 && index >= i + 1) {
+                            for (let k = j + 1; k > i + 1; k--) {
+                                if (k % 3 === 1) {
+                                    copyArrChange[k] = "a"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie środkowej i prawej kolumny, lewa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 2) {
+                    for (let j = copyArr.length; j > i; j--) {
+                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 2 && index >= i + 2) {
+                            for (let k = j + 2; k > i + 1; k--) {
+                                copyArrChange[k] = "a"
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie środkowej kolumny, prawa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
+                    for (let j = copyArr.length; j > i; j--) {
+                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 1 && index >= i - 1) {
+                            for (let k = j - 1; k >= i - 1; k--) {
+                                if (k % 3 === 1) {
+                                    copyArrChange[k] = "a"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie lewej i środkowej kolumny, prawa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 0) {
+                    for (let j = copyArr.length; j > i; j--) {
+                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 2 && index >= i - 2) {
+                            for (let k = j - 1; k >= i - 2; k--) {
+                                copyArrChange[k] = "a"
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (chosenModel.lcdScreen !== false) {
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && index < 9) {
+                        for (let j = 0; j < 9; j++) {
+                            for (let k = 0; k < 9; k++) {
+                                copyArrChange[k] = "a"
+                            }
+                        }
+                    }
+                }
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && index >= 9) {
+                        if (index % 3 === 0) {
+                            for (let k = 0; k <= index + 2; k++) {
+                                copyArrChange[k] = "a"
+                            }
+                        } else if (index % 3 === 1) {
+                            for (let k = 0; k <= index + 1; k++) {
+                                copyArrChange[k] = "a"
+                            }
+                        } else {
+                            for (let k = 0; k < index; k++) {
+                                copyArrChange[k] = "a"
+                            }
+                        }
+                    }
+                }
+                if (copyArr.length > 9) {
+                    for (let i = copyArr.length; i >= copyArr.length - 9; i--) {
+                        if (copyArr[i] === "s") {
+                            for (let j = 0; j < 9; j++) {
+                                if (index === j) {
+                                    if (i % 3 === 0) {
+                                        for (let k = 0; k <= i + 2; k++) {
+                                            copyArrChange[k] = "a"
+                                        }
+                                    } else if (i % 3 === 1) {
+                                        for (let k = 0; k <= i + 1; k++) {
+                                            copyArrChange[k] = "a"
+                                        }
+                                    } else {
+                                        for (let k = 0; k < i; k++) {
+                                            copyArrChange[k] = "a"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+            for (let i = 0; i < copyArr.length; i++) {
+                if (copyArr[i] === "s") {
+                    copyArrChange[i] = 0
+                }
+            }
+
+
+
+
+        } else if (copyArr[index] === "s") {
+            copyArrChange[index] = "r";
+
+            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, cała góra zaznaczona
+            for (let i = 0; i < index; i++) {
+                if (i % 3 === 0 && i < index - 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                    if (copyArr[index + 3] !== "s" && index % 3 === 0) {
+                        for (let j = index; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (copyArr[index + 3] !== "s" && index % 3 === 2) {
+                        for (let j = index - 2; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        for (let j = index - 1; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, cała szerokość zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 5] === "s") {
+                    if (index % 3 === 0) {
+                        for (let j = index; j < index + 3; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        for (let j = index - 1; j < index + 2; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (index % 3 === 2) {
+                        for (let j = index - 2; j < index + 1; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, lewa i środek zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                    for (let j = i; j < copyArr.length; j++) {
+                        if (j % 3 === 2) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, prawa i środek zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                    for (let j = i; j < copyArr.length; j++) {
+                        if (j % 3 === 0) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+
+
+
+            //dwa lewe zaznaczone
+            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa lewe zaznaczone
+            for (let i = 0; i < index; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                    if (copyArr[index + 3] !== "s" && index % 3 === 0) {
+                        for (let j = index; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (copyArr[index + 3] !== "s" && index % 3 === 1) {
+                        for (let j = index - 1; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa prawe zaznaczone
+            for (let i = 0; i < index; i++) {
+                if (i % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
+                    if (copyArr[index + 3] !== "s" && index % 3 === 1) {
+                        for (let j = index; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (copyArr[index + 3] !== "s" && index % 3 === 2) {
+                        for (let j = index - 1; j < copyArr.length; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa lewe zaznaczone
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i + 2] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
+                    if (index % 3 === 0) {
+                        for (let j = index; j < index + 2; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        for (let j = index - 1; j < index + 1; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa prawe zaznaczone
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 1 && copyArr[i - 1] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
+                    if (index % 3 === 1) {
+                        for (let j = index; j < index + 2; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                    if (index % 3 === 2) {
+                        for (let j = index - 1; j < index + 1; j++) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+
+            //automatyczne usuwanie prawej kolumny - naciśnięcie na środek, lewa zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                    for (let j = i; j < copyArr.length; j++) {
+                        if (j % 3 === 1) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, środkowa zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 1 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
+                    for (let j = i; j < copyArr.length; j++) {
+                        if (j % 3 === 2) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, środek zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                    for (let j = i; j < copyArr.length; j++) {
+                        if (j % 3 === 0) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            // automatyczne usuwanie lewej kolumny - naciśnięcie na środkową, prawa zaznaczona
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 1 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
+                    for (let j = i; j < copyArr.length; j++) {
+                        if (j % 3 === 1) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+
+            // automatyczne usuwanie prawej komórki - zaznaczony jeden rząd
+            if ((index % 3 === 1) && copyArr[index - 1] === "s" && copyArr[index + 1] === "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
+                copyArrChange[index + 1] = "r"
+            }
+
+
+
+            // automatyczne usuwanie dolnych komórek - zaznaczona lewa kolumna
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && index % 3 === 0 && i < index && copyArr[i] === "s" && copyArr[i + 1] !== "s") {
+                    for (let j = copyArr.length - 1; j > index; j--) {
+                        if (j % 3 === 0) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            // automatyczne usuwanie dolnych komórek - zaznaczona środkowa kolumna
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 1 && index % 3 === 1 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s") {
+                    for (let j = copyArr.length - 1; j > index; j--) {
+                        if (j % 3 === 1) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+            // automatyczne usuwanie dolnych komórek - zaznaczona prawa kolumna
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 2 && index % 3 === 2 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s") {
+                    for (let j = copyArr.length - 1; j > index; j--) {
+                        if (j % 3 === 2) {
+                            copyArrChange[j] = "r"
+                        }
+                    }
+                }
+            }
+
+
+            if (chosenModel.lcdScreen !== false) {
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s") {
+                        for (let j = 0; j < 9; j++) {
+                            if (index === j && j !== i) {
+                                for (let k = 0; k < 9; k++) {
+                                    copyArrChange[k] = "r"
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s") {
+                        for (let j = 0; j < 9; j++) {
+                            if (copyArr[j] === "s" && j !== i) {
+                                for (let k = 9; k < copyArr.length; k++) {
+                                    if (index === k && (index % 3 === 0 || index % 3 === 2)) {
+                                        for (let l = 0; l < 9; l++) {
+                                            copyArrChange[l] = "r"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (let i = 0; i < copyArr.length; i++) {
+                if (copyArr[i] !== "s") {
+                    copyArrChange[i] = 0
+                }
+            }
+
+
+            if (chosenModel.type === "MDOT-2") {
+                if (copyArr[3] === "s") {
+                    if (index === 4 || index === 5) {
+                        copyArrChange[4] = "r"
+                        copyArrChange[5] = "r"
+                    }
+                }
+
+                if (copyArr[5] === "s") {
+                    if (index === 3) {
+                        copyArrChange[3] = "r"
+                        copyArrChange[4] = "r"
+                    }
+                }
+            }
+            if (chosenModel.type === "MDOT-4") {
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
+                        if (index === i + 1 || index === i + 2) {
+                            copyArrChange[i + 1] = "r"
+                            copyArrChange[i + 2] = "r"
+                        }
+                    }
+
+                    if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
+                        if (index === i - 2) {
+                            copyArrChange[i - 1] = "r"
+                            copyArrChange[i - 2] = "r"
+                        }
+                    }
+                }
+
+                for (let i = 0; i < 3; i++) {
+                    if (copyArr[i] === "s" && copyArr[1] !== "s") {
+                        if (index === i + 3 || index === i + 6) {
+                            copyArrChange[i + 3] = "r"
+                            copyArrChange[i + 6] = "r"
+                        }
+                    }
+                }
+
+                for (let i = 8; i > 5; i--) {
+                    if (copyArr[i] === "s" && copyArr[7] !== "s") {
+                        if (index === i - 6) {
+                            copyArrChange[i - 3] = "r"
+                            copyArrChange[i - 6] = "r"
+                        }
+                    }
+                }
+
+
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && copyArr[i + 4] === "s") {
+                        if (index === 0) {
+                            copyArrChange[0] = "r"
+                            copyArrChange[1] = "r"
+                            copyArrChange[2] = "r"
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[6] = "r"
+                            copyArrChange[7] = "r"
+                        } else if (index === 1) {
+                            copyArrChange[0] = "r"
+                            copyArrChange[1] = "r"
+                            copyArrChange[2] = "r"
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                        } else if (index === 2) {
+                            copyArrChange[0] = "r"
+                            copyArrChange[1] = "r"
+                            copyArrChange[2] = "r"
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[7] = "r"
+                            copyArrChange[8] = "r"
+                        } else if (index === 3) {
+                            copyArrChange[0] = "r"
+                            copyArrChange[1] = "r"
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[6] = "r"
+                            copyArrChange[7] = "r"
+                        } else if (index === 4) {
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[6] = "r"
+                            copyArrChange[7] = "r"
+                            copyArrChange[8] = "r"
+                        } else if (index === 5) {
+                            copyArrChange[1] = "r"
+                            copyArrChange[2] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[7] = "r"
+                            copyArrChange[8] = "r"
+                        } else if (index === 6) {
+                            copyArrChange[0] = "r"
+                            copyArrChange[1] = "r"
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[6] = "r"
+                            copyArrChange[7] = "r"
+                            copyArrChange[8] = "r"
+                        } else if (index === 7) {
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[6] = "r"
+                            copyArrChange[7] = "r"
+                            copyArrChange[8] = "r"
+                        } else if (index === 8) {
+                            copyArrChange[1] = "r"
+                            copyArrChange[2] = "r"
+                            copyArrChange[3] = "r"
+                            copyArrChange[4] = "r"
+                            copyArrChange[5] = "r"
+                            copyArrChange[6] = "r"
+                            copyArrChange[7] = "r"
+                            copyArrChange[8] = "r"
+                        }
+                    }
+                }
+            }
+        }
+
+        setNewFrameChange(copyArrChange);
+        setRerender(prev => !prev)
+    });
+
+    const handleFrameLeave = ((index) => {
+        const arrNewFrameChange = [];
+        chosenModel.dotLocation.forEach(element => {
+            arrNewFrameChange.push(element)
+        });
+        setNewFrameChange(arrNewFrameChange);
+        setRerender(prev => !prev)
+    });
+
+
+    const handleFrameClick = useCallback((index) => {
+        const copyArr = newFrame;
+        const copyTempArr = tempFrame;
+        if (copyArr[index] === 1) {
+            copyArr[index] = "s";
+
+            //poziomo: automatyczne zaznaczenie środkowego kiedy lewy był zaznaczony i zaznacza się prawy
+            if (((index % 3) === 2) && copyArr[index - 2] === "s" && copyArr[index - 1] !== 0) {
+                copyArr[index - 1] = "s";
+            }
+            //poziomo: automatyczne zaznaczenie środkowego kiedy prawy był zaznaczony i zaznacza się lewy
+            if ((index % 3 === 0) && copyArr[index + 2] === "s" && copyArr[index + 1] !== 0) {
+                copyArr[index + 1] = "s";
+            }
+            //pionowo: automatyczne zaznaczenie pośrednich kiedy wyżej był zaznaczony i zaznacza się nizszy
+            for (let i = 0; i < index; i++) {
+                if (i % 3 === index % 3 && copyArr[i] === "s" && i + 3 < index) {
+                    copyArr[i + 3] = "s"
+                }
+            }
+            //pionowo: automatyczne zaznaczenie pośrednich kiedy niżej był zaznaczony i zaznacza się wyższy
+            for (let i = copyArr.length; i > index; i--) {
+                if (i % 3 === index % 3 && copyArr[i] === "s" && i - 3 > index) {
+                    copyArr[i - 3] = "s"
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne prawe
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
+                    for (let j = i; j < index; j++) {
+                        copyArr[j] = "s"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 2) {
+                    for (let j = i + 2; j > index - 2; j--) {
+                        copyArr[j] = "s"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, tylko prawy zaznaczony
+            for (let i = 2; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 0) {
+                    for (let j = i - 2; j < index + 2; j++) {
+                        copyArr[j] = "s"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, prawy i środkowy zaznaczony  
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && copyArr[i + 1] === "s" && i % 3 === 1 && index % 3 === 0) {
+                    for (let j = i - 1; j < index + 2; j++) {
+                        copyArr[j] = "s"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, skrajne lewe, zaznaczony tylko środkowy rząd
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && i % 3 === 1 && index % 3 === 0) {
+                    for (let j = i - 1; j < index + 2; j++) {
+                        if (j % 3 !== 2) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, środek, zaznaczony tylko prawy rząd
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 2 && index % 3 === 1) {
+                    for (let j = i - 1; j < index + 1; j++) {
+                        if (j % 3 !== 0) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, środek, zaznaczony tylko lewy rząd
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
+                    for (let j = i + 1; j > index - 1; j--) {
+                        if (j % 3 !== 2) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne lewe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 - 2 === index % 3) {
+                    for (let j = i; j > index; j--) {
+                        copyArr[j] = "s"
+                    }
+                }
+            }
+
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, skrajne prawe
+            for (let i = copyArr.length - 1; i > index; i--) {
+                if (copyArr[i] === "s" && copyArr[i - 1] === "s" && i % 3 === 1 && index % 3 === 2) {
+                    for (let j = i + 1; j > index - 2; j--) {
+                        copyArr[j] = "s"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, zaznaczony tylko środkowy rząd
+            for (let i = copyArr.length - 1; i > index; i--) {
+                if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 === 1 && index % 3 === 2) {
+                    for (let j = i + 1; j > index - 2; j--) {
+                        if (j % 3 !== 0) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && index % 3 === 1) {
+                    for (let j = i; j < index; j++) {
+                        if (j % 3 !== 2)
+                            copyArr[j] = "s"
+                    }
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie lewe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 0) {
+                    for (let j = i; j > index; j--)
+                        if (j % 3 !== 2)
+                            copyArr[j] = "s"
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy niższy był zaznaczony i zaznacza się wyższy, sąsiednie prawe
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 1 && index % 3 === 2) {
+                    for (let j = i; j < index; j++)
+                        if (j % 3 !== 0)
+                            copyArr[j] = "s"
+                }
+            }
+            //3d: automatyczne zaznaczenie pośrednich kiedy wyższy był zaznaczony i zaznacza się niższy, sąsiednie prawe
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 2 && index % 3 === 1) {
+                    for (let j = i; j > index; j--)
+                        if (j % 3 !== 0)
+                            copyArr[j] = "s"
+                }
+            }
+            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                    for (let j = i + 3; j < index; j++) {
+                        copyArr[j] = "s"
+                    }
+                    if (index % 3 === 0) {
+                        copyArr[index + 1] = "s"
+                        copyArr[index + 2] = "s"
+                    }
+                    if (index % 3 === 1) {
+                        copyArr[index + 1] = "s"
+                    }
+                }
+            }
+            //dodawanie rzędu na 3: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy 
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s" && copyArr[i - 2] === "s") {
+                    for (let j = i - 3; j > index; j--) {
+                        copyArr[j] = "s"
+                    }
+                    if (index % 3 === 2) {
+                        copyArr[index - 1] = "s"
+                        copyArr[index - 2] = "s"
+                    }
+                    if (index % 3 === 1) {
+                        copyArr[index - 1] = "s"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 1] === "s") {
+                    for (let j = i + 3; j < index; j++) {
+                        if (j % 3 !== 2) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                    if (index % 3 === 0) {
+                        copyArr[index + 1] = "s"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 lewego: automatyczne zaznaczenie całego rzędu kiedy wyższy  był zaznaczony i zaznacza się niższy,
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i - 1] === "s") {
+                    for (let j = i - 3; j > index; j--) {
+                        if (j % 3 !== 2) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        copyArr[index - 1] = "s"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy niższy był zaznaczony i zaznacza się wyższy,
+            for (let i = 0; i < index; i++) {
+                if (copyArr[i] === "s" && i % 3 === 1 && copyArr[i + 1] === "s") {
+                    for (let j = i + 3; j < index; j++) {
+                        if (j % 3 !== 0) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                    if (index % 3 === 1) {
+                        copyArr[index + 1] = "s"
+                    }
+                }
+            }
+            //dodawanie rzędu na 2 prawego: automatyczne zaznaczenie całego rzędu kiedy wyższy był zaznaczony i zaznacza się niższy,
+            for (let i = copyArr.length; i > index; i--) {
+                if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i - 1] === "s") {
+                    for (let j = i - 3; j > index; j--) {
+                        if (j % 3 !== 0) {
+                            copyArr[j] = "s"
+                        }
+                    }
+                    if (index % 3 === 2) {
+                        copyArr[index - 1] = "s"
+                    }
+                }
+            }
+            // dodawanie prawej kolumny, dwie lewe zaznaczone, środek zaznaczony: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 3] === "s" && copyArr[i + 4] === "s" && index % 3 === 2) {
+                    for (let j = copyArr.length - 1; j > i; j--) {
+                        if (j % 3 === 1 && copyArr[j] === "s" && index <= j + 1 && index >= i + 2) {
+                            for (let k = j + 1; k > i + 2; k--) {
+                                if (k % 3 === 2) {
+                                    copyArr[k] = "s"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie środkowej kolumny, lewa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
+                    for (let j = copyArr.length - 2; j > i; j--) {
+                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 1 && index >= i + 1) {
+                            for (let k = j + 1; k > i + 1; k--) {
+                                if (k % 3 === 1) {
+                                    copyArr[k] = "s"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie środkowej i prawej kolumny, lewa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 2) {
+                    for (let j = copyArr.length; j > i; j--) {
+                        if (j % 3 === 0 && copyArr[j] === "s" && index <= j + 2 && index >= i + 2) {
+                            for (let k = j + 2; k > i + 1; k--) {
+                                copyArr[k] = "s"
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie środkowej kolumny, prawa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 1) {
+                    for (let j = copyArr.length; j > i; j--) {
+                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 1 && index >= i - 1) {
+                            for (let k = j - 1; k >= i - 1; k--) {
+                                if (k % 3 === 1) {
+                                    copyArr[k] = "s"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // dodawanie lewej i środkowej kolumny, prawa zaznaczona: 
+            for (let i = 0; i < copyArr.length; i++) {
+                if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i + 3] === "s" && index % 3 === 0) {
+                    for (let j = copyArr.length; j > i; j--) {
+                        if (j % 3 === 2 && copyArr[j] === "s" && index <= j - 2 && index >= i - 2) {
+                            for (let k = j - 1; k >= i - 2; k--) {
+                                copyArr[k] = "s"
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (chosenModel.lcdScreen !== false) {
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && index < 9) {
+                        for (let j = 0; j < 9; j++) {
+                            if (copyArr[j] === "s" && j !== i) {
+                                for (let k = 0; k < 9; k++) {
+                                    copyArr[k] = "s"
+                                }
+                            }
+                        }
+                    }
+                }
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && index >= 9) {
+                        if (index % 3 === 0) {
+                            for (let k = 0; k <= index + 2; k++) {
+                                copyArr[k] = "s"
+                            }
+                        } else if (index % 3 === 1) {
+                            for (let k = 0; k <= index + 1; k++) {
+                                copyArr[k] = "s"
+                            }
+                        } else {
+                            for (let k = 0; k < index; k++) {
+                                copyArr[k] = "s"
+                            }
+                        }
+                    }
+                }
+                if (copyArr.length > 9) {
+                    for (let i = copyArr.length; i >= copyArr.length - 9; i--) {
+                        if (copyArr[i] === "s") {
+                            for (let j = 0; j < 9; j++) {
+                                if (index === j) {
+                                    if (i % 3 === 0) {
+                                        for (let k = 0; k <= i + 2; k++) {
+                                            copyArr[k] = "s"
+                                        }
+                                    } else if (i % 3 === 1) {
+                                        for (let k = 0; k <= i + 1; k++) {
+                                            copyArr[k] = "s"
+                                        }
+                                    } else {
+                                        for (let k = 0; k < i; k++) {
+                                            copyArr[k] = "s"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+        } else if (copyArr[index] === "s") {
+            copyArr[index] = 1;
+
+            if (chosenModel.type !== "MDOT-4") {
+
+                //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, cała góra zaznaczona
+                for (let i = 0; i < index; i++) {
+                    if (i % 3 === 0 && i < index - 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                        if (copyArr[index + 3] !== "s" && index % 3 === 0) {
+                            for (let j = index; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (copyArr[index + 3] !== "s" && index % 3 === 2) {
+                            for (let j = index - 2; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (index % 3 === 1) {
+                            for (let j = index - 1; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, cała szerokość zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 5] === "s") {
+                        if (index % 3 === 0) {
+                            for (let j = index; j < index + 3; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (index % 3 === 1) {
+                            for (let j = index - 1; j < index + 2; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (index % 3 === 2) {
+                            for (let j = index - 2; j < index + 1; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, lewa i środek zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                        for (let j = i; j < copyArr.length; j++) {
+                            if (j % 3 === 2) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, prawa i środek zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s") {
+                        for (let j = i; j < copyArr.length; j++) {
+                            if (j % 3 === 0) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+
+
+
+                //dwa lewe zaznaczone
+                //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa lewe zaznaczone
+                for (let i = 0; i < index; i++) {
+                    if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                        if (copyArr[index + 3] !== "s" && index % 3 === 0) {
+                            for (let j = index; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (copyArr[index + 3] !== "s" && index % 3 === 1) {
+                            for (let j = index - 1; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa prawe zaznaczone
+                for (let i = 0; i < index; i++) {
+                    if (i % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
+                        if (copyArr[index + 3] !== "s" && index % 3 === 1) {
+                            for (let j = index; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (copyArr[index + 3] !== "s" && index % 3 === 2) {
+                            for (let j = index - 1; j < copyArr.length; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa lewe zaznaczone
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && copyArr[i + 2] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
+                        if (index % 3 === 0) {
+                            for (let j = index; j < index + 2; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (index % 3 === 1) {
+                            for (let j = index - 1; j < index + 1; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie górnego rzędu - naciśnięcie na góre, dwa prawe zaznaczone
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 1 && copyArr[i - 1] !== "s" && copyArr[index - 3] !== "s" && copyArr[i] === "s" && copyArr[i + 4] === "s") {
+                        if (index % 3 === 1) {
+                            for (let j = index; j < index + 2; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                        if (index % 3 === 2) {
+                            for (let j = index - 1; j < index + 1; j++) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+
+                //automatyczne usuwanie prawej kolumny - naciśnięcie na środek, lewa zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                        for (let j = i; j < copyArr.length; j++) {
+                            if (j % 3 === 1) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie prawej kolumny - naciśnięcie na prawą, środkowa zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 1 && index % 3 === 2 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
+                        for (let j = i; j < copyArr.length; j++) {
+                            if (j % 3 === 2) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                //automatyczne usuwanie lewej kolumny - naciśnięcie na lewą, środek zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && index % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                        for (let j = i; j < copyArr.length; j++) {
+                            if (j % 3 === 0) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                // automatyczne usuwanie lewej kolumny - naciśnięcie na środkową, prawa zaznaczona
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 1 && index % 3 === 1 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s") {
+                        for (let j = i; j < copyArr.length; j++) {
+                            if (j % 3 === 1) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+
+
+
+                // automatyczne usuwanie prawej komórki - zaznaczony jeden rząd
+                if ((index % 3 === 1) && copyArr[index - 1] === "s" && copyArr[index + 1] === "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
+                    copyArr[index + 1] = 1
+                }
+
+
+
+                // automatyczne usuwanie dolnych komórek - zaznaczona lewa kolumna
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 0 && index % 3 === 0 && i < index && copyArr[i] === "s" && copyArr[i + 1] !== "s") {
+                        for (let j = copyArr.length - 1; j > index; j--) {
+                            if (j % 3 === 0) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                // automatyczne usuwanie dolnych komórek - zaznaczona środkowa kolumna
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 1 && index % 3 === 1 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s") {
+                        for (let j = copyArr.length - 1; j > index; j--) {
+                            if (j % 3 === 1) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+                // automatyczne usuwanie dolnych komórek - zaznaczona prawa kolumna
+                for (let i = 0; i < copyArr.length; i++) {
+                    if (i % 3 === 2 && index % 3 === 2 && i < index && copyArr[i] === "s" && copyArr[i - 1] !== "s") {
+                        for (let j = copyArr.length - 1; j > index; j--) {
+                            if (j % 3 === 2) {
+                                copyArr[j] = 1
+                            }
+                        }
+                    }
+                }
+
+
+                if (chosenModel.lcdScreen !== false) {
+                    for (let i = 0; i < 9; i++) {
+                        if (copyArr[i] === "s") {
+                            for (let j = 0; j < 9; j++) {
+                                if (index === j && j !== i) {
+                                    for (let k = 0; k < 9; k++) {
+                                        if (k % 3 === 1) {
+                                            copyArr[k] = 0
+                                        } else {
+                                            copyArr[k] = 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    for (let i = 0; i < 9; i++) {
+                        if (copyArr[i] === "s") {
+                            for (let j = 0; j < 9; j++) {
+                                if (copyArr[j] === "s" && j !== i) {
+                                    for (let k = 9; k < copyArr.length; k++) {
+                                        if (index === k && (index % 3 === 0 || index % 3 === 2)) {
+                                            for (let l = 0; l < 9; l++) {
+                                                if (l % 3 === 1) {
+                                                    copyArr[l] = 0
+                                                } else {
+                                                    copyArr[l] = 1
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (chosenModel.type === "MDOT-2") {
+                    if (copyArr[3] === "s") {
+                        if (index === 4 || index === 5) {
+                            copyArr[4] = 0
+                            copyArr[5] = 1
+                        }
+                    }
+
+                    if (copyArr[5] === "s") {
+                        if (index === 3 || index === 4) {
+                            copyArr[3] = 1
+                            copyArr[4] = 0
+                        }
+                    }
+                }
+            } else if (chosenModel.type === "MDOT-4") {
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
+                        if (index === i + 1 || index === i + 2) {
+                            copyArr[i + 1] = 0
+                            copyArr[i + 2] = 1
+                        }
+                    }
+
+                    if (copyArr[i] === "s" && i % 3 === 2 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
+                        if (index === i - 2) {
+                            copyArr[i - 1] = 0
+                            copyArr[i - 2] = 1
+                        }
+                    }
+                }
+
+                for (let i = 0; i < 3; i++) {
+                    if (copyArr[i] === "s" && copyArr[1] !== "s") {
+                        if (index === i + 3 || index === i + 6) {
+                            copyArr[i + 3] = 0
+                            copyArr[i + 6] = 1
+                        }
+                    }
+                }
+
+                for (let i = 8; i > 5; i--) {
+                    if (copyArr[i] === "s" && copyArr[7] !== "s") {
+                        if (index === i - 3 || index === i - 6) {
+                            copyArr[i - 3] = 0
+                            copyArr[i - 6] = 1
+                        }
+                    }
+                }
+
+
+                for (let i = 0; i < 9; i++) {
+                    if (copyArr[i] === "s" && copyArr[i + 4] === "s") {
+                        if (index === 0) {
+                            copyArr[0] = 1
+                            copyArr[1] = 0
+                            copyArr[2] = 1
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[6] = 1
+                            copyArr[7] = 0
+                        } else if (index === 1) {
+                            copyArr[0] = 1
+                            copyArr[1] = 0
+                            copyArr[2] = 1
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                        } else if (index === 2) {
+                            copyArr[0] = 1
+                            copyArr[1] = 0
+                            copyArr[2] = 1
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[7] = 0
+                            copyArr[8] = 1
+                        } else if (index === 3) {
+                            copyArr[0] = 1
+                            copyArr[1] = 0
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[6] = 1
+                            copyArr[7] = 0
+                        } else if (index === 4) {
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[6] = 1
+                            copyArr[7] = 0
+                            copyArr[8] = 1
+                        } else if (index === 5) {
+                            copyArr[1] = 0
+                            copyArr[2] = 1
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[7] = 0
+                            copyArr[8] = 1
+                        } else if (index === 6) {
+                            copyArr[0] = 1
+                            copyArr[1] = 0
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[6] = 1
+                            copyArr[7] = 0
+                            copyArr[8] = 1
+                        } else if (index === 7) {
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[6] = 1
+                            copyArr[7] = 0
+                            copyArr[8] = 1
+                        } else if (index === 8) {
+                            copyArr[1] = 0
+                            copyArr[2] = 1
+                            copyArr[3] = 0
+                            copyArr[4] = 0
+                            copyArr[5] = 0
+                            copyArr[6] = 1
+                            copyArr[7] = 0
+                            copyArr[8] = 1
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
+        for (let i = 0; i < copyArr.length; i++) {
+            if (copyArr[i] !== "s") {
+                copyTempArr[i].t = 0
+                copyTempArr[i].r = 0
+                copyTempArr[i].b = 0
+                copyTempArr[i].l = 0
+            }
+
+            if (copyArr[i] === "s" && copyArr[i - 3] !== "s") {
+                copyTempArr[i].t = 1
+            }
+            if (copyArr[i] === "s" && copyArr[i - 3] === "s") {
+                copyTempArr[i].t = 0
+            }
+            if (copyArr[i] === "s" && copyArr[i + 3] !== "s") {
+                copyTempArr[i].b = 1
+            }
+            if (copyArr[i] === "s" && copyArr[i + 3] === "s") {
+                copyTempArr[i].b = 0
+            }
+
+
+            if (copyArr[i] === "s" && copyArr[i - 1] !== "s" && i % 3 !== 0) {
+                copyTempArr[i].l = 1
+            } else if (copyArr[i] === "s" && i % 3 === 0) {
+                copyTempArr[i].l = 1
+            }
+            if (copyArr[i] === "s" && copyArr[i - 1] === "s" && i % 3 !== 0) {
+                copyTempArr[i].l = 0
+            }
+
+            if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && i % 3 !== 2) {
+                copyTempArr[i].r = 1
+            } else if (copyArr[i] === "s" && i % 3 === 2) {
+                copyTempArr[i].r = 1
+            }
+            if (copyArr[i] === "s" && copyArr[i + 1] === "s" && i % 3 !== 2) {
+                copyTempArr[i].r = 0
+            }
+
+            if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && copyArr[i - 1] !== "s" && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") { //-------------------------------single frame
+                copyTempArr[i].t = 0
+                copyTempArr[i].r = 0
+                copyTempArr[i].b = 0
+                copyTempArr[i].l = 0
+                const copyIconHolders = iconHolders;
+                copyIconHolders[i].singleFrame = true
+                setIconHolders(copyIconHolders)
+            } else {
+                const copyIconHolders = iconHolders;
+                copyIconHolders[i].singleFrame = false
+                setIconHolders(copyIconHolders)
+            }
+
+            if (copyTempArr[i].t === 1 && copyTempArr[i].l === 1) {
+                copyTempArr[i].rtl = 3
+            }
+            if (copyTempArr[i].t === 1 && copyTempArr[i].r === 1) {
+                copyTempArr[i].rtr = 3
+            }
+            if (copyTempArr[i].b === 1 && copyTempArr[i].r === 1) {
+                copyTempArr[i].rbr = 3
+            }
+            if (copyTempArr[i].b === 1 && copyTempArr[i].l === 1) {
+                copyTempArr[i].rbl = 3
+            }
+
+            if (copyTempArr[i].t === 1 && copyTempArr[i].l !== 1) {
+                copyTempArr[i].rtl = 0
+            }
+            if (copyTempArr[i].t !== 1 && copyTempArr[i].l === 1) {
+                copyTempArr[i].rtl = 0
+            }
+            if (copyTempArr[i].t === 1 && copyTempArr[i].r !== 1) {
+                copyTempArr[i].rtr = 0
+            }
+            if (copyTempArr[i].t !== 1 && copyTempArr[i].r === 1) {
+                copyTempArr[i].rtr = 0
+            }
+            if (copyTempArr[i].b === 1 && copyTempArr[i].r !== 1) {
+                copyTempArr[i].rbr = 0
+            }
+            if (copyTempArr[i].b !== 1 && copyTempArr[i].r === 1) {
+                copyTempArr[i].rbr = 0
+            }
+            if (copyTempArr[i].b === 1 && copyTempArr[i].l !== 1) {
+                copyTempArr[i].rbl = 0
+            }
+            if (copyTempArr[i].b !== 1 && copyTempArr[i].l === 1) {
+                copyTempArr[i].rbl = 0
+            }
+        }
+
+        for (let i = 0; i < copyArr.length; i++) {
+            copyTempArr[i].shape = chosenFrameShape
+        }
+
+
+        const arrNewFrameChange = [];
+        chosenModel.dotLocation.forEach(element => {
+            arrNewFrameChange.push(element)
+        });
+        setNewFrameChange(arrNewFrameChange);
+
+
+        setNewFrame(copyArr);
+        setTempFrame(copyTempArr);
+        setRerender(prev => !prev)
+
+        if (copyArr[index] === "s" && copyArr[index + 1] !== "s" && copyArr[index - 1] !== "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") { //-------------------------------single frame
+
+            setIconHolders(update(iconHolders, {
+                [index]: {
+                    singleFrame: {
+                        $set: true,
+                    }
+                },
+            }));
+        } else {
+            setIconHolders(update(iconHolders, {
+                [index]: {
+                    singleFrame: {
+                        $set: false,
+                    }
+                },
+            }));
+        }
+
+    }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenFrameShape]);
+
+
+    // useEffect(() => {
+    //     const arrNewFrame = [];
+    //     const arrNewFrameChange = [];
+    //     const arrTempFrame = [];
+    //     const currFrames = frameHolders
+    //     currFrames.push(tempFrame)
+    //     chosenModel.dotLocation.forEach(element => {
+    //         arrNewFrame.push(element)
+    //     });
+    //     chosenModel.dotLocation.forEach(element => {
+    //         arrNewFrameChange.push(element)
+    //     });
+    //     chosenModel.dotLocation.forEach(element => {
+    //         arrTempFrame.push({
+    //             flag: element,
+    //             rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+    //             t: 0, r: 0, b: 0, l: 0,
+    //             textUp: "", frameFont: null,
+    //             shape: null,
+    //         })
+    //     });
+    //     setNewFrame(arrNewFrame)
+    //     setNewFrameChange(arrNewFrameChange)
+    //     setTempFrame(arrTempFrame)
+    //     setFrameHolders(currFrames)
+    //     setRerender(prev => !prev)
+    // }, [addNewFrame, frameHolders, tempFrame, chosenModel.dotLocation]);
+    // }, [addNewFrame]);
+
+
+
+
+
+    const handleAddFrame = () => {
+        const arrNewFrame = [];
+        const arrNewFrameChange = [];
+        const arrTempFrame = [];
+        const currFrames = frameHolders
+        currFrames.push(tempFrame)
+        chosenModel.dotLocation.forEach(element => {
+            arrNewFrame.push(element)
+        });
+        chosenModel.dotLocation.forEach(element => {
+            arrNewFrameChange.push(element)
+        });
+        chosenModel.dotLocation.forEach(element => {
+            arrTempFrame.push({
+                flag: element,
+                rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+                t: 0, r: 0, b: 0, l: 0,
+                textUp: "", frameFont: null,
+                shape: null,
+            })
+        });
+        setNewFrame(arrNewFrame)
+        setNewFrameChange(arrNewFrameChange)
+        setTempFrame(arrTempFrame)
+        setFrameHolders(currFrames)
+        setRerender(prev => !prev)
+        console.log(chosenFrameShape)
+        console.log(frameHolders)
+
+    }
+
+
+    useEffect(() => {
+        console.log("test")
+        const currFrames = frameHolders
+        currFrames.push(tempFrame)
+        setFrameHolders(currFrames)
+        setRerender(prev => !prev)
+    }, [addNewFrame, frameHolders, tempFrame,]);
 
     return (
         <div className="panelpreview_container" style={panelPreviewStyle}>
@@ -2094,17 +2621,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 <div className="panel_container">
                     <div className="resize_container" style={resizeStyle}>
                         <div className="panel_box" style={chosenModelStyle}>
-
-                            {/* <> ----Backup
-                                    <div className="visualization_frame" style={!visual ? { border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { opacity: "0" }} />
-                                    <div className="visualization_frame" style={!visual ? { border: `4px groove white`, opacity: "0.2" } : { opacity: "0" }} />
-                                    {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-                                    <div className="visualization_glass" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
-                                    <div className="visualization_glass_bis" style={!visual ? { opacity: "1" } : { opacity: "0" }} />
-                                    <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { opacity: "1" } : { opacity: "0" }} />
-                                    <div className="visualization_frame" style={!visual ? { border: "2px outset #d4d4d4", opacity: "0.8" } : { opacity: "0" }} />
-                                    <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
-                                </> */}
 
                             {!visualChange &&
                                 <>
@@ -2117,11 +2633,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                     <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8" } : { ...vusialStyle, opacity: "0" }} />
                                     <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                                 </>}
-
-
-
-
-
 
                             <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
                                 {hideAll &&
@@ -2141,10 +2652,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
                                                 {el !== 0 &&
 
-                                                    <div style={el === 1 ? { ...frameCellStyle } : 
-                                                    chosenColor.hex !== "#2fa32c"?
-                                                    { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.75)" }
-                                                    :{ ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.75)" }} >
+                                                    <div style={el === 1 ? { ...frameCellStyle } :
+                                                        chosenColor.hex !== "#2fa32c" ?
+                                                            { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.75)" }
+                                                            : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.75)" }} >
                                                         <div style={frameClickStyle}
                                                             onClick={() => handleFrameClick(index)}
                                                             onMouseOver={() => handleFrameOver(index)}
@@ -2175,9 +2686,9 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                                 : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
                                                         )} >
 
-                                                <div style={{ ...frameCellStyle, backgroundColor: "none"}} >
-                                                    < img src={chosenColor.hex !== "#2fa32c"? Addframe : Addframedark} alt="addframe" className="frame_change" style={el === "a" ? { opacity: "1"}: {opacity: "0"}} />
-                                                    < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" className="frame_change" style={el === "r" ? { opacity: "1"}: {opacity: "0"}} />
+                                                <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
+                                                    < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" className="frame_change" style={el === "a" ? { opacity: "1" } : { opacity: "0" }} />
+                                                    < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" className="frame_change" style={el === "r" ? { opacity: "1" } : { opacity: "0" }} />
                                                 </div>
                                             </div>
                                         )
@@ -2202,8 +2713,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                         )} >
 
                                                 {el !== 0 &&
-                                                    <div style={chosenFrameShape === "sharp" ? { ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0" } :
-                                                        { ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px` }}
+                                                    <div style={chosenFrameShape === "sharp" ? {
+                                                        ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
+                                                        height: "100%",
+                                                        width: "100%",
+                                                    }
+                                                        : {
+                                                            ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                            height: "100%",
+                                                            width: "100%",
+                                                        }}
                                                         className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
                                                     />
                                                 }
@@ -2214,15 +2733,42 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
 
+                            {hideAll && frameHolders.length !== 0 &&
+                                <>
+                                    {frameHolders.map((frame, i) =>
+                                        <div key={i} className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
 
+                                            {frame.map((el, index) =>
+                                                <div key={index}
+                                                    style={
+                                                        ((index + 2) % 3 === 0) ?
+                                                            (
+                                                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                                                    : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                                            )
+                                                            : (
+                                                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                                                    : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                                            )} >
 
-
-
-
-
-
-
-
+                                                    {el !== 0 &&
+                                                        <div style={el.shape === "sharp" ? {
+                                                            ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
+                                                            height: "100%",
+                                                            width: "100%",
+                                                        }
+                                                            : {
+                                                                ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                                height: "100%",
+                                                                width: "100%",
+                                                            }}
+                                                            className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                                        />
+                                                    }
+                                                </div>)}
+                                        </div>)}
+                                </>
+                            }
 
 
 
@@ -2231,7 +2777,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                 {hideAll &&
                                     <>
                                         {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown,
-                                            textUp, fontUp, textDown, fontDown,
+                                            textUp, fontUp, textDown, fontDown, singleFrame
                                         }, index) =>
                                             <div key={index}
                                                 style={
@@ -2399,31 +2945,26 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                             showRemoveIcon={showRemoveIcon}
                                                             showRemoveIcons={showRemoveIcons}
                                                             chosenModel={chosenModel}
+                                                            singleFrame={singleFrame}
+                                                            chosenFrameShape={chosenFrameShape}
                                                         />
                                                     </>}
+                                                {/* {el !== 0 &&
+                                                    <div style={chosenFrameShape === "sharp" ? {
+                                                        ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
+                                                        height: "100%",
+                                                        width: "100%",
+                                                    }
+                                                        : {
+                                                            ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                            height: "100%",
+                                                            width: "100%",
+                                                        }}
+                                                        className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                                    />
+                                                } */}
                                             </div>
                                         )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                                         {(lcdShow && visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
@@ -2489,12 +3030,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                 }
                             </div>
 
-
-
-
-
-
-
                         </div>
                     </div>
                 </div>
@@ -2531,6 +3066,13 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll} />
                     <span>Zresetuj wszystko</span>
                 </div>
+
+                <div className="side_box">
+                    <img src={Addframe} alt="addframe" className="side_icon" onClick={handleAddFrame} />
+                    <span>Zatwierdź</span>
+                </div>
+
+
                 {chosenTab === "icons" &&
                     <>
                         <div className="side_box">
@@ -2616,186 +3158,3 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 export default PanelPreview;
 
-
-// import { useState, useEffect, useCallback, memo } from 'react';
-// import "./PanelPreview.scss"
-
-// import { StatusIconHolder } from './StatusIconHolder';
-// import { IconHolder } from './IconHolder';
-
-// import update from 'immutability-helper';
-
-// export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor }) {
-
-//     const sc = 5;
-
-//     const chosenModelStyle = {};
-//     chosenModelStyle.backgroundColor = chosenColor.hex;
-//     chosenModelStyle.height = `${parseInt(chosenModel.height) * sc}px`;
-//     chosenModelStyle.width = `${parseInt(chosenModel.width) * sc}px`;
-
-//     const contentStyle = {};
-//     contentStyle.height = `${parseInt(chosenModel.height) * sc - (chosenModel.marginTopBotton * 2 * sc)}px`;
-//     contentStyle.width = `${parseInt(chosenModel.width) * sc - (chosenModel.marginLeftRight * 2 * sc)}px`;
-//     contentStyle.margin = `${chosenModel.marginTopBotton * sc}px ${chosenModel.marginLeftRight * sc}px`
-
-//     const [iconHolders, setIconHolders] = useState([])
-
-//     useEffect(() => {
-//         const tempArr = [];
-//         chosenModel.dotLocation.forEach(element => {
-//             tempArr.push({ flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null })
-//         });
-//         setIconHolders(tempArr);
-//     }, [chosenModel]);
-
-
-//     // const [droppedIcons, setDroppedIcons] = useState([]);
-//     // function isDropped(icon) { //feedback dla ikony, że już jest dropnięta. Zbędne? 
-//     // return droppedIcons.indexOf(icon) > -1;
-//     // }
-//     const handleDropDot = useCallback((index, item) => {
-//         // const { image } = item;
-//         // setDroppedIcons(update(droppedIcons, image ? { $push: [image] } : { $push: [] }));
-//         setIconHolders(update(iconHolders, {
-//             [index]: {
-//                 lastDroppedDot: {
-//                     $set: item,
-//                 }
-//             },
-//         }));
-//         // }, [droppedIcons, iconHolders]);
-//     }, [iconHolders]);
-
-
-//     const handleDropIcon = useCallback((index, item) => {
-//         // const { image } = item;
-//         // setDroppedIcons(update(droppedIcons, image ? { $push: [image] } : { $push: [] }));
-//         setIconHolders(update(iconHolders, {
-//             [index]: {
-//                 lastDroppedIcon: {
-//                     $set: item,
-//                 },
-//                 lastDroppedSlashUp: {
-//                     $set: null,
-//                 },
-//                 lastDroppedSlashDown: {
-//                     $set: null,
-//                 }
-//             },
-//         }));
-//         // }, [droppedIcons, iconHolders]);
-//     }, [iconHolders]);
-
-
-//     // const handleDropIcon = useCallback((index, item) => {
-//     //     const { image } = item;
-//     //     setDroppedIcons(update(droppedIcons, image ? { $push: [image] } : { $push: [] }));
-//     //     setIconHolders(update(iconHolders, {
-//     //         [index]: {
-//     //             lastDroppedIcon: {
-//     //                 $set: item,
-//     //             },
-//     //             lastDroppedSlashUp: {
-//     //                 $set: null,
-//     //             },
-//     //             lastDroppedSlashDown: {
-//     //                 $set: null,
-//     //             }
-//     //         },
-//     //     }));
-//     // }, [droppedIcons, iconHolders]);
-
-
-
-//     const handleDropSlashUp = useCallback((index, item) => {
-//         // const { image } = item;
-//         // setDroppedIcons(update(droppedIcons, image ? { $push: [image] } : { $push: [] }));
-//         setIconHolders(update(iconHolders, {
-//             [index]: {
-//                 lastDroppedSlashUp: {
-//                     $set: item,
-//                 },
-//                 lastDroppedIcon: {
-//                     $set: null,
-//                 }
-//             },
-//         }));
-//         // }, [droppedIcons, iconHolders]);
-//     }, [iconHolders]);
-
-
-//     const handleDropSlashDown = useCallback((index, item) => {
-//         // const { image } = item;
-//         // setDroppedIcons(update(droppedIcons, image ? { $push: [image] } : { $push: [] }));
-//         setIconHolders(update(iconHolders, {
-//             [index]: {
-//                 lastDroppedSlashDown: {
-//                     $set: item,
-//                 },
-//                 lastDroppedIcon: {
-//                     $set: null,
-//                 }
-//             },
-//         }));
-//         // }, [droppedIcons, iconHolders]);
-//     }, [iconHolders]);
-
-
-
-
-//     const handleResetIcon = useCallback((index, item) => {
-//         // const { image } = item;
-//         // setDroppedIcons(update(droppedIcons, image ? { $push: [image] } : { $push: [] }));
-//         setIconHolders(update(iconHolders, {
-//             [index]: {
-//                 lastDroppedIcon: {
-//                     $set: null,
-//                 }
-//             },
-//         }));
-//         // }, [droppedIcons, iconHolders]);
-//     }, [iconHolders]);
-
-
-
-//     return (
-//         <>
-//             <div className="preview_container">
-//                 <h2>Podgląd panelu</h2>
-//                 <div className="panel_box"
-//                     style={chosenModelStyle}>
-//                     <div className="panel_content" style={contentStyle}>
-//                         {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown }, index) =>
-//                             <div key={index}
-//                                 className={(iconHolders.length <= 9) ? "cell cell_dot9" : "cell cell_dot18"}>
-//                                 {flag === 1 &&
-//                                     <>
-//                                         <StatusIconHolder lastDroppedDot={lastDroppedDot} onDrop={(item) => handleDropDot(index, item)} chosenColor={chosenColor} />
-//                                         <IconHolder
-//                                             chosenColor={chosenColor}
-//                                             lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
-//                                             lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
-//                                             lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
-
-
-//                                             onReset={(item) => handleResetIcon(index, item)}
-//                                         // onReset={handleResetIcon}
-//                                         />
-//                                     </>}
-//                             </div>
-//                         )}
-//                     </div>
-//                     {chosenModel.lcdScreen && <div className="lcd" style={{ borderColor: chosenColor.iconColor }} />}
-//                 </div>
-
-//                 <div className="panel_info" style={{ width: parseInt(chosenModel.width) * sc }}>
-//                     <span>{chosenModel.type}</span>
-//                     <span>RAL: {chosenColor.RAL}</span>
-//                 </div>
-//             </div>
-//         </>
-//     );
-// });
-
-// export default PanelPreview;

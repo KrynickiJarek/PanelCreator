@@ -12,7 +12,7 @@ import { ReDragUp } from './ReDrag/ReDragUp';
 
 export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSlashUp, onDropSlashUp, chosenColor, onUpActive, show, showNow,
     warning, onResetUp, scale, onSelectUp, selectedUp, animations, clear, rotateRight, rotateLeft, visual, chosenTab, chosenModel,
-    showRemoveIcon, showRemoveIcons }) {
+    showRemoveIcon, showRemoveIcons, singleFrame }) {
 
 
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -34,6 +34,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
     styleScale.height = `${3.6 * scale}px`;
     styleScale.width = `${3.6 * scale}px`;
     let styleZIndex = {};
+
 
     if ((isActive && show) || (isActive && showNow)) {
         if (chosenColor.hex !== "#2fa32c") {
@@ -127,6 +128,7 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
         };
     }
 
+
     useEffect(() => {
         if (isActive) {
             onUpActive(true)
@@ -141,10 +143,10 @@ export const IconHolderSlashUp = memo(function IconHolderSlashUp({ lastDroppedSl
                 <div className="slash_area_dropping_pulse" style={styleDroppingPulse} />
             </div>
             <div className="slash_up_area_dropping" style={{ ...styleDropping, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }} />
-            <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px` }} >
+            <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px`}} >
                 {lastDroppedSlashUp &&
                     <ReDragUp image={lastDroppedSlashUp.image} chosenColor={chosenColor} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp}
-                        clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
+                        clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} singleFrame={singleFrame}/>
                 }
                 {
                     !lastDroppedSlashUp &&
