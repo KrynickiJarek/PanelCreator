@@ -73,34 +73,50 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     const [newFrameChange, setNewFrameChange] = useState([]) //----------------------------------------------------------------FRAME
     const [tempFrame, setTempFrame] = useState([]) //----------------------------------------------------------------FRAME
     const [frameHolders, setFrameHolders] = useState([]) //----------------------------------------------------------------FRAME
-    // const [selectedFrameShape, setSelectedFrameShape] = useState(chosenFrameShape) //----------------------------------------------------------------FRAME
 
     const [rerender, setRerender] = useState(false)
 
     useEffect(() => {
     }, [rerender])
 
-    // useEffect(() => {//----------------------------------------------------------------FRAME
-    //     setSelectedFrameShape(chosenFrameShape)
-    //     setRerender(prev => !prev)
-    // }, [chosenFrameShape])
 
+
+
+    // let frameCellStyle = {}//----------------------------------------------------------------FRAME
+    // frameCellStyle.height = `${19.5 * sc}px`;
+    // frameCellStyle.width = "98%";
+    // frameCellStyle.top = `${0.7 * sc}px`;
+    // frameCellStyle.left = "1%";
+    // frameCellStyle.position = "absolute";
+    // frameCellStyle.borderRadius = `${3 * sc}px`;
+    // frameCellStyle.borderRadius = "50%";
+    // frameCellStyle.transition = "400ms ease";
+    // frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.75)";
+    // frameCellStyle.opacity = "0";
 
     let frameCellStyle = {}//----------------------------------------------------------------FRAME
-    frameCellStyle.height = `${19.5 * sc}px`;
-    frameCellStyle.width = "98%";
-    frameCellStyle.top = `${0.7 * sc}px`;
-    frameCellStyle.left = "1%";
-    frameCellStyle.position = "absolute";
-    frameCellStyle.borderRadius = `${3 * sc}px`;
+    frameCellStyle.height = `${16 * sc}px`;
+    frameCellStyle.width = `${16 * sc}px`;
+    frameCellStyle.borderRadius = "50%";
     frameCellStyle.transition = "400ms ease";
     frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.75)";
     frameCellStyle.opacity = "0";
-
+    frameCellStyle.margin = `${2 * sc}px auto`;
 
     if ((chosenTab === "frame")) {
         frameCellStyle.opacity = "1";
     }
+
+
+    let frameChangeStyle = {}//----------------------------------------------------------------FRAME
+    frameChangeStyle.height = `${16 * sc}px`;
+    frameChangeStyle.width = `${16 * sc}px`;
+    frameChangeStyle.transition = "200ms ease";
+    frameChangeStyle.position = "absolute";
+    frameChangeStyle.marginTop = `${1.5 * sc}px`;
+    frameChangeStyle.left = "50%"
+    frameChangeStyle.transform = "translate(-50%,-10%)"
+
 
 
     let frameClickStyle = {}
@@ -113,12 +129,21 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     }
 
     let frameTempStyle = {}
-    // frameTempStyle.height = "100%";
-    // frameTempStyle.width = "100%";
     frameTempStyle.position = "absolute";
     frameTempStyle.transition = "width 400ms ease, height 400ms ease, border-color 400ms ease, border-width 0s";
+    frameTempStyle.borderColor = "rgb(40, 167, 69)";
+    frameTempStyle.opacity = "0";
 
+    if (chosenColor.hex === "#2fa32c") {
+        frameTempStyle.borderColor = "rgb(32, 114, 30)";
+    }
+    if ((chosenTab === "frame")) {
+        frameTempStyle.opacity = "1";
+    }
 
+    let frameStyle = {}
+    frameStyle.position = "absolute";
+    frameStyle.transition = "width 400ms ease, height 400ms ease, border-color 400ms ease, border-width 0s";
 
 
     const handleZoomOut = () => {
@@ -349,7 +374,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 arrIconHolders.push({
                     flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
                     selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
-                    textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrame: false
+                    textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrame: false, singleFrames: []
                 })
             });
             chosenModel.dotLocation.forEach(element => {
@@ -711,7 +736,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 tempArr.push({
                     flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
                     selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
-                    textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrame: false
+                    textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrame: false, singleFrames: []
                 })
             });
             setIconHolders(tempArr);
@@ -1345,7 +1370,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
             //dwa lewe zaznaczone
             //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, dwa lewe zaznaczone
             for (let i = 0; i < index; i++) {
-                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s") {
+                if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s" && (copyArr[i + 3] === "s" || copyArr[i - 3] === "s")) {
                     if (copyArr[index + 3] !== "s" && index % 3 === 0) {
                         for (let j = index; j < copyArr.length; j++) {
                             copyArrChange[j] = "r"
@@ -2501,10 +2526,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
             }
         }
 
-        for (let i = 0; i < copyArr.length; i++) {
-            copyTempArr[i].shape = chosenFrameShape
-        }
 
+        // for (let i = 0; i < copyTempArr.length; i++) {
+        //     copyTempArr[i].shape = chosenFrameShape
+        // }
 
         const arrNewFrameChange = [];
         chosenModel.dotLocation.forEach(element => {
@@ -2535,8 +2560,21 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                 },
             }));
         }
+    }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame]);
+    // }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenFrameShape]);
 
-    }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenFrameShape]);
+
+    useEffect(() => {
+        const copyTempArr = tempFrame;
+        for (let i = 0; i < copyTempArr.length; i++) {
+            copyTempArr[i].shape = chosenFrameShape
+        }
+        setTempFrame(copyTempArr);
+
+    }, [chosenFrameShape, tempFrame]);
+
+
+
 
 
     // useEffect(() => {
@@ -2572,7 +2610,38 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
 
-    const handleAddFrame = () => {
+    // const handleAddFrame = () => {
+    //     const arrNewFrame = [];
+    //     const arrNewFrameChange = [];
+    //     const arrTempFrame = [];
+    //     const currFrames = frameHolders
+    //     currFrames.push(tempFrame)
+    //     chosenModel.dotLocation.forEach(element => {
+    //         arrNewFrame.push(element)
+    //     });
+    //     chosenModel.dotLocation.forEach(element => {
+    //         arrNewFrameChange.push(element)
+    //     });
+    //     chosenModel.dotLocation.forEach(element => {
+    //         arrTempFrame.push({
+    //             flag: element,
+    //             rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+    //             t: 0, r: 0, b: 0, l: 0,
+    //             textUp: "", frameFont: null,
+    //             shape: null,
+    //         })
+    //     });
+    //     setNewFrame(arrNewFrame)
+    //     setNewFrameChange(arrNewFrameChange)
+    //     setTempFrame(arrTempFrame)
+    //     setFrameHolders(currFrames)
+    //     setRerender(prev => !prev)
+    //     console.log(chosenFrameShape)
+    //     console.log(frameHolders)
+    // }
+
+
+    useEffect(() => {
         const arrNewFrame = [];
         const arrNewFrameChange = [];
         const arrTempFrame = [];
@@ -2598,19 +2667,25 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         setTempFrame(arrTempFrame)
         setFrameHolders(currFrames)
         setRerender(prev => !prev)
-        console.log(chosenFrameShape)
-        console.log(frameHolders)
-
-    }
 
 
-    useEffect(() => {
-        console.log("test")
-        const currFrames = frameHolders
-        currFrames.push(tempFrame)
-        setFrameHolders(currFrames)
-        setRerender(prev => !prev)
-    }, [addNewFrame, frameHolders, tempFrame,]);
+
+        const copyArr = iconHolders;
+
+        copyArr.forEach((element) => {
+
+            if (element.singleFrame) {
+                element.singleFrames.push(chosenFrameShape)
+                element.singleFrame = false; 
+            }
+        })
+
+        setIconHolders(copyArr)
+
+
+        // eslint-disable-next-line 
+    }, [addNewFrame]);
+    // }, [addNewFrame, chosenFrameShape, chosenModel.dotLocation, frameHolders, tempFrame]);
 
     return (
         <div className="panelpreview_container" style={panelPreviewStyle}>
@@ -2687,8 +2762,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                         )} >
 
                                                 <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
-                                                    < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" className="frame_change" style={el === "a" ? { opacity: "1" } : { opacity: "0" }} />
-                                                    < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" className="frame_change" style={el === "r" ? { opacity: "1" } : { opacity: "0" }} />
+                                                    {/* < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" className="frame_change" style={el === "a" ? { opacity: "1" } : { opacity: "0" }} /> */}
+                                                    {/* < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" className="frame_change" style={el === "r" ? { opacity: "1" } : { opacity: "0" }} /> */}
+                                                    < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
+                                                    < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
                                                 </div>
                                             </div>
                                         )
@@ -2696,40 +2773,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                     </>}
                             </div>
 
-                            <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                                {hideAll &&
-                                    <>
-                                        {tempFrame.map((el, index) =>
-                                            <div key={index}
-                                                style={
-                                                    ((index + 2) % 3 === 0) ?
-                                                        (
-                                                            ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                                                : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                                                        )
-                                                        : (
-                                                            ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                                                : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                                                        )} >
 
-                                                {el !== 0 &&
-                                                    <div style={chosenFrameShape === "sharp" ? {
-                                                        ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
-                                                        height: "100%",
-                                                        width: "100%",
-                                                    }
-                                                        : {
-                                                            ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
-                                                            height: "100%",
-                                                            width: "100%",
-                                                        }}
-                                                        className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                                                    />
-                                                }
-                                            </div>
-                                        )}
-                                    </>}
-                            </div>
 
 
 
@@ -2753,12 +2797,12 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
                                                     {el !== 0 &&
                                                         <div style={el.shape === "sharp" ? {
-                                                            ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
+                                                            ...frameStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
                                                             height: "100%",
                                                             width: "100%",
                                                         }
                                                             : {
-                                                                ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                                ...frameStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
                                                                 height: "100%",
                                                                 width: "100%",
                                                             }}
@@ -2770,14 +2814,49 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                 </>
                             }
 
+                            <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                                {hideAll &&
+                                    <>
+                                        {tempFrame.map((el, index) =>
+                                            <div key={index}
+                                                style={
+                                                    ((index + 2) % 3 === 0) ?
+                                                        (
+                                                            ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                                                : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                                        )
+                                                        : (
+                                                            ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                                                : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                                        )} >
 
+                                                {el !== 0 &&
+                                                    <div style={chosenFrameShape === "sharp" ? {
+                                                        ...frameTempStyle, borderRadius: "0",
+                                                        // ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: "0",
+                                                        height: "100%",
+                                                        width: "100%",
+                                                    }
+                                                        : {
+                                                            ...frameTempStyle, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                            // ...frameTempStyle, borderColor: `${chosenColor.iconColor}`, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                            height: "100%",
+                                                            width: "100%",
+                                                        }}
+                                                        className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                                    />
+                                                }
+                                            </div>
+                                        )}
+                                    </>}
+                            </div>
 
                             <div className="panel_content" style={contentStyle}>
 
                                 {hideAll &&
                                     <>
                                         {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown,
-                                            textUp, fontUp, textDown, fontDown, singleFrame
+                                            textUp, fontUp, textDown, fontDown, singleFrame, singleFrames
                                         }, index) =>
                                             <div key={index}
                                                 style={
@@ -2946,6 +3025,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                                             showRemoveIcons={showRemoveIcons}
                                                             chosenModel={chosenModel}
                                                             singleFrame={singleFrame}
+                                                            singleFrames={singleFrames}
                                                             chosenFrameShape={chosenFrameShape}
                                                         />
                                                     </>}
@@ -3067,10 +3147,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                     <span>Zresetuj wszystko</span>
                 </div>
 
-                <div className="side_box">
+                {/* <div className="side_box">
                     <img src={Addframe} alt="addframe" className="side_icon" onClick={handleAddFrame} />
                     <span>Zatwierdź</span>
-                </div>
+                </div> */}
 
 
                 {chosenTab === "icons" &&

@@ -33,6 +33,7 @@ export const IconHolder = memo(function IconHolder({
     showRemoveIcons,
     chosenModel,
     singleFrame,
+    singleFrames,
     chosenFrameShape
 }) {
 
@@ -142,11 +143,22 @@ export const IconHolder = memo(function IconHolder({
         setShow(false)
     }, [isOverToShow]);
 
+    if (singleFrames.lenght !== 0) {
+        styleSignleFrame = {
+            // border: `2px solid ${chosenColor.iconColor}`,
+            border: `2px solid white`,
+            borderRadius: "0px",
+        }
+        styleSignleFrameResize = {
+            transform: "scale(0.75)",
+        }
+    }
+    // console.log(singleFrames)
 
 
     if (singleFrame && chosenFrameShape === "sharp") {
         styleSignleFrame = {
-            border: `2px solid ${chosenColor.iconColor}`,
+            border: "2px solid rgb(32, 114, 30)",
             borderRadius: "0px",
         }
         styleSignleFrameResize = {
@@ -154,7 +166,7 @@ export const IconHolder = memo(function IconHolder({
         }
     } else if (singleFrame && chosenFrameShape === "round") {
         styleSignleFrame = {
-            border: `2px solid ${chosenColor.iconColor}`,
+            border: "2px solid rgb(32, 114, 30)",
             borderRadius: `${scale}px`,
         }
         styleSignleFrameResize = {
@@ -192,7 +204,6 @@ export const IconHolder = memo(function IconHolder({
     useEffect(() => {
         setShowHolder(false)
     }, [isActive]);
-
 
 
 
@@ -239,12 +250,12 @@ export const IconHolder = memo(function IconHolder({
                 <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} chosenColor={chosenColor} onUpActive={(income) => setUpActive(income)}
                     show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} animations={animations}
                     clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab} chosenModel={chosenModel}
-                    showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame}/>
+                    showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame} />
 
                 <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} chosenColor={chosenColor} onDownActive={(income) => setDownActive(income)}
                     show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} animations={animations}
                     clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} chosenTab={chosenTab} chosenModel={chosenModel}
-                    showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame}/>
+                    showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame} />
             </div>
             {/* </div> */}
         </>
