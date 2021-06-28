@@ -1,4 +1,5 @@
-import { useState, memo} from 'react';
+// import { useState, memo } from 'react';
+import { useState, memo, useEffect } from 'react';
 
 import "./MainCreator.scss"
 
@@ -14,57 +15,76 @@ import availableColors from "./PanelEditor/ColorEditor/availableColors"
 
 export const MainCreator = memo(function MainCreator() {
 
-    const [chosenColor, setChosenColor] = useState(availableColors[0])
-    const [chosenModel, setChosenModel] = useState(availableModels[0])
-    const [chosenTab, setChosenTab] = useState("model") 
-    const [chosenFont, setChosenFont] = useState("Calibri-bold")
-    const [chosenFrameFont, setChosenFrameFont] = useState("Calibri-bold")
-    const [chosenFrameShape, setChosenFrameShape] = useState("sharp")
-    const [addNewFrame, setAddNewFrame] = useState(false)
+  const [chosenColor, setChosenColor] = useState(availableColors[0])
+  const [chosenModel, setChosenModel] = useState(availableModels[6])
+  // const [chosenModel, setChosenModel] = useState(availableModels[0])
+  const [chosenTab, setChosenTab] = useState("model")
+  const [chosenFont, setChosenFont] = useState("Calibri-bold")
+  const [chosenFrameFont, setChosenFrameFont] = useState("Calibri-bold")
+  const [chosenFrameShape, setChosenFrameShape] = useState("sharp")
+  const [addNewFrame, setAddNewFrame] = useState(false)
+  const [removeFrame, setRemoveFrame] = useState({ type: null, id: null })
+  const [frameList, setFrameList] = useState([])
+  const [frameListProp, setFrameListProp] = useState([])
 
-    const handleSetColor = (chosenColor) => {
-        setChosenColor(chosenColor);
-    }
+  const handleSetColor = (chosenColor) => {
+    setChosenColor(chosenColor);
+  }
 
-    const handleSetModel = (chosenModel) => {
-        setChosenModel(chosenModel);
-    }
+  const handleSetModel = (chosenModel) => {
+    setChosenModel(chosenModel);
+  }
 
-    const handleSetTab = (chosenTab) => {
-        setChosenTab(chosenTab);
-    }
+  const handleSetTab = (chosenTab) => {
+    setChosenTab(chosenTab);
+  }
 
-    const handleSetFont = (chosenFont) => {
-        setChosenFont(chosenFont);
-    }
+  const handleSetFont = (chosenFont) => {
+    setChosenFont(chosenFont);
+  }
 
-    const handleFrameFontSet = (chosenFrameFont) => {
-        setChosenFrameFont(chosenFrameFont);
-    }
+  const handleFrameFontSet = (chosenFrameFont) => {
+    setChosenFrameFont(chosenFrameFont);
+  }
 
-    const handleFrameShapeSet = (chosenFrameShape) => {
-        setChosenFrameShape(chosenFrameShape);
-    }
+  const handleFrameShapeSet = (chosenFrameShape) => {
+    setChosenFrameShape(chosenFrameShape);
+  }
 
-    const handleAddNewFrame = ()=>{
-        setAddNewFrame(prev=>!prev)
-    }
+  const handleAddNewFrame = () => {
+    setAddNewFrame(prev => !prev)
+  }
 
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <div className="main_container">
-                <CreatorHeader />
-                <div className="content_container">
-                    <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} onTabSet={handleSetTab} onFontSet={handleSetFont}
-                    onFrameFontSet={handleFrameFontSet} onFrameShapeSet={handleFrameShapeSet} onAddNewFrame={handleAddNewFrame}
-                     chosenColor={chosenColor} chosenModel={chosenModel} />
-                    <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}
-                    chosenFrameFont={chosenFrameFont} chosenFrameShape={chosenFrameShape} addNewFrame={addNewFrame} 
-                    />
-                </div>
-            </div>
-        </DndProvider>
-    );
+  const handleFrameList = (frameList) => {
+    setFrameList(frameList)
+  }
+
+  const handleRemoveFrame = (type, id) => {
+    setRemoveFrame({ type: type, id: id })
+  }
+
+  useEffect(() => {
+    // console.log("MAIN")
+    setFrameListProp(frameList)
+    // eslint-disable-next-line 
+  }, [handleFrameList])
+
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <div className="main_container">
+        <CreatorHeader />
+        <div className="content_container">
+          <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} onTabSet={handleSetTab} onFontSet={handleSetFont}
+            onFrameFontSet={handleFrameFontSet} onFrameShapeSet={handleFrameShapeSet} onAddNewFrame={handleAddNewFrame} onRemoveFrame={handleRemoveFrame}
+            chosenColor={chosenColor} chosenModel={chosenModel} frameList={frameListProp} />
+          <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}
+            chosenFrameFont={chosenFrameFont} chosenFrameShape={chosenFrameShape} addNewFrame={addNewFrame} onFrameList={handleFrameList} removeFrame={removeFrame}
+          />
+        </div>
+      </div>
+    </DndProvider>
+  );
 });
 
 

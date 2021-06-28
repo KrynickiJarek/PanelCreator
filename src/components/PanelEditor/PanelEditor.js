@@ -24,7 +24,7 @@ import FrameFill from "../../assets/editornav/frame_fill.svg"
 import Color from "../../assets/editornav/color.svg"
 import ColorFill from "../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenModel, onTabSet, onFontSet, onFrameFontSet, onFrameShapeSet, onAddNewFrame }) => {
+const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenModel, onTabSet, onFontSet, onFrameFontSet, onFrameShapeSet, onAddNewFrame, frameList, onRemoveFrame }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -149,7 +149,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
               <TextEditor onFontSet={onFontSet} />
             </Tab.Pane>
             <Tab.Pane eventKey="frame">
-              <FrameEditor onFrameFontSet={onFrameFontSet} onFrameShapeSet={onFrameShapeSet} onAddNewFrame={onAddNewFrame} />
+              <FrameEditor onFrameFontSet={onFrameFontSet} onFrameShapeSet={onFrameShapeSet} onAddNewFrame={onAddNewFrame} frameList={frameList} onRemoveFrame={onRemoveFrame} />
             </Tab.Pane>
 
           </Tab.Content>
