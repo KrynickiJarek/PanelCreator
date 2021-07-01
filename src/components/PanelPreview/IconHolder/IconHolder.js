@@ -69,6 +69,7 @@ export const IconHolder = memo(function IconHolder({
   let styleZIndex = {};
   let styleSignleFrame = {};
   let styleSignleFrameResize = {};
+  styleSignleFrameResize.transform = "scale(1)";
 
   if (isActive) {
     if (chosenColor.hex !== "#2fa32c") {
@@ -144,7 +145,7 @@ export const IconHolder = memo(function IconHolder({
   }, [isOverToShow]);
 
 
-  if (singleFrameTemp && chosenFrameShape === "sharp") {
+  if (singleFrameTemp && chosenFrameShape === "sharp" && chosenTab === "frame") {
     styleSignleFrame = {
       border: "2px solid rgb(32, 114, 30)",
       borderRadius: "0px",
@@ -152,7 +153,7 @@ export const IconHolder = memo(function IconHolder({
     styleSignleFrameResize = {
       transform: "scale(0.75)",
     }
-  } else if (singleFrameTemp && chosenFrameShape === "round") {
+  } else if (singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame") {
     styleSignleFrame = {
       border: "2px solid rgb(32, 114, 30)",
       borderRadius: `${scale}px`,
@@ -165,9 +166,15 @@ export const IconHolder = memo(function IconHolder({
       border: "2px solid transparent",
       borderRadius: `${scale}px`
     }
+    styleSignleFrameResize = {
+      transform: "scale(1)",
+    }
   } else if ((!singleFrameTemp && chosenFrameShape === "sharp") || chosenTab !== "frame") { //??
     styleSignleFrame = {
       border: "2px solid transparent"
+    }
+    styleSignleFrameResize = {
+      transform: "scale(1)",
     }
   }
 
@@ -198,8 +205,6 @@ export const IconHolder = memo(function IconHolder({
   useEffect(() => {
     setShowHolder(false)
   }, [isActive]);
-
-
 
 
   return (

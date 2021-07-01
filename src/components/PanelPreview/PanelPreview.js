@@ -53,7 +53,7 @@ import Rightuni from "../../assets/lcd/rightuni.svg"
 
 import { IconHolder } from './IconHolder/IconHolder';
 
-export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor, chosenTab, chosenFont, chosenFrameFont, chosenFrameShape, addNewFrame, onFrameList, removeFrame }) {
+export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColor, chosenTab, chosenFont, chosenFrameFont, chosenFrameShape, addNewFrame, onFrameList, removeFrame, overFrame, frameTitle, onAllowTextFrame }) {
 
   const [sc, setSc] = useState(5);
 
@@ -72,11 +72,16 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
   const [newFrame, setNewFrame] = useState([])
   const [newFrameHide, setNewFrameHide] = useState([])
   const [newFrameChange, setNewFrameChange] = useState([])
-  const [tempFrame, setTempFrame] = useState({ text: "", frameFont: null, shape: null, id: 0, frameArr: [] })
+  const [tempFrame, setTempFrame] = useState({ textX: 0, textY: 0, id: 0, frameArr: [] })
+  const [tempFrameText, setTempFrameText] = useState("")
 
 
   const [frameHolders, setFrameHolders] = useState([])
   const [frameSingleHolders, setFrameSingleHolders] = useState([])
+  const [textFrame, setTextFrame] = useState(false)
+  const [isFocusedInputFrame, setIsFocusedInputFrame] = useState(false)
+
+
   const [frameList, setFrameList] = useState([])
 
   const [rerender, setRerender] = useState(false)
@@ -91,7 +96,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
   frameCellStyle.width = `${16 * sc}px`;
   frameCellStyle.borderRadius = "50%";
   frameCellStyle.transition = "400ms ease";
-  frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.75)";
+  frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.5)";
   frameCellStyle.opacity = "0";
   frameCellStyle.margin = `${2 * sc}px auto`;
 
@@ -145,8 +150,13 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
   singleFrameStyle.left = "50%";
   singleFrameStyle.marginLeft = `${-3.75 * sc}px`;
   singleFrameStyle.border = "2px solid transparent";
+  // singleFrameStyle.border = chosenColor.iconColor;
   singleFrameStyle.position = "absolute";
   singleFrameStyle.transition = "width 400ms ease, height 400ms ease, border-color 400ms ease, border-width 0s";
+
+
+
+
 
   const handleZoomOut = () => {
     (sc > 4) && setSc(prev => prev - 0.5)
@@ -219,6 +229,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
   if (!visual) {
     universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))";
+    frameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    frameStyle.borderColor = "white"; //??????????????????
+    singleFrameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    singleFrameStyle.borderColor = "white";
   } else if (chosenColor.iconColor === "white") {
     universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10)";
   } else {
@@ -323,13 +337,37 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
 
-  if ((chosenTab === "text") && showTextBorder) {
+  if ((chosenTab === "text") && showTextBorder && visual) {
     textStyle.border = "2px solid rgb(236, 105, 92)"
   }
 
   if (!visual) {
     textStyle.color = "white";
     textStyle.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
+  }
+
+
+  const textStyleFrame = {};
+  textStyleFrame.backgroundColor = "transparent";
+  textStyleFrame.color = chosenColor.iconColor;
+  textStyleFrame.border = "2px dashed transparent"
+  textStyleFrame.borderRadius = `${0.9 * sc}px`;
+  textStyleFrame.fontSize = `${2 * sc}px`
+  textStyleFrame.lineHeight = `${2 * sc}px`;
+  textStyleFrame.height = `${3.6 * sc}px`;
+  textStyleFrame.gridArea = "1 / 1 / 2 / 2";
+  textStyleFrame.width = "100%";
+  textStyleFrame.transition = "400ms ease";
+
+  // if ((chosenTab === "frame") && textFrame) {
+  if (chosenTab === "frame") {
+    textStyleFrame.border = "2px dashed rgb(236, 105, 92)"
+  }
+
+  if (!visual) {
+    textStyleFrame.color = "white";
+    textStyleFrame.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
+    textStyleFrame.transition = "0.4s ease";
   }
 
 
@@ -370,7 +408,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     const arrNewFrame = [];
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
-    const arrTempFrame = { text: "", frameFont: null, shape: null, id: 0, frameArr: [] };
+    const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
     setHideAll(false)
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
@@ -407,6 +445,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
       setFrameSingleHolders([])
       setFrameList([])
       setIconHolders(arrIconHolders);
+      setTempFrameText("")
+      setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
       (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
       setVisualChange(false)
@@ -749,9 +789,41 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         })
       });
       setIconHolders(tempArr);
-      setFrameHolders([])//----------------------------------------------------------------FRAME
-      setFrameSingleHolders([])//----------------------------------------------------------------FRAME
-      setFrameList([])//----------------------------------------------------------------FRAME
+      setFrameHolders([])
+      setFrameSingleHolders([])
+      setFrameList([])
+
+      const arrNewFrame = []; //----framkowe stejty
+      const arrNewFrameHide = [];
+      const arrNewFrameChange = [];
+      const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
+
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrame.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameHide.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameChange.push(element)
+      });
+
+
+      chosenModel.dotLocation.forEach(element => {
+        arrTempFrame.frameArr.push({
+          flag: element,
+          rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+          t: 0, r: 0, b: 0, l: 0,
+          fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
+        })
+      });
+      setNewFrame(arrNewFrame)
+      setNewFrameHide(arrNewFrameHide)
+      setNewFrameChange(arrNewFrameChange)
+      setTempFrame(arrTempFrame)
+      onFrameList(frameList)
+      setTempFrameText("")
+      setTextFrame(false) //----framkowe stejty
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
     }, 300);
     return () => clearTimeout(modeltimeout);
@@ -942,6 +1014,26 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
       setDifferentFont(false)
     }
   }, [iconHolders]);
+
+  const [differentFrameFont, setDifferentFrameFont] = useState(false) ///----------------------------------------------------------------------------- PRZENIEŚ UUSŃ
+  // useEffect(() => {
+  //   console.log("TEST!!!!!!!!!!!")
+  //   alert("alert")
+  //   const copyArr = frameHolders;
+  //   const checkArr = []
+  //   copyArr.forEach((el) => {
+  //     console.log(`element ${el}`)
+  //     console.log(`element.frameFont>>>>> ${el.frameFont}`)
+  //     if (el.frameFont && !checkArr.includes(el.frameFont)) {
+  //       checkArr.push(el.frameFont)
+  //     }
+  //   })
+  //   if (checkArr.length > 1) {
+  //     setDifferentFrameFont(true)
+  //   } else {
+  //     setDifferentFrameFont(false)
+  //   }
+  // }, [frameHolders]);
 
   const handleFrameOver = ((index) => {
     const copyArr = newFrame;
@@ -2056,10 +2148,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
 
-
-
-
-
     } else if (copyArr[index] === "s") {
       copyArr[index] = 1;
 
@@ -2469,7 +2557,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         copyTempArr[i].l = 0
         const copyIconHolders = iconHolders;
         copyIconHolders[i].singleFrameTemp = true
-        copyIconHolders[i].singleFrame = true
+        // copyIconHolders[i].singleFrame = true
         setIconHolders(copyIconHolders)
       } else {
         const copyIconHolders = iconHolders;
@@ -2562,9 +2650,38 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         copyTempArr[i].ml = 0
         copyTempArr[i].mr = (chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2
       }
-
     }
 
+    let textX = 0
+    let textY = 0
+    for (let i = 0; i < copyArr.length; i++) {
+      if (copyArr[i] === "s" && copyArr[i + 1] === "s" && (i % 3 === 0 || i % 3 === 1)) {
+        setTextFrame(true)
+        onAllowTextFrame(true)
+        textY = (Math.ceil((copyArr.indexOf("s") + 1) / 3) - 1) * chosenModel.multiRowFrameHeight
+        if (copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s" && i % 3 === 0) {
+          textX = ((chosenModel.sideColumnFrameWidth * 2) + chosenModel.centerColumnFrameWidth) / 2
+        }
+        if (copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] !== "s" && i % 3 === 0) {
+          textX = (((chosenModel.sideColumnFrameWidth) + chosenModel.centerColumnFrameWidth) - ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)) / 2
+        }
+        if (copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i - 1] !== "s" && i % 3 === 1) {
+          textX = (((3 * chosenModel.sideColumnFrameWidth) + chosenModel.centerColumnFrameWidth) + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)) / 2
+        }
+      }
+      if (i % 3 === 1 && copyArr[i] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s") {
+        setTextFrame(false)
+        onAllowTextFrame(false)
+      }
+      if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] !== "s") {
+        setTextFrame(false)
+        onAllowTextFrame(false)
+      }
+      if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i - 1] !== "s") {
+        setTextFrame(false)
+        onAllowTextFrame(false)
+      }
+    }
 
     const arrNewFrameChange = [];
     chosenModel.dotLocation.forEach(element => {
@@ -2577,7 +2694,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
     const copyTempFrame = tempFrame;
     copyTempFrame.frameArr = copyTempArr
+    copyTempFrame.textX = textX
+    copyTempFrame.textY = textY
     setTempFrame(copyTempFrame)
+
 
 
     setRerender(prev => !prev)
@@ -2600,27 +2720,30 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         },
       }));
     }
-  }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight, chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth]);
+  }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight, chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame]);
 
 
-  useEffect(() => {
+  const handleChangeTextFrame = (text) => {
+    // const copyTempArr = tempFrame;
+    // copyTempArr.text = text.target.value.toUpperCase()
+    // setTempFrame(copyTempArr);
+    setTempFrameText(text.target.value.toUpperCase());
+  }
 
+  const handleFocusInputFrame = () => {
+    setIsFocusedInputFrame(true)
+  }
 
-    const copyTempArr = tempFrame;
-    copyTempArr.shape = chosenFrameShape
-    setTempFrame(copyTempArr);
-
-  }, [chosenFrameShape, tempFrame]);
-
-
-
+  const handleBlurInputFrame = () => {
+    setIsFocusedInputFrame(false)
+  }
 
 
   useEffect(() => {
     const arrNewFrame = [];
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
-    const arrTempFrame = { text: "", frameFont: null, shape: null, id: 0, frameArr: [] };
+    const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
     const currFrames = frameHolders
     const frameListTemp = frameList;
 
@@ -2664,8 +2787,9 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
         })
 
 
-        currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID })
+        currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID, over: false })
         element.singleFrameTemp = false;
+        element.singleFrame = true;
 
         if (chosenModel.type !== "MDOT-18 poziomy") {
           frameListTemp.push(
@@ -2676,6 +2800,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
               columns: 1,
               shape: chosenFrameShape,
               text: "",
+              textX: 0,
+              textY: 0,
               frameFont: null,
               type: "s",
               id: singleFrameID,
@@ -2698,6 +2824,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
               columns: 1,
               shape: chosenFrameShape,
               text: "",
+              textX: 0,
+              textY: 0,
               frameFont: null,
               type: "s",
               id: singleFrameID,
@@ -2727,8 +2855,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
       tempFrame.id = multiFrameID
 
-
-
       const columns = ((newFrame.lastIndexOf("s") % 3) + 1) - (newFrame.indexOf("s") % 3)
       const rows = Math.ceil((newFrame.lastIndexOf("s") + 1) / 3) - Math.floor(newFrame.indexOf("s") / 3)
 
@@ -2739,9 +2865,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
             startColumn: ((newFrame.indexOf("s") % 3) + 1),
             rows: rows,
             columns: columns,
-            shape: tempFrame.shape,
-            text: tempFrame.text,
-            frameFont: tempFrame.frameFont,
+            shape: chosenFrameShape,
+            text: tempFrameText,
+            textX: tempFrame.textX,
+            textY: tempFrame.textY,
+            frameFont: chosenFrameFont,
             type: "m",
             id: multiFrameID,
           })
@@ -2762,9 +2890,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
             startColumn: Math.ceil((newFrame.indexOf("s") + 1) / 3),
             rows: columns,
             columns: rows,
-            shape: tempFrame.shape,
-            text: tempFrame.text,
-            frameFont: tempFrame.frameFont,
+            shape: chosenFrameShape,
+            text: "",
+            textX: tempFrame.textX,
+            textY: tempFrame.textY,
+            frameFont: null,
             type: "m",
             id: multiFrameID,
           })
@@ -2780,7 +2910,29 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     if (currSingleFramesShapes.includes("sharp") || currSingleFramesShapes.includes("round")) {
       currSingleFramesArr.push(currSingleFrames)
     } else {
-      currFrames.push(tempFrame)
+      const copyTempFrame = tempFrame
+      copyTempFrame.text = tempFrameText
+      copyTempFrame.shape = chosenFrameShape
+      copyTempFrame.over = false
+      if (tempFrameText !== "") {
+        copyTempFrame.frameFont = chosenFrameFont
+      } else {
+        copyTempFrame.frameFont = null
+
+      }
+      currFrames.push(copyTempFrame)
+    }
+
+    const checkFrameFontArr = []
+    currFrames.forEach((el) => {
+      if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
+        checkFrameFontArr.push(el.frameFont)
+      }
+    })
+    if (checkFrameFontArr.length > 1) {
+      setDifferentFrameFont(true)
+    } else {
+      setDifferentFrameFont(false)
     }
 
 
@@ -2793,9 +2945,11 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
     setFrameSingleHolders(currSingleFramesArr)
     setFrameList(frameListTemp)
     onFrameList(frameList)
-
-
+    setTempFrameText("")
+    setTextFrame(false)
+    onAllowTextFrame(false)
     setRerender(prev => !prev)
+
     // eslint-disable-next-line 
   }, [addNewFrame]);
 
@@ -2832,11 +2986,88 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
       })
     }
+
+
+    const checkFrameFontArr = []
+    currFrames.forEach((el) => {
+      if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
+        checkFrameFontArr.push(el.frameFont)
+      }
+    })
+    if (checkFrameFontArr.length > 1) {
+      setDifferentFrameFont(true)
+    } else {
+      setDifferentFrameFont(false)
+    }
+
+
+
+    setFrameHolders(currFrames)
+    setFrameSingleHolders(currSingleFramesArr)
+    setRerender(prev => !prev)
+
+    const copyArr = iconHolders;
+
+    copyArr.forEach((element) => {
+      element.singleFrame = false;
+    })
+
+    currSingleFramesArr.forEach((el, i) => {
+      for (let i = 0; i < el.length; i++) {
+        if (el[i] !== 0) {
+          copyArr[i].singleFrame = true
+        }
+      }
+    })
+    setIconHolders(copyArr)
+
+
+
+    // eslint-disable-next-line 
+  }, [removeFrame]);
+
+
+
+  useEffect(() => {
+    const currFrames = frameHolders
+    const currSingleFramesArr = frameSingleHolders
+
+    if (overFrame.type === "m") {
+      currFrames.forEach((element, index) => {
+        if (element.id === overFrame.id) {
+          currFrames[index].over = true
+        } else {
+          currFrames[index].over = false
+
+        }
+      })
+    } else if (overFrame.type === "s") {
+      currSingleFramesArr.forEach((element, index) => {
+        element.forEach((el, i) => {
+          if (el !== 0) {
+            if (el.id === overFrame.id) {
+              currSingleFramesArr[index][i].over = true
+            } else {
+              currSingleFramesArr[index][i].over = false
+            }
+          }
+        })
+
+      })
+    }
     setFrameHolders(currFrames)
     setFrameSingleHolders(currSingleFramesArr)
     setRerender(prev => !prev)
     // eslint-disable-next-line 
-  }, [removeFrame]);
+  }, [overFrame]);
+
+
+
+  useEffect(() => {
+    if (!frameTitle) {
+      setTempFrameText("")
+    }
+  }, [frameTitle])
 
 
 
@@ -2863,7 +3094,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
           <div className="resize_container" style={resizeStyle}>
             <div className="panel_box" style={chosenModelStyle}>
 
-              {!visualChange &&
+              {/* {!visualChange &&
                 <>
                   <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
                   <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
@@ -2873,10 +3104,10 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                   <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
                   <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8" } : { ...vusialStyle, opacity: "0" }} />
                   <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
-                </>}
+                </>} */}
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll &&
+                {hideAll && visual &&
                   <>
                     {newFrame.map((el, index) =>
                       <div key={index}
@@ -2895,8 +3126,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
                           <div style={el === 1 ? { ...frameCellStyle } :
                             chosenColor.hex !== "#2fa32c" ?
-                              { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.75)" }
-                              : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.75)" }} >
+                              { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
+                              : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.5)" }} >
                             <div style={frameClickStyle}
                               onClick={() => handleFrameClick(index)}
                               onMouseOver={() => handleFrameOver(index)}
@@ -2911,7 +3142,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
               </div>
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll &&
+                {hideAll && visual &&
                   <>
                     {newFrameHide.map((el, index) =>
                       <div key={index}
@@ -2936,7 +3167,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll &&
+                {hideAll && visual &&
                   <>
                     {newFrameChange.map((el, index) =>
                       <div key={index}
@@ -2977,7 +3208,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                               : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
                           } >
 
-                          {el !== 0 &&
+                          {el !== 0 && visual &&
                             <div style={frame.shape === "sharp" ? {
                               ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: "0",
                               height: `${el.fh * sc}px`,
@@ -2985,7 +3216,8 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                               marginBottom: `${el.mb * sc}px`,
                               marginLeft: `${el.ml * sc}px`,
                               marginRight: `${el.mr * sc}px`,
-                              transition: "0s"
+                              // transition: "0.4s ease"
+                              transition: "0s",
                             }
                               : {
                                 ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
@@ -2994,13 +3226,90 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                 marginBottom: `${el.mb * sc}px`,
                                 marginLeft: `${el.ml * sc}px`,
                                 marginRight: `${el.mr * sc}px`,
-                                transition: "0s"
+                                // transition: "0.4s ease"
+                                transition: "0s",
                               }}
+
+                              className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                            />
+                          }
+                          {el !== 0 && !visual &&
+                            <div style={frame.shape === "sharp" ? {
+                              ...frameStyle, borderColor: "white", borderRadius: "0",
+                              height: `${el.fh * sc}px`,
+                              width: `${el.fw * sc}px`,
+                              marginBottom: `${el.mb * sc}px`,
+                              marginLeft: `${el.ml * sc}px`,
+                              marginRight: `${el.mr * sc}px`,
+                              transition: "0.4s ease"
+                            }
+                              : {
+                                ...frameStyle, borderColor: "white",
+                                borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                height: `${el.fh * sc}px`,
+                                width: `${el.fw * sc}px`,
+                                marginBottom: `${el.mb * sc}px`,
+                                marginLeft: `${el.ml * sc}px`,
+                                marginRight: `${el.mr * sc}px`,
+                                transition: "0.4s ease"
+                              }}
+
+                              className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                            />
+                          }
+                          {el !== 0 && frame.over && visual &&
+                            <div style={frame.shape === "sharp" ? {
+                              ...frameStyle,
+                              borderColor: "#dc3545",
+                              zIndex: "9999",
+                              borderRadius: "0",
+                              height: `${el.fh * sc}px`,
+                              width: `${el.fw * sc}px`,
+                              marginBottom: `${el.mb * sc}px`,
+                              marginLeft: `${el.ml * sc}px`,
+                              marginRight: `${el.mr * sc}px`,
+                              transition: "0.4s ease",
+                            }
+                              : {
+                                ...frameStyle,
+                                borderColor: "#dc3545",
+                                zIndex: "9999",
+                                borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                height: `${el.fh * sc}px`,
+                                width: `${el.fw * sc}px`,
+                                marginBottom: `${el.mb * sc}px`,
+                                marginLeft: `${el.ml * sc}px`,
+                                marginRight: `${el.mr * sc}px`,
+                                transition: "0.4s ease",
+                              }}
+
                               className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
                             />
                           }
                         </div>
                       )}
+                      {(frame.text !== "") &&
+                        <div style={{ position: "absolute", width: "100%" }}>
+                          <div style={visual ? { ...autoResizeInputStyle, top: `${frame.textY * sc}px`, left: `${frame.textX * sc}px`, transition: "0s" } :
+                            { ...autoResizeInputStyle, top: `${frame.textY * sc}px`, left: `${frame.textX * sc}px`, transition: "0.4s ease" }}>
+                            <input className="text_input_frame"
+                              type="text"
+                              maxLength="25"
+                              style={{
+                                ...textStyleFrame,
+                                fontFamily: frame.frameFont,
+                                backgroundColor: chosenColor.hex,
+                                border: "none",
+                              }}
+                              disabled={true}
+                              value={frame.text}
+                            />
+                            <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                              {frame.text}
+                            </span>
+                          </div>
+                        </div>
+                      }
                     </div>
                   )}
                 </>
@@ -3026,21 +3335,31 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                                   : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
                               )} >
 
-                          {el !== 0 &&
+                          {el !== 0 && visual &&
                             <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
                               : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px`, }}
                             />
                           }
+                          {el !== 0 && !visual &&
+                            <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", }
+                              : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, }}
+                            />
+                          }
+                          {el !== 0 && el.over && visual &&
+                            <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: "0", zIndex: "9999", }
+                              : { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: `${sc}px`, zIndex: "9999", }}
+                            />
+                          }
                         </div>
                       )}
+
                     </div>
                   )}
                 </>
               }
 
               <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
-                {/* {hideAll && 0 === 1 && //NUMBERRR */}
-                {hideAll &&  //NUMBERRR
+                {hideAll && visual &&
                   <>
                     {tempFrame.frameArr.map((el, index) =>
                       <div key={index}
@@ -3058,7 +3377,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                             marginBottom: `${el.mb * sc}px`,
                             marginLeft: `${el.ml * sc}px`,
                             marginRight: `${el.mr * sc}px`,
-                            transition: "0s"
+                            transition: "0s",
                           }
                             : {
                               ...frameTempStyle, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
@@ -3074,8 +3393,87 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                         }
                       </div>
                     )}
+
+                    {textFrame && chosenTab === "frame" && frameTitle &&
+                      <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
+                        <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
+                          <form onSubmit={handleSubmit}>
+                            <div style={{ ...autoResizeInputStyle, top: `${tempFrame.textY * sc}px`, left: `${tempFrame.textX * sc}px`, transition: "0s" }}>
+                              <input className="text_input_frame"
+                                type="text"
+                                maxLength="25"
+                                style={(isFocusedInputFrame) ?
+                                  (
+                                    (chosenColor.hex !== "#2fa32c") ? {
+                                      ...textStyleFrame,
+                                      fontFamily: chosenFrameFont,
+                                      border: "2px dashed rgb(40, 167, 69)",
+                                      backgroundColor: chosenColor.hex
+                                    } :
+                                      {
+                                        ...textStyleFrame,
+                                        fontFamily: chosenFrameFont,
+                                        border: "2px dashed rgb(32, 114, 30)",
+                                        backgroundColor: chosenColor.hex
+                                      }
+                                  )
+                                  : {
+                                    ...textStyleFrame,
+                                    fontFamily: chosenFrameFont,
+                                    backgroundColor: chosenColor.hex
+
+                                  }}
+                                disabled={chosenTab !== "frame" && true}
+                                onMouseOver={showBorder}
+                                onMouseLeave={hideBorder}
+                                value={tempFrameText}
+                                onChange={(text) => handleChangeTextFrame(text)}
+                                onFocus={handleFocusInputFrame}
+                                onBlur={handleBlurInputFrame}
+                              />
+                              <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                {tempFrameText}
+                              </span>
+                              {(isFocusedInputFrame && chosenColor.hex !== "#2fa32c") &&
+                                <input type="image" src={Submitinput} alt="submitinput"
+                                  style={{
+                                    height: `${3.6 * sc}px`,
+                                    width: `${3.6 * sc}px`,
+                                    transform: "translate(75%, -50%)",
+                                    gridArea: '1 / 1 / 2 / 2'
+                                  }}
+                                />
+                              }
+                              {(isFocusedInputFrame && chosenColor.hex === "#2fa32c") &&
+                                <input type="image" src={Submitinputdark} alt="submitinput"
+                                  style={{
+                                    height: `${3.6 * sc}px`,
+                                    width: `${3.6 * sc}px`,
+                                    transform: "translate(75%, -50%)",
+                                    gridArea: '1 / 1 / 2 / 2'
+                                  }}
+                                />
+                              }
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    }
+
                   </>}
               </div>
+
+              {!visualChange &&
+                <>
+                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
+                  {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
+                  <div className="visualization_glass" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_glass_bis" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...vusialStyle, opacity: "0" }} />
+                  <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
+                </>}
 
               <div className="panel_content" style={contentStyle}>
 
@@ -3321,7 +3719,6 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
                   </>
                 }
               </div>
-
             </div>
           </div>
         </div>
@@ -3351,7 +3748,7 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 
         <div className="side_box">
           <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
-          {visual ? <span>Widok wizuali-<br />zacji</span> : <span>Widok schematy-<br />czny</span>}
+          {visual ? <span>Podgląd</span> : <span>Tryb edycji</span>}
         </div>
 
         <div className="side_box">
@@ -3422,10 +3819,19 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
             {differentFont &&
               <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
                 <img src={Alert} alt="Alert" className="side_icon" />
-                <span style={{ color: "red" }}>Zastosowano różne fonty</span>
+                <span style={{ color: "red" }}>Zastosowano różne fonty opisów</span>
               </div>
             }
-
+          </>
+        }
+        {chosenTab === "frame" &&
+          <>
+            {differentFrameFont &&
+              <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
+                <img src={Alert} alt="Alert" className="side_icon" />
+                <span style={{ color: "red" }}>Zastosowano różne fonty tytułów ramek</span>
+              </div>
+            }
           </>
         }
         {/* <OverlayTrigger
@@ -3447,598 +3853,3 @@ export const PanelPreview = memo(function MainCreator({ chosenModel, chosenColor
 });
 
 export default PanelPreview;
-
-
-
-// return (
-  //     <div className="panelpreview_container" style={panelPreviewStyle}>
-  //       <div className="preview_container">
-  //         <div className="preview_top">
-  //           <h2>PODGLĄD PANELU</h2>
-  //         </div>
-  //         <div className="panel_container">
-  //           <div className="resize_container" style={resizeStyle}>
-  //             <div className="panel_box" style={chosenModelStyle}>
-
-  //               {!visualChange &&
-  //                 <>
-  //                   <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
-  //                   <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
-  //                   {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-  //                   <div className="visualization_glass" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-  //                   <div className="visualization_glass_bis" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-  //                   <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-  //                   <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8" } : { ...vusialStyle, opacity: "0" }} />
-  //                   <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
-  //                 </>}
-
-  //               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-  //                 {hideAll &&
-  //                   <>
-  //                     {newFrame.map((el, index) =>
-  //                       <div key={index}
-  //                         style={
-  //                           ((index + 2) % 3 === 0) ?
-  //                             (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )
-  //                             : (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )} >
-
-  //                         {el !== 0 &&
-
-  //                           <div style={el === 1 ? { ...frameCellStyle } :
-  //                             chosenColor.hex !== "#2fa32c" ?
-  //                               { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.75)" }
-  //                               : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.75)" }} >
-  //                             <div style={frameClickStyle}
-  //                               onClick={() => handleFrameClick(index)}
-  //                               onMouseOver={() => handleFrameOver(index)}
-  //                               onMouseLeave={() => handleFrameLeave(index)}
-  //                             />
-  //                           </div>
-  //                         }
-  //                       </div>
-  //                     )
-  //                     }
-  //                   </>}
-  //               </div>
-
-  //               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-  //                 {hideAll &&
-  //                   <>
-  //                     {newFrameHide.map((el, index) =>
-  //                       <div key={index}
-  //                         style={
-  //                           ((index + 2) % 3 === 0) ?
-  //                             (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )
-  //                             : (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )} >
-  //                         {el === 0 &&
-  //                           <div style={{ ...frameCellStyle, backgroundColor: chosenColor.hex, height: `${18 * sc}px`, width: `${18 * sc}px`, margin: `${1 * sc}px auto` }} />
-  //                         }
-  //                       </div>
-  //                     )
-  //                     }
-  //                   </>}
-  //               </div>
-
-
-  //               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-  //                 {hideAll &&
-  //                   <>
-  //                     {newFrameChange.map((el, index) =>
-  //                       <div key={index}
-  //                         style={
-  //                           ((index + 2) % 3 === 0) ?
-  //                             (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )
-  //                             : (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )} >
-
-  //                         <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
-  //                           {/* < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" className="frame_change" style={el === "a" ? { opacity: "1" } : { opacity: "0" }} /> */}
-  //                           {/* < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" className="frame_change" style={el === "r" ? { opacity: "1" } : { opacity: "0" }} /> */}
-  //                           < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
-  //                           < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
-  //                         </div>
-  //                       </div>
-  //                     )
-  //                     }
-  //                   </>}
-  //               </div>
-
-
-  //               {hideAll && frameHolders.frameArr.length !== 0 && 1 === 0 &&//NUMBERR
-  //                 <>
-  //                   {frameHolders.frameArr.map((frame, i) =>
-  //                     <div key={i} className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
-
-  //                       {frame.map((el, index) =>
-  //                         <div key={index}
-  //                           style={
-  //                             ((index + 2) % 3 === 0) ?
-  //                               { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-  //                               : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-  //                           } >
-
-  //                           {el !== 0 &&
-  //                             <div style={el.shape === "sharp" ? {
-  //                               ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: "0",
-  //                               height: `${el.fh * sc}px`,
-  //                               width: `${el.fw * sc}px`,
-  //                               marginBottom: `${el.mb * sc}px`,
-  //                               marginLeft: `${el.ml * sc}px`,
-  //                               marginRight: `${el.mr * sc}px`,
-  //                               transition: "0s"
-  //                             }
-  //                               : {
-  //                                 ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
-  //                                 height: `${el.fh * sc}px`,
-  //                                 width: `${el.fw * sc}px`,
-  //                                 marginBottom: `${el.mb * sc}px`,
-  //                                 marginLeft: `${el.ml * sc}px`,
-  //                                 marginRight: `${el.mr * sc}px`,
-  //                                 transition: "0s"
-  //                               }}
-  //                               className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-  //                             />
-  //                           }
-  //                         </div>
-  //                       )}
-  //                     </div>
-  //                   )}
-  //                 </>
-  //               }
-
-
-
-  //               {hideAll && frameSingleHolders.length !== 0 &&
-  //                 <>
-  //                   {frameSingleHolders.map((frame, i) =>
-  //                     <div key={i} className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-
-  //                       {frame.map((el, index) =>
-  //                         <div key={index}
-  //                           style={
-  //                             ((index + 2) % 3 === 0) ?
-  //                               (
-  //                                 ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                   : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                               )
-  //                               : (
-  //                                 ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                   : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                               )} >
-
-  //                           {el !== 0 &&
-  //                             <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
-  //                               : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px`, }}
-  //                             />
-  //                           }
-  //                         </div>
-  //                       )}
-  //                     </div>
-  //                   )}
-  //                 </>
-  //               }
-
-  //               <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
-  //                 {/* {hideAll && 0 === 1 && //NUMBERRR */}
-  //                 {hideAll &&  //NUMBERRR
-  //                   <>
-  //                     {tempFrame.frameArr.map((el, index) =>
-  //                       <div key={index}
-  //                         style={
-  //                           ((index + 2) % 3 === 0) ?
-  //                             { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-  //                             : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-  //                         } >
-
-  //                         {el !== 0 &&
-  //                           <div style={chosenFrameShape === "sharp" ? {
-  //                             ...frameTempStyle, borderRadius: "0",
-  //                             height: `${el.fh * sc}px`,
-  //                             width: `${el.fw * sc}px`,
-  //                             marginBottom: `${el.mb * sc}px`,
-  //                             marginLeft: `${el.ml * sc}px`,
-  //                             marginRight: `${el.mr * sc}px`,
-  //                             transition: "0s"
-  //                           }
-  //                             : {
-  //                               ...frameTempStyle, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
-  //                               height: `${el.fh * sc}px`,
-  //                               width: `${el.fw * sc}px`,
-  //                               marginBottom: `${el.mb * sc}px`,
-  //                               marginLeft: `${el.ml * sc}px`,
-  //                               marginRight: `${el.mr * sc}px`,
-  //                               transition: "0s"
-  //                             }}
-  //                             className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-  //                           />
-  //                         }
-  //                       </div>
-  //                     )}
-  //                   </>}
-  //               </div>
-
-  //               <div className="panel_content" style={contentStyle}>
-
-  //                 {hideAll &&
-  //                   <>
-  //                     {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown,
-  //                       textUp, fontUp, textDown, fontDown, singleFrameTemp, singleFrame
-  //                     }, index) =>
-  //                       <div key={index}
-  //                         style={
-  //                           ((index + 2) % 3 === 0) ?
-  //                             (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )
-  //                             : (
-  //                               ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-  //                                 : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-  //                             )}>
-  //                         {flag === 1 &&
-  //                           <>
-  //                             <div className="text_box" style={chosenTab === "text" ? { zIndex: "999" } : { zIndex: "0" }}>
-  //                               <div className="text_box" style={chosenModel.type !== "MDOT-18 poziomy" ? { transition: "0.4s ease" } : { transform: "rotate(90deg)", transformOrigin: `center ${10.4 * sc}px`, transition: "0.4s ease" }}>
-  //                                 {textUpOff &&
-  //                                   <form onSubmit={handleSubmit}>
-  //                                     <div style={chosenModel.type !== "MDOT-18 poziomy" ?
-  //                                       { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }
-  //                                       :
-  //                                       { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
-  //                                       <input className="text_input"
-  //                                         type="text"
-  //                                         maxLength="25"
-  //                                         style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
-  //                                           (
-  //                                             (chosenColor.hex !== "#2fa32c") ? {
-  //                                               ...textStyle,
-  //                                               fontFamily: fontUp,
-  //                                               border: "2px solid rgb(40, 167, 69)"
-  //                                             } :
-  //                                               {
-  //                                                 ...textStyle,
-  //                                                 fontFamily: fontUp,
-  //                                                 border: "2px solid rgb(32, 114, 30)",
-  //                                               }
-  //                                           )
-  //                                           : {
-  //                                             ...textStyle,
-  //                                             fontFamily: fontUp,
-  //                                           }}
-  //                                         disabled={chosenTab !== "text" && true}
-  //                                         onMouseOver={showBorder}
-  //                                         onMouseLeave={hideBorder}
-  //                                         value={textUp}
-  //                                         onChange={(text) => handleChangeTextUp(index, text)}
-  //                                         onClick={() => handleChangeFontUp(index)}
-  //                                         onFocus={() => { handleFocusInput(index, "up") }}
-  //                                         onBlur={handleBlurInput}
-  //                                       />
-  //                                       <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-  //                                         {textUp}
-  //                                       </span>
-  //                                       {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#2fa32c") &&
-  //                                         <input type="image" src={Submitinput} alt="submitinput"
-  //                                           style={{
-  //                                             height: `${3.6 * sc}px`,
-  //                                             width: `${3.6 * sc}px`,
-  //                                             transform: "translateX(75%)",
-  //                                             gridArea: '1 / 1 / 2 / 2'
-  //                                           }}
-  //                                         />
-  //                                       }
-  //                                       {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#2fa32c") &&
-  //                                         <input type="image" src={Submitinputdark} alt="submitinput"
-  //                                           style={{
-  //                                             height: `${3.6 * sc}px`,
-  //                                             width: `${3.6 * sc}px`,
-  //                                             transform: "translateX(75%)",
-  //                                             gridArea: '1 / 1 / 2 / 2'
-  //                                           }}
-  //                                         />
-  //                                       }
-  //                                     </div>
-  //                                   </form>
-  //                                 }
-  //                                 <form onSubmit={handleSubmit}>
-  //                                   <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
-  //                                     <input className="text_input"
-  //                                       type="text"
-  //                                       maxLength="25"
-  //                                       style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
-  //                                         (
-  //                                           (chosenColor.hex !== "#2fa32c") ? {
-  //                                             ...textStyle,
-  //                                             fontFamily: fontDown,
-  //                                             border: "2px solid rgb(40, 167, 69)"
-  //                                           } :
-  //                                             {
-  //                                               ...textStyle,
-  //                                               fontFamily: fontDown,
-  //                                               border: "2px solid rgb(32, 114, 30)"
-  //                                             }
-  //                                         )
-  //                                         : {
-  //                                           ...textStyle,
-  //                                           fontFamily: fontDown
-  //                                         }}
-  //                                       disabled={chosenTab !== "text" && true}
-  //                                       onMouseOver={showBorder}
-  //                                       onMouseLeave={hideBorder}
-  //                                       value={textDown}
-  //                                       onChange={(text) => handleChangeTextDown(index, text)}
-  //                                       onClick={() => handleChangeFontDown(index)}
-  //                                       onFocus={() => { handleFocusInput(index, "down") }}
-  //                                       onBlur={handleBlurInput}
-  //                                     />
-  //                                     <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-  //                                       {textDown}
-  //                                     </span>
-  //                                     {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#2fa32c") &&
-  //                                       <input type="image" src={Submitinput} alt="submitinput"
-  //                                         style={{
-  //                                           height: `${3.6 * sc}px`,
-  //                                           width: `${3.6 * sc}px`,
-  //                                           transform: "translateX(75%)",
-  //                                           gridArea: '1 / 1 / 2 / 2'
-  //                                         }}
-  //                                       />
-  //                                     }
-  //                                     {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#2fa32c") &&
-  //                                       <input type="image" src={Submitinputdark} alt="submitinput"
-  //                                         style={{
-  //                                           height: `${3.6 * sc}px`,
-  //                                           width: `${3.6 * sc}px`,
-  //                                           transform: "translateX(75%)",
-  //                                           gridArea: '1 / 1 / 2 / 2'
-  //                                         }}
-  //                                       />
-  //                                     }
-  //                                   </div>
-  //                                 </form>
-  //                               </div>
-  //                             </div>
-
-
-  //                             <IconHolder
-  //                               chosenColor={chosenColor}
-  //                               lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
-  //                               lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
-  //                               lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
-  //                               lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
-  //                               onReset={(item) => handleReset(index, item)}
-  //                               onResetDot={(item) => handleResetDot(index, item)}
-  //                               onResetUp={(item) => handleResetUp(index, item)}
-  //                               onResetDown={(item) => handleResetDown(index, item)}
-  //                               scale={sc}
-  //                               onSelect={(item) => handleSelect(index, item)}
-  //                               onSelectDot={(item) => handleSelectDot(index, item)}
-  //                               onSelectUp={(item) => handleSelectUp(index, item)}
-  //                               onSelectDown={(item) => handleSelectDown(index, item)}
-  //                               selectedDot={selectedDot}
-  //                               selected={selected}
-  //                               selectedUp={selectedUp}
-  //                               selectedDown={selectedDown}
-  //                               onDrag={(item) => handleDrag(index, item)}
-  //                               // onDrag={handleDrag}
-  //                               animations={animations}
-  //                               clear={clear}
-  //                               rotateRight={rotateRight}
-  //                               rotateLeft={rotateLeft}
-  //                               visual={visual}
-  //                               chosenTab={chosenTab}
-  //                               showRemoveIcon={showRemoveIcon}
-  //                               showRemoveIcons={showRemoveIcons}
-  //                               chosenModel={chosenModel}
-  //                               singleFrameTemp={singleFrameTemp}
-  //                               singleFrame={singleFrame}
-  //                               chosenFrameShape={chosenFrameShape}
-  //                             />
-  //                           </>}
-  //                       </div>
-  //                     )}
-
-
-  //                     {(lcdShow && visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
-  //                     {(lcdShow && !visual && lcdNew) &&
-  //                       <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
-  //                         <div className="lcd_icon_box">
-  //                           < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
-  //                           < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
-  //                         </div>
-
-  //                         <div>
-  //                           <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
-  //                           <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-  //                         </div>
-
-  //                         <div className="lcd_icon_box">
-  //                           < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
-  //                           < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
-  //                         </div>
-  //                       </div>
-  //                     }
-  //                     {(lcdShow && !visual && !lcdNew) &&
-  //                       <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px`, justifyContent: "center" }}>
-  //                         <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
-  //                         <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-  //                       </div>
-  //                     }
-  //                     {(lcdShow && !visual && lcdNew) &&
-  //                       <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
-  //                         <div className="lcd_icon_box">
-  //                           < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
-  //                           < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
-  //                         </div>
-
-  //                         <div>
-  //                           <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
-  //                           <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-  //                         </div>
-
-  //                         <div className="lcd_icon_box">
-  //                           < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
-  //                           < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
-  //                         </div>
-  //                       </div>
-  //                     }
-  //                     {lcdNew &&
-  //                       <div className="universal_icons" style={universalIconBoxStyle}>
-  //                         < img src={Minusuni} alt="minusuni" className="universal_icon"
-  //                           style={{ ...universalIconStyle, top: `${6.65 * sc}px`, left: `${7.45 * sc}px` }} />
-  //                         < img src={Minusuni} alt="minusuni" className="universal_icon"
-  //                           style={{ ...universalIconStyle, top: `${6.65 * sc}px`, left: `${55.45 * sc}px` }} />
-  //                         < img src={Leftuni} alt="leftuni" className="universal_icon"
-  //                           style={{ ...universalIconStyle, top: `${26.65 * sc}px`, left: `${7.45 * sc}px` }} />
-  //                         < img src={Rightuni} alt="rightuni" className="universal_icon"
-  //                           style={{ ...universalIconStyle, top: `${26.65 * sc}px`, left: `${55.45 * sc}px` }} />
-  //                         < img src={Minusuni} alt="minusuni" className="universal_icon"
-  //                           style={{ ...universalIconStyle, top: `${46.65 * sc}px`, left: `${7.45 * sc}px` }} />
-  //                         < img src={Minusuni} alt="minusuni" className="universal_icon"
-  //                           style={{ ...universalIconStyle, top: `${46.65 * sc}px`, left: `${55.45 * sc}px` }} />
-  //                       </div>
-  //                     }
-  //                   </>
-  //                 }
-  //               </div>
-
-  //             </div>
-  //           </div>
-  //         </div>
-  //         <div className="preview_bottom">
-  //           <div className="bottom_info_model">
-  //             <span>{chosenModel.type}</span>
-  //           </div>
-  //           <div className="scale_container">
-  //             <div className="scale_box">
-  //               <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut}
-  //                 style={sc === 4 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}} />
-  //             </div>
-  //             <div className="scale_box">
-  //               <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} />
-  //             </div>
-  //             <div className="scale_box">
-  //               <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn}
-  //                 style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}} />
-  //             </div>
-  //           </div>
-  //           <div className="bottom_info_ral">
-  //             <span>RAL: {chosenColor.RAL}</span>
-  //           </div>
-  //         </div>
-  //       </div>
-  //       <div className="preview_side">
-
-  //         <div className="side_box">
-  //           <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
-  //           {visual ? <span>Widok wizuali-<br />zacji</span> : <span>Widok schematy-<br />czny</span>}
-  //         </div>
-
-  //         <div className="side_box">
-  //           <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll} />
-  //           <span>Zresetuj wszystko</span>
-  //         </div>
-
-  //         {/* <div className="side_box">
-  //                     <img src={Addframe} alt="addframe" className="side_icon" onClick={handleAddFrame} />
-  //                     <span>Zatwierdź</span>
-  //                 </div> */}
-
-
-  //         {chosenTab === "icons" &&
-  //           <>
-  //             <div className="side_box">
-  //               {animations ?
-  //                 <img src={Animoff} alt="animationoff" className="side_icon" onClick={handleAnimation} />
-  //                 : <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
-  //               }
-  //               {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
-  //             </div>
-  //             <div className="side_box">
-  //               <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={handleClearAllIcons}
-  //                 onMouseOver={handleShowClearAllIcons} onMouseLeave={handleHideClearAllIcons} />
-  //               <span>Usuń wszystkie ikony</span>
-  //             </div>
-  //             <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-  //               <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-  //                 onMouseOver={handleShowClearIcon} onMouseLeave={handleHideClearIcon} />
-  //               <span>Usuń zaznaczoną ikonę</span>
-  //             </div>
-  //             <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-  //               <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-  //               <span>Obróć o 90° w prawo</span>
-  //             </div>
-  //             <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-  //               <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-  //               <span >Obróć o 90° w lewo</span>
-  //             </div>
-  //           </>
-  //         }
-  //         {chosenTab === "text" &&
-  //           <>
-  //             <div className="side_box">
-  //               <img src={Textborder} alt="textborder" className="side_icon" onClick={handleTextBorder} />
-  //               <span>Pokaż granice</span>
-  //             </div>
-
-  //             <div className="side_box">
-  //               {textUpOff ?
-  //                 <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff} />
-  //                 :
-  //                 <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff} />}
-  //               {textUpOff ? <span>Wyłącz i usuń opisy nad ikonami</span> : <span>Włącz opisy nad ikonami</span>}
-  //             </div>
-
-  //             <div className="side_box">
-  //               <img src={Clearalltext} alt="clearalltext" className="side_icon" onClick={handleClearAllText} />
-  //               <span>Usuń wszystkie opisy</span>
-  //             </div>
-
-  //             <div className="side_box">
-  //               <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
-  //               <span>Wybrany font dla wszystkich opisów</span>
-  //             </div>
-
-  //             {differentFont &&
-  //               <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
-  //                 <img src={Alert} alt="Alert" className="side_icon" />
-  //                 <span style={{ color: "red" }}>Zastosowano różne fonty</span>
-  //               </div>
-  //             }
-
-  //           </>
-  //         }
-  //         {/* <OverlayTrigger
-  //                     arrowProps
-  //                     placement="left"
-  //                     delay={{ show: 250, hide: 400 }}
-  //                     overlay={renderTooltip}
-  //                 >
-  //                     <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-  //                         <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-  //                         <span >Obróć o 90° w lewo</span>
-  //                     </div>
-  //                 </OverlayTrigger> */}
-
-  //       </div>
-
-  //     </div >
-  //   );
-  // });

@@ -1,5 +1,5 @@
-// import { useState, memo } from 'react';
-import { useState, memo, useEffect } from 'react';
+import { useState, memo } from 'react';
+// import { useState, memo, useEffect } from 'react';
 
 import "./MainCreator.scss"
 
@@ -24,8 +24,11 @@ export const MainCreator = memo(function MainCreator() {
   const [chosenFrameShape, setChosenFrameShape] = useState("sharp")
   const [addNewFrame, setAddNewFrame] = useState(false)
   const [removeFrame, setRemoveFrame] = useState({ type: null, id: null })
+  const [overFrame, setOverFrame] = useState({ type: null, id: null })
   const [frameList, setFrameList] = useState([])
-  const [frameListProp, setFrameListProp] = useState([])
+  // const [frameListProp, setFrameListProp] = useState([])
+  const [frameTitle, setFrameTitle] = useState(false)
+  const [allowTextFrame, setAllowTextFrame] = useState(false)
 
   const handleSetColor = (chosenColor) => {
     setChosenColor(chosenColor);
@@ -63,11 +66,22 @@ export const MainCreator = memo(function MainCreator() {
     setRemoveFrame({ type: type, id: id })
   }
 
-  useEffect(() => {
-    // console.log("MAIN")
-    setFrameListProp(frameList)
-    // eslint-disable-next-line 
-  }, [handleFrameList])
+  const handleOverFrame = (type, id) => {
+    setOverFrame({ type: type, id: id })
+  }
+
+  const handleFrameTitle = (income) => {
+    setFrameTitle(income)
+  }
+
+  const handleAllowTextFrame = (income) => {
+    setAllowTextFrame(income)
+  }
+  // useEffect(() => {
+  //   // console.log("MAIN")
+  //   setFrameListProp(frameList)
+  //   // eslint-disable-next-line 
+  // }, [handleFrameList])
 
 
   return (
@@ -76,10 +90,11 @@ export const MainCreator = memo(function MainCreator() {
         <CreatorHeader />
         <div className="content_container">
           <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} onTabSet={handleSetTab} onFontSet={handleSetFont}
-            onFrameFontSet={handleFrameFontSet} onFrameShapeSet={handleFrameShapeSet} onAddNewFrame={handleAddNewFrame} onRemoveFrame={handleRemoveFrame}
-            chosenColor={chosenColor} chosenModel={chosenModel} frameList={frameListProp} />
+            onFrameFontSet={handleFrameFontSet} onFrameShapeSet={handleFrameShapeSet} onAddNewFrame={handleAddNewFrame} onRemoveFrame={handleRemoveFrame} onToggleFrameTitle={handleFrameTitle}
+            onOverFrame={handleOverFrame} chosenColor={chosenColor} chosenModel={chosenModel} frameList={frameList} allowTextFrame={allowTextFrame} />
           <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}
-            chosenFrameFont={chosenFrameFont} chosenFrameShape={chosenFrameShape} addNewFrame={addNewFrame} onFrameList={handleFrameList} removeFrame={removeFrame}
+            chosenFrameFont={chosenFrameFont} chosenFrameShape={chosenFrameShape} addNewFrame={addNewFrame} onFrameList={handleFrameList}
+            removeFrame={removeFrame} overFrame={overFrame} frameTitle={frameTitle} onAllowTextFrame={handleAllowTextFrame}
           />
         </div>
       </div>
@@ -174,3 +189,4 @@ export default MainCreator;
 
 
 // export default MainCreator;
+

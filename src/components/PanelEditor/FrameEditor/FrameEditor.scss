@@ -1,10 +1,19 @@
-.frame_container{
+.scroll_container{
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  
+  
+  .frame_container{
     display: flex;
     flex-direction: column;
     padding: 55px 55px 0 55px;
     height: 100%;
+    // width: calc(100% - 12px);
     width: 100%;
-    overflow-y: auto;
+    // overflow-y: auto;
     background-color: white;
     position: absolute;
     
@@ -63,6 +72,7 @@
         margin-top: 15px;
         margin-bottom: 5px;
         margin-left: 10px;
+        transition: 0.4s ease;
     }
 
     .frame_choosing_box {
@@ -82,7 +92,7 @@
                 text-align: left;
                 margin: 10px;
                 border: 3px solid transparent;
-                transition: 300ms ease;
+                transition: 0.4s ease;
                 cursor: pointer;
                 border-radius: 15px;
                 position: relative;
@@ -105,9 +115,6 @@
             .frame_shape_link{
                 width: 135px;
             }
-            .frame_link:hover, .frame_shape_link:hover{
-                border: 3px solid #EC695C;
-            }
             .frame_chosen{
                 position: absolute;
                 right: 0;
@@ -118,20 +125,124 @@
                 transform: translate(-50%,50%);
                 background-repeat: no-repeat;
             }
+            .frame_link:hover, .frame_shape_link:hover{
+              border: 3px solid #EC695C;
+            }
         }
+
+        .add_frame_button{
+          height: 50px;
+          width: 180px;
+          cursor: pointer;
+          font-weight: 700;
+          font-family: 'Montserrat', sans-serif;
+          color: #333333;  
+          font-size: 16px;
+          padding: 10px 30px 10px 0;
+          border: 3px solid transparent;
+          transition: 0.4s ease;
+          align-self: flex-end;
+          position: relative;
+
+          .button_arrows{
+            position: absolute;
+            right: 0;
+            top: 50%;
+            height: 16px;
+            width: 20px;
+            background-image:  url("../../../assets/arrows.svg");
+            transform: translate(-90%,-40%);
+            background-repeat: no-repeat;
+          }
+        }
+
+        .add_frame_button:hover{
+          border: 3px solid #EC695C;
+        }
+
+        .add_title_button{
+          height: 40px;
+          width: 100px;
+          cursor: pointer;
+          font-weight: 700;
+          font-family: 'Montserrat', sans-serif;
+          color: #333333;  
+          font-size: 12px;
+          padding: 10px 20px 10px 0;
+          margin-top: 10px;
+          margin-bottom: 0;
+          margin-left: 10px;
+          border: 3px solid transparent;
+          transition: 0.4s ease;
+          position: relative;
+          top: 0;
+
+          .button_arrows{
+            position: absolute;
+            right: 0;
+            top: 50%;
+            height: 12px;
+            width: 15px;
+            background-image:  url("../../../assets/arrows.svg");
+            transform: translate(-90%,-30%);
+            background-repeat: no-repeat;
+          }
+        }
+
+        .add_title_button:hover{
+          border: 3px solid #EC695C;
+        }
+
+    }
     }
 }
 
+.hide_box{
+  overflow: hidden;
+  height: auto;
+
+  .title_box{
+    transition: 0.4s ease;
+    display: flex;
+    flex-direction: column;
+
+    .frame_list{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      list-style-type: disc;
+
+      .frame_list_element{
+        font-size: 14px;
+        font-weight: 400;
+        font-family: 'Montserrat', sans-serif;
+        color: #333333;  
+        margin-top: 5px;
+        cursor: pointer;
+      }
+      .frame_list_button{
+        display: inline;
+        cursor: pointer;
+      }
+      .frame_list_img{
+        height: 20px;
+        width: 20px;
+        margin-left: 5px;
+
+      }
+    }
+  }
+}
 
 
 
 
 
-.frame_container::-webkit-scrollbar {
+.scroll_container::-webkit-scrollbar {
     width: 12px;
 }
 
-.frame_container::-webkit-scrollbar-thumb {
+.scroll_container::-webkit-scrollbar-thumb {
     background: #ECECEC;
     background: rgb(217,217,217);
     border-radius: 10px;
