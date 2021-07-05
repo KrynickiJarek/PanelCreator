@@ -76,7 +76,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
   frameListRED,
   frameHoldersRED,
+  frameHoldersREDreset,
   frameHoldersTempRED,
+  changeFrameText
 
 
 }) {
@@ -100,12 +102,12 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   const [newFrame, setNewFrame] = useState([])
   const [newFrameHide, setNewFrameHide] = useState([])
   const [newFrameChange, setNewFrameChange] = useState([])
-  const [tempFrame, setTempFrame] = useState({ textX: 0, textY: 0, id: 0, frameArr: [] })
+  const [tempFrame, setTempFrame] = useState({ textX: 0, textY: 0, frameArr: [], text: "" })
   const [tempFrameText, setTempFrameText] = useState("")
 
 
-  const [frameHolders, setFrameHolders] = useState([])
-  const [frameSingleHolders, setFrameSingleHolders] = useState([])
+  // const [frameHolders, setFrameHolders] = useState([])
+  // const [frameSingleHolders, setFrameSingleHolders] = useState([])
   const [textFrame, setTextFrame] = useState(false)
   const [isFocusedInputFrame, setIsFocusedInputFrame] = useState(false)
 
@@ -436,7 +438,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     const arrNewFrame = [];
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
-    const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
+    const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
     setHideAll(false)
 
     setFrameList([])
@@ -474,16 +476,18 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
-      setFrameHolders([])
-      setFrameSingleHolders([])
+      // setFrameHolders([])
+      // setFrameSingleHolders([])
       // setFrameList([])//----------------------------------------------------------------przeniesione poza timeouta 
       // onFrameList(frameList) 
       setIconHolders(arrIconHolders);
       setTempFrameText("")
+      changeFrameText("")
       setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
       (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
       setVisualChange(false)
+      frameHoldersREDreset([])
     }, 300);
     return () => clearTimeout(modeltimeout);
     // eslint-disable-next-line
@@ -825,14 +829,14 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         })
       });
       setIconHolders(tempArr);
-      setFrameHolders([])
-      setFrameSingleHolders([])
+      // setFrameHolders([])
+      // setFrameSingleHolders([])
       setFrameList([])
 
       const arrNewFrame = []; //----framkowe stejty
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
-      const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
+      const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
 
       chosenModel.dotLocation.forEach(element => {
         arrNewFrame.push(element)
@@ -859,6 +863,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setTempFrame(arrTempFrame)
       onFrameList(frameList)
       setTempFrameText("")
+      changeFrameText("")
       setTextFrame(false) //----framkowe stejty
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
     }, 300);
@@ -2734,6 +2739,20 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     copyTempFrame.textY = textY
     setTempFrame(copyTempFrame)
 
+
+    const copyFramePrint = {};
+    copyFramePrint.frameArr = copyTempArr
+    copyFramePrint.textX = textX
+    copyFramePrint.textY = textY
+    // copyFramePrint.text = tempFrameText
+    // copyFramePrint.over = false
+    // copyFramePrint.shape = chosenFrameShape
+    // if (tempFrameText !== "") {
+    // copyFramePrint.frameFont = chosenFrameFont
+    // } else {
+    // copyFramePrint.frameFont = null
+    // }
+
     //---------------------------------REDUX---------------------------------
     let frameTempRED = {};
 
@@ -2746,7 +2765,11 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
       frameTempRED.type = "multi"
-      frameTempRED.framePrint = copyTempFrame
+      frameTempRED.framePrint = copyFramePrint
+
+      // frameTempRED.framePrint.frameArr = 
+      // frameTempRED.framePrint.textX = textX
+      // frameTempRED.framePrint.textY = textY
 
       const columns = ((copyArr.lastIndexOf("s") % 3) + 1) - (copyArr.indexOf("s") % 3)
       const rows = Math.ceil((copyArr.lastIndexOf("s") + 1) / 3) - Math.floor(copyArr.indexOf("s") / 3)
@@ -2760,8 +2783,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           columns: columns,
           shape: chosenFrameShape,
           text: tempFrameText,
-          textX: tempFrame.textX,
-          textY: tempFrame.textY,
+          textX: textX,
+          textY: textY,
           frameFont: chosenFrameFont,
         }
       } else {
@@ -2783,8 +2806,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           columns: rows,
           shape: chosenFrameShape,
           text: "",
-          textX: tempFrame.textX,
-          textY: tempFrame.textY,
+          textX: textX,
+          textY: textY,
           frameFont: null,
         }
       }
@@ -2832,10 +2855,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
               frameFont: null,
             }
           }
-
-
-
-
 
         } else {
           currSingleFrames.push(0)
@@ -2885,10 +2904,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
   const handleChangeTextFrame = (text) => {
-    // const copyTempArr = tempFrame;
-    // copyTempArr.text = text.target.value.toUpperCase()
-    // setTempFrame(copyTempArr);
     setTempFrameText(text.target.value.toUpperCase());
+    changeFrameText(text.target.value.toUpperCase());
   }
 
   const handleFocusInputFrame = () => {
@@ -2902,14 +2919,12 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
   useEffect(() => {
     if (addNewFrameFlag) {
-
-
       const arrNewFrame = [];
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
-      const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
-      const currFrames = frameHolders
-      const frameListTemp = frameList;
+      const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
+      // const currFrames = frameHolders
+      // const frameListTemp = frameList;
 
       chosenModel.dotLocation.forEach(element => {
         arrNewFrame.push(element)
@@ -2932,165 +2947,170 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       });
 
       const copyArr = iconHolders;
-      const currSingleFrames = [];
-      const currSingleFramesArr = frameSingleHolders;
+      // const currSingleFrames = [];
+      // const currSingleFramesArr = frameSingleHolders;
 
       copyArr.forEach((element, index) => {
 
         if (element.singleFrameTemp) {
-          let singleFrameID = 0
+          // let singleFrameID = 0
 
-          currSingleFramesArr.forEach(element => {
-            element.forEach(el => {
-              if (el !== 0) {
-                if (el.id >= singleFrameID) {
-                  singleFrameID = el.id + 1
-                }
-              }
-            })
-          })
+          // currSingleFramesArr.forEach(element => {
+          //   element.forEach(el => {
+          //     if (el !== 0) {
+          //       if (el.id >= singleFrameID) {
+          //         singleFrameID = el.id + 1
+          //       }
+          //     }
+          //   })
+          // })
 
 
-          currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID, over: false })
+          // currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID, over: false })
           element.singleFrameTemp = false;
           element.singleFrame = true;
-
-          if (chosenModel.type !== "MDOT-18 poziomy") {
-            frameListTemp.push(
-              {
-                startRow: Math.ceil((index + 1) / 3),
-                startColumn: ((index % 3) + 1),
-                rows: 1,
-                columns: 1,
-                shape: chosenFrameShape,
-                text: "",
-                textX: 0,
-                textY: 0,
-                frameFont: null,
-                type: "s",
-                id: singleFrameID,
-              })
-          } else {
-            let startRow
-            if (index % 3 === 0) {
-              startRow = 3
-            } else if (index % 3 === 1) {
-              startRow = 2
-            } else if (index % 3 === 2) {
-              startRow = 1
-            }
-
-            frameListTemp.push(
-              {
-                startRow: startRow,
-                startColumn: Math.ceil((index + 1) / 3),
-                rows: 1,
-                columns: 1,
-                shape: chosenFrameShape,
-                text: "",
-                textX: 0,
-                textY: 0,
-                frameFont: null,
-                type: "s",
-                id: singleFrameID,
-              })
-          }
-        }
-        else {
-          currSingleFrames.push(0)
         }
       })
 
+      //     if (chosenModel.type !== "MDOT-18 poziomy") {
+      //       frameListTemp.push(
+      //         {
+      //           startRow: Math.ceil((index + 1) / 3),
+      //           startColumn: ((index % 3) + 1),
+      //           rows: 1,
+      //           columns: 1,
+      //           shape: chosenFrameShape,
+      //           text: "",
+      // textX: 0,
+      //           textY: 0,
+      //           frameFont: null,
+      //           type: "s",
+      //           id: singleFrameID,
+      //         })
+      //     } else {
+      //       let startRow
+      //       if (index % 3 === 0) {
+      //         startRow = 3
+      //       } else if (index % 3 === 1) {
+      //         startRow = 2
+      //       } else if (index % 3 === 2) {
+      //         startRow = 1
+      //       }
 
-      const checkArr = newFrame.filter(function (element) {
-        return element === "s"
-      })
-
-
-      if (checkArr.length > 1) {
-
-        let multiFrameID = 0
-
-        currFrames.forEach(element => {
-          if (element.id >= multiFrameID) {
-            multiFrameID = element.id + 1
-          }
-        })
-
-        tempFrame.id = multiFrameID
-
-        const columns = ((newFrame.lastIndexOf("s") % 3) + 1) - (newFrame.indexOf("s") % 3)
-        const rows = Math.ceil((newFrame.lastIndexOf("s") + 1) / 3) - Math.floor(newFrame.indexOf("s") / 3)
-
-        if (chosenModel.type !== "MDOT-18 poziomy") {
-          frameListTemp.push(
-            {
-              startRow: Math.ceil((newFrame.indexOf("s") + 1) / 3),
-              startColumn: ((newFrame.indexOf("s") % 3) + 1),
-              rows: rows,
-              columns: columns,
-              shape: chosenFrameShape,
-              text: tempFrameText,
-              textX: tempFrame.textX,
-              textY: tempFrame.textY,
-              frameFont: chosenFrameFont,
-              type: "m",
-              id: multiFrameID,
-            })
-        } else {
-          const rowCalc = (newFrame.indexOf("s") % 3) + columns
-          let startRow
-          if (rowCalc === 1) {
-            startRow = 3
-          } else if (rowCalc === 2) {
-            startRow = 2
-          } else if (rowCalc === 3) {
-            startRow = 1
-          }
-
-          frameListTemp.push(
-            {
-              startRow: startRow,
-              startColumn: Math.ceil((newFrame.indexOf("s") + 1) / 3),
-              rows: columns,
-              columns: rows,
-              shape: chosenFrameShape,
-              text: "",
-              textX: tempFrame.textX,
-              textY: tempFrame.textY,
-              frameFont: null,
-              type: "m",
-              id: multiFrameID,
-            })
-        }
-      }
+      //       frameListTemp.push(
+      //         {
+      //           startRow: startRow,
+      //           startColumn: Math.ceil((index + 1) / 3),
+      //           rows: 1,
+      //           columns: 1,
+      //           shape: chosenFrameShape,
+      //           text: "",
+      //           textX: 0,
+      //           textY: 0,
+      //           frameFont: null,
+      //           type: "s",
+      //           id: singleFrameID,
+      //         })
+      //     }
+      //   }
+      //   else {
+      //     currSingleFrames.push(0)
+      //   }
+      // })
 
 
-      const currSingleFramesShapes = []
-      currSingleFrames.forEach(element => {
-        currSingleFramesShapes.push(element.shape)
-      })
+      // const checkArr = newFrame.filter(function (element) {
+      //   return element === "s"
+      // })
 
-      if (currSingleFramesShapes.includes("sharp") || currSingleFramesShapes.includes("round")) { //===================== 
-        currSingleFramesArr.push(currSingleFrames)
-      } else {
-        const copyTempFrame = tempFrame
-        copyTempFrame.text = tempFrameText
-        copyTempFrame.shape = chosenFrameShape
-        copyTempFrame.over = false
-        if (tempFrameText !== "") {
-          copyTempFrame.frameFont = chosenFrameFont
-        } else {
-          copyTempFrame.frameFont = null
 
-        }
-        currFrames.push(copyTempFrame)
-      }
+      // if (checkArr.length > 1) {
+
+      //   let multiFrameID = 0
+
+      //   currFrames.forEach(element => {
+      //     if (element.id >= multiFrameID) {
+      //       multiFrameID = element.id + 1
+      //     }
+      //   })
+
+      //   tempFrame.id = multiFrameID
+
+      //   const columns = ((newFrame.lastIndexOf("s") % 3) + 1) - (newFrame.indexOf("s") % 3)
+      //   const rows = Math.ceil((newFrame.lastIndexOf("s") + 1) / 3) - Math.floor(newFrame.indexOf("s") / 3)
+
+      //   if (chosenModel.type !== "MDOT-18 poziomy") {
+      //     frameListTemp.push(
+      //       {
+      //         startRow: Math.ceil((newFrame.indexOf("s") + 1) / 3),
+      //         startColumn: ((newFrame.indexOf("s") % 3) + 1),
+      //         rows: rows,
+      //         columns: columns,
+      //         shape: chosenFrameShape,
+      //         text: tempFrameText,
+      //         textX: tempFrame.textX,
+      //         textY: tempFrame.textY,
+      //         frameFont: chosenFrameFont,
+      //         type: "m",
+      //         id: multiFrameID,
+      //       })
+      //   } else {
+      //     const rowCalc = (newFrame.indexOf("s") % 3) + columns
+      //     let startRow
+      //     if (rowCalc === 1) {
+      //       startRow = 3
+      //     } else if (rowCalc === 2) {
+      //       startRow = 2
+      //     } else if (rowCalc === 3) {
+      //       startRow = 1
+      //     }
+
+      //     frameListTemp.push(
+      //       {
+      //         startRow: startRow,
+      //         startColumn: Math.ceil((newFrame.indexOf("s") + 1) / 3),
+      //         rows: columns,
+      //         columns: rows,
+      //         shape: chosenFrameShape,
+      //         text: "",
+      //         textX: tempFrame.textX,
+      //         textY: tempFrame.textY,
+      //         frameFont: null,
+      //         type: "m",
+      //         id: multiFrameID,
+      //       })
+      //   }
+      // }
+
+
+      // const currSingleFramesShapes = []
+      // currSingleFrames.forEach(element => {
+      //   currSingleFramesShapes.push(element.shape)
+      // })
+
+      // if (currSingleFramesShapes.includes("sharp") || currSingleFramesShapes.includes("round")) { //===================== 
+      //   currSingleFramesArr.push(currSingleFrames)
+      // } else {
+      //   const copyTempFrame = tempFrame
+      //   copyTempFrame.text = tempFrameText
+      //   copyTempFrame.shape = chosenFrameShape
+      //   copyTempFrame.over = false
+      //   if (tempFrameText !== "") {
+      //     copyTempFrame.frameFont = chosenFrameFont
+      //   } else {
+      //     copyTempFrame.frameFont = null
+
+      //   }
+      //   currFrames.push(copyTempFrame)
+      // }
+
+
+      const currFramesRED = frameHoldersRED
 
       const checkFrameFontArr = []
-      currFrames.forEach((el) => {
-        if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
-          checkFrameFontArr.push(el.frameFont)
+      currFramesRED.forEach((el) => {
+        if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
+          checkFrameFontArr.push(el.framePrint.frameFont)
         }
       })
       if (checkFrameFontArr.length > 1) {
@@ -3104,21 +3124,19 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
-      setFrameHolders(currFrames)
+      // setFrameHolders(currFrames)
       setIconHolders(copyArr)
-      setFrameSingleHolders(currSingleFramesArr)
-      setFrameList(frameListTemp)
-      onFrameList(frameList)
+      // setFrameSingleHolders(currSingleFramesArr)
+      // setFrameList(frameListTemp)
+      // onFrameList(frameList)
       setTempFrameText("")
+      changeFrameText("")
       setTextFrame(false)
       onAllowTextFrame(false)
       setRerender(prev => !prev)
 
-
       addNewFrameFlag(false)
-      frameListRED(frameListTemp)
-      console.log("frameHolders", frameHolders)
-      console.log("frameSingleHolders", frameSingleHolders)
+      // frameListRED(frameListTemp)
     }
     // eslint-disable-next-line 
   }, [addNewFrameFlagState]);
@@ -3126,42 +3144,77 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
   useEffect(() => {
-    const frameListTemp = frameList;
-    frameListTemp.forEach((element, index) => {
-      if (element.type === removeFrame.type && element.id === removeFrame.id) {
-        frameListTemp.splice(index, 1)
-      }
-    })
-    setFrameList(frameListTemp)
-    onFrameList(frameList)
+    //   const frameListTemp = frameList;
+    //   frameListTemp.forEach((element, index) => {
+    //     if (element.type === removeFrame.type && element.id === removeFrame.id) {
+    //       frameListTemp.splice(index, 1)
+    //     }
+    //   })
+    //   setFrameList(frameListTemp)
+    //   onFrameList(frameList)
 
-    const currFrames = frameHolders
-    const currSingleFramesArr = frameSingleHolders
+    //   const currFrames = frameHolders
+    //   const currSingleFramesArr = frameSingleHolders
 
-    if (removeFrame.type === "m") {
-      currFrames.forEach((element, index) => {
-        if (element.id === removeFrame.id) {
-          currFrames.splice(index, 1)
-        }
-      })
-    } else if (removeFrame.type === "s") {
-      currSingleFramesArr.forEach((element, index) => {
-        element.forEach(el => {
-          if (el !== 0) {
-            if (el.id === removeFrame.id) {
-              currSingleFramesArr.splice(index, 1)
-            }
-          }
-        })
+    //   if (removeFrame.type === "m") {
+    //     currFrames.forEach((element, index) => {
+    //       if (element.id === removeFrame.id) {
+    //         currFrames.splice(index, 1)
+    //       }
+    //     })
+    //   } else if (removeFrame.type === "s") {
+    //     currSingleFramesArr.forEach((element, index) => {
+    //       element.forEach(el => {
+    //         if (el !== 0) {
+    //           if (el.id === removeFrame.id) {
+    //             currSingleFramesArr.splice(index, 1)
+    //           }
+    //         }
+    //       })
 
-      })
-    }
+    //     })
+    //   }
 
+
+    //   const checkFrameFontArr = []
+    //   currFrames.forEach((el) => {
+    //     if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
+    //       checkFrameFontArr.push(el.frameFont)
+    //     }
+    //   })
+    //   if (checkFrameFontArr.length > 1) {
+    //     setDifferentFrameFont(true)
+    //   } else {
+    //     setDifferentFrameFont(false)
+    //   }
+
+
+
+    //   setFrameHolders(currFrames)
+    //   setFrameSingleHolders(currSingleFramesArr)
+    //   setRerender(prev => !prev)
+
+    //   const copyArr = iconHolders;
+
+    //   copyArr.forEach((element) => {
+    //     element.singleFrame = false;
+    //   })
+
+    //   currSingleFramesArr.forEach((el, i) => {
+    //     for (let i = 0; i < el.length; i++) {
+    //       if (el[i] !== 0) {
+    //         copyArr[i].singleFrame = true
+    //       }
+    //     }
+    //   })
+    //   setIconHolders(copyArr)
+
+    const currFramesRED = frameHoldersRED
 
     const checkFrameFontArr = []
-    currFrames.forEach((el) => {
-      if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
-        checkFrameFontArr.push(el.frameFont)
+    currFramesRED.forEach((el) => {
+      if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
+        checkFrameFontArr.push(el.framePrint.frameFont)
       }
     })
     if (checkFrameFontArr.length > 1) {
@@ -3169,75 +3222,57 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     } else {
       setDifferentFrameFont(false)
     }
-
-
-
-    setFrameHolders(currFrames)
-    setFrameSingleHolders(currSingleFramesArr)
     setRerender(prev => !prev)
-
-    const copyArr = iconHolders;
-
-    copyArr.forEach((element) => {
-      element.singleFrame = false;
-    })
-
-    currSingleFramesArr.forEach((el, i) => {
-      for (let i = 0; i < el.length; i++) {
-        if (el[i] !== 0) {
-          copyArr[i].singleFrame = true
-        }
-      }
-    })
-    setIconHolders(copyArr)
-
-
 
     // eslint-disable-next-line 
   }, [removeFrame]);
 
 
 
-  useEffect(() => {
-    const currFrames = frameHolders
-    const currSingleFramesArr = frameSingleHolders
+  // useEffect(() => {
+  // const currFrames = frameHolders
+  // const currSingleFramesArr = frameSingleHolders
 
-    if (overFrame.type === "m") {
-      currFrames.forEach((element, index) => {
-        if (element.id === overFrame.id) {
-          currFrames[index].over = true
-        } else {
-          currFrames[index].over = false
+  // if (overFrame.type === "m") {
+  //   currFrames.forEach((element, index) => {
+  //     if (element.id === overFrame.id) {
+  //       currFrames[index].over = true
+  //     } else {
+  //       currFrames[index].over = false
 
-        }
-      })
-    } else if (overFrame.type === "s") {
-      currSingleFramesArr.forEach((element, index) => {
-        element.forEach((el, i) => {
-          if (el !== 0) {
-            if (el.id === overFrame.id) {
-              currSingleFramesArr[index][i].over = true
-            } else {
-              currSingleFramesArr[index][i].over = false
-            }
-          }
-        })
+  //     }
+  //   })
+  // } else if (overFrame.type === "s") {
+  //   currSingleFramesArr.forEach((element, index) => {
+  //     element.forEach((el, i) => {
+  //       if (el !== 0) {
+  //         if (el.id === overFrame.id) {
+  //           currSingleFramesArr[index][i].over = true
+  //         } else {
+  //           currSingleFramesArr[index][i].over = false
+  //         }
+  //       }
+  //     })
 
-      })
-    }
-    setFrameHolders(currFrames)
-    setFrameSingleHolders(currSingleFramesArr)
-    setRerender(prev => !prev)
-    // eslint-disable-next-line 
-  }, [overFrame]);
+  //   })
+  // }
+  // setFrameHolders(currFrames)
+  // setFrameSingleHolders(currSingleFramesArr)
 
+
+  // setRerender(prev => !prev)
+  // }, [overFrame]);
 
 
   useEffect(() => {
     if (!frameTitle) {
       setTempFrameText("")
+      setTempFrameText("")
+      changeFrameText("")
     }
-  }, [frameTitle])
+  }, [frameTitle, changeFrameText])
+
+
 
 
 
@@ -3669,10 +3704,10 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                                     ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
                                       : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
                                   )} >
-
                               {el !== 0 && visual &&
-                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
-                                  : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px`, }}
+                                <div style={!el.over ?
+                                  { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
+                                  : { ...singleFrameStyle, borderColor: "red", borderRadius: `${sc}px`, }}
                                 />
                               }
                               {el !== 0 && !visual &&
@@ -4206,8 +4241,9 @@ const mapDispatchToProps = dispatch => ({
   addNewFrame: (income) => dispatch(actionsFrame.addNewFrame(income)),
   addNewFrameFlag: (income) => dispatch(actionsFrame.addNewFrameFlag(income)),
   frameListRED: (income) => dispatch(actionsFrame.frameList(income)),
-  // frameHoldersRED: (income) => dispatch(actionsFrame.frameHolders(income)),
+  frameHoldersREDreset: (income) => dispatch(actionsFrame.frameHolders(income)),
   frameHoldersTempRED: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
+  changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
 })
 
 

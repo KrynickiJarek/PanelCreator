@@ -40,6 +40,10 @@ const frameHoldersTemp = item => ({
   type: types.FRAME_HOLDERS_TEMP, item
 })
 
+const changeFrameText = item => ({
+  type: types.CHANGE_FRAME_TEXT, item
+})
+
 const actions = {
   changeFrameFont,
   changeFrameShape,
@@ -50,7 +54,8 @@ const actions = {
   overFrame,
   frameList,
   frameHolders,
-  frameHoldersTemp
+  frameHoldersTemp,
+  changeFrameText
 }
 
 export default actions

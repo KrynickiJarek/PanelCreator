@@ -186,13 +186,12 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
                     <ol className="frame_list" >
                       {frameHolders.map((frame, index) =>
                         < li key={index} className="frame_list_element"
-                        // onMouseOver={() => { overFrame({ type: frame.type, id: frame.id }) }}
-                        // onMouseLeave={() => { overFrame({ type: frame.type, id: null }) }}
-                        >Pole startowe (rząd, kolumna): {frame.frameInfo.startRow}, {frame.frameInfo.startColumn} ; Szerokość: {frame.frameInfo.columns}; Wysokość: {frame.frameInfo.rows}; Narożniki: {frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}{frame.frameInfo.text && `, Tytuł: ${frame.frameList.text}; Font: ${frame.frameInfo.frameFont}`}
-
-                          {/* <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }) }}>
-                                <img className="frame_list_img" src={Remove} alt="removeframe" />
-                              </div> */}
+                          onMouseOver={() => { overFrame({ index: index, flag: true }) }}
+                          onMouseLeave={() => { overFrame({ index: index, flag: false }) }}
+                        >
+                          {/* {frame.framePrint.over ? "TAK" : "NIE"}-_-_-_-_ */}
+                          Pole startowe (rząd, kolumna): {frame.frameInfo.startRow}, {frame.frameInfo.startColumn} ; Szerokość: {frame.frameInfo.columns}; Wysokość: {frame.frameInfo.rows};
+                          Narożniki: {frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}{frame.framePrint.text && `, Tytuł: ${frame.framePrint.text}; Font: ${frame.framePrint.frameFont}`}
                           <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }); removeFrameList(index) }}>
                             {/* <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }) }}> */}
                             <img className="frame_list_img" src={Remove} alt="removeframe" />
