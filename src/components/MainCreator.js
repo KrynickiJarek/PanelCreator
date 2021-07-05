@@ -10,65 +10,25 @@ import CreatorHeader from "../components/CreatorHeader/CreatorHeader"
 import PanelEditor from "../components/PanelEditor/PanelEditor"
 import PanelPreview from "../components/PanelPreview/PanelPreview"
 
-import availableModels from "./PanelEditor/ModelChooser/availableModels"
-import availableColors from "./PanelEditor/ColorEditor/availableColors"
 
 export const MainCreator = memo(function MainCreator() {
 
-  const [chosenColor, setChosenColor] = useState(availableColors[0])
-  const [chosenModel, setChosenModel] = useState(availableModels[6])
-  // const [chosenModel, setChosenModel] = useState(availableModels[0])
-  const [chosenTab, setChosenTab] = useState("model")
   const [chosenFont, setChosenFont] = useState("Calibri-bold")
-  const [chosenFrameFont, setChosenFrameFont] = useState("Calibri-bold")
-  const [chosenFrameShape, setChosenFrameShape] = useState("sharp")
-  const [addNewFrame, setAddNewFrame] = useState(false)
-  const [removeFrame, setRemoveFrame] = useState({ type: null, id: null })
-  const [overFrame, setOverFrame] = useState({ type: null, id: null })
   const [frameList, setFrameList] = useState([])
   // const [frameListProp, setFrameListProp] = useState([])
   const [frameTitle, setFrameTitle] = useState(false)
   const [allowTextFrame, setAllowTextFrame] = useState(false)
 
-  const handleSetColor = (chosenColor) => {
-    setChosenColor(chosenColor);
-  }
-
-  const handleSetModel = (chosenModel) => {
-    setChosenModel(chosenModel);
-  }
-
-  const handleSetTab = (chosenTab) => {
-    setChosenTab(chosenTab);
-  }
 
   const handleSetFont = (chosenFont) => {
     setChosenFont(chosenFont);
   }
 
-  const handleFrameFontSet = (chosenFrameFont) => {
-    setChosenFrameFont(chosenFrameFont);
-  }
-
-  const handleFrameShapeSet = (chosenFrameShape) => {
-    setChosenFrameShape(chosenFrameShape);
-  }
-
-  const handleAddNewFrame = () => {
-    setAddNewFrame(prev => !prev)
-  }
 
   const handleFrameList = (frameList) => {
     setFrameList(frameList)
   }
 
-  const handleRemoveFrame = (type, id) => {
-    setRemoveFrame({ type: type, id: id })
-  }
-
-  const handleOverFrame = (type, id) => {
-    setOverFrame({ type: type, id: id })
-  }
 
   const handleFrameTitle = (income) => {
     setFrameTitle(income)
@@ -89,12 +49,12 @@ export const MainCreator = memo(function MainCreator() {
       <div className="main_container">
         <CreatorHeader />
         <div className="content_container">
-          <PanelEditor onModelSet={handleSetModel} onColorSet={handleSetColor} onTabSet={handleSetTab} onFontSet={handleSetFont}
-            onFrameFontSet={handleFrameFontSet} onFrameShapeSet={handleFrameShapeSet} onAddNewFrame={handleAddNewFrame} onRemoveFrame={handleRemoveFrame} onToggleFrameTitle={handleFrameTitle}
-            onOverFrame={handleOverFrame} chosenColor={chosenColor} chosenModel={chosenModel} frameList={frameList} allowTextFrame={allowTextFrame} />
-          <PanelPreview chosenModel={chosenModel} chosenColor={chosenColor} chosenTab={chosenTab} chosenFont={chosenFont}
-            chosenFrameFont={chosenFrameFont} chosenFrameShape={chosenFrameShape} addNewFrame={addNewFrame} onFrameList={handleFrameList}
-            removeFrame={removeFrame} overFrame={overFrame} frameTitle={frameTitle} onAllowTextFrame={handleAllowTextFrame}
+          <PanelEditor onFontSet={handleSetFont}
+            onToggleFrameTitle={handleFrameTitle}
+            frameList={frameList} allowTextFrame={allowTextFrame} />
+          <PanelPreview chosenFont={chosenFont}
+            onFrameList={handleFrameList}
+            frameTitle={frameTitle} onAllowTextFrame={handleAllowTextFrame}
           />
         </div>
       </div>

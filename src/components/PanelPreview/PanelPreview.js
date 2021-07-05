@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback, memo } from 'react';
+import { connect } from "react-redux"
+import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
+
 import update from 'immutability-helper';
 import moment from 'moment';
 
@@ -53,7 +56,32 @@ import Rightuni from "../../assets/lcd/rightuni.svg"
 
 import { IconHolder } from './IconHolder/IconHolder';
 
-export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColor, chosenTab, chosenFont, chosenFrameFont, chosenFrameShape, addNewFrame, onFrameList, removeFrame, overFrame, frameTitle, onAllowTextFrame }) {
+export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList, frameTitle, onAllowTextFrame,
+
+  //wywalone jako state (zamienone na reduxowe)
+  // chosenColor, chosenTab, chosenModel, chosenFrameFont, chosenFrameShape, addNewFrame, removeFrame, overFrame
+  //reduxowe poniżej
+  chosenColor,
+  chosenTab,
+  chosenModel,
+  chosenFrameFont,
+  chosenFrameShape,
+  addNewFrame,
+  addNewFrameFlagState,
+  addNewFrameFlag,
+  removeFrame,
+  overFrame,
+
+
+
+  frameListRED,
+  frameHoldersRED,
+  frameHoldersTempRED,
+
+
+}) {
+
+
 
   const [sc, setSc] = useState(5);
 
@@ -410,6 +438,11 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
     const arrNewFrameChange = [];
     const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
     setHideAll(false)
+
+    setFrameList([])
+    // onFrameList(frameList) //-----------------------------------------------------------------po reduxie obczaj czy działa
+    onFrameList([]) //-----------------------------------------------------------------po reduxie obczaj czy działa
+
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
       chosenModel.dotLocation.forEach(element => {
@@ -443,7 +476,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
       setTempFrame(arrTempFrame)
       setFrameHolders([])
       setFrameSingleHolders([])
-      setFrameList([])
+      // setFrameList([])//----------------------------------------------------------------przeniesione poza timeouta 
+      // onFrameList(frameList) 
       setIconHolders(arrIconHolders);
       setTempFrameText("")
       setTextFrame(false)
@@ -452,7 +486,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
       setVisualChange(false)
     }, 300);
     return () => clearTimeout(modeltimeout);
+    // eslint-disable-next-line
   }, [chosenModel]);
+  // }, [chosenModel, frameList, onFrameList]); //-----------------------------------------------------------------było samo chosenModel i bez eslint
 
 
 
@@ -2698,11 +2734,135 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
     copyTempFrame.textY = textY
     setTempFrame(copyTempFrame)
 
+    //---------------------------------REDUX---------------------------------
+    let frameTempRED = {};
+
+    const checkArr = copyArr.filter(function (element) {
+      return element === "s"
+    })
 
 
+    if (checkArr.length > 1) {
+
+
+      frameTempRED.type = "multi"
+      frameTempRED.framePrint = copyTempFrame
+
+      const columns = ((copyArr.lastIndexOf("s") % 3) + 1) - (copyArr.indexOf("s") % 3)
+      const rows = Math.ceil((copyArr.lastIndexOf("s") + 1) / 3) - Math.floor(copyArr.indexOf("s") / 3)
+
+      if (chosenModel.type !== "MDOT-18 poziomy") {
+        frameTempRED.frameInfo =
+        {
+          startRow: Math.ceil((copyArr.indexOf("s") + 1) / 3),
+          startColumn: ((copyArr.indexOf("s") % 3) + 1),
+          rows: rows,
+          columns: columns,
+          shape: chosenFrameShape,
+          text: tempFrameText,
+          textX: tempFrame.textX,
+          textY: tempFrame.textY,
+          frameFont: chosenFrameFont,
+        }
+      } else {
+        const rowCalc = (copyArr.indexOf("s") % 3) + columns
+        let startRow
+        if (rowCalc === 1) {
+          startRow = 3
+        } else if (rowCalc === 2) {
+          startRow = 2
+        } else if (rowCalc === 3) {
+          startRow = 1
+        }
+
+        frameTempRED.frameInfo =
+        {
+          startRow: startRow,
+          startColumn: Math.ceil((copyArr.indexOf("s") + 1) / 3),
+          rows: columns,
+          columns: rows,
+          shape: chosenFrameShape,
+          text: "",
+          textX: tempFrame.textX,
+          textY: tempFrame.textY,
+          frameFont: null,
+        }
+      }
+    } else if (checkArr.length === 1) {
+      frameTempRED.type = "single"
+
+      const currSingleFrames = [];
+      copyArr.forEach((el) => {
+        if (el === "s") {
+          currSingleFrames.push({ shape: chosenFrameShape, over: false })
+
+          if (chosenModel.type !== "MDOT-18 poziomy") {
+            frameTempRED.frameInfo =
+            {
+              startRow: Math.ceil((index + 1) / 3),
+              startColumn: ((index % 3) + 1),
+              rows: 1,
+              columns: 1,
+              shape: chosenFrameShape,
+              text: "",
+              textX: 0,
+              textY: 0,
+              frameFont: null,
+            }
+          } else {
+            let startRow
+            if (index % 3 === 0) {
+              startRow = 3
+            } else if (index % 3 === 1) {
+              startRow = 2
+            } else if (index % 3 === 2) {
+              startRow = 1
+            }
+
+            frameTempRED.frameInfo =
+            {
+              startRow: startRow,
+              startColumn: Math.ceil((index + 1) / 3),
+              rows: 1,
+              columns: 1,
+              shape: chosenFrameShape,
+              text: "",
+              textX: 0,
+              textY: 0,
+              frameFont: null,
+            }
+          }
+
+
+
+
+
+        } else {
+          currSingleFrames.push(0)
+        }
+      })
+      frameTempRED.framePrint = currSingleFrames
+
+
+    } else {
+      frameTempRED = {};
+    }
+
+    frameHoldersTempRED(frameTempRED)
+
+
+
+
+
+
+
+
+
+
+    //---------------------------------REDUX---------------------------------
     setRerender(prev => !prev)
 
-    if (copyArr[index] === "s" && copyArr[index + 1] !== "s" && copyArr[index - 1] !== "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") { //-------------------------------single frame
+    if (copyArr[index] === "s" && copyArr[index + 1] !== "s" && copyArr[index - 1] !== "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
 
       setIconHolders(update(iconHolders, {
         [index]: {
@@ -2720,7 +2880,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
         },
       }));
     }
-  }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight, chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame]);
+  }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight,
+    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameFont, chosenFrameShape, frameHoldersTempRED, tempFrameText]);
 
 
   const handleChangeTextFrame = (text) => {
@@ -2740,218 +2901,228 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
 
 
   useEffect(() => {
-    const arrNewFrame = [];
-    const arrNewFrameHide = [];
-    const arrNewFrameChange = [];
-    const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
-    const currFrames = frameHolders
-    const frameListTemp = frameList;
-
-    chosenModel.dotLocation.forEach(element => {
-      arrNewFrame.push(element)
-    });
-    chosenModel.dotLocation.forEach(element => {
-      arrNewFrameHide.push(element)
-    });
-    chosenModel.dotLocation.forEach(element => {
-      arrNewFrameChange.push(element)
-    });
+    if (addNewFrameFlag) {
 
 
-    chosenModel.dotLocation.forEach(element => {
-      arrTempFrame.frameArr.push({
-        flag: element,
-        rtl: 0, rtr: 0, rbr: 0, rbl: 0,
-        t: 0, r: 0, b: 0, l: 0,
-        fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
-      })
-    });
+      const arrNewFrame = [];
+      const arrNewFrameHide = [];
+      const arrNewFrameChange = [];
+      const arrTempFrame = { textX: 0, textY: 0, id: 0, frameArr: [] };
+      const currFrames = frameHolders
+      const frameListTemp = frameList;
 
-    const copyArr = iconHolders;
-    const currSingleFrames = [];
-    const currSingleFramesArr = frameSingleHolders;
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrame.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameHide.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameChange.push(element)
+      });
 
-    copyArr.forEach((element, index) => {
 
-      if (element.singleFrameTemp) {
-        let singleFrameID = 0
+      chosenModel.dotLocation.forEach(element => {
+        arrTempFrame.frameArr.push({
+          flag: element,
+          rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+          t: 0, r: 0, b: 0, l: 0,
+          fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
+        })
+      });
 
-        currSingleFramesArr.forEach(element => {
-          element.forEach(el => {
-            if (el !== 0) {
-              if (el.id >= singleFrameID) {
-                singleFrameID = el.id + 1
+      const copyArr = iconHolders;
+      const currSingleFrames = [];
+      const currSingleFramesArr = frameSingleHolders;
+
+      copyArr.forEach((element, index) => {
+
+        if (element.singleFrameTemp) {
+          let singleFrameID = 0
+
+          currSingleFramesArr.forEach(element => {
+            element.forEach(el => {
+              if (el !== 0) {
+                if (el.id >= singleFrameID) {
+                  singleFrameID = el.id + 1
+                }
               }
-            }
+            })
           })
+
+
+          currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID, over: false })
+          element.singleFrameTemp = false;
+          element.singleFrame = true;
+
+          if (chosenModel.type !== "MDOT-18 poziomy") {
+            frameListTemp.push(
+              {
+                startRow: Math.ceil((index + 1) / 3),
+                startColumn: ((index % 3) + 1),
+                rows: 1,
+                columns: 1,
+                shape: chosenFrameShape,
+                text: "",
+                textX: 0,
+                textY: 0,
+                frameFont: null,
+                type: "s",
+                id: singleFrameID,
+              })
+          } else {
+            let startRow
+            if (index % 3 === 0) {
+              startRow = 3
+            } else if (index % 3 === 1) {
+              startRow = 2
+            } else if (index % 3 === 2) {
+              startRow = 1
+            }
+
+            frameListTemp.push(
+              {
+                startRow: startRow,
+                startColumn: Math.ceil((index + 1) / 3),
+                rows: 1,
+                columns: 1,
+                shape: chosenFrameShape,
+                text: "",
+                textX: 0,
+                textY: 0,
+                frameFont: null,
+                type: "s",
+                id: singleFrameID,
+              })
+          }
+        }
+        else {
+          currSingleFrames.push(0)
+        }
+      })
+
+
+      const checkArr = newFrame.filter(function (element) {
+        return element === "s"
+      })
+
+
+      if (checkArr.length > 1) {
+
+        let multiFrameID = 0
+
+        currFrames.forEach(element => {
+          if (element.id >= multiFrameID) {
+            multiFrameID = element.id + 1
+          }
         })
 
+        tempFrame.id = multiFrameID
 
-        currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID, over: false })
-        element.singleFrameTemp = false;
-        element.singleFrame = true;
+        const columns = ((newFrame.lastIndexOf("s") % 3) + 1) - (newFrame.indexOf("s") % 3)
+        const rows = Math.ceil((newFrame.lastIndexOf("s") + 1) / 3) - Math.floor(newFrame.indexOf("s") / 3)
 
         if (chosenModel.type !== "MDOT-18 poziomy") {
           frameListTemp.push(
             {
-              startRow: Math.ceil((index + 1) / 3),
-              startColumn: ((index % 3) + 1),
-              rows: 1,
-              columns: 1,
+              startRow: Math.ceil((newFrame.indexOf("s") + 1) / 3),
+              startColumn: ((newFrame.indexOf("s") % 3) + 1),
+              rows: rows,
+              columns: columns,
               shape: chosenFrameShape,
-              text: "",
-              textX: 0,
-              textY: 0,
-              frameFont: null,
-              type: "s",
-              id: singleFrameID,
+              text: tempFrameText,
+              textX: tempFrame.textX,
+              textY: tempFrame.textY,
+              frameFont: chosenFrameFont,
+              type: "m",
+              id: multiFrameID,
             })
         } else {
+          const rowCalc = (newFrame.indexOf("s") % 3) + columns
           let startRow
-          if (index % 3 === 0) {
+          if (rowCalc === 1) {
             startRow = 3
-          } else if (index % 3 === 1) {
+          } else if (rowCalc === 2) {
             startRow = 2
-          } else if (index % 3 === 2) {
+          } else if (rowCalc === 3) {
             startRow = 1
           }
 
           frameListTemp.push(
             {
               startRow: startRow,
-              startColumn: Math.ceil((index + 1) / 3),
-              rows: 1,
-              columns: 1,
+              startColumn: Math.ceil((newFrame.indexOf("s") + 1) / 3),
+              rows: columns,
+              columns: rows,
               shape: chosenFrameShape,
               text: "",
-              textX: 0,
-              textY: 0,
+              textX: tempFrame.textX,
+              textY: tempFrame.textY,
               frameFont: null,
-              type: "s",
-              id: singleFrameID,
+              type: "m",
+              id: multiFrameID,
             })
         }
       }
-      else {
-        currSingleFrames.push(0)
-      }
-    })
 
 
-    const checkArr = newFrame.filter(function (element) {
-      return element === "s"
-    })
-
-
-    if (checkArr.length > 1) {
-
-      let multiFrameID = 0
-
-      currFrames.forEach(element => {
-        if (element.id >= multiFrameID) {
-          multiFrameID = element.id + 1
-        }
+      const currSingleFramesShapes = []
+      currSingleFrames.forEach(element => {
+        currSingleFramesShapes.push(element.shape)
       })
 
-      tempFrame.id = multiFrameID
-
-      const columns = ((newFrame.lastIndexOf("s") % 3) + 1) - (newFrame.indexOf("s") % 3)
-      const rows = Math.ceil((newFrame.lastIndexOf("s") + 1) / 3) - Math.floor(newFrame.indexOf("s") / 3)
-
-      if (chosenModel.type !== "MDOT-18 poziomy") {
-        frameListTemp.push(
-          {
-            startRow: Math.ceil((newFrame.indexOf("s") + 1) / 3),
-            startColumn: ((newFrame.indexOf("s") % 3) + 1),
-            rows: rows,
-            columns: columns,
-            shape: chosenFrameShape,
-            text: tempFrameText,
-            textX: tempFrame.textX,
-            textY: tempFrame.textY,
-            frameFont: chosenFrameFont,
-            type: "m",
-            id: multiFrameID,
-          })
+      if (currSingleFramesShapes.includes("sharp") || currSingleFramesShapes.includes("round")) { //===================== 
+        currSingleFramesArr.push(currSingleFrames)
       } else {
-        const rowCalc = (newFrame.indexOf("s") % 3) + columns
-        let startRow
-        if (rowCalc === 1) {
-          startRow = 3
-        } else if (rowCalc === 2) {
-          startRow = 2
-        } else if (rowCalc === 3) {
-          startRow = 1
+        const copyTempFrame = tempFrame
+        copyTempFrame.text = tempFrameText
+        copyTempFrame.shape = chosenFrameShape
+        copyTempFrame.over = false
+        if (tempFrameText !== "") {
+          copyTempFrame.frameFont = chosenFrameFont
+        } else {
+          copyTempFrame.frameFont = null
+
         }
-
-        frameListTemp.push(
-          {
-            startRow: startRow,
-            startColumn: Math.ceil((newFrame.indexOf("s") + 1) / 3),
-            rows: columns,
-            columns: rows,
-            shape: chosenFrameShape,
-            text: "",
-            textX: tempFrame.textX,
-            textY: tempFrame.textY,
-            frameFont: null,
-            type: "m",
-            id: multiFrameID,
-          })
+        currFrames.push(copyTempFrame)
       }
-    }
 
-
-    const currSingleFramesShapes = []
-    currSingleFrames.forEach(element => {
-      currSingleFramesShapes.push(element.shape)
-    })
-
-    if (currSingleFramesShapes.includes("sharp") || currSingleFramesShapes.includes("round")) {
-      currSingleFramesArr.push(currSingleFrames)
-    } else {
-      const copyTempFrame = tempFrame
-      copyTempFrame.text = tempFrameText
-      copyTempFrame.shape = chosenFrameShape
-      copyTempFrame.over = false
-      if (tempFrameText !== "") {
-        copyTempFrame.frameFont = chosenFrameFont
+      const checkFrameFontArr = []
+      currFrames.forEach((el) => {
+        if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
+          checkFrameFontArr.push(el.frameFont)
+        }
+      })
+      if (checkFrameFontArr.length > 1) {
+        setDifferentFrameFont(true)
       } else {
-        copyTempFrame.frameFont = null
-
+        setDifferentFrameFont(false)
       }
-      currFrames.push(copyTempFrame)
+
+
+      setNewFrame(arrNewFrame)
+      setNewFrameHide(arrNewFrameHide)
+      setNewFrameChange(arrNewFrameChange)
+      setTempFrame(arrTempFrame)
+      setFrameHolders(currFrames)
+      setIconHolders(copyArr)
+      setFrameSingleHolders(currSingleFramesArr)
+      setFrameList(frameListTemp)
+      onFrameList(frameList)
+      setTempFrameText("")
+      setTextFrame(false)
+      onAllowTextFrame(false)
+      setRerender(prev => !prev)
+
+
+      addNewFrameFlag(false)
+      frameListRED(frameListTemp)
+      console.log("frameHolders", frameHolders)
+      console.log("frameSingleHolders", frameSingleHolders)
     }
-
-    const checkFrameFontArr = []
-    currFrames.forEach((el) => {
-      if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
-        checkFrameFontArr.push(el.frameFont)
-      }
-    })
-    if (checkFrameFontArr.length > 1) {
-      setDifferentFrameFont(true)
-    } else {
-      setDifferentFrameFont(false)
-    }
-
-
-    setNewFrame(arrNewFrame)
-    setNewFrameHide(arrNewFrameHide)
-    setNewFrameChange(arrNewFrameChange)
-    setTempFrame(arrTempFrame)
-    setFrameHolders(currFrames)
-    setIconHolders(copyArr)
-    setFrameSingleHolders(currSingleFramesArr)
-    setFrameList(frameListTemp)
-    onFrameList(frameList)
-    setTempFrameText("")
-    setTextFrame(false)
-    onAllowTextFrame(false)
-    setRerender(prev => !prev)
-
     // eslint-disable-next-line 
-  }, [addNewFrame]);
+  }, [addNewFrameFlagState]);
+
 
 
   useEffect(() => {
@@ -2963,7 +3134,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
     })
     setFrameList(frameListTemp)
     onFrameList(frameList)
-
 
     const currFrames = frameHolders
     const currSingleFramesArr = frameSingleHolders
@@ -3195,7 +3365,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
               </div>
 
 
-              {hideAll && frameHolders.length !== 0 &&
+              {/* {hideAll && frameHolders.length !== 0 &&
                 <>
                   {frameHolders.map((frame, i) =>
                     <div key={i} className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
@@ -3313,11 +3483,134 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
                     </div>
                   )}
                 </>
+              } */}
+
+              {hideAll &&
+                <>
+                  {frameHoldersRED.map((frame, i) =>
+                    <>
+                      {frame.type === "multi" &&
+                        <div key={i} className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
+
+                          {frame.framePrint.frameArr.map((el, index) =>
+                            <div key={index}
+                              style={
+                                ((index + 2) % 3 === 0) ?
+                                  { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
+                              } >
+
+                              {el !== 0 && visual &&
+                                <div style={frame.framePrint.shape === "sharp" ? {
+                                  ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: "0",
+                                  height: `${el.fh * sc}px`,
+                                  width: `${el.fw * sc}px`,
+                                  marginBottom: `${el.mb * sc}px`,
+                                  marginLeft: `${el.ml * sc}px`,
+                                  marginRight: `${el.mr * sc}px`,
+                                  // transition: "0.4s ease"
+                                  transition: "0s",
+                                }
+                                  : {
+                                    ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                    height: `${el.fh * sc}px`,
+                                    width: `${el.fw * sc}px`,
+                                    marginBottom: `${el.mb * sc}px`,
+                                    marginLeft: `${el.ml * sc}px`,
+                                    marginRight: `${el.mr * sc}px`,
+                                    // transition: "0.4s ease"
+                                    transition: "0s",
+                                  }}
+
+                                  className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                />
+                              }
+                              {el !== 0 && !visual &&
+                                <div style={frame.framePrint.shape === "sharp" ? {
+                                  ...frameStyle, borderColor: "white", borderRadius: "0",
+                                  height: `${el.fh * sc}px`,
+                                  width: `${el.fw * sc}px`,
+                                  marginBottom: `${el.mb * sc}px`,
+                                  marginLeft: `${el.ml * sc}px`,
+                                  marginRight: `${el.mr * sc}px`,
+                                  transition: "0.4s ease"
+                                }
+                                  : {
+                                    ...frameStyle, borderColor: "white",
+                                    borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                    height: `${el.fh * sc}px`,
+                                    width: `${el.fw * sc}px`,
+                                    marginBottom: `${el.mb * sc}px`,
+                                    marginLeft: `${el.ml * sc}px`,
+                                    marginRight: `${el.mr * sc}px`,
+                                    transition: "0.4s ease"
+                                  }}
+
+                                  className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                />
+                              }
+                              {el !== 0 && frame.framePrint.over && visual &&
+                                <div style={frame.framePrint.shape === "sharp" ? {
+                                  ...frameStyle,
+                                  borderColor: "#dc3545",
+                                  zIndex: "9999",
+                                  borderRadius: "0",
+                                  height: `${el.fh * sc}px`,
+                                  width: `${el.fw * sc}px`,
+                                  marginBottom: `${el.mb * sc}px`,
+                                  marginLeft: `${el.ml * sc}px`,
+                                  marginRight: `${el.mr * sc}px`,
+                                  transition: "0.4s ease",
+                                }
+                                  : {
+                                    ...frameStyle,
+                                    borderColor: "#dc3545",
+                                    zIndex: "9999",
+                                    borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                    height: `${el.fh * sc}px`,
+                                    width: `${el.fw * sc}px`,
+                                    marginBottom: `${el.mb * sc}px`,
+                                    marginLeft: `${el.ml * sc}px`,
+                                    marginRight: `${el.mr * sc}px`,
+                                    transition: "0.4s ease",
+                                  }}
+
+                                  className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                />
+                              }
+                            </div>
+                          )}
+                          {(frame.framePrint.text !== "") &&
+                            <div style={{ position: "absolute", width: "100%" }}>
+                              <div style={visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
+                                { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
+                                <input className="text_input_frame"
+                                  type="text"
+                                  maxLength="25"
+                                  style={{
+                                    ...textStyleFrame,
+                                    fontFamily: frame.framePrint.frameFont,
+                                    backgroundColor: chosenColor.hex,
+                                    border: "none",
+                                  }}
+                                  disabled={true}
+                                  value={frame.framePrint.text}
+                                />
+                                <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                  {frame.framePrint.text}
+                                </span>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </>
+                  )}
+                </>
               }
 
 
-
-              {hideAll && frameSingleHolders.length !== 0 &&
+              {/* {hideAll && frameSingleHolders.length !== 0 &&
                 <>
                   {frameSingleHolders.map((frame, i) =>
                     <div key={i} className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
@@ -3354,6 +3647,49 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
                       )}
 
                     </div>
+                  )}
+                </>
+              } */}
+
+              {hideAll &&
+                <>
+                  {frameHoldersRED.map((frame, i) =>
+                    <>
+                      {frame.type === "single" &&
+                        <div key={i} className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                          {frame.framePrint.map((el, index) =>
+                            <div key={index}
+                              style={
+                                ((index + 2) % 3 === 0) ?
+                                  (
+                                    ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                      : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                  )
+                                  : (
+                                    ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                      : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                  )} >
+
+                              {el !== 0 && visual &&
+                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
+                                  : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px`, }}
+                                />
+                              }
+                              {el !== 0 && !visual &&
+                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", }
+                                  : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, }}
+                                />
+                              }
+                              {el !== 0 && el.over && visual &&
+                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: "0", zIndex: "9999", }
+                                  : { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: `${sc}px`, zIndex: "9999", }}
+                                />
+                              }
+                            </div>
+                          )}
+                        </div>
+                      }
+                    </>
                   )}
                 </>
               }
@@ -3619,7 +3955,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
 
 
                             <IconHolder
-                              chosenColor={chosenColor}
+                              chosenColor={chosenColor}// redux
                               lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
                               lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
                               lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
@@ -3644,10 +3980,10 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
                               rotateRight={rotateRight}
                               rotateLeft={rotateLeft}
                               visual={visual}
-                              chosenTab={chosenTab}
+                              chosenTab={chosenTab}// redux
                               showRemoveIcon={showRemoveIcon}
                               showRemoveIcons={showRemoveIcons}
-                              chosenModel={chosenModel}
+                              chosenModel={chosenModel}// redux
                               singleFrameTemp={singleFrameTemp}
                               singleFrame={singleFrame}
                               chosenFrameShape={chosenFrameShape}
@@ -3852,4 +4188,27 @@ export const PanelPreview = memo(function PanelPreview({ chosenModel, chosenColo
   );
 });
 
-export default PanelPreview;
+
+
+const mapStateToProps = state => ({
+  chosenColor: state.color,
+  chosenTab: state.tab,
+  chosenModel: state.model,
+  chosenFrameFont: state.frame.chosenFrameFont,
+  chosenFrameShape: state.frame.chosenFrameShape,
+  addNewFrameFlagState: state.frame.addNewFrameFlag,
+  removeFrame: state.frame.removeFrame,
+  overFrame: state.frame.overFrame,
+  frameHoldersRED: state.frame.frameHolders,
+})
+
+const mapDispatchToProps = dispatch => ({
+  addNewFrame: (income) => dispatch(actionsFrame.addNewFrame(income)),
+  addNewFrameFlag: (income) => dispatch(actionsFrame.addNewFrameFlag(income)),
+  frameListRED: (income) => dispatch(actionsFrame.frameList(income)),
+  // frameHoldersRED: (income) => dispatch(actionsFrame.frameHolders(income)),
+  frameHoldersTempRED: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanelPreview)

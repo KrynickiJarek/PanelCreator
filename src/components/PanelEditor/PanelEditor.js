@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { connect } from "react-redux"
+import actions from "./duck/actions"
 import "./PanelEditor.scss"
 
 import Tab from 'react-bootstrap/Tab'
@@ -24,7 +26,7 @@ import FrameFill from "../../assets/editornav/frame_fill.svg"
 import Color from "../../assets/editornav/color.svg"
 import ColorFill from "../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenModel, onTabSet, onFontSet, onFrameFontSet, onFrameShapeSet, onAddNewFrame, frameList, onRemoveFrame, onOverFrame, onToggleFrameTitle, allowTextFrame }) => {
+const PanelEditor = ({ tab, change, onIconSet, onFontSet, frameList, onToggleFrameTitle, allowTextFrame }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -32,61 +34,27 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
   const [frameHover, setFrameHover] = useState(false)
   const [colorHover, setColorHover] = useState(false)
 
-  const [modelShow, setModelShow] = useState(true)
-  const [iconsShow, setIconsShow] = useState(false)
-  const [textShow, setTextShow] = useState(false)
-  const [frameShow, setFrameShow] = useState(false)
-  const [colorShow, setColorShow] = useState(false)
-
-
 
   const handleClickModel = () => {
     setModelHover(true)
-    setModelShow(true)
-    setIconsShow(false)
-    setTextShow(false)
-    setFrameShow(false)
-    setColorShow(false)
-    onTabSet("model")
+    change("model")
   }
   const handleClickIcons = () => {
     setIconsHover(true)
-    setModelShow(false)
-    setIconsShow(true)
-    setTextShow(false)
-    setFrameShow(false)
-    setColorShow(false)
-    onTabSet("icons")
+    change("icons")
   }
   const handleClickText = () => {
     setTextHover(true)
-    setModelShow(false)
-    setIconsShow(false)
-    setTextShow(true)
-    setFrameShow(false)
-    setColorShow(false)
-    onTabSet("text")
+    change("text")
   }
   const handleClickFrame = () => {
     setFrameHover(true)
-    setModelShow(false)
-    setIconsShow(false)
-    setTextShow(false)
-    setFrameShow(true)
-    setColorShow(false)
-    onTabSet("frame")
+    change("frame")
   }
   const handleClickColor = () => {
     setColorHover(true)
-    setModelShow(false)
-    setIconsShow(false)
-    setTextShow(false)
-    setFrameShow(false)
-    setColorShow(true)
-    onTabSet("color")
+    change("color")
   }
-
-
 
 
 
@@ -97,50 +65,50 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
           <Nav.Link eventKey="model">
             <div className="editor_button" onMouseOver={() => { setModelHover(true) }} onMouseLeave={() => { setModelHover(false) }} onClick={handleClickModel}>
               <img src={Model} alt="model" className="button_icon" />
-              {(modelHover || modelShow) && <img src={ModelFill} alt="model" className="button_icon_hover" />}
-              <p className="button_text" style={modelShow ? { fontWeight: "700" } : {}}>Model</p>
+              {(modelHover || tab === "model") && <img src={ModelFill} alt="model" className="button_icon_hover" />}
+              <p className="button_text" style={tab === "model" ? { fontWeight: "700" } : {}}>Model</p>
             </div>
           </Nav.Link>
 
           <Nav.Link eventKey="color">
             <div className="editor_button" onMouseOver={() => { setColorHover(true) }} onMouseLeave={() => { setColorHover(false) }} onClick={handleClickColor}>
               <img src={Color} alt="color" className="button_icon" />
-              {(colorHover || colorShow) && <img src={ColorFill} alt="color" className="button_icon_hover" />}
-              <p className="button_text" style={colorShow ? { fontWeight: "700" } : {}}>Kolor</p>
+              {(colorHover || tab === "color") && <img src={ColorFill} alt="color" className="button_icon_hover" />}
+              <p className="button_text" style={tab === "color" ? { fontWeight: "700" } : {}}>Kolor</p>
             </div>
           </Nav.Link>
 
           <Nav.Link eventKey="icon">
             <div className="editor_button" onMouseOver={() => { setIconsHover(true) }} onMouseLeave={() => { setIconsHover(false) }} onClick={handleClickIcons}>
               <img src={Icons} alt="icons" className="button_icon" />
-              {(iconsHover || iconsShow) && <img src={IconsFill} alt="icons" className="button_icon_hover" />}
-              <p className="button_text" style={iconsShow ? { fontWeight: "700" } : {}}>Ikony</p>
+              {(iconsHover || tab === "icons") && <img src={IconsFill} alt="icons" className="button_icon_hover" />}
+              <p className="button_text" style={tab === "icons" ? { fontWeight: "700" } : {}}>Ikony</p>
             </div>
           </Nav.Link>
 
           <Nav.Link eventKey="text">
             <div className="editor_button" onMouseOver={() => { setTextHover(true) }} onMouseLeave={() => { setTextHover(false) }} onClick={handleClickText}>
               <img src={Text} alt="text" className="button_icon" />
-              {(textHover || textShow) && <img src={TextFill} alt="text" className="button_icon_hover" />}
-              <p className="button_text" style={textShow ? { fontWeight: "700" } : {}}>Napisy</p>
+              {(textHover || tab === "text") && <img src={TextFill} alt="text" className="button_icon_hover" />}
+              <p className="button_text" style={tab === "text" ? { fontWeight: "700" } : {}}>Napisy</p>
             </div>
           </Nav.Link>
 
           <Nav.Link eventKey="frame">
             <div className="editor_button" onMouseOver={() => { setFrameHover(true) }} onMouseLeave={() => { setFrameHover(false) }} onClick={handleClickFrame}>
               <img src={Frame} alt="frame" className="button_icon" />
-              {(frameHover || frameShow) && <img src={FrameFill} alt="frame" className="button_icon_hover" />}
-              <p className="button_text" style={frameShow ? { fontWeight: "700" } : {}}>Ramki</p>
+              {(frameHover || tab === "frame") && <img src={FrameFill} alt="frame" className="button_icon_hover" />}
+              <p className="button_text" style={tab === "frame" ? { fontWeight: "700" } : {}}>Ramki</p>
             </div>
           </Nav.Link>
         </div>
         <div className="editor_box">
           <Tab.Content>
             <Tab.Pane eventKey="model">
-              <ModelChooser onModelSet={onModelSet} chosenModel={chosenModel} />
+              <ModelChooser />
             </Tab.Pane>
             <Tab.Pane eventKey="color">
-              <ColorEditor onColorSet={onColorSet} chosenColor={chosenColor} />
+              <ColorEditor />
             </Tab.Pane>
             <Tab.Pane eventKey="icon">
               <IconEditor onIconSet={onIconSet} />
@@ -149,7 +117,7 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
               <TextEditor onFontSet={onFontSet} />
             </Tab.Pane>
             <Tab.Pane eventKey="frame">
-              <FrameEditor chosenModel={chosenModel} onFrameFontSet={onFrameFontSet} onFrameShapeSet={onFrameShapeSet} onAddNewFrame={onAddNewFrame} frameList={frameList} onOverFrame={onOverFrame} onRemoveFrame={onRemoveFrame} onToggleFrameTitle={onToggleFrameTitle} allowTextFrame={allowTextFrame} />
+              <FrameEditor frameList={frameList} onToggleFrameTitle={onToggleFrameTitle} allowTextFrame={allowTextFrame} />
             </Tab.Pane>
 
           </Tab.Content>
@@ -160,4 +128,14 @@ const PanelEditor = ({ onModelSet, onColorSet, onIconSet, chosenColor, chosenMod
   );
 };
 
-export default PanelEditor;
+// export default PanelEditor;
+const mapStateToProps = state => ({
+  tab: state.tab
+})
+
+const mapDispatchToProps = dispatch => ({
+  change: tab => dispatch(actions.change(tab))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanelEditor)
+

@@ -1,47 +1,57 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from "react-redux"
+import actions from "./duck/actions"
+
 import "./ModelChooser.scss"
 import availableModels from "./availableModels"
 import { Select } from "antd"
 
 
-const ModelChooser = ({ onModelSet, chosenModel }) => {
-
-    const { Option } = Select;
-
-    const [model, setModel] = useState(chosenModel)
-
-    const handlePanelChange = (value) => {
-        onModelSet(availableModels.find(panel => panel.type === value));
-        setModel(availableModels.find(panel => panel.type === value))
-    };
+const ModelChooser = ({ panelModel, change }) => {
 
 
-    return (
-        <div className="model_container">
-            <h2 className="model_header">Wybierz model panelu</h2>
-            <div className="model_content">
-                <p>(wersja robocza)</p>
-                <form className="panel_form">
-                    <label>Wybierz model:</label>
-                    <Select defaultValue={model.type} style={{ width: 200 }} value={availableModels.type} onChange={handlePanelChange}>
-                        {availableModels.map((panel) => <Option key={panel.type}>{panel.type}</Option>)}
-                    </Select>
-                </form>
 
-                {/* <ul className="panel_list">
+  const { Option } = Select;
+
+
+  const handlePanelChange = (value) => {
+    change(availableModels.find(panel => panel.type === value))
+  };
+
+
+  return (
+    <div className="model_container">
+      <h2 className="model_header">Wybierz model panelu</h2>
+      <div className="model_content">
+        <p>(wersja robocza)</p>
+        <form className="panel_form">
+          <label>Wybierz model:</label>
+          <Select defaultValue={panelModel.type} style={{ width: 200 }} value={availableModels.type} onChange={handlePanelChange}>
+            {availableModels.map((panel) => <Option key={panel.type}>{panel.type}</Option>)}
+          </Select>
+        </form>
+
+        {/* <ul className="panel_list">
                     <li>Nazwa panelu: <span>{model.type}</span></li>
                     <li>Liczba ikon: <span>{model.numberOfDots}</span></li>
                     <li>Wysokość: <span>{model.height}</span></li>
                     <li>Szerokość: <span>{model.width}</span></li>
                     <li>Wyświetlacz LCD: <span>{(model.lcdScreen === true) ? "tak" : "nie"}</span></li>
                 </ul> */}
-            </div>
-        </div >
-    );
+      </div>
+    </div >
+  );
 };
 
-export default ModelChooser;
+const mapStateToProps = state => ({
+  panelModel: state.model
+})
 
+const mapDispatchToProps = dispatch => ({
+  change: panelModel => dispatch(actions.change(panelModel))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModelChooser)
 
 
 

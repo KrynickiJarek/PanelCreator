@@ -1,27 +1,49 @@
 import React, { useState, useEffect } from 'react';
-// import React, { useState } from 'react';
+import { connect } from "react-redux"
+import actions from "./duck/actions"
+
 import "./FrameEditor.scss"
 import Roundframe from "../../../assets/frame/roundframe.svg"
 import Sharpframe from "../../../assets/frame/sharpframe.svg"
 import Remove from "../../../assets/preview/remove.svg"
 
 
-const FrameEditor = ({ chosenModel, onFrameFontSet, onFrameShapeSet, onAddNewFrame, frameList, onRemoveFrame, onOverFrame, onToggleFrameTitle, allowTextFrame }) => {
+const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
+
+
+  chosenModel,
+  changeFrameFont,
+  changeFrameShape,
+  addNewFrame,
+  addNewFrameFlag,
+  removeFrame,
+  removeFrameList,
+  overFrame,
+  chosenFrameFont,
+  chosenFrameShape,
+  frameList,
+  frameHolders
 
 
 
-  const [frameFont, setFrameFont] = useState("Calibri-bold")
-  const [frameShape, setFrameShape] = useState("sharp")
+
+
+}) => {
+
+
+
   const [title, setTitle] = useState(false)
   const [hideSize, setHideSize] = useState(false)
   const [transition, setTranistion] = useState("0s")
-  const [frameListState, setFrameListState] = useState(frameList)
+  // const [frameListState, setFrameListState] = useState(frameList)
 
 
-  const addNewFrame = () => {
+
+  const handleAddNewFrame = () => {
     setTitle(false)
-    onAddNewFrame()
     onToggleFrameTitle(false)
+    addNewFrame()
+    addNewFrameFlag(true)
   }
   const toggleTitle = () => {
     setTitle(prev => !prev)
@@ -29,11 +51,7 @@ const FrameEditor = ({ chosenModel, onFrameFontSet, onFrameShapeSet, onAddNewFra
     setTranistion("400ms ease")
   }
 
-  const handleRemoveFrame = (index) => {
-    const copyFrameListState = frameListState
-    copyFrameListState.splice(index, 1)
-    setFrameListState(copyFrameListState)
-  }
+
 
   useEffect(() => {
     if (!allowTextFrame) {
@@ -52,14 +70,18 @@ const FrameEditor = ({ chosenModel, onFrameFontSet, onFrameShapeSet, onAddNewFra
   }
   window.addEventListener('resize', handleResize)
 
+  // document.querySelector(".panelpreview_container").addEventListener('resize', handleResize)
+  // console.log(document.querySelector(".panelpreview_container").clientWidth)
 
-  // console.log(frameListState)
-  // console.log(frameList.length)
 
 
-  useEffect(() => {
-    setFrameListState(frameList)
-  }, [frameList])
+  // useEffect(() => {
+  //   setFrameListState(frameList)
+  // }, [frameList])
+
+  // useEffect(() => {
+  //   // console.log("aktualizacja frameList")
+  // }, [frameList])
 
   return (
     <>
@@ -72,16 +94,16 @@ const FrameEditor = ({ chosenModel, onFrameFontSet, onFrameShapeSet, onAddNewFra
 
             <div className="frame_choosing_box">
 
-              <div className="frame_shape_link" style={((frameShape === "sharp") || !frameShape) ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
-                onClick={() => { setFrameShape("sharp"); onFrameShapeSet("sharp") }} >
-                {((frameShape === "sharp") || !frameShape) && <div className="frame_chosen" />}
+              <div className="frame_shape_link" style={(chosenFrameShape === "sharp") ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
+                onClick={() => { changeFrameShape("sharp") }} >
+                {(chosenFrameShape === "sharp") && <div className="frame_chosen" />}
                 < p className="shape_name">Ostre<br />narożniki</p>
                 <img src={Sharpframe} alt="sharpframe" className="shape_image" />
               </div>
 
-              <div className="frame_shape_link" style={frameShape === "round" ? { border: "3px solid #EC695C" } : {}}
-                onClick={() => { setFrameShape("round"); onFrameShapeSet("round") }} >
-                {frameShape === "round" && <div className="frame_chosen" />}
+              <div className="frame_shape_link" style={chosenFrameShape === "round" ? { border: "3px solid #EC695C" } : {}}
+                onClick={() => { changeFrameShape("round") }} >
+                {chosenFrameShape === "round" && <div className="frame_chosen" />}
                 < p className="shape_name">Zaokrąglone<br />narożniki</p>
                 <img src={Roundframe} alt="roundframe" className="shape_image" />
               </div>
@@ -102,73 +124,77 @@ const FrameEditor = ({ chosenModel, onFrameFontSet, onFrameShapeSet, onAddNewFra
             </div>
 
             <div className="hide_box" >
-              <div className="title_box" style={title ? { transition: `${transition}`, } : { transition: `${transition}`, transform: `translateY(-${hideSize}px)` }}>
-                <div className="title_box_content" >
+              <div className="title_box" style={(title || chosenModel.type === "MDOT-18 poziomy") ? { transition: `${transition}` } : { transition: `${transition}`, transform: `translateY(-${hideSize}px)` }}>
+                <div className="title_box_content" style={chosenModel.type !== "MDOT-18 poziomy" ? { visibility: "visible" } : { visibility: "hidden", height: "0px" }}>
                   <p className="instruction_normal">Wybierz font, a następnie wpisz tytuł na tworzonej ramce.</p>
 
                   <div className="frame_choosing_box">
 
-                    <div className="frame_link" style={((frameFont === "Calibri-bold") || !frameFont) ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold" }
+                    <div className="frame_link" style={(chosenFrameFont === "Calibri-bold") ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold" }
                       : { fontFamily: "Calibri-bold" }}
-                      onClick={() => { setFrameFont("Calibri-bold"); onFrameFontSet("Calibri-bold") }} >
-                      {((frameFont === "Calibri-bold") || !frameFont) && <div className="frame_chosen" />}
+                      onClick={() => { changeFrameFont("Calibri-bold") }} >
+                      {(chosenFrameFont === "Calibri-bold") && <div className="frame_chosen" />}
                       < p className="font_name" style={{ fontSize: "18px" }}>Calibri bold</p>
                       < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Calibri-bold</p>
                     </div>
 
-                    <div className="frame_link" style={frameFont === "Calibri" ? { border: "3px solid #EC695C", fontFamily: "Calibri" }
+                    <div className="frame_link" style={chosenFrameFont === "Calibri" ? { border: "3px solid #EC695C", fontFamily: "Calibri" }
                       : { fontFamily: "Calibri" }}
-                      onClick={() => { setFrameFont("Calibri"); onFrameFontSet("Calibri") }} >
-                      {frameFont === "Calibri" && <div className="frame_chosen" />}
+                      onClick={() => { changeFrameFont("Calibri") }} >
+                      {chosenFrameFont === "Calibri" && <div className="frame_chosen" />}
                       < p className="font_name" style={{ fontSize: "18px" }}>Calibri</p>
                       < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Calibri</p>
                     </div>
 
-                    <div className="frame_link" style={frameFont === "Helvetica-bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica-bold" }
+                    <div className="frame_link" style={chosenFrameFont === "Helvetica-bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica-bold" }
                       : { fontFamily: "Helvetica-bold" }}
-                      onClick={() => { setFrameFont("Helvetica-bold"); onFrameFontSet("Helvetica-bold") }} >
-                      {frameFont === "Helvetica-bold" && <div className="frame_chosen" />}
+                      onClick={() => { changeFrameFont("Helvetica-bold") }} >
+                      {chosenFrameFont === "Helvetica-bold" && <div className="frame_chosen" />}
                       < p className="font_name" style={{ fontSize: "18px" }}>Helvetica bold</p>
                       < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Helvetica Bold</p>
                     </div>
 
-                    <div className="frame_link" style={frameFont === "Helvetica" ? { border: "3px solid #EC695C", fontFamily: "Helvetica" }
+                    <div className="frame_link" style={chosenFrameFont === "Helvetica" ? { border: "3px solid #EC695C", fontFamily: "Helvetica" }
                       : { fontFamily: "Helvetica" }}
-                      onClick={() => { setFrameFont("Helvetica"); onFrameFontSet("Helvetica") }} >
-                      {frameFont === "Helvetica" && <div className="frame_chosen" />}
+                      onClick={() => { changeFrameFont("Helvetica") }} >
+                      {chosenFrameFont === "Helvetica" && <div className="frame_chosen" />}
                       < p className="font_name" style={{ fontSize: "18px" }}>Helvetica</p>
                       < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Helvetica</p>
                     </div>
 
-                    <div className="frame_link" style={frameFont === "Arial" ? { border: "3px solid #EC695C", fontFamily: "Arial" }
+                    <div className="frame_link" style={chosenFrameFont === "Arial" ? { border: "3px solid #EC695C", fontFamily: "Arial" }
                       : { fontFamily: "Arial" }}
-                      onClick={() => { setFrameFont("Arial"); onFrameFontSet("Arial") }} >
-                      {frameFont === "Arial" && <div className="frame_chosen" />}
+                      onClick={() => { changeFrameFont("Arial") }} >
+                      {chosenFrameFont === "Arial" && <div className="frame_chosen" />}
                       < p className="font_name" style={{ fontSize: "18px" }}>Arial</p>
                       < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Arial</p>
                     </div>
                   </div>
                 </div>
 
-
-
                 <div className="add_frame_button"
-                  onClick={addNewFrame} >
+                  onClick={handleAddNewFrame} >
                   ZATWIERDŹ
                   <div className="button_arrows" />
                 </div>
 
-                {frameListState.length > 0 &&
+                {/* {frameList.length > 0 && */}
+                {frameHolders.length > 0 &&
                   <>
                     <p className="instruction_bold">Lista dodanych ramek:</p>
 
                     <ol className="frame_list" >
-                      {frameListState.map((frame, index) =>
-                        <li key={index} className="frame_list_element"
-                          onMouseOver={() => { onOverFrame(frame.type, frame.id) }}
-                          onMouseLeave={() => { onOverFrame(frame.type, null) }}
-                        >Pole startowe (rząd, kolumna): {frame.startRow}, {frame.startColumn} ; Szerokość: {frame.columns}; Wysokość: {frame.rows}; Narożniki: {frame.shape === "sharp" ? "proste" : "zaokrąglone"}{frame.text && `, Tytuł: ${frame.text}; Font: ${frame.frameFont}`}
-                          <div className="frame_list_button" onClick={() => { handleRemoveFrame(index); onRemoveFrame(frame.type, frame.id) }}>
+                      {frameHolders.map((frame, index) =>
+                        < li key={index} className="frame_list_element"
+                        // onMouseOver={() => { overFrame({ type: frame.type, id: frame.id }) }}
+                        // onMouseLeave={() => { overFrame({ type: frame.type, id: null }) }}
+                        >Pole startowe (rząd, kolumna): {frame.frameInfo.startRow}, {frame.frameInfo.startColumn} ; Szerokość: {frame.frameInfo.columns}; Wysokość: {frame.frameInfo.rows}; Narożniki: {frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}{frame.frameInfo.text && `, Tytuł: ${frame.frameList.text}; Font: ${frame.frameInfo.frameFont}`}
+
+                          {/* <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }) }}>
+                                <img className="frame_list_img" src={Remove} alt="removeframe" />
+                              </div> */}
+                          <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }); removeFrameList(index) }}>
+                            {/* <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }) }}> */}
                             <img className="frame_list_img" src={Remove} alt="removeframe" />
                           </div>
                         </li>
@@ -185,4 +211,22 @@ const FrameEditor = ({ chosenModel, onFrameFontSet, onFrameShapeSet, onAddNewFra
   );
 };
 
-export default FrameEditor;
+const mapStateToProps = state => ({
+  chosenModel: state.model,
+  chosenFrameFont: state.frame.chosenFrameFont,
+  chosenFrameShape: state.frame.chosenFrameShape,
+  frameList: state.frame.frameList,
+  frameHolders: state.frame.frameHolders
+})
+
+const mapDispatchToProps = dispatch => ({
+  changeFrameFont: font => dispatch(actions.changeFrameFont(font)),
+  changeFrameShape: shape => dispatch(actions.changeFrameShape(shape)),
+  addNewFrame: (income) => dispatch(actions.addNewFrame(income)),
+  addNewFrameFlag: (income) => dispatch(actions.addNewFrameFlag(income)),
+  removeFrame: (frame) => dispatch(actions.removeFrame(frame)),
+  removeFrameList: (frame) => dispatch(actions.removeFrameList(frame)),
+  overFrame: (frame) => dispatch(actions.overFrame(frame)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(FrameEditor)
