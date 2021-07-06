@@ -40,16 +40,41 @@ const frameReducer = (state = INITIAL_STATE, action) => {
       //   newFrame.framePrint.frameFont = null
       // }
 
+      // const newFrameHolders = state.frameHolders
+      // const newFrame = state.frameHoldersTemp
+      // if (newFrame.length !== 0) {
+      //   newFrame.framePrint.shape = state.chosenFrameShape
+      //   newFrame.framePrint.over = false
+      //   newFrame.framePrint.text = state.changeFrameText
+      //   if (state.changeFrameText !== "") {
+      //     newFrame.framePrint.frameFont = state.chosenFrameFont
+      //   } else {
+      //     newFrame.framePrint.frameFont = null
+      //   }
+      //   newFrameHolders.push(newFrame)
+      // }
+
       const newFrameHolders = state.frameHolders
       const newFrame = state.frameHoldersTemp
       if (newFrame.length !== 0) {
-        newFrame.framePrint.shape = state.chosenFrameShape
-        newFrame.framePrint.over = false
-        newFrame.framePrint.text = state.changeFrameText
-        if (state.changeFrameText !== "") {
-          newFrame.framePrint.frameFont = state.chosenFrameFont
-        } else {
-          newFrame.framePrint.frameFont = null
+        if (newFrame.type === "multi") {
+          newFrame.framePrint.shape = state.chosenFrameShape
+          newFrame.frameInfo.shape = state.chosenFrameShape
+          newFrame.framePrint.over = false
+          newFrame.framePrint.text = state.changeFrameText
+          if (state.changeFrameText !== "") {
+            newFrame.framePrint.frameFont = state.chosenFrameFont
+          } else {
+            newFrame.framePrint.frameFont = null
+          }
+        } else if (newFrame.type === "single") {
+          newFrame.frameInfo.shape = state.chosenFrameShape
+          newFrame.framePrint.forEach(el => {
+            if (el !== 0) {
+              el.shape = state.chosenFrameShape
+              el.over = false
+            }
+          })
         }
         newFrameHolders.push(newFrame)
       }

@@ -220,7 +220,7 @@ export const IconHolder = memo(function IconHolder({
   }, [isOverToShow]);
 
 
-  if (singleFrameTemp && chosenFrameShape === "sharp" && chosenTab === "frame") {
+  if (singleFrameTemp && chosenFrameShape === "sharp" && chosenTab === "frame" && visual) {
     styleSignleFrame = {
       border: "2px solid rgb(32, 114, 30)",
       borderRadius: "0px",
@@ -228,7 +228,7 @@ export const IconHolder = memo(function IconHolder({
     styleSignleFrameResize = {
       transform: "scale(0.75)",
     }
-  } else if (singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame") {
+  } else if (singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame" && visual) {
     styleSignleFrame = {
       border: "2px solid rgb(32, 114, 30)",
       borderRadius: `${scale}px`,

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { connect } from "react-redux"
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
+import actionsVisual from "../PanelPreview/duck/actions"
 
 import update from 'immutability-helper';
 import moment from 'moment';
@@ -72,13 +73,14 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   removeFrame,
   overFrame,
 
-
-
   frameListRED,
   frameHoldersRED,
   frameHoldersREDreset,
   frameHoldersTempRED,
-  changeFrameText
+  changeFrameText,
+
+  toggleVisual,
+  visual
 
 
 }) {
@@ -87,7 +89,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
   const [sc, setSc] = useState(5);
 
-  const [visual, setVisual] = useState(true)
+  // const [visual, setVisual] = useState(true)
   const [visualChange, setVisualChange] = useState(true)
   const [animations, setAnimations] = useState(true)
   const [isAnySelected, setIsAnySelected] = useState(false)
@@ -180,7 +182,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   singleFrameStyle.left = "50%";
   singleFrameStyle.marginLeft = `${-3.75 * sc}px`;
   singleFrameStyle.border = "2px solid transparent";
-  // singleFrameStyle.border = chosenColor.iconColor;
   singleFrameStyle.position = "absolute";
   singleFrameStyle.transition = "width 400ms ease, height 400ms ease, border-color 400ms ease, border-width 0s";
 
@@ -257,12 +258,10 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     vusialStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
   }
 
-  if (!visual) {
+  if (visual) {
     universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))";
     frameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
-    frameStyle.borderColor = "white"; //??????????????????
     singleFrameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
-    singleFrameStyle.borderColor = "white";
   } else if (chosenColor.iconColor === "white") {
     universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10)";
   } else {
@@ -294,21 +293,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   else {
     resizeStyle.width = "100%";
   }
-
-  // const [panelContainerHeight, setPanelContainerHeight] = useState("100%") // ----------- stara wersja, przed MDOT-18 poziomy
-  // const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
-  // if (!panelContainerHeight || (panelContainerHeight < (chosenModel.height * sc))) {
-  //     resizeStyle.height = `${(chosenModel.height * sc) + 50}px`;
-  // } else {
-  //     resizeStyle.height = "100%";
-  // }
-
-  // if (!panelContainerWidth || (panelContainerWidth < (chosenModel.width * sc))) {
-  //     resizeStyle.width = `${(chosenModel.width * sc) + 50}px`;
-  // } else {
-  //     resizeStyle.width = "100%";
-  // }
-
   // window.addEventListener('resize', handleResize)
 
 
@@ -367,11 +351,11 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
 
-  if ((chosenTab === "text") && showTextBorder && visual) {
+  if ((chosenTab === "text") && showTextBorder && !visual) {
     textStyle.border = "2px solid rgb(236, 105, 92)"
   }
 
-  if (!visual) {
+  if (visual) {
     textStyle.color = "white";
     textStyle.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
   }
@@ -389,12 +373,11 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   textStyleFrame.width = "100%";
   textStyleFrame.transition = "400ms ease";
 
-  // if ((chosenTab === "frame") && textFrame) {
   if (chosenTab === "frame") {
     textStyleFrame.border = "2px dashed rgb(236, 105, 92)"
   }
 
-  if (!visual) {
+  if (visual) {
     textStyleFrame.color = "white";
     textStyleFrame.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
     textStyleFrame.transition = "0.4s ease";
@@ -476,10 +459,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
-      // setFrameHolders([])
-      // setFrameSingleHolders([])
-      // setFrameList([])//----------------------------------------------------------------przeniesione poza timeouta 
-      // onFrameList(frameList) 
       setIconHolders(arrIconHolders);
       setTempFrameText("")
       changeFrameText("")
@@ -492,7 +471,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     return () => clearTimeout(modeltimeout);
     // eslint-disable-next-line
   }, [chosenModel]);
-  // }, [chosenModel, frameList, onFrameList]); //-----------------------------------------------------------------było samo chosenModel i bez eslint
 
 
 
@@ -813,7 +791,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
   const handleVisual = () => {
-    setVisual(prev => !prev)
+    toggleVisual(!visual)
   }
 
   const handleClearAll = () => {
@@ -829,11 +807,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         })
       });
       setIconHolders(tempArr);
-      // setFrameHolders([])
-      // setFrameSingleHolders([])
       setFrameList([])
 
-      const arrNewFrame = []; //----framkowe stejty
+      const arrNewFrame = [];
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
@@ -864,7 +840,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       onFrameList(frameList)
       setTempFrameText("")
       changeFrameText("")
-      setTextFrame(false) //----framkowe stejty
+      frameHoldersREDreset([])
+      setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
     }, 300);
     return () => clearTimeout(modeltimeout);
@@ -2598,7 +2575,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         copyTempArr[i].l = 0
         const copyIconHolders = iconHolders;
         copyIconHolders[i].singleFrameTemp = true
-        // copyIconHolders[i].singleFrame = true
         setIconHolders(copyIconHolders)
       } else {
         const copyIconHolders = iconHolders;
@@ -2744,14 +2720,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     copyFramePrint.frameArr = copyTempArr
     copyFramePrint.textX = textX
     copyFramePrint.textY = textY
-    // copyFramePrint.text = tempFrameText
-    // copyFramePrint.over = false
-    // copyFramePrint.shape = chosenFrameShape
-    // if (tempFrameText !== "") {
-    // copyFramePrint.frameFont = chosenFrameFont
-    // } else {
-    // copyFramePrint.frameFont = null
-    // }
 
     //---------------------------------REDUX---------------------------------
     let frameTempRED = {};
@@ -2767,10 +2735,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       frameTempRED.type = "multi"
       frameTempRED.framePrint = copyFramePrint
 
-      // frameTempRED.framePrint.frameArr = 
-      // frameTempRED.framePrint.textX = textX
-      // frameTempRED.framePrint.textY = textY
-
       const columns = ((copyArr.lastIndexOf("s") % 3) + 1) - (copyArr.indexOf("s") % 3)
       const rows = Math.ceil((copyArr.lastIndexOf("s") + 1) / 3) - Math.floor(copyArr.indexOf("s") / 3)
 
@@ -2782,10 +2746,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           rows: rows,
           columns: columns,
           shape: chosenFrameShape,
-          text: tempFrameText,
-          textX: textX,
-          textY: textY,
-          frameFont: chosenFrameFont,
         }
       } else {
         const rowCalc = (copyArr.indexOf("s") % 3) + columns
@@ -2805,10 +2765,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           rows: columns,
           columns: rows,
           shape: chosenFrameShape,
-          text: "",
-          textX: textX,
-          textY: textY,
-          frameFont: null,
         }
       }
     } else if (checkArr.length === 1) {
@@ -2827,10 +2783,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
               rows: 1,
               columns: 1,
               shape: chosenFrameShape,
-              text: "",
-              textX: 0,
-              textY: 0,
-              frameFont: null,
             }
           } else {
             let startRow
@@ -2849,10 +2801,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
               rows: 1,
               columns: 1,
               shape: chosenFrameShape,
-              text: "",
-              textX: 0,
-              textY: 0,
-              frameFont: null,
             }
           }
 
@@ -2866,18 +2814,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     } else {
       frameTempRED = {};
     }
-
     frameHoldersTempRED(frameTempRED)
-
-
-
-
-
-
-
-
-
-
     //---------------------------------REDUX---------------------------------
     setRerender(prev => !prev)
 
@@ -2900,7 +2837,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       }));
     }
   }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight,
-    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameFont, chosenFrameShape, frameHoldersTempRED, tempFrameText]);
+    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameShape, frameHoldersTempRED]);
 
 
   const handleChangeTextFrame = (text) => {
@@ -2923,8 +2860,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
-      // const currFrames = frameHolders
-      // const frameListTemp = frameList;
 
       chosenModel.dotLocation.forEach(element => {
         arrNewFrame.push(element)
@@ -2947,168 +2882,18 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       });
 
       const copyArr = iconHolders;
-      // const currSingleFrames = [];
-      // const currSingleFramesArr = frameSingleHolders;
-
       copyArr.forEach((element, index) => {
 
         if (element.singleFrameTemp) {
-          // let singleFrameID = 0
-
-          // currSingleFramesArr.forEach(element => {
-          //   element.forEach(el => {
-          //     if (el !== 0) {
-          //       if (el.id >= singleFrameID) {
-          //         singleFrameID = el.id + 1
-          //       }
-          //     }
-          //   })
-          // })
-
-
-          // currSingleFrames.push({ shape: chosenFrameShape, id: singleFrameID, over: false })
           element.singleFrameTemp = false;
           element.singleFrame = true;
         }
       })
 
-      //     if (chosenModel.type !== "MDOT-18 poziomy") {
-      //       frameListTemp.push(
-      //         {
-      //           startRow: Math.ceil((index + 1) / 3),
-      //           startColumn: ((index % 3) + 1),
-      //           rows: 1,
-      //           columns: 1,
-      //           shape: chosenFrameShape,
-      //           text: "",
-      // textX: 0,
-      //           textY: 0,
-      //           frameFont: null,
-      //           type: "s",
-      //           id: singleFrameID,
-      //         })
-      //     } else {
-      //       let startRow
-      //       if (index % 3 === 0) {
-      //         startRow = 3
-      //       } else if (index % 3 === 1) {
-      //         startRow = 2
-      //       } else if (index % 3 === 2) {
-      //         startRow = 1
-      //       }
-
-      //       frameListTemp.push(
-      //         {
-      //           startRow: startRow,
-      //           startColumn: Math.ceil((index + 1) / 3),
-      //           rows: 1,
-      //           columns: 1,
-      //           shape: chosenFrameShape,
-      //           text: "",
-      //           textX: 0,
-      //           textY: 0,
-      //           frameFont: null,
-      //           type: "s",
-      //           id: singleFrameID,
-      //         })
-      //     }
-      //   }
-      //   else {
-      //     currSingleFrames.push(0)
-      //   }
-      // })
-
-
-      // const checkArr = newFrame.filter(function (element) {
-      //   return element === "s"
-      // })
-
-
-      // if (checkArr.length > 1) {
-
-      //   let multiFrameID = 0
-
-      //   currFrames.forEach(element => {
-      //     if (element.id >= multiFrameID) {
-      //       multiFrameID = element.id + 1
-      //     }
-      //   })
-
-      //   tempFrame.id = multiFrameID
-
-      //   const columns = ((newFrame.lastIndexOf("s") % 3) + 1) - (newFrame.indexOf("s") % 3)
-      //   const rows = Math.ceil((newFrame.lastIndexOf("s") + 1) / 3) - Math.floor(newFrame.indexOf("s") / 3)
-
-      //   if (chosenModel.type !== "MDOT-18 poziomy") {
-      //     frameListTemp.push(
-      //       {
-      //         startRow: Math.ceil((newFrame.indexOf("s") + 1) / 3),
-      //         startColumn: ((newFrame.indexOf("s") % 3) + 1),
-      //         rows: rows,
-      //         columns: columns,
-      //         shape: chosenFrameShape,
-      //         text: tempFrameText,
-      //         textX: tempFrame.textX,
-      //         textY: tempFrame.textY,
-      //         frameFont: chosenFrameFont,
-      //         type: "m",
-      //         id: multiFrameID,
-      //       })
-      //   } else {
-      //     const rowCalc = (newFrame.indexOf("s") % 3) + columns
-      //     let startRow
-      //     if (rowCalc === 1) {
-      //       startRow = 3
-      //     } else if (rowCalc === 2) {
-      //       startRow = 2
-      //     } else if (rowCalc === 3) {
-      //       startRow = 1
-      //     }
-
-      //     frameListTemp.push(
-      //       {
-      //         startRow: startRow,
-      //         startColumn: Math.ceil((newFrame.indexOf("s") + 1) / 3),
-      //         rows: columns,
-      //         columns: rows,
-      //         shape: chosenFrameShape,
-      //         text: "",
-      //         textX: tempFrame.textX,
-      //         textY: tempFrame.textY,
-      //         frameFont: null,
-      //         type: "m",
-      //         id: multiFrameID,
-      //       })
-      //   }
-      // }
-
-
-      // const currSingleFramesShapes = []
-      // currSingleFrames.forEach(element => {
-      //   currSingleFramesShapes.push(element.shape)
-      // })
-
-      // if (currSingleFramesShapes.includes("sharp") || currSingleFramesShapes.includes("round")) { //===================== 
-      //   currSingleFramesArr.push(currSingleFrames)
-      // } else {
-      //   const copyTempFrame = tempFrame
-      //   copyTempFrame.text = tempFrameText
-      //   copyTempFrame.shape = chosenFrameShape
-      //   copyTempFrame.over = false
-      //   if (tempFrameText !== "") {
-      //     copyTempFrame.frameFont = chosenFrameFont
-      //   } else {
-      //     copyTempFrame.frameFont = null
-
-      //   }
-      //   currFrames.push(copyTempFrame)
-      // }
-
-
-      const currFramesRED = frameHoldersRED
+      const copyFrameHolders = frameHoldersRED
 
       const checkFrameFontArr = []
-      currFramesRED.forEach((el) => {
+      copyFrameHolders.forEach((el) => {
         if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
           checkFrameFontArr.push(el.framePrint.frameFont)
         }
@@ -3124,11 +2909,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
-      // setFrameHolders(currFrames)
       setIconHolders(copyArr)
-      // setFrameSingleHolders(currSingleFramesArr)
-      // setFrameList(frameListTemp)
-      // onFrameList(frameList)
       setTempFrameText("")
       changeFrameText("")
       setTextFrame(false)
@@ -3136,7 +2917,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setRerender(prev => !prev)
 
       addNewFrameFlag(false)
-      // frameListRED(frameListTemp)
     }
     // eslint-disable-next-line 
   }, [addNewFrameFlagState]);
@@ -3144,75 +2924,28 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
   useEffect(() => {
-    //   const frameListTemp = frameList;
-    //   frameListTemp.forEach((element, index) => {
-    //     if (element.type === removeFrame.type && element.id === removeFrame.id) {
-    //       frameListTemp.splice(index, 1)
-    //     }
-    //   })
-    //   setFrameList(frameListTemp)
-    //   onFrameList(frameList)
+    const copyFrameHolders = frameHoldersRED
+    const checkSingleFramesArr = []
 
-    //   const currFrames = frameHolders
-    //   const currSingleFramesArr = frameSingleHolders
-
-    //   if (removeFrame.type === "m") {
-    //     currFrames.forEach((element, index) => {
-    //       if (element.id === removeFrame.id) {
-    //         currFrames.splice(index, 1)
-    //       }
-    //     })
-    //   } else if (removeFrame.type === "s") {
-    //     currSingleFramesArr.forEach((element, index) => {
-    //       element.forEach(el => {
-    //         if (el !== 0) {
-    //           if (el.id === removeFrame.id) {
-    //             currSingleFramesArr.splice(index, 1)
-    //           }
-    //         }
-    //       })
-
-    //     })
-    //   }
-
-
-    //   const checkFrameFontArr = []
-    //   currFrames.forEach((el) => {
-    //     if (el.frameFont && !checkFrameFontArr.includes(el.frameFont)) {
-    //       checkFrameFontArr.push(el.frameFont)
-    //     }
-    //   })
-    //   if (checkFrameFontArr.length > 1) {
-    //     setDifferentFrameFont(true)
-    //   } else {
-    //     setDifferentFrameFont(false)
-    //   }
-
-
-
-    //   setFrameHolders(currFrames)
-    //   setFrameSingleHolders(currSingleFramesArr)
-    //   setRerender(prev => !prev)
-
-    //   const copyArr = iconHolders;
-
-    //   copyArr.forEach((element) => {
-    //     element.singleFrame = false;
-    //   })
-
-    //   currSingleFramesArr.forEach((el, i) => {
-    //     for (let i = 0; i < el.length; i++) {
-    //       if (el[i] !== 0) {
-    //         copyArr[i].singleFrame = true
-    //       }
-    //     }
-    //   })
-    //   setIconHolders(copyArr)
-
-    const currFramesRED = frameHoldersRED
+    copyFrameHolders.forEach(element => {
+      if (element.type === "single") {
+        element.framePrint.forEach((el, index) => {
+          if (el !== 0) {
+            checkSingleFramesArr.push(index)
+          }
+        })
+      }
+    })
+    const copyArr = iconHolders;
+    copyArr.forEach((element, index) => {
+      if (!checkSingleFramesArr.includes(index)) {
+        element.singleFrame = false;
+      }
+    })
+    setIconHolders(copyArr)
 
     const checkFrameFontArr = []
-    currFramesRED.forEach((el) => {
+    copyFrameHolders.forEach((el) => {
       if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
         checkFrameFontArr.push(el.framePrint.frameFont)
       }
@@ -3223,45 +2956,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setDifferentFrameFont(false)
     }
     setRerender(prev => !prev)
-
     // eslint-disable-next-line 
   }, [removeFrame]);
 
-
-
-  // useEffect(() => {
-  // const currFrames = frameHolders
-  // const currSingleFramesArr = frameSingleHolders
-
-  // if (overFrame.type === "m") {
-  //   currFrames.forEach((element, index) => {
-  //     if (element.id === overFrame.id) {
-  //       currFrames[index].over = true
-  //     } else {
-  //       currFrames[index].over = false
-
-  //     }
-  //   })
-  // } else if (overFrame.type === "s") {
-  //   currSingleFramesArr.forEach((element, index) => {
-  //     element.forEach((el, i) => {
-  //       if (el !== 0) {
-  //         if (el.id === overFrame.id) {
-  //           currSingleFramesArr[index][i].over = true
-  //         } else {
-  //           currSingleFramesArr[index][i].over = false
-  //         }
-  //       }
-  //     })
-
-  //   })
-  // }
-  // setFrameHolders(currFrames)
-  // setFrameSingleHolders(currSingleFramesArr)
-
-
-  // setRerender(prev => !prev)
-  // }, [overFrame]);
 
 
   useEffect(() => {
@@ -3273,22 +2970,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   }, [frameTitle, changeFrameText])
 
 
-
-
-
-
-  // useEffect(() => {
-  //   console.log("PREVIEW")
-  //   // setFrameListProp(frameList)
-  //   // setRerender(prev => !prev)
-  //   onFrameList(frameList)
-  // }, [onFrameList, frameList, frameList.length])
-
-  //   return (
-  //     <h1>HELLOOO</h1>
-  //   );
-  // });
-
   return (
     <div className="panelpreview_container" style={panelPreviewStyle}>
       <div className="preview_container">
@@ -3299,20 +2980,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           <div className="resize_container" style={resizeStyle}>
             <div className="panel_box" style={chosenModelStyle}>
 
-              {/* {!visualChange &&
-                <>
-                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
-                  {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-                  <div className="visualization_glass" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_glass_bis" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8" } : { ...vusialStyle, opacity: "0" }} />
-                  <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
-                </>} */}
-
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll && visual &&
+                {hideAll && !visual &&
                   <>
                     {newFrame.map((el, index) =>
                       <div key={index}
@@ -3347,7 +3016,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
               </div>
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll && visual &&
+                {hideAll && !visual &&
                   <>
                     {newFrameHide.map((el, index) =>
                       <div key={index}
@@ -3372,7 +3041,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll && visual &&
+                {hideAll && !visual &&
                   <>
                     {newFrameChange.map((el, index) =>
                       <div key={index}
@@ -3388,8 +3057,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                             )} >
 
                         <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
-                          {/* < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" className="frame_change" style={el === "a" ? { opacity: "1" } : { opacity: "0" }} /> */}
-                          {/* < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" className="frame_change" style={el === "r" ? { opacity: "1" } : { opacity: "0" }} /> */}
                           < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
                           < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
                         </div>
@@ -3400,132 +3067,12 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
               </div>
 
 
-              {/* {hideAll && frameHolders.length !== 0 &&
-                <>
-                  {frameHolders.map((frame, i) =>
-                    <div key={i} className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
-
-                      {frame.frameArr.map((el, index) =>
-                        <div key={index}
-                          style={
-                            ((index + 2) % 3 === 0) ?
-                              { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-                              : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-                          } >
-
-                          {el !== 0 && visual &&
-                            <div style={frame.shape === "sharp" ? {
-                              ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: "0",
-                              height: `${el.fh * sc}px`,
-                              width: `${el.fw * sc}px`,
-                              marginBottom: `${el.mb * sc}px`,
-                              marginLeft: `${el.ml * sc}px`,
-                              marginRight: `${el.mr * sc}px`,
-                              // transition: "0.4s ease"
-                              transition: "0s",
-                            }
-                              : {
-                                ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
-                                height: `${el.fh * sc}px`,
-                                width: `${el.fw * sc}px`,
-                                marginBottom: `${el.mb * sc}px`,
-                                marginLeft: `${el.ml * sc}px`,
-                                marginRight: `${el.mr * sc}px`,
-                                // transition: "0.4s ease"
-                                transition: "0s",
-                              }}
-
-                              className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                            />
-                          }
-                          {el !== 0 && !visual &&
-                            <div style={frame.shape === "sharp" ? {
-                              ...frameStyle, borderColor: "white", borderRadius: "0",
-                              height: `${el.fh * sc}px`,
-                              width: `${el.fw * sc}px`,
-                              marginBottom: `${el.mb * sc}px`,
-                              marginLeft: `${el.ml * sc}px`,
-                              marginRight: `${el.mr * sc}px`,
-                              transition: "0.4s ease"
-                            }
-                              : {
-                                ...frameStyle, borderColor: "white",
-                                borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
-                                height: `${el.fh * sc}px`,
-                                width: `${el.fw * sc}px`,
-                                marginBottom: `${el.mb * sc}px`,
-                                marginLeft: `${el.ml * sc}px`,
-                                marginRight: `${el.mr * sc}px`,
-                                transition: "0.4s ease"
-                              }}
-
-                              className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                            />
-                          }
-                          {el !== 0 && frame.over && visual &&
-                            <div style={frame.shape === "sharp" ? {
-                              ...frameStyle,
-                              borderColor: "#dc3545",
-                              zIndex: "9999",
-                              borderRadius: "0",
-                              height: `${el.fh * sc}px`,
-                              width: `${el.fw * sc}px`,
-                              marginBottom: `${el.mb * sc}px`,
-                              marginLeft: `${el.ml * sc}px`,
-                              marginRight: `${el.mr * sc}px`,
-                              transition: "0.4s ease",
-                            }
-                              : {
-                                ...frameStyle,
-                                borderColor: "#dc3545",
-                                zIndex: "9999",
-                                borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
-                                height: `${el.fh * sc}px`,
-                                width: `${el.fw * sc}px`,
-                                marginBottom: `${el.mb * sc}px`,
-                                marginLeft: `${el.ml * sc}px`,
-                                marginRight: `${el.mr * sc}px`,
-                                transition: "0.4s ease",
-                              }}
-
-                              className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                            />
-                          }
-                        </div>
-                      )}
-                      {(frame.text !== "") &&
-                        <div style={{ position: "absolute", width: "100%" }}>
-                          <div style={visual ? { ...autoResizeInputStyle, top: `${frame.textY * sc}px`, left: `${frame.textX * sc}px`, transition: "0s" } :
-                            { ...autoResizeInputStyle, top: `${frame.textY * sc}px`, left: `${frame.textX * sc}px`, transition: "0.4s ease" }}>
-                            <input className="text_input_frame"
-                              type="text"
-                              maxLength="25"
-                              style={{
-                                ...textStyleFrame,
-                                fontFamily: frame.frameFont,
-                                backgroundColor: chosenColor.hex,
-                                border: "none",
-                              }}
-                              disabled={true}
-                              value={frame.text}
-                            />
-                            <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                              {frame.text}
-                            </span>
-                          </div>
-                        </div>
-                      }
-                    </div>
-                  )}
-                </>
-              } */}
-
               {hideAll &&
                 <>
                   {frameHoldersRED.map((frame, i) =>
-                    <>
+                    <div key={i} >
                       {frame.type === "multi" &&
-                        <div key={i} className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
+                        <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
 
                           {frame.framePrint.frameArr.map((el, index) =>
                             <div key={index}
@@ -3535,7 +3082,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                                   : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
                               } >
 
-                              {el !== 0 && visual &&
+                              {el !== 0 && !visual &&
                                 <div style={frame.framePrint.shape === "sharp" ? {
                                   ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: "0",
                                   height: `${el.fh * sc}px`,
@@ -3560,31 +3107,36 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                                   className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
                                 />
                               }
-                              {el !== 0 && !visual &&
+                              {el !== 0 && visual &&
                                 <div style={frame.framePrint.shape === "sharp" ? {
-                                  ...frameStyle, borderColor: "white", borderRadius: "0",
+                                  ...frameStyle,
+                                  borderColor: "white",
+                                  borderRadius: "0",
                                   height: `${el.fh * sc}px`,
                                   width: `${el.fw * sc}px`,
                                   marginBottom: `${el.mb * sc}px`,
                                   marginLeft: `${el.ml * sc}px`,
                                   marginRight: `${el.mr * sc}px`,
-                                  transition: "0.4s ease"
+                                  transition: "0.4s ease",
+                                  // zIndex: "999"
                                 }
                                   : {
-                                    ...frameStyle, borderColor: "white",
+                                    ...frameStyle,
+                                    borderColor: "white",
                                     borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
                                     height: `${el.fh * sc}px`,
                                     width: `${el.fw * sc}px`,
                                     marginBottom: `${el.mb * sc}px`,
                                     marginLeft: `${el.ml * sc}px`,
                                     marginRight: `${el.mr * sc}px`,
-                                    transition: "0.4s ease"
+                                    transition: "0.4s ease",
+                                    // zIndex: "999"
                                   }}
 
                                   className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
                                 />
                               }
-                              {el !== 0 && frame.framePrint.over && visual &&
+                              {el !== 0 && frame.framePrint.over && !visual &&
                                 <div style={frame.framePrint.shape === "sharp" ? {
                                   ...frameStyle,
                                   borderColor: "#dc3545",
@@ -3617,7 +3169,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                           )}
                           {(frame.framePrint.text !== "") &&
                             <div style={{ position: "absolute", width: "100%" }}>
-                              <div style={visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
+                              <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                 { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                 <input className="text_input_frame"
                                   type="text"
@@ -3627,6 +3179,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                                     fontFamily: frame.framePrint.frameFont,
                                     backgroundColor: chosenColor.hex,
                                     border: "none",
+
                                   }}
                                   disabled={true}
                                   value={frame.framePrint.text}
@@ -3639,59 +3192,19 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                           }
                         </div>
                       }
-                    </>
+                    </div>
                   )}
                 </>
               }
 
 
-              {/* {hideAll && frameSingleHolders.length !== 0 &&
-                <>
-                  {frameSingleHolders.map((frame, i) =>
-                    <div key={i} className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-
-                      {frame.map((el, index) =>
-                        <div key={index}
-                          style={
-                            ((index + 2) % 3 === 0) ?
-                              (
-                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                  : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                              )
-                              : (
-                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                  : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                              )} >
-
-                          {el !== 0 && visual &&
-                            <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
-                              : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px`, }}
-                            />
-                          }
-                          {el !== 0 && !visual &&
-                            <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", }
-                              : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, }}
-                            />
-                          }
-                          {el !== 0 && el.over && visual &&
-                            <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: "0", zIndex: "9999", }
-                              : { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: `${sc}px`, zIndex: "9999", }}
-                            />
-                          }
-                        </div>
-                      )}
-
-                    </div>
-                  )}
-                </>
-              } */}
-
               {hideAll &&
                 <>
                   {frameHoldersRED.map((frame, i) =>
-                    <>
+                    <div key={i} >
                       {frame.type === "single" &&
-                        <div key={i} className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                        <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+
                           {frame.framePrint.map((el, index) =>
                             <div key={index}
                               style={
@@ -3704,18 +3217,18 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                                     ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
                                       : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
                                   )} >
-                              {el !== 0 && visual &&
-                                <div style={!el.over ?
-                                  { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
-                                  : { ...singleFrameStyle, borderColor: "red", borderRadius: `${sc}px`, }}
-                                />
-                              }
                               {el !== 0 && !visual &&
-                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", }
-                                  : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, }}
+                                <div style={el.shape === "sharp" ?
+                                  { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
+                                  : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px` }}
                                 />
                               }
-                              {el !== 0 && el.over && visual &&
+                              {el !== 0 && visual &&
+                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", zIndex: "99999" }
+                                  : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, zIndex: "99999" }}
+                                />
+                              }
+                              {el !== 0 && el.over && !visual &&
                                 <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: "0", zIndex: "9999", }
                                   : { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: `${sc}px`, zIndex: "9999", }}
                                 />
@@ -3724,13 +3237,13 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                           )}
                         </div>
                       }
-                    </>
+                    </div>
                   )}
                 </>
               }
 
               <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
-                {hideAll && visual &&
+                {hideAll && !visual &&
                   <>
                     {tempFrame.frameArr.map((el, index) =>
                       <div key={index}
@@ -3836,14 +3349,14 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
               {!visualChange &&
                 <>
-                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
-                  {(lcdShow && !visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-                  <div className="visualization_glass" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_glass_bis" style={!visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_glass_white" style={(!visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={!visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...vusialStyle, opacity: "0" }} />
-                  <img src={LogoPure} alt="logo" className="logo_pure" style={!visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
+                  {(lcdShow && visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
+                  <div className="visualization_glass" style={visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_glass_bis" style={visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...vusialStyle, opacity: "0" }} />
+                  <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                 </>}
 
               <div className="panel_content" style={contentStyle}>
@@ -4014,7 +3527,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                               clear={clear}
                               rotateRight={rotateRight}
                               rotateLeft={rotateLeft}
-                              visual={visual}
+                              visual={!visual}
                               chosenTab={chosenTab}// redux
                               showRemoveIcon={showRemoveIcon}
                               showRemoveIcons={showRemoveIcons}
@@ -4028,8 +3541,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                     )}
 
 
-                    {(lcdShow && visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
-                    {(lcdShow && !visual && lcdNew) &&
+                    {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
+                    {(lcdShow && visual && lcdNew) &&
                       <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
                         <div className="lcd_icon_box">
                           < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
@@ -4047,13 +3560,13 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                         </div>
                       </div>
                     }
-                    {(lcdShow && !visual && !lcdNew) &&
+                    {(lcdShow && visual && !lcdNew) &&
                       <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px`, justifyContent: "center" }}>
                         <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
                         <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
                       </div>
                     }
-                    {(lcdShow && !visual && lcdNew) &&
+                    {(lcdShow && visual && lcdNew) &&
                       <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
                         <div className="lcd_icon_box">
                           < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
@@ -4119,7 +3632,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
         <div className="side_box">
           <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
-          {visual ? <span>Podgląd</span> : <span>Tryb edycji</span>}
+          {!visual ? <span>Podgląd</span> : <span>Tryb edycji</span>}
         </div>
 
         <div className="side_box">
@@ -4235,6 +3748,7 @@ const mapStateToProps = state => ({
   removeFrame: state.frame.removeFrame,
   overFrame: state.frame.overFrame,
   frameHoldersRED: state.frame.frameHolders,
+  visual: state.visual,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -4244,6 +3758,7 @@ const mapDispatchToProps = dispatch => ({
   frameHoldersREDreset: (income) => dispatch(actionsFrame.frameHolders(income)),
   frameHoldersTempRED: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
   changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
+  toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
 })
 
 
