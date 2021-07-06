@@ -57,7 +57,8 @@ import Rightuni from "../../assets/lcd/rightuni.svg"
 
 import { IconHolder } from './IconHolder/IconHolder';
 
-export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList, frameTitle, onAllowTextFrame,
+export const PanelPreview = memo(function PanelPreview({ chosenFont,
+  frameTitle, onAllowTextFrame,
 
   //wywalone jako state (zamienone na reduxowe)
   // chosenColor, chosenTab, chosenModel, chosenFrameFont, chosenFrameShape, addNewFrame, removeFrame, overFrame
@@ -67,16 +68,13 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   chosenModel,
   chosenFrameFont,
   chosenFrameShape,
-  addNewFrame,
   addNewFrameFlagState,
   addNewFrameFlag,
   removeFrame,
-  overFrame,
 
-  frameListRED,
-  frameHoldersRED,
-  frameHoldersREDreset,
-  frameHoldersTempRED,
+  frameHolders,
+  frameHoldersReset,
+  frameHoldersTemp,
   changeFrameText,
 
   toggleVisual,
@@ -89,7 +87,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
   const [sc, setSc] = useState(5);
 
-  // const [visual, setVisual] = useState(true)
   const [visualChange, setVisualChange] = useState(true)
   const [animations, setAnimations] = useState(true)
   const [isAnySelected, setIsAnySelected] = useState(false)
@@ -108,13 +105,10 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
   const [tempFrameText, setTempFrameText] = useState("")
 
 
-  // const [frameHolders, setFrameHolders] = useState([])
-  // const [frameSingleHolders, setFrameSingleHolders] = useState([])
   const [textFrame, setTextFrame] = useState(false)
   const [isFocusedInputFrame, setIsFocusedInputFrame] = useState(false)
 
 
-  const [frameList, setFrameList] = useState([])
 
   const [rerender, setRerender] = useState(false)
 
@@ -424,9 +418,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
     setHideAll(false)
 
-    setFrameList([])
-    // onFrameList(frameList) //-----------------------------------------------------------------po reduxie obczaj czy działa
-    onFrameList([]) //-----------------------------------------------------------------po reduxie obczaj czy działa
 
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
@@ -466,7 +457,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
       (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
       setVisualChange(false)
-      frameHoldersREDreset([])
+      frameHoldersReset([])
     }, 300);
     return () => clearTimeout(modeltimeout);
     // eslint-disable-next-line
@@ -807,7 +798,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         })
       });
       setIconHolders(tempArr);
-      setFrameList([])
 
       const arrNewFrame = [];
       const arrNewFrameHide = [];
@@ -837,10 +827,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
-      onFrameList(frameList)
       setTempFrameText("")
       changeFrameText("")
-      frameHoldersREDreset([])
+      frameHoldersReset([])
       setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
     }, 300);
@@ -1033,25 +1022,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     }
   }, [iconHolders]);
 
-  const [differentFrameFont, setDifferentFrameFont] = useState(false) ///----------------------------------------------------------------------------- PRZENIEŚ UUSŃ
-  // useEffect(() => {
-  //   console.log("TEST!!!!!!!!!!!")
-  //   alert("alert")
-  //   const copyArr = frameHolders;
-  //   const checkArr = []
-  //   copyArr.forEach((el) => {
-  //     console.log(`element ${el}`)
-  //     console.log(`element.frameFont>>>>> ${el.frameFont}`)
-  //     if (el.frameFont && !checkArr.includes(el.frameFont)) {
-  //       checkArr.push(el.frameFont)
-  //     }
-  //   })
-  //   if (checkArr.length > 1) {
-  //     setDifferentFrameFont(true)
-  //   } else {
-  //     setDifferentFrameFont(false)
-  //   }
-  // }, [frameHolders]);
+  const [differentFrameFont, setDifferentFrameFont] = useState(false)
 
   const handleFrameOver = ((index) => {
     const copyArr = newFrame;
@@ -2722,7 +2693,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     copyFramePrint.textY = textY
 
     //---------------------------------REDUX---------------------------------
-    let frameTempRED = {};
+    let frameTemp = {};
 
     const checkArr = copyArr.filter(function (element) {
       return element === "s"
@@ -2732,14 +2703,14 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
     if (checkArr.length > 1) {
 
 
-      frameTempRED.type = "multi"
-      frameTempRED.framePrint = copyFramePrint
+      frameTemp.type = "multi"
+      frameTemp.framePrint = copyFramePrint
 
       const columns = ((copyArr.lastIndexOf("s") % 3) + 1) - (copyArr.indexOf("s") % 3)
       const rows = Math.ceil((copyArr.lastIndexOf("s") + 1) / 3) - Math.floor(copyArr.indexOf("s") / 3)
 
       if (chosenModel.type !== "MDOT-18 poziomy") {
-        frameTempRED.frameInfo =
+        frameTemp.frameInfo =
         {
           startRow: Math.ceil((copyArr.indexOf("s") + 1) / 3),
           startColumn: ((copyArr.indexOf("s") % 3) + 1),
@@ -2758,7 +2729,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           startRow = 1
         }
 
-        frameTempRED.frameInfo =
+        frameTemp.frameInfo =
         {
           startRow: startRow,
           startColumn: Math.ceil((copyArr.indexOf("s") + 1) / 3),
@@ -2768,7 +2739,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         }
       }
     } else if (checkArr.length === 1) {
-      frameTempRED.type = "single"
+      frameTemp.type = "single"
 
       const currSingleFrames = [];
       copyArr.forEach((el) => {
@@ -2776,7 +2747,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           currSingleFrames.push({ shape: chosenFrameShape, over: false })
 
           if (chosenModel.type !== "MDOT-18 poziomy") {
-            frameTempRED.frameInfo =
+            frameTemp.frameInfo =
             {
               startRow: Math.ceil((index + 1) / 3),
               startColumn: ((index % 3) + 1),
@@ -2794,7 +2765,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
               startRow = 1
             }
 
-            frameTempRED.frameInfo =
+            frameTemp.frameInfo =
             {
               startRow: startRow,
               startColumn: Math.ceil((index + 1) / 3),
@@ -2808,13 +2779,13 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
           currSingleFrames.push(0)
         }
       })
-      frameTempRED.framePrint = currSingleFrames
+      frameTemp.framePrint = currSingleFrames
 
 
     } else {
-      frameTempRED = {};
+      frameTemp = {};
     }
-    frameHoldersTempRED(frameTempRED)
+    frameHoldersTemp(frameTemp)
     //---------------------------------REDUX---------------------------------
     setRerender(prev => !prev)
 
@@ -2837,7 +2808,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
       }));
     }
   }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight,
-    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameShape, frameHoldersTempRED]);
+    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameShape, frameHoldersTemp]);
 
 
   const handleChangeTextFrame = (text) => {
@@ -2890,7 +2861,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         }
       })
 
-      const copyFrameHolders = frameHoldersRED
+      const copyFrameHolders = frameHolders
 
       const checkFrameFontArr = []
       copyFrameHolders.forEach((el) => {
@@ -2924,7 +2895,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
 
   useEffect(() => {
-    const copyFrameHolders = frameHoldersRED
+    const copyFrameHolders = frameHolders
     const checkSingleFramesArr = []
 
     copyFrameHolders.forEach(element => {
@@ -2979,6 +2950,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
         <div className="panel_container">
           <div className="resize_container" style={resizeStyle}>
             <div className="panel_box" style={chosenModelStyle}>
+
+              <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
                 {hideAll && !visual &&
@@ -3069,7 +3043,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
               {hideAll &&
                 <>
-                  {frameHoldersRED.map((frame, i) =>
+                  {frameHolders.map((frame, i) =>
                     <div key={i} >
                       {frame.type === "multi" &&
                         <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
@@ -3167,20 +3141,54 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                               }
                             </div>
                           )}
-                          {(frame.framePrint.text !== "") &&
+                          {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                             <div style={{ position: "absolute", width: "100%" }}>
                               <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                 { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                 <input className="text_input_frame"
                                   type="text"
                                   maxLength="25"
-                                  style={{
-                                    ...textStyleFrame,
-                                    fontFamily: frame.framePrint.frameFont,
-                                    backgroundColor: chosenColor.hex,
-                                    border: "none",
+                                  style={(chosenColor.RAL === "9003" && visual) ?
+                                    {
+                                      ...textStyleFrame,
+                                      fontFamily: frame.framePrint.frameFont,
+                                      backgroundColor: "rgb(233,233,233)",
+                                      border: "none",
+                                    }
+                                    :
+                                    {
+                                      ...textStyleFrame,
+                                      fontFamily: frame.framePrint.frameFont,
+                                      backgroundColor: chosenColor.hex,
+                                      border: "none",
+                                    }
+                                  }
+                                  disabled={true}
+                                  value={frame.framePrint.text}
+                                />
+                                <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                  {frame.framePrint.text}
+                                </span>
+                              </div>
+                            </div>
+                          }
+                          {(frame.framePrint.text !== "" && frame.framePrint.over) &&
+                            <div style={{ position: "absolute", width: "100%" }}>
+                              <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
+                                { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
+                                <input className="text_input_frame"
+                                  type="text"
+                                  maxLength="25"
+                                  style={
+                                    {
+                                      ...textStyleFrame,
+                                      fontFamily: frame.framePrint.frameFont,
+                                      backgroundColor: chosenColor.hex,
+                                      border: "none",
+                                      zIndex: "99999",
 
-                                  }}
+                                    }
+                                  }
                                   disabled={true}
                                   value={frame.framePrint.text}
                                 />
@@ -3200,7 +3208,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
 
               {hideAll &&
                 <>
-                  {frameHoldersRED.map((frame, i) =>
+                  {frameHolders.map((frame, i) =>
                     <div key={i} >
                       {frame.type === "single" &&
                         <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
@@ -3354,7 +3362,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont, onFrameList
                   {(lcdShow && visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
                   <div className="visualization_glass" style={visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
                   <div className="visualization_glass_bis" style={visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+                  {/* <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} /> */}
                   <div className="visualization_frame" style={visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...vusialStyle, opacity: "0" }} />
                   <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                 </>}
@@ -3747,16 +3755,15 @@ const mapStateToProps = state => ({
   addNewFrameFlagState: state.frame.addNewFrameFlag,
   removeFrame: state.frame.removeFrame,
   overFrame: state.frame.overFrame,
-  frameHoldersRED: state.frame.frameHolders,
+  frameHolders: state.frame.frameHolders,
   visual: state.visual,
 })
 
 const mapDispatchToProps = dispatch => ({
   addNewFrame: (income) => dispatch(actionsFrame.addNewFrame(income)),
   addNewFrameFlag: (income) => dispatch(actionsFrame.addNewFrameFlag(income)),
-  frameListRED: (income) => dispatch(actionsFrame.frameList(income)),
-  frameHoldersREDreset: (income) => dispatch(actionsFrame.frameHolders(income)),
-  frameHoldersTempRED: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
+  frameHoldersReset: (income) => dispatch(actionsFrame.frameHolders(income)),
+  frameHoldersTemp: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
   changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
 })
