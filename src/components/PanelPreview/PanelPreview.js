@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from "react-redux"
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
 import actionsVisual from "../PanelPreview/duck/actions"
+import actionsIcon from "../PanelEditor/IconEditor/duck/actions"
 
 import update from 'immutability-helper';
 import moment from 'moment';
@@ -33,6 +34,13 @@ import Textupoff from "../../assets/side/textupoff.svg"
 import Textupon from "../../assets/side/textupon.svg"
 import Clearalltext from "../../assets/side/clearalltext.svg"
 import Setonefont from "../../assets/side/setonefont.svg"
+import Frameblacklight from "../../assets/side/framebacklight.svg"
+import Framesharp from "../../assets/side/framesharp.svg"
+import Frameround from "../../assets/side/frameround.svg"
+import Removeallframes from "../../assets/side/removeallframes.svg"
+import Removecurrframe from "../../assets/side/removecurrframe.svg"
+
+
 import Submitinput from "../../assets/preview/submitinput.svg"
 // import Remove from "../../assets/preview/remove.svg"
 import Submitinputdark from "../../assets/preview/submitinputdark.svg"
@@ -52,36 +60,41 @@ import Leftuni from "../../assets/lcd/leftuni.svg"
 import Rightuni from "../../assets/lcd/rightuni.svg"
 
 
+import IconHolder from './IconHolder/IconHolder';
 
-
-
-import { IconHolder } from './IconHolder/IconHolder';
-
-export const PanelPreview = memo(function PanelPreview({ chosenFont,
+const PanelPreview = ({
   frameTitle, onAllowTextFrame,
 
   //wywalone jako state (zamienone na reduxowe)
-  // chosenColor, chosenTab, chosenModel, chosenFrameFont, chosenFrameShape, addNewFrame, removeFrame, overFrame
+  // chosenColor, chosenTab, chosenModel, chosenFrameFont, chosenFrameShape, addNewFrame, removeFrame, overFrame, chosenFont
   //reduxowe poniżej
   chosenColor,
   chosenTab,
   chosenModel,
   chosenFrameFont,
   chosenFrameShape,
-  addNewFrameFlagState,
-  addNewFrameFlag,
+  addNewFrameState,
+  addNewFrame,
   removeFrame,
 
   frameHolders,
-  frameHoldersReset,
   frameHoldersTemp,
+  frameHoldersReset,
+  changeFrameHoldersTemp,
   changeFrameText,
+  changeFramesShapeToSharp,
+  changeFramesShapeToRound,
+  overFrameReRender,
+
+  chosenTextFont,
 
   toggleVisual,
-  visual
+  visual,
+  changeIconHolders,
+  iconHoldersRED
 
 
-}) {
+}) => {
 
 
 
@@ -95,8 +108,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
   const [rotateLeft, setRotateLeft] = useState(false)
 
   const [showTextBorder, setShowTextBorder] = useState(true)
+  const [showFrameTextBorder, setShowFrameTextBorder] = useState(true)
+  const [showFramBlackLight, setShowFramBlackLight] = useState(true)
   const [textUpOff, setTextUpOff] = useState(true)
-
 
   const [newFrame, setNewFrame] = useState([])
   const [newFrameHide, setNewFrameHide] = useState([])
@@ -107,13 +121,10 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
 
   const [textFrame, setTextFrame] = useState(false)
   const [isFocusedInputFrame, setIsFocusedInputFrame] = useState(false)
+  const [allFramesSharpRound, setAllFramesSharpRound] = useState(true)
 
 
 
-  const [rerender, setRerender] = useState(false)
-
-  useEffect(() => {
-  }, [rerender])
 
 
 
@@ -345,7 +356,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
 
-  if ((chosenTab === "text") && showTextBorder && !visual) {
+  if (chosenTab === "text" && showTextBorder && !visual) {
     textStyle.border = "2px solid rgb(236, 105, 92)"
   }
 
@@ -367,7 +378,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
   textStyleFrame.width = "100%";
   textStyleFrame.transition = "400ms ease";
 
-  if (chosenTab === "frame") {
+  if (chosenTab === "frame" && showFrameTextBorder) {
     textStyleFrame.border = "2px dashed rgb(236, 105, 92)"
   }
 
@@ -389,6 +400,19 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
   function hideBorder(e) {
     if ((chosenTab === "text") && !showTextBorder && !isFocusedInputIndex) {
       e.target.style.border = "2px solid transparent"
+    }
+  }
+
+  function showFrameBorder(e) {
+    if ((chosenTab === "frame") && !showFrameTextBorder && !isFocusedInputFrame) {
+      e.target.style.border = "2px dashed rgb(236, 105, 92)"
+    }
+  }
+
+
+  function hideFrameBorder(e) {
+    if ((chosenTab === "frame") && !showFrameTextBorder && !isFocusedInputFrame) {
+      e.target.style.border = "2px dashed transparent"
     }
   }
 
@@ -451,6 +475,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
       setIconHolders(arrIconHolders);
+      changeIconHolders(arrIconHolders);
       setTempFrameText("")
       changeFrameText("")
       setTextFrame(false)
@@ -474,7 +499,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
   //         el.selectedDown = false;
   //     })
   //     setIconHolders(copyArr)
-  //     // setRerender(prev => !prev)
   //     console.log("NOW")//------------------------powoduje częste przeładowanie
   // }
 
@@ -497,6 +521,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       },
     }));
   }, [iconHolders]);
+
 
   const handleDropDot = useCallback((index, item) => {
     const copyArr = iconHolders;
@@ -675,7 +700,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       })
       setIconHolders(copyArr)
       setIsAnySelected(false)
-      setRerender(prev => !prev)
     }
   }, [chosenTab, iconHolders]);
 
@@ -783,6 +807,16 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
 
   const handleVisual = () => {
     toggleVisual(!visual)
+    const copyArr = iconHolders;
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    setIconHolders(copyArr)
+    setIsAnySelected(false)
+
   }
 
   const handleClearAll = () => {
@@ -798,6 +832,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
         })
       });
       setIconHolders(tempArr);
+      changeIconHolders(tempArr);
 
       const arrNewFrame = [];
       const arrNewFrameHide = [];
@@ -849,7 +884,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       el.selectedDown = false;
     })
     setIconHolders(copyArr)
-    setRerender(prev => !prev)
   }
 
   const [showRemoveIcons, setShowRemoveIcons] = useState(false)
@@ -899,9 +933,9 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
     setRotateLeft(prev => !prev)
   }
 
-  const handleTextBorder = () => {
-    setShowTextBorder(prev => !prev)
-  }
+  // const handleTextBorder = () => { //usuń
+  //   setShowTextBorder(prev => !prev)
+  // }
 
   const handleTextUpOff = () => {
     setTextUpOff(prev => !prev)
@@ -922,7 +956,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       el.fontDown = null;
     })
     setIconHolders(copyArr)
-    setRerender(prev => !prev)
   }
 
 
@@ -958,38 +991,41 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
     setIconHolders(update(iconHolders, {
       [index]: {
         fontDown: {
-          $set: chosenFont,
+          $set: chosenTextFont,
         }
       },
     }));
-  }, [iconHolders, chosenFont]);
+  }, [iconHolders, chosenTextFont]);
+
+
+
 
   const handleChangeFontUp = useCallback((index) => {
     setIconHolders(update(iconHolders, {
       [index]: {
         fontUp: {
-          $set: chosenFont,
+          $set: chosenTextFont,
         }
       },
     }));
-  }, [iconHolders, chosenFont]);
+  }, [iconHolders, chosenTextFont]);
 
 
 
   const handleSetOneFont = () => {
     const copyArr = iconHolders;
     copyArr.forEach((el) => {
-      el.fontUp = chosenFont;
-      el.fontDown = chosenFont;
+      el.fontUp = chosenTextFont;
+      el.fontDown = chosenTextFont;
     })
     setIconHolders(copyArr)
     setDifferentFont(false)
-    setRerender(prev => !prev)
   }
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // console.log("submitniente")
   };
 
   const handleFocusInput = (index, side) => {
@@ -1025,6 +1061,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
   const [differentFrameFont, setDifferentFrameFont] = useState(false)
 
   const handleFrameOver = ((index) => {
+    console.log("zmień na reduxa i wywal rerender")
     const copyArr = newFrame;
     const copyArrChange = newFrameChange;
 
@@ -1769,16 +1806,16 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
     }
 
     setNewFrameChange(copyArrChange);
-    setRerender(prev => !prev)
+    overFrameReRender()
   });
 
-  const handleFrameLeave = ((index) => {
+  const handleFrameLeave = (() => {
     const arrNewFrameChange = [];
     chosenModel.dotLocation.forEach(element => {
       arrNewFrameChange.push(element)
     });
     setNewFrameChange(arrNewFrameChange);
-    setRerender(prev => !prev)
+    overFrameReRender()
   });
 
 
@@ -2783,11 +2820,10 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
 
 
     } else {
-      frameTemp = {};
+      frameTemp = null;
     }
-    frameHoldersTemp(frameTemp)
+    changeFrameHoldersTemp(frameTemp)
     //---------------------------------REDUX---------------------------------
-    setRerender(prev => !prev)
 
     if (copyArr[index] === "s" && copyArr[index + 1] !== "s" && copyArr[index - 1] !== "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
 
@@ -2808,25 +2844,83 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       }));
     }
   }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight,
-    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameShape, frameHoldersTemp]);
+    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameShape, changeFrameHoldersTemp]);
 
 
   const handleChangeTextFrame = (text) => {
     setTempFrameText(text.target.value.toUpperCase());
-    changeFrameText(text.target.value.toUpperCase());
+    changeFrameText(text.target.value.toUpperCase())
   }
 
-  const handleFocusInputFrame = () => {
-    setIsFocusedInputFrame(true)
+  const handleChangeFramseToSharp = () => {
+    if (frameHolders.length !== 0) {
+      changeFramesShapeToSharp()
+      setAllFramesSharpRound(prev => !prev)
+    }
   }
 
-  const handleBlurInputFrame = () => {
-    setIsFocusedInputFrame(false)
+  const handleChangeFramseToRound = () => {
+    if (frameHolders.length !== 0) {
+      changeFramesShapeToRound()
+      setAllFramesSharpRound(prev => !prev)
+    }
   }
 
+
+  const handleResetCurrFrame = () => {
+    const copyArr = iconHolders;
+
+    const arrNewFrame = [];
+    const arrNewFrameHide = [];
+    const arrNewFrameChange = [];
+    const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
+
+    chosenModel.dotLocation.forEach(element => {
+      arrNewFrame.push(element)
+    });
+    chosenModel.dotLocation.forEach(element => {
+      arrNewFrameHide.push(element)
+    });
+    chosenModel.dotLocation.forEach(element => {
+      arrNewFrameChange.push(element)
+    });
+
+
+    chosenModel.dotLocation.forEach(element => {
+      arrTempFrame.frameArr.push({
+        flag: element,
+        rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+        t: 0, r: 0, b: 0, l: 0,
+        fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
+      })
+    });
+    copyArr.forEach((el) => {
+      el.singleFrameTemp = false
+    })
+    setIconHolders(copyArr)
+    setNewFrame(arrNewFrame)
+    setNewFrameHide(arrNewFrameHide)
+    setNewFrameChange(arrNewFrameChange)
+    setTempFrame(arrTempFrame)
+    setTempFrameText("")
+    changeFrameText("")
+    setTextFrame(false)
+    changeFrameHoldersTemp(null)
+    overFrameReRender()
+  }
+
+  const handleResetAllFrames = () => {
+    frameHoldersReset([])
+    const copyArr = iconHolders;
+    copyArr.forEach((element, index) => {
+      element.singleFrame = false;
+    })
+    setIconHolders(copyArr)
+    overFrameReRender()
+  }
 
   useEffect(() => {
-    if (addNewFrameFlag) {
+    if (addNewFrameState) {
       const arrNewFrame = [];
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
@@ -2885,19 +2979,18 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
       changeFrameText("")
       setTextFrame(false)
       onAllowTextFrame(false)
-      setRerender(prev => !prev)
 
-      addNewFrameFlag(false)
+      addNewFrame(false)
     }
     // eslint-disable-next-line 
-  }, [addNewFrameFlagState]);
+  }, [addNewFrameState]);
 
 
 
   useEffect(() => {
     const copyFrameHolders = frameHolders
     const checkSingleFramesArr = []
-
+    // let indexTest = 0
     copyFrameHolders.forEach(element => {
       if (element.type === "single") {
         element.framePrint.forEach((el, index) => {
@@ -2926,7 +3019,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
     } else {
       setDifferentFrameFont(false)
     }
-    setRerender(prev => !prev)
+    overFrameReRender()
     // eslint-disable-next-line 
   }, [removeFrame]);
 
@@ -2970,8 +3063,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
                                 : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
                             )} >
 
-                        {el !== 0 &&
-
+                        {el !== 0 && showFramBlackLight &&
                           <div style={el === 1 ? { ...frameCellStyle } :
                             chosenColor.hex !== "#2fa32c" ?
                               { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
@@ -2979,7 +3071,17 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
                             <div style={frameClickStyle}
                               onClick={() => handleFrameClick(index)}
                               onMouseOver={() => handleFrameOver(index)}
-                              onMouseLeave={() => handleFrameLeave(index)}
+                              onMouseLeave={() => handleFrameLeave()}
+                            />
+                          </div>
+                        }
+
+                        {el !== 0 && !showFramBlackLight &&
+                          <div style={{ ...frameCellStyle, backgroundColor: "transparent" }} >
+                            <div style={frameClickStyle}
+                              onClick={() => handleFrameClick(index)}
+                              onMouseOver={() => handleFrameOver(index)}
+                              onMouseLeave={() => handleFrameLeave()}
                             />
                           </div>
                         }
@@ -3186,7 +3288,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
                                       backgroundColor: chosenColor.hex,
                                       border: "none",
                                       zIndex: "99999",
-
+                                      color: "#dc3545",
                                     }
                                   }
                                   disabled={true}
@@ -3316,12 +3418,12 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
 
                                   }}
                                 disabled={chosenTab !== "frame" && true}
-                                onMouseOver={showBorder}
-                                onMouseLeave={hideBorder}
+                                onMouseOver={showFrameBorder}
+                                onMouseLeave={hideFrameBorder}
                                 value={tempFrameText}
                                 onChange={(text) => handleChangeTextFrame(text)}
-                                onFocus={handleFocusInputFrame}
-                                onBlur={handleBlurInputFrame}
+                                onFocus={() => setIsFocusedInputFrame(true)}
+                                onBlur={() => setIsFocusedInputFrame(false)}
                               />
                               <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
                                 {tempFrameText}
@@ -3424,6 +3526,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
                                         onFocus={() => { handleFocusInput(index, "up") }}
                                         onBlur={handleBlurInput}
                                       />
+                                      {/* <button type="submit">SUBMIT</button> */}
+
                                       <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
                                         {textUp}
                                       </span>
@@ -3511,7 +3615,6 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
 
 
                             <IconHolder
-                              chosenColor={chosenColor}// redux
                               lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
                               lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
                               lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
@@ -3536,10 +3639,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
                               rotateRight={rotateRight}
                               rotateLeft={rotateLeft}
                               visual={!visual}
-                              chosenTab={chosenTab}// redux
                               showRemoveIcon={showRemoveIcon}
                               showRemoveIcons={showRemoveIcons}
-                              chosenModel={chosenModel}// redux
                               singleFrameTemp={singleFrameTemp}
                               singleFrame={singleFrame}
                               chosenFrameShape={chosenFrameShape}
@@ -3686,8 +3787,8 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
         {chosenTab === "text" &&
           <>
             <div className="side_box">
-              <img src={Textborder} alt="textborder" className="side_icon" onClick={handleTextBorder} />
-              <span>Pokaż granice</span>
+              <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowTextBorder(prev => !prev) }} />
+              <span>{showTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
             </div>
 
             <div className="side_box">
@@ -3718,6 +3819,54 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
         }
         {chosenTab === "frame" &&
           <>
+
+            <div className="side_box">
+              <img src={Frameblacklight} alt="frameblacklight" className="side_icon" onClick={() => { setShowFramBlackLight(prev => !prev) }} />
+              {showFramBlackLight ? <span>Ukryj podświet- <br />lenie pól</span> : <span>Pokaż podświet- <br />lenie pól</span>}
+            </div>
+
+
+            <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              <img src={Removeallframes} alt="ramoveallframes" className="side_icon" onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }} />
+              <span>Usuń wszystkie ramki</span>
+            </div>
+
+            <div className="side_box" style={!frameHoldersTemp ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
+              <span>Usuń tworzoną ramkę</span>
+            </div>
+
+            {/* <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              {allFramesSharpRound ?
+                <img src={Framesharp} alt="framesharp" className="side_icon" onClick={() => { changeFramesShapeToSharp(); setAllFramesRound(prev => !prev) }} />
+                :
+                <img src={Frameround} alt="frameround" className="side_icon" onClick={() => { changeFramesShapeToRound(); setAllFramesRound(prev => !prev) }} />}
+              {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
+            </div>
+
+            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowFrameTextBorder(prev => !prev) }}  />
+              <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+            </div> */}
+
+            <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              {allFramesSharpRound ?
+                <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramseToSharp} />
+                :
+                <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramseToRound} />}
+              {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
+            </div>
+
+            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowFrameTextBorder(prev => !prev) }} />
+              <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+            </div>
+
+            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
+              <span>Wybrany font dla wszystkich tytułów</span>
+            </div>
+
             {differentFrameFont &&
               <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
                 <img src={Alert} alt="Alert" className="side_icon" />
@@ -3742,7 +3891,7 @@ export const PanelPreview = memo(function PanelPreview({ chosenFont,
 
     </div >
   );
-});
+}
 
 
 
@@ -3752,20 +3901,26 @@ const mapStateToProps = state => ({
   chosenModel: state.model,
   chosenFrameFont: state.frame.chosenFrameFont,
   chosenFrameShape: state.frame.chosenFrameShape,
-  addNewFrameFlagState: state.frame.addNewFrameFlag,
+  addNewFrameState: state.frame.addNewFrame,
   removeFrame: state.frame.removeFrame,
-  overFrame: state.frame.overFrame,
+  overFrameRender: state.frame.overFrameRender,
   frameHolders: state.frame.frameHolders,
+  frameHoldersTemp: state.frame.frameHoldersTemp,
   visual: state.visual,
+  chosenTextFont: state.text.chosenTextFont,
+  iconHoldersRED: state.icon.iconHolders,
 })
 
 const mapDispatchToProps = dispatch => ({
   addNewFrame: (income) => dispatch(actionsFrame.addNewFrame(income)),
-  addNewFrameFlag: (income) => dispatch(actionsFrame.addNewFrameFlag(income)),
   frameHoldersReset: (income) => dispatch(actionsFrame.frameHolders(income)),
-  frameHoldersTemp: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
+  changeFrameHoldersTemp: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
   changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
+  changeFramesShapeToSharp: (income) => dispatch(actionsFrame.changeFramesShapeToSharp(income)),
+  changeFramesShapeToRound: (income) => dispatch(actionsFrame.changeFramesShapeToRound(income)),
+  overFrameReRender: (income) => dispatch(actionsFrame.overFrameReRender(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
 })
 
 

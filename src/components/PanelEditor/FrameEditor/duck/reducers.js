@@ -4,18 +4,12 @@ import types from "./types"
 const INITIAL_STATE = {
   chosenFrameFont: "Calibri-bold",
   chosenFrameShape: "sharp",
-  addNewFrame: false, //chyba do skasowania
-  addNewFrameFlag: false,
-  removeFrame: { type: null, id: null },
-  removeFrameList: null, //może nie być intial state?
-  overFrame: false,
-  frameList: [],
+  addNewFrame: false,
+  removeFrame: false,
+  overFrameRender: false,
   frameHolders: [],
-  frameHoldersTemp: [],
+  frameHoldersTemp: null,
   changeFrameText: ""
-
-
-
 }
 
 const frameReducer = (state = INITIAL_STATE, action) => {
@@ -29,34 +23,9 @@ const frameReducer = (state = INITIAL_STATE, action) => {
         ...state, chosenFrameShape: action.item
       }
     case types.ADD_NEW_FRAME:
-
-      // const newFrame = state.frameHoldersTemp
-      // newFrame.framePrint.shape = state.chosenFrameShape
-      // newFrame.framePrint.over = false
-      // newFrame.framePrint.text = state.changeFrameText
-      // if (state.changeFrameText !== "") {
-      //   newFrame.framePrint.frameFont = state.chosenFrameFont
-      // } else {
-      //   newFrame.framePrint.frameFont = null
-      // }
-
-      // const newFrameHolders = state.frameHolders
-      // const newFrame = state.frameHoldersTemp
-      // if (newFrame.length !== 0) {
-      //   newFrame.framePrint.shape = state.chosenFrameShape
-      //   newFrame.framePrint.over = false
-      //   newFrame.framePrint.text = state.changeFrameText
-      //   if (state.changeFrameText !== "") {
-      //     newFrame.framePrint.frameFont = state.chosenFrameFont
-      //   } else {
-      //     newFrame.framePrint.frameFont = null
-      //   }
-      //   newFrameHolders.push(newFrame)
-      // }
-
       const newFrameHolders = state.frameHolders
       const newFrame = state.frameHoldersTemp
-      if (newFrame.length !== 0) {
+      if (newFrame) {
         if (newFrame.type === "multi") {
           newFrame.framePrint.shape = state.chosenFrameShape
           newFrame.frameInfo.shape = state.chosenFrameShape
@@ -79,20 +48,11 @@ const frameReducer = (state = INITIAL_STATE, action) => {
         newFrameHolders.push(newFrame)
       }
       return {
-        // ...state, frameHolders: [...state.frameHolders, newFrame], frameHoldersTemp: [], addNewFrameFlag: action.item
-        ...state, frameHolders: [...newFrameHolders], frameHoldersTemp: [], addNewFrameFlag: action.item
-      }
-    case types.ADD_NEW_FRAME_FLAG:
-      return {
-        ...state, addNewFrameFlag: action.item
+        ...state, frameHolders: [...newFrameHolders], frameHoldersTemp: null, addNewFrame: action.item
       }
     case types.REMOVE_FRAME:
       return {
-        ...state, removeFrame: action.item
-      }
-    case types.REMOVE_FRAME_LIST:
-      return {
-        ...state, frameHolders: [...state.frameHolders.filter(function (element, index) { return index !== action.item })]
+        ...state, frameHolders: [...state.frameHolders.filter(function (element, index) { return index !== action.item })], removeFrame: !state.removeFrame
       }
     case types.OVER_FRAME:
       const copyFrameHolders = state.frameHolders;
@@ -110,11 +70,7 @@ const frameReducer = (state = INITIAL_STATE, action) => {
         }
       })
       return {
-        ...state, frameHolders: copyFrameHolders, overFrame: !state.overFrame
-      }
-    case types.FRAME_LIST:
-      return {
-        ...state, frameList: action.item
+        ...state, frameHolders: copyFrameHolders, overFrameRender: !state.overFrameRender
       }
     case types.FRAME_HOLDERS:
       return {
@@ -127,6 +83,46 @@ const frameReducer = (state = INITIAL_STATE, action) => {
     case types.CHANGE_FRAME_TEXT:
       return {
         ...state, changeFrameText: action.item
+      }
+    case types.CHANGE_FRAMES_SHAPE_TO_SHARP:
+      const copyFrameHoldersForShapeChangeToSharp = state.frameHolders
+      copyFrameHoldersForShapeChangeToSharp.forEach(element => {
+        if (element.type === "multi") {
+          element.framePrint.shape = "sharp"
+          element.frameInfo.shape = "sharp"
+        } else if (element.type === "single") {
+          element.frameInfo.shape = "sharp"
+          element.framePrint.forEach(singleElement => {
+            if (singleElement !== 0) {
+              singleElement.shape = "sharp"
+            }
+          })
+        }
+      })
+      return {
+        ...state, frameHolders: copyFrameHoldersForShapeChangeToSharp
+      }
+    case types.CHANGE_FRAMES_SHAPE_TO_ROUND:
+      const copyFrameHoldersForShapeChangeToRound = state.frameHolders
+      copyFrameHoldersForShapeChangeToRound.forEach(element => {
+        if (element.type === "multi") {
+          element.framePrint.shape = "round"
+          element.frameInfo.shape = "round"
+        } else if (element.type === "single") {
+          element.frameInfo.shape = "round"
+          element.framePrint.forEach(singleElement => {
+            if (singleElement !== 0) {
+              singleElement.shape = "round"
+            }
+          })
+        }
+      })
+      return {
+        ...state, frameHolders: copyFrameHoldersForShapeChangeToRound
+      }
+    case types.OVER_FRAME_RE_RENDER:
+      return {
+        ...state, overFrameRender: !state.overFrameRender
       }
     default:
       return state

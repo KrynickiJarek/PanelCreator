@@ -1,9 +1,30 @@
-import { memo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
+import { connect } from "react-redux"
 import "./../IconHolderSlash.scss"
 
 
-export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, scale, onSelectUp, selectedUp, clear, rotateRight, rotateLeft, visual, singleFrame, singleFrameTemp, chosenTab }) {
+export const ReDragUp = ({
+  image,
+  // chosenColor, 
+  onResetUp,
+  scale,
+  onSelectUp,
+  selectedUp,
+  clear,
+  rotateRight,
+  rotateLeft,
+  visual,
+  singleFrame,
+  singleFrameTemp,
+  //  chosenTab ,
+
+
+  chosenTab,
+  chosenColor,
+
+
+}) => {
 
   let styleScale = {};
   styleScale.height = `${7.5 * scale}px`;
@@ -67,4 +88,12 @@ export const ReDragUp = memo(function ReDragUp({ image, chosenColor, onResetUp, 
           : { ...styleScale, ...styleTurn, filter: "grayscale(100%) brightness(0)" }}
       onClick={() => onSelectUp()} />
   )
+}
+
+const mapStateToProps = state => ({
+  chosenColor: state.color,
+  chosenTab: state.tab,
 })
+
+
+export default connect(mapStateToProps, {})(ReDragUp)

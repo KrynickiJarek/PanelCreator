@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import "./IconEditor.scss"
@@ -7,7 +7,7 @@ import Favorite from "../../../assets/favorite.svg"
 import Locked from "../../../assets/preview/lock.svg"
 import Unlocked from "../../../assets/preview/unlock.svg"
 
-import { IconToDrag } from './IconToDrag';
+import IconToDrag from './IconToDrag';
 import iconCategories from "./iconCategories"
 
 import Tab from 'react-bootstrap/Tab'
@@ -16,35 +16,11 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-export const IconEditor = memo(function IconEditor({ visual, toggleVisual }) {
+export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
 
-  const [favoriteIcons, setFavoriteIcons] = useState([])
-  const [rerender, setRerender] = useState(false)
   const [unlock, setUnlock] = useState(false)
 
-  const handleFavorite = (image) => {
-    const tempArr = favoriteIcons;
-    if (tempArr.indexOf(image) === -1) {
-      tempArr.push(image)
-    }
-    else {
-      tempArr.splice((tempArr.indexOf(image)), 1)
-    }
-    setFavoriteIcons(tempArr)
-  }
 
-  const handleRemoveFavorite = (image) => {
-    const tempArr = favoriteIcons;
-    tempArr.splice((tempArr.indexOf(image)), 1)
-    setFavoriteIcons(tempArr)
-    setRerender(prev => !prev)
-  }
-
-  const handleClick = () => {
-    setRerender(prev => !prev)
-  }
-  useEffect(() => {
-  }, [rerender])
 
 
 
@@ -77,7 +53,7 @@ export const IconEditor = memo(function IconEditor({ visual, toggleVisual }) {
         <Tab.Container defaultActiveKey="ulubione" mountOnEnter>
           <div className="nav_col">
             <Nav variant="pills" className="flex-column">
-              <Nav.Link eventKey="ulubione" onClick={handleClick}>
+              <Nav.Link eventKey="ulubione" >
                 <img src={Favorite} alt="favorite" className="favorite_nav" />
                 Ulubione
               </Nav.Link>
@@ -101,10 +77,8 @@ export const IconEditor = memo(function IconEditor({ visual, toggleVisual }) {
 
                     : favoriteIcons.map((image, index) =>
                       <IconToDrag key={index} image={image}
-                        addToFavorite={(image) => handleFavorite(image)}
-                        removeFavorite={(image) => handleRemoveFavorite(image)}
                         isInFavorite={true}
-                        favoriteIcons={favoriteIcons} />)}
+                      />)}
                 </div>
               </Tab.Pane>
               {iconCategories.map((el, i) => (
@@ -113,11 +87,8 @@ export const IconEditor = memo(function IconEditor({ visual, toggleVisual }) {
                     {
                       el.listOfIcons.map(
                         (image, index) => <IconToDrag key={index} image={image}
-                          addToFavorite={(image) => handleFavorite(image)}
-                          removeFavorite={(image) => handleRemoveFavorite(image)}
                           isInFavorite={false}
-                          favoriteIcons={favoriteIcons} />
-
+                        />
                       )
                     }
                   </div>
@@ -131,15 +102,17 @@ export const IconEditor = memo(function IconEditor({ visual, toggleVisual }) {
   </div>
 
   );
-})
+}
 
 const mapStateToProps = state => ({
   visual: state.visual,
+  favoriteIcons: state.icon.favoriteIcons,
+  favoriteIconsRender: state.icon.favoriteIconsRender
+
 })
 
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
-
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)

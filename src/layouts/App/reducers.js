@@ -3,6 +3,8 @@ import colorReducer from "../../components/PanelEditor/ColorEditor/duck"
 import tabReducer from "../../components/PanelEditor/duck/reducers";
 import modelReducer from "../../components/PanelEditor/ModelChooser/duck";
 import frameReducer from "../../components/PanelEditor/FrameEditor/duck";
+import iconReducer from "../../components/PanelEditor/IconEditor/duck";
+import textReducer from "../../components/PanelEditor/TextEditor/duck";
 import visualReducer from "../../components/PanelPreview/duck";
 
 const rootReducers = combineReducers({
@@ -10,7 +12,9 @@ const rootReducers = combineReducers({
   tab: tabReducer,
   model: modelReducer,
   frame: frameReducer,
-  visual: visualReducer
+  visual: visualReducer,
+  text: textReducer,
+  icon: iconReducer
 })
 
 export default rootReducers

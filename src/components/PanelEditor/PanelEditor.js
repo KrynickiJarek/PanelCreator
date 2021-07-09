@@ -26,7 +26,7 @@ import FrameFill from "../../assets/editornav/frame_fill.svg"
 import Color from "../../assets/editornav/color.svg"
 import ColorFill from "../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ tab, change, onIconSet, onFontSet, frameList, onToggleFrameTitle, allowTextFrame }) => {
+const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -111,13 +111,13 @@ const PanelEditor = ({ tab, change, onIconSet, onFontSet, frameList, onToggleFra
               <ColorEditor />
             </Tab.Pane>
             <Tab.Pane eventKey="icon">
-              <IconEditor onIconSet={onIconSet} />
+              <IconEditor />
             </Tab.Pane>
             <Tab.Pane eventKey="text">
-              <TextEditor onFontSet={onFontSet} />
+              <TextEditor />
             </Tab.Pane>
             <Tab.Pane eventKey="frame">
-              <FrameEditor frameList={frameList} onToggleFrameTitle={onToggleFrameTitle} allowTextFrame={allowTextFrame} />
+              <FrameEditor onToggleFrameTitle={onToggleFrameTitle} allowTextFrame={allowTextFrame} />
             </Tab.Pane>
 
           </Tab.Content>

@@ -18,13 +18,10 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
   changeFrameFont,
   changeFrameShape,
   addNewFrame,
-  addNewFrameFlag,
   removeFrame,
-  removeFrameList,
   overFrame,
   chosenFrameFont,
   chosenFrameShape,
-  frameList,
   frameHolders,
   visual,
   toggleVisual
@@ -35,7 +32,6 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
   const [title, setTitle] = useState(false)
   const [hideSize, setHideSize] = useState(false)
   const [transition, setTranistion] = useState("0s")
-  // const [frameListState, setFrameListState] = useState(frameList)
 
   const [unlock, setUnlock] = useState(false)
 
@@ -43,8 +39,7 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
   const handleAddNewFrame = () => {
     setTitle(false)
     onToggleFrameTitle(false)
-    addNewFrame()
-    addNewFrameFlag(true)
+    addNewFrame(true)
   }
   const toggleTitle = () => {
     setTitle(prev => !prev)
@@ -75,13 +70,7 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
 
 
 
-  // useEffect(() => {
-  //   setFrameListState(frameList)
-  // }, [frameList])
 
-  // useEffect(() => {
-  //   // console.log("aktualizacja frameList")
-  // }, [frameList])
 
   return (
     <div className="scroll_container">
@@ -197,7 +186,6 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
                 <div className="button_arrows" />
               </div>
 
-              {/* {frameList.length > 0 && */}
               {frameHolders.length > 0 &&
                 <>
                   <p className="instruction_bold">Lista dodanych ramek:</p>
@@ -210,8 +198,7 @@ const FrameEditor = ({ onToggleFrameTitle, allowTextFrame,
                       >
                         Pole startowe (rząd, kolumna): {frame.frameInfo.startRow}, {frame.frameInfo.startColumn} ; Szerokość: {frame.frameInfo.columns}; Wysokość: {frame.frameInfo.rows};
                         Narożniki: {frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}{frame.framePrint.text && `, Tytuł: ${frame.framePrint.text}; Font: ${frame.framePrint.frameFont}`}
-                        <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }); removeFrameList(index) }}>
-                          {/* <div className="frame_list_button" onClick={() => { removeFrame({ type: frame.type, id: frame.id }) }}> */}
+                        <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
                           <img className="frame_list_img" src={Remove} alt="removeframe" />
                         </div>
                       </li>
@@ -240,9 +227,7 @@ const mapDispatchToProps = dispatch => ({
   changeFrameFont: font => dispatch(actions.changeFrameFont(font)),
   changeFrameShape: shape => dispatch(actions.changeFrameShape(shape)),
   addNewFrame: (income) => dispatch(actions.addNewFrame(income)),
-  addNewFrameFlag: (income) => dispatch(actions.addNewFrameFlag(income)),
   removeFrame: (frame) => dispatch(actions.removeFrame(frame)),
-  removeFrameList: (frame) => dispatch(actions.removeFrameList(frame)),
   overFrame: (frame) => dispatch(actions.overFrame(frame)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
 
