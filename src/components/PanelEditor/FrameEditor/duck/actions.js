@@ -44,6 +44,14 @@ const overFrameReRender = item => ({
   type: types.OVER_FRAME_RE_RENDER, item
 })
 
+const frameTitle = item => ({
+  type: types.FRAME_TITLE, item
+})
+
+const allowFrameTitle = item => ({
+  type: types.ALLOW_FRAME_TITLE, item
+})
+
 const actions = {
   changeFrameFont,
   changeFrameShape,
@@ -55,8 +63,9 @@ const actions = {
   changeFrameText,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
-  overFrameReRender
-
+  overFrameReRender,
+  frameTitle,
+  allowFrameTitle
 }
 
 export default actions

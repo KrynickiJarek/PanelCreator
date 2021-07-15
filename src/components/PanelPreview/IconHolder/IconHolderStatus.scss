@@ -42,10 +42,11 @@
   .dot{ 
     transition: 0.3s;
     z-index: inherit;
+    transition: transform 0.3s, background-color 0.1s linear, height 0.4s ease, width 0.4s ease;
   }
 
   .status_icon{
-    transition: 0.3s;
+    // transition: 0.3s;
     z-index: inherit;
     transform: scale(0.333); 
     cursor: pointer;

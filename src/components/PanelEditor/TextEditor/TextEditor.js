@@ -86,14 +86,13 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) =>
 };
 
 const mapStateToProps = state => ({
-  visual: state.visual,
+  visual: state.visual.visual,
   chosenTextFont: state.text.chosenTextFont,
 })
 
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   changeTextFont: font => dispatch(actions.changeTextFont(font)),
-
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextEditor)

@@ -105,7 +105,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
 }
 
 const mapStateToProps = state => ({
-  visual: state.visual,
+  visual: state.visual.visual,
   favoriteIcons: state.icon.favoriteIcons,
   favoriteIconsRender: state.icon.favoriteIconsRender
 

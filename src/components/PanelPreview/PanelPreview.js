@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
 import actionsVisual from "../PanelPreview/duck/actions"
 import actionsIcon from "../PanelEditor/IconEditor/duck/actions"
 
-import update from 'immutability-helper';
 import moment from 'moment';
 
 import "./PanelPreview.scss"
@@ -42,8 +41,9 @@ import Removecurrframe from "../../assets/side/removecurrframe.svg"
 
 
 import Submitinput from "../../assets/preview/submitinput.svg"
-// import Remove from "../../assets/preview/remove.svg"
+import Clearinput from "../../assets/preview/clearinput.svg"
 import Submitinputdark from "../../assets/preview/submitinputdark.svg"
+import Removeall from "../../assets/preview/remove.svg"
 
 import Addframe from "../../assets/frame/addframe.svg"
 import Addframedark from "../../assets/frame/addframedark.svg"
@@ -63,11 +63,9 @@ import Rightuni from "../../assets/lcd/rightuni.svg"
 import IconHolder from './IconHolder/IconHolder';
 
 const PanelPreview = ({
-  frameTitle, onAllowTextFrame,
-
-  //wywalone jako state (zamienone na reduxowe)
-  // chosenColor, chosenTab, chosenModel, chosenFrameFont, chosenFrameShape, addNewFrame, removeFrame, overFrame, chosenFont
-  //reduxowe poniżej
+  frameTitleFlag,
+  frameTitle,
+  allowFrameTitle,
   chosenColor,
   chosenTab,
   chosenModel,
@@ -76,36 +74,37 @@ const PanelPreview = ({
   addNewFrameState,
   addNewFrame,
   removeFrame,
-
   frameHolders,
   frameHoldersTemp,
-  frameHoldersReset,
+  changeFrameHolders,
   changeFrameHoldersTemp,
   changeFrameText,
+  frameText,
+  changeFrameShape,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
   overFrameReRender,
-
   chosenTextFont,
-
   toggleVisual,
   visual,
+  changeScale,
+  sc,
+  animations,
+  toggleAnimations,
   changeIconHolders,
-  iconHoldersRED
+  iconHolders,
+  isAnySelected,
+  changeIsAnySelected,
+  showRemoveIcon,
+  showRemoveIcons,
 
 
 }) => {
 
 
 
-  const [sc, setSc] = useState(5);
 
-  const [visualChange, setVisualChange] = useState(true)
-  const [animations, setAnimations] = useState(true)
-  const [isAnySelected, setIsAnySelected] = useState(false)
-  const [clear, setClear] = useState(false)
-  const [rotateRight, setRotateRight] = useState(false)
-  const [rotateLeft, setRotateLeft] = useState(false)
+  const [visualSmooth, setVisualSmooth] = useState(true)
 
   const [showTextBorder, setShowTextBorder] = useState(true)
   const [showFrameTextBorder, setShowFrameTextBorder] = useState(true)
@@ -116,16 +115,248 @@ const PanelPreview = ({
   const [newFrameHide, setNewFrameHide] = useState([])
   const [newFrameChange, setNewFrameChange] = useState([])
   const [tempFrame, setTempFrame] = useState({ textX: 0, textY: 0, frameArr: [], text: "" })
-  const [tempFrameText, setTempFrameText] = useState("")
 
 
   const [textFrame, setTextFrame] = useState(false)
   const [isFocusedInputFrame, setIsFocusedInputFrame] = useState(false)
   const [allFramesSharpRound, setAllFramesSharpRound] = useState(true)
 
+  const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
+  const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
+
+  const [time, setTime] = useState(moment().format('HH:mm'));
+  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+
+  const [differentFont, setDifferentFont] = useState(false)
+
+  const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
+  const [lcdNew, setLcdNew] = useState((chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? true : false)
+  const [hideAll, setHideAll] = useState(true)
+
+  const [removeAll, setRemoveAll] = useState(false)
+
+  const [differentFrameFont, setDifferentFrameFont] = useState(false)
+
+  const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
+  const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
+
+
+  useEffect(() => {
+    setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
+    setPanelContainerWidth(document.querySelector(".panel_container").clientWidth)
+  }, [panelContainerHeight, panelContainerWidth]);
 
 
 
+  useEffect(() => {
+    const intervalID = setInterval(() => {
+      setTime(moment().format('HH:mm'));
+      setDate(moment().format('YYYY-MM-DD'));
+    }, 5000)
+    return () => clearInterval(intervalID);
+  }, [time])
+
+  useEffect(() => {
+    setVisualSmooth(true)
+    const arrIconHolders = [];
+    const arrNewFrame = [];
+    const arrNewFrameHide = [];
+    const arrNewFrameChange = [];
+    const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
+    setHideAll(false)
+    setDifferentFont(false)
+    setDifferentFrameFont(false)
+
+
+    const modeltimeout = setTimeout(() => {
+      setHideAll(true)
+      chosenModel.dotLocation.forEach(element => {
+        arrIconHolders.push({
+          flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+          selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
+          textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrameTemp: false, singleFrame: false
+        })
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrame.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameHide.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameChange.push(element)
+      });
+
+      chosenModel.dotLocation.forEach(element => {
+        arrTempFrame.frameArr.push({
+          flag: element,
+          rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+          t: 0, r: 0, b: 0, l: 0,
+          fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
+        })
+      });
+      setNewFrame(arrNewFrame)
+      setNewFrameHide(arrNewFrameHide)
+      setNewFrameChange(arrNewFrameChange)
+      setTempFrame(arrTempFrame)
+      changeIconHolders(arrIconHolders);
+      // setTempFrameText("")
+      changeFrameText("")
+      setTextFrame(false)
+      chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
+      (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
+      setVisualSmooth(false)
+      changeFrameHolders([])
+    }, 300);
+    return () => clearTimeout(modeltimeout);
+    // eslint-disable-next-line
+  }, [chosenModel]);
+
+  useEffect(() => {
+    const copyArr = iconHolders;
+    const checkArr = []
+    copyArr.forEach((el) => {
+      if (el.fontDown && el.textDown && !checkArr.includes(el.fontDown)) {
+        checkArr.push(el.fontDown)
+      }
+      if (el.fontUp && el.textUp && !checkArr.includes(el.fontUp)) {
+        checkArr.push(el.fontUp)
+      }
+    })
+    if (checkArr.length > 1) {
+      setDifferentFont(true)
+    } else {
+      setDifferentFont(false)
+    }
+    // eslint-disable-next-line
+  }, [isFocusedInputIndex, isFocusedInputSide]);
+
+  useEffect(() => {
+    if (addNewFrameState) {
+      const arrNewFrame = [];
+      const arrNewFrameHide = [];
+      const arrNewFrameChange = [];
+      const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
+
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrame.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameHide.push(element)
+      });
+      chosenModel.dotLocation.forEach(element => {
+        arrNewFrameChange.push(element)
+      });
+
+
+      chosenModel.dotLocation.forEach(element => {
+        arrTempFrame.frameArr.push({
+          flag: element,
+          rtl: 0, rtr: 0, rbr: 0, rbl: 0,
+          t: 0, r: 0, b: 0, l: 0,
+          fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
+        })
+      });
+
+      const copyArr = iconHolders;
+      copyArr.forEach((element, index) => {
+
+        if (element.singleFrameTemp) {
+          element.singleFrameTemp = false;
+          element.singleFrame = true;
+        }
+      })
+
+      const copyFrameHolders = frameHolders
+
+      const checkFrameFontArr = []
+      copyFrameHolders.forEach((el) => {
+        if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
+          checkFrameFontArr.push(el.framePrint.frameFont)
+        }
+      })
+      if (checkFrameFontArr.length > 1) {
+        setDifferentFrameFont(true)
+      } else {
+        setDifferentFrameFont(false)
+      }
+
+
+      setNewFrame(arrNewFrame)
+      setNewFrameHide(arrNewFrameHide)
+      setNewFrameChange(arrNewFrameChange)
+      setTempFrame(arrTempFrame)
+      changeIconHolders(copyArr)
+      changeFrameText("")
+      setTextFrame(false)
+      allowFrameTitle(false)
+      addNewFrame(false)
+    }
+    // eslint-disable-next-line 
+  }, [addNewFrameState]);
+
+
+
+  useEffect(() => {
+    const copyFrameHolders = frameHolders
+    const checkSingleFramesArr = []
+    copyFrameHolders.forEach(element => {
+      if (element.type === "single") {
+        element.framePrint.forEach((el, index) => {
+          if (el !== 0) {
+            checkSingleFramesArr.push(index)
+          }
+        })
+      }
+    })
+    const copyArr = iconHolders;
+    copyArr.forEach((element, index) => {
+      if (!checkSingleFramesArr.includes(index)) {
+        element.singleFrame = false;
+      }
+    })
+    changeIconHolders(copyArr)
+
+    const checkFrameFontArr = []
+    copyFrameHolders.forEach((el) => {
+      if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
+        checkFrameFontArr.push(el.framePrint.frameFont)
+      }
+    })
+    if (checkFrameFontArr.length > 1) {
+      setDifferentFrameFont(true)
+    } else {
+      setDifferentFrameFont(false)
+    }
+    overFrameReRender()
+    // eslint-disable-next-line 
+  }, [removeFrame]);
+
+
+
+
+  useEffect(() => {
+    if (chosenTab !== "text") {
+      setIsFocusedInputIndex(null)
+      setIsFocusedInputSide(null)
+    } else if (chosenTab !== "frame") {
+      setIsFocusedInputFrame(false)
+    }
+  }, [chosenTab]);
+
+
+
+  useEffect(() => {
+    const copyArr = iconHolders;
+    if (isFocusedInputSide === "up") {
+      copyArr[isFocusedInputIndex].fontUp = chosenTextFont
+
+    } else if (isFocusedInputSide === "down") {
+      copyArr[isFocusedInputIndex].fontDown = chosenTextFont
+    }
+    changeIconHolders(copyArr)
+    // eslint-disable-next-line 
+  }, [chosenTextFont]);
 
 
   let frameCellStyle = {}
@@ -168,7 +399,7 @@ const PanelPreview = ({
   frameTempStyle.borderColor = "rgb(40, 167, 69)";
   frameTempStyle.opacity = "0";
 
-  if (chosenColor.hex === "#2fa32c") {
+  if (chosenColor.hex === "#30a32c") {
     frameTempStyle.borderColor = "rgb(32, 114, 30)";
   }
   if ((chosenTab === "frame")) {
@@ -195,14 +426,16 @@ const PanelPreview = ({
 
 
   const handleZoomOut = () => {
-    (sc > 4) && setSc(prev => prev - 0.5)
+    let scaleCopy = sc;
+    (sc > 4) && changeScale(scaleCopy - 0.5)
   }
   const handleResize = () => {
-    setSc(5)
+    changeScale(5)
   }
 
   const handleZoomIn = () => {
-    (sc < 8) && setSc(prev => prev + 0.5)
+    let scaleCopy = sc;
+    (sc < 8) && changeScale(scaleCopy + 0.5)
   }
 
 
@@ -253,14 +486,14 @@ const PanelPreview = ({
   universalIconStyle.width = `${7.5 * sc}px`;
   universalIconStyle.transition = "400ms ease";
 
-  let vusialStyle = {}
-  vusialStyle.width = `${chosenModel.width * sc}px`;
-  vusialStyle.height = `${chosenModel.height * sc}px`;
+  let visualStyle = {}
+  visualStyle.width = `${chosenModel.width * sc}px`;
+  visualStyle.height = `${chosenModel.height * sc}px`;
   if (chosenModel.type === "MDOT-18 poziomy") {
-    vusialStyle.width = `${chosenModel.height * sc}px`;
-    vusialStyle.height = `${chosenModel.width * sc}px`;
-    vusialStyle.transform = "rotate(90deg)";
-    vusialStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
+    visualStyle.width = `${chosenModel.height * sc}px`;
+    visualStyle.height = `${chosenModel.width * sc}px`;
+    visualStyle.transform = "rotate(90deg)";
+    visualStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
   }
 
   if (visual) {
@@ -273,13 +506,10 @@ const PanelPreview = ({
     universalIconStyle.filter = "grayscale(100%) brightness(0)";
   }
 
-  const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
-  const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
 
-  useEffect(() => {
-    setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
-    setPanelContainerWidth(document.querySelector(".panel_container").clientWidth)
-  }, [panelContainerHeight, panelContainerWidth]);
+
+
+
 
   if ((chosenModel.type !== "MDOT-18 poziomy") && (panelContainerHeight < (chosenModel.height * sc))) {
     resizeStyle.height = `${(chosenModel.height * sc) + 50}px`;
@@ -290,15 +520,16 @@ const PanelPreview = ({
     resizeStyle.height = "100%";
   }
 
-  if ((chosenModel.type !== "MDOT-18 poziomy") && (panelContainerWidth < (chosenModel.width * sc))) {
+
+  if (chosenModel.type !== "MDOT-18 poziomy" && panelContainerWidth < (chosenModel.width * sc)) { //TA LINIJKA
     resizeStyle.width = `${(chosenModel.width * sc) + 50}px`;
-  } else if ((chosenModel.type === "MDOT-18 poziomy") && (panelContainerWidth < (chosenModel.height * sc))) {
+  } else if (chosenModel.type === "MDOT-18 poziomy" && (panelContainerWidth < chosenModel.height * sc)) { //TA LINIJKA
     resizeStyle.width = `${(chosenModel.height * sc) + 50}px`;
   }
   else {
     resizeStyle.width = "100%";
   }
-  // window.addEventListener('resize', handleResize)
+
 
 
   const logoStyle = {};
@@ -329,11 +560,12 @@ const PanelPreview = ({
   lcdIconStyle.width = `${7 * sc}px`;
 
 
+
   const autoResizeInputStyle = {};
   autoResizeInputStyle.fontSize = `${2 * sc}px`;
   autoResizeInputStyle.lineHeight = `${2 * sc}px`;
   autoResizeInputStyle.height = `${3.6 * sc}px`;
-  autoResizeInputStyle.width = `${10 * sc}px`;
+  autoResizeInputStyle.width = `${8 * sc}px`;// było 10
   autoResizeInputStyle.transition = "400ms ease";
   autoResizeInputStyle.position = "absolute";
   autoResizeInputStyle.display = "inline-grid";
@@ -353,8 +585,7 @@ const PanelPreview = ({
   textStyle.transition = "400ms ease";
 
 
-  const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
-  const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
+
 
   if (chosenTab === "text" && showTextBorder && !visual) {
     textStyle.border = "2px solid rgb(236, 105, 92)"
@@ -417,394 +648,6 @@ const PanelPreview = ({
   }
 
 
-  const [time, setTime] = useState(moment().format('HH:mm'));
-  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
-  useEffect(() => {
-    const intervalID = setInterval(() => {
-      setTime(moment().format('HH:mm'));
-      setDate(moment().format('YYYY-MM-DD'));
-    }, 5000)
-    return () => clearInterval(intervalID);
-  }, [time])
-
-  const [iconHolders, setIconHolders] = useState([])
-  const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
-  const [lcdNew, setLcdNew] = useState((chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? true : false)
-  // const [showUniversalIcons, setShowUniversalIcons] = useState(chosenModel.type === "MDOT-M18 uniwersalny" ? true : false)
-  const [hideAll, setHideAll] = useState(true)
-
-  useEffect(() => {
-    setVisualChange(true)
-    const arrIconHolders = [];
-    const arrNewFrame = [];
-    const arrNewFrameHide = [];
-    const arrNewFrameChange = [];
-    const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
-    setHideAll(false)
-
-
-    const modeltimeout = setTimeout(() => {
-      setHideAll(true)
-      chosenModel.dotLocation.forEach(element => {
-        arrIconHolders.push({
-          flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
-          selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
-          textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrameTemp: false, singleFrame: false
-        })
-      });
-      chosenModel.dotLocation.forEach(element => {
-        arrNewFrame.push(element)
-      });
-      chosenModel.dotLocation.forEach(element => {
-        arrNewFrameHide.push(element)
-      });
-      chosenModel.dotLocation.forEach(element => {
-        arrNewFrameChange.push(element)
-      });
-
-      chosenModel.dotLocation.forEach(element => {
-        arrTempFrame.frameArr.push({
-          flag: element,
-          rtl: 0, rtr: 0, rbr: 0, rbl: 0,
-          t: 0, r: 0, b: 0, l: 0,
-          fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
-        })
-      });
-      setNewFrame(arrNewFrame)
-      setNewFrameHide(arrNewFrameHide)
-      setNewFrameChange(arrNewFrameChange)
-      setTempFrame(arrTempFrame)
-      setIconHolders(arrIconHolders);
-      changeIconHolders(arrIconHolders);
-      setTempFrameText("")
-      changeFrameText("")
-      setTextFrame(false)
-      chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
-      (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
-      setVisualChange(false)
-      frameHoldersReset([])
-    }, 300);
-    return () => clearTimeout(modeltimeout);
-    // eslint-disable-next-line
-  }, [chosenModel]);
-
-
-
-  // const handleDrag = () => { //---zacina mdot 9 i mdot 15
-  //     const copyArr = iconHolders;
-  //     copyArr.forEach((el) => {
-  //         el.selectedDot = false;
-  //         el.selected = false;
-  //         el.selectedUp = false;
-  //         el.selectedDown = false;
-  //     })
-  //     setIconHolders(copyArr)
-  //     console.log("NOW")//------------------------powoduje częste przeładowanie
-  // }
-
-  const handleDrag = useCallback((index, item) => {
-    // console.log("NOW")//------------------------powoduje częste przeładowanie
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        selectedDot: {
-          $set: false,
-        },
-        selected: {
-          $set: false,
-        },
-        selectedUp: {
-          $set: false,
-        },
-        selectedDown: {
-          $set: false,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-  const handleDropDot = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedDot: {
-          $set: item,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-  const handleResetDot = useCallback((index, item) => {
-    setClear(false)
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedDot: {
-          $set: null,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-  const handleDropIcon = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedIcon: {
-          $set: item,
-        },
-        lastDroppedSlashUp: {
-          $set: null,
-        },
-        lastDroppedSlashDown: {
-          $set: null,
-        },
-      },
-    }));
-  }, [iconHolders]);
-
-
-  const handleReset = useCallback((index, item) => {
-    setClear(false)
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedIcon: {
-          $set: null,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-
-  const handleDropSlashUp = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedSlashUp: {
-          $set: item,
-        },
-        lastDroppedIcon: {
-          $set: null,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-  const handleResetUp = useCallback((index, item) => {
-    setClear(false)
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedSlashUp: {
-          $set: null,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-  const handleDropSlashDown = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedSlashDown: {
-          $set: item,
-        },
-        lastDroppedIcon: {
-          $set: null,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-  const handleResetDown = useCallback((index, item) => {
-    setClear(false)
-    const copyArr = iconHolders;
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        lastDroppedSlashDown: {
-          $set: null,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-
-  useEffect(() => {
-    if (chosenTab !== "icons") {
-      const copyArr = iconHolders;
-      copyArr.forEach((el) => {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      })
-      setIconHolders(copyArr)
-      setIsAnySelected(false)
-    }
-  }, [chosenTab, iconHolders]);
-
-
-  const handleSelect = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el, i) => {
-      if (i === index) {
-        el.selectedDot = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      } else {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      }
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        selected: {
-          $set: !iconHolders[index].selected,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-
-  const handleSelectDot = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el, i) => {
-      if (i === index) {
-        el.selected = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      } else {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      }
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        selectedDot: {
-          $set: !iconHolders[index].selectedDot,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-  const handleSelectDown = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el, i) => {
-      if (i === index) {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedUp = false;
-      } else {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      }
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        selectedDown: {
-          $set: !iconHolders[index].selectedDown,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
-  const handleSelectUp = useCallback((index, item) => {
-    const copyArr = iconHolders;
-    copyArr.forEach((el, i) => {
-      if (i === index) {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedDown = false;
-      } else {
-        el.selectedDot = false;
-        el.selected = false;
-        el.selectedUp = false;
-        el.selectedDown = false;
-      }
-    })
-    setIconHolders(copyArr)
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        selectedUp: {
-          $set: !iconHolders[index].selectedUp,
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-
   const handleVisual = () => {
     toggleVisual(!visual)
     const copyArr = iconHolders;
@@ -814,24 +657,26 @@ const PanelPreview = ({
       el.selectedUp = false;
       el.selectedDown = false;
     })
-    setIconHolders(copyArr)
-    setIsAnySelected(false)
-
+    changeIconHolders(copyArr)
+    changeIsAnySelected(false)
   }
 
   const handleClearAll = () => {
+    setRemoveAll(false)
+
     const tempArr = [];
     setHideAll(false)
+    setDifferentFont(false)
+    setDifferentFrameFont(false)
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
       chosenModel.dotLocation.forEach(element => {
         tempArr.push({
           flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
-          selectedDot: false, selected: false, selectedUp: false, selectedDown: false,
+          selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
           textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrameTemp: false, singleFrame: false
         })
       });
-      setIconHolders(tempArr);
       changeIconHolders(tempArr);
 
       const arrNewFrame = [];
@@ -862,13 +707,20 @@ const PanelPreview = ({
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
-      setTempFrameText("")
       changeFrameText("")
-      frameHoldersReset([])
+      changeFrameHolders([])
       setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
     }, 300);
     return () => clearTimeout(modeltimeout);
+  }
+
+  const handleClearAllOver = () => {
+    setRemoveAll(true)
+  }
+
+  const handleClearAllLeave = () => {
+    setRemoveAll(false)
   }
 
   const handleClearAllIcons = () => {
@@ -883,59 +735,65 @@ const PanelPreview = ({
       el.selectedUp = false;
       el.selectedDown = false;
     })
-    setIconHolders(copyArr)
+    changeIconHolders(copyArr)
   }
-
-  const [showRemoveIcons, setShowRemoveIcons] = useState(false)
-
-  const handleShowClearAllIcons = () => {
-    setShowRemoveIcons(true)
-  }
-  const handleHideClearAllIcons = () => {
-    setShowRemoveIcons(false)
-  }
-
-  const [showRemoveIcon, setShowRemoveIcon] = useState(false)
-
-  const handleShowClearIcon = () => {
-    setShowRemoveIcon(true)
-  }
-  const handleHideClearIcon = () => {
-    setShowRemoveIcon(false)
-  }
-
-  useEffect(() => {
-    setIsAnySelected(false)
-    iconHolders.forEach((el) => {
-      if (el.selectedDot || el.selected || el.selectedUp || el.selectedDown || el.selectedDot) {
-        setIsAnySelected(true)
-      }
-    })
-  }, [iconHolders, isAnySelected]);
-
 
   const handleClearIcon = () => {
-    if (isAnySelected) {
-      setClear(true)
-    }
-    setIsAnySelected(false)
-  }
-
-  const handleAnimation = () => {
-    setAnimations(prev => !prev)
+    const copyArr = iconHolders;
+    copyArr.forEach((el) => {
+      if (el.selectedDot) {
+        el.lastDroppedDot = null;
+        el.selectedDot = false;
+        el.rotationDot = 0;
+      } else if (el.selected) {
+        el.lastDroppedIcon = null;
+        el.selected = false;
+        el.rotationIcon = 0;
+      } else if (el.selectedDown) {
+        el.lastDroppedSlashDown = null;
+        el.selectedDown = false;
+        el.rotationDown = 0;
+      } else if (el.selectedUp) {
+        el.lastDroppedSlashUp = null;
+        el.selectedUp = false;
+        el.rotationUp = 0;
+      }
+    })
+    changeIconHolders(copyArr)
   }
 
   const handleRotateRight = () => {
-    setRotateRight(prev => !prev)
+    const copyArr = iconHolders;
+    copyArr.forEach((el) => {
+      if (el.selectedDot) {
+        el.rotationDot = el.rotationDot + 90;
+      } else if (el.selected) {
+        el.rotationIcon = el.rotationIcon + 90;
+      } else if (el.selectedDown) {
+        el.rotationDown = el.rotationDown + 90;
+      } else if (el.selectedUp) {
+        el.rotationUp = el.rotationUp + 90;
+      }
+    })
+    changeIconHolders(copyArr)
   }
 
   const handleRotateLeft = () => {
-    setRotateLeft(prev => !prev)
+    const copyArr = iconHolders;
+    copyArr.forEach((el) => {
+      if (el.selectedDot) {
+        el.rotationDot = el.rotationDot - 90;
+      } else if (el.selected) {
+        el.rotationIcon = el.rotationIcon - 90;
+      } else if (el.selectedDown) {
+        el.rotationDown = el.rotationDown - 90;
+      } else if (el.selectedUp) {
+        el.rotationUp = el.rotationUp - 90;
+      }
+    })
+    changeIconHolders(copyArr)
   }
 
-  // const handleTextBorder = () => { //usuń
-  //   setShowTextBorder(prev => !prev)
-  // }
 
   const handleTextUpOff = () => {
     setTextUpOff(prev => !prev)
@@ -944,7 +802,7 @@ const PanelPreview = ({
       el.textUp = "";
       el.fontUp = null;
     })
-    setIconHolders(copyArr)
+    changeIconHolders(copyArr)
   }
 
   const handleClearAllText = () => {
@@ -955,7 +813,7 @@ const PanelPreview = ({
       el.textDown = "";
       el.fontDown = null;
     })
-    setIconHolders(copyArr)
+    changeIconHolders(copyArr)
   }
 
 
@@ -966,49 +824,33 @@ const PanelPreview = ({
   //     </Tooltip>
   // );
 
-  const handleChangeTextUp = useCallback((index, text) => {
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        textUp: {
-          $set: text.target.value.toUpperCase(),
-        }
-      },
-    }));
-  }, [iconHolders]);
+  const handleChangeTextUp = (index, text) => {
+    const copyArr = iconHolders;
+    copyArr[index].textUp = text.target.value.toUpperCase()
+    changeIconHolders(copyArr)
+  };
 
 
-  const handleChangeTextDown = useCallback((index, text) => {
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        textDown: {
-          $set: text.target.value.toUpperCase(),
-        }
-      },
-    }));
-  }, [iconHolders]);
-
-  const handleChangeFontDown = useCallback((index) => {
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        fontDown: {
-          $set: chosenTextFont,
-        }
-      },
-    }));
-  }, [iconHolders, chosenTextFont]);
+  const handleChangeTextDown = (index, text) => {
+    const copyArr = iconHolders;
+    copyArr[index].textDown = text.target.value.toUpperCase()
+    changeIconHolders(copyArr)
+  };
 
 
+  const handleChangeFontDown = (index) => {
+    const copyArr = iconHolders;
+    copyArr[index].fontDown = chosenTextFont
+    changeIconHolders(copyArr)
+  }
 
 
-  const handleChangeFontUp = useCallback((index) => {
-    setIconHolders(update(iconHolders, {
-      [index]: {
-        fontUp: {
-          $set: chosenTextFont,
-        }
-      },
-    }));
-  }, [iconHolders, chosenTextFont]);
+  const handleChangeFontUp = (index) => {
+    const copyArr = iconHolders;
+    copyArr[index].fontUp = chosenTextFont
+    changeIconHolders(copyArr)
+  }
+
 
 
 
@@ -1018,50 +860,66 @@ const PanelPreview = ({
       el.fontUp = chosenTextFont;
       el.fontDown = chosenTextFont;
     })
-    setIconHolders(copyArr)
+    changeIconHolders(copyArr)
     setDifferentFont(false)
+  }
+
+  const handleSetOneFrameFont = () => {
+    const copyFrameHolders = frameHolders
+    copyFrameHolders.forEach((el) => {
+      el.framePrint.frameFont = chosenFrameFont
+    })
+    changeFrameHolders(copyFrameHolders)
+    overFrameReRender()
+    setDifferentFrameFont(false)
   }
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log("submitniente")
-  };
+    setIsFocusedInputIndex(null)
+    setIsFocusedInputSide(null)
+    setIsFocusedInputFrame(false)
+  }
+
+
+  const handleKeyPress = (e) => {
+    if (e.keyCode === 13 || e.keyCode === 27) {
+      e.target.blur();
+      setIsFocusedInputIndex(null)
+      setIsFocusedInputSide(null)
+      setIsFocusedInputFrame(false)
+    }
+  }
 
   const handleFocusInput = (index, side) => {
     setIsFocusedInputIndex(index)
     setIsFocusedInputSide(side)
   }
 
-  const handleBlurInput = (index, side) => {
+
+  const handleClearInput = (index, side) => {
+    const copyArr = iconHolders;
+    if (side === "up") {
+      copyArr[index].textUp = "";
+      copyArr[index].fontUp = null;
+    } else if (side === "down") {
+      copyArr[index].textDown = "";
+      copyArr[index].fontDown = null;
+    }
+    changeIconHolders(copyArr)
     setIsFocusedInputIndex(null)
     setIsFocusedInputSide(null)
   }
+  const handleClearInputFrame = () => {
+    changeFrameText("")
+    setIsFocusedInputFrame(false)
+  }
 
 
-  const [differentFont, setDifferentFont] = useState(false)
-  useEffect(() => {
-    const copyArr = iconHolders;
-    const checkArr = []
-    copyArr.forEach((el) => {
-      if (el.fontDown && el.textDown && !checkArr.includes(el.fontDown)) {
-        checkArr.push(el.fontDown)
-      }
-      if (el.fontUp && el.textUp && !checkArr.includes(el.fontUp)) {
-        checkArr.push(el.fontUp)
-      }
-    })
-    if (checkArr.length > 1) {
-      setDifferentFont(true)
-    } else {
-      setDifferentFont(false)
-    }
-  }, [iconHolders]);
 
-  const [differentFrameFont, setDifferentFrameFont] = useState(false)
 
   const handleFrameOver = ((index) => {
-    console.log("zmień na reduxa i wywal rerender")
     const copyArr = newFrame;
     const copyArrChange = newFrameChange;
 
@@ -1819,8 +1677,10 @@ const PanelPreview = ({
   });
 
 
-  const handleFrameClick = useCallback((index) => {
+  // const handleFrameClick = useCallback((index) => {
+  const handleFrameClick = (index) => {
     const copyArr = newFrame;
+    const copyIconHolders = iconHolders;
     const copyTempArr = tempFrame.frameArr;
     if (copyArr[index] === 1) {
       copyArr[index] = "s";
@@ -2375,6 +2235,10 @@ const PanelPreview = ({
                       copyArr[k] = 1
                     }
                   }
+                  setTextFrame(false)
+                  allowFrameTitle(false)
+                  changeFrameText("")
+                  frameTitle(false)
                 }
               }
             }
@@ -2576,19 +2440,6 @@ const PanelPreview = ({
         copyTempArr[i].r = 0
       }
 
-      if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && copyArr[i - 1] !== "s" && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") { //-------------------------------single frame
-        copyTempArr[i].t = 0
-        copyTempArr[i].r = 0
-        copyTempArr[i].b = 0
-        copyTempArr[i].l = 0
-        const copyIconHolders = iconHolders;
-        copyIconHolders[i].singleFrameTemp = true
-        setIconHolders(copyIconHolders)
-      } else {
-        const copyIconHolders = iconHolders;
-        copyIconHolders[i].singleFrameTemp = false
-        setIconHolders(copyIconHolders)
-      }
 
       if (copyTempArr[i].t === 1 && copyTempArr[i].l === 1) {
         copyTempArr[i].rtl = 3
@@ -2675,6 +2526,16 @@ const PanelPreview = ({
         copyTempArr[i].ml = 0
         copyTempArr[i].mr = (chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2
       }
+
+      if (copyArr[i] === "s" && copyArr[i + 1] !== "s" && copyArr[i - 1] !== "s" && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
+        copyTempArr[i].t = 0
+        copyTempArr[i].r = 0
+        copyTempArr[i].b = 0
+        copyTempArr[i].l = 0
+        copyIconHolders[i].singleFrameTemp = true
+      } else {
+        copyIconHolders[i].singleFrameTemp = false
+      }
     }
 
     let textX = 0
@@ -2682,7 +2543,7 @@ const PanelPreview = ({
     for (let i = 0; i < copyArr.length; i++) {
       if (copyArr[i] === "s" && copyArr[i + 1] === "s" && (i % 3 === 0 || i % 3 === 1)) {
         setTextFrame(true)
-        onAllowTextFrame(true)
+        allowFrameTitle(true)
         textY = (Math.ceil((copyArr.indexOf("s") + 1) / 3) - 1) * chosenModel.multiRowFrameHeight
         if (copyArr[i] === "s" && copyArr[i + 1] === "s" && copyArr[i + 2] === "s" && i % 3 === 0) {
           textX = ((chosenModel.sideColumnFrameWidth * 2) + chosenModel.centerColumnFrameWidth) / 2
@@ -2696,16 +2557,26 @@ const PanelPreview = ({
       }
       if (i % 3 === 1 && copyArr[i] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s") {
         setTextFrame(false)
-        onAllowTextFrame(false)
+        allowFrameTitle(false)
+        changeFrameText("")
+        frameTitle(false)
       }
       if (i % 3 === 0 && copyArr[i] === "s" && copyArr[i + 1] !== "s") {
         setTextFrame(false)
-        onAllowTextFrame(false)
+        allowFrameTitle(false)
+        changeFrameText("")
+        frameTitle(false)
       }
       if (i % 3 === 2 && copyArr[i] === "s" && copyArr[i - 1] !== "s") {
         setTextFrame(false)
-        onAllowTextFrame(false)
+        allowFrameTitle(false)
+        changeFrameText("")
+        frameTitle(false)
       }
+      // if (copyArr.indexOf("s") === -1) {
+      //   allowFrameTitle(false)
+      //   changeFrameText("")
+      // }
     }
 
     const arrNewFrameChange = [];
@@ -2823,47 +2694,26 @@ const PanelPreview = ({
       frameTemp = null;
     }
     changeFrameHoldersTemp(frameTemp)
-    //---------------------------------REDUX---------------------------------
-
-    if (copyArr[index] === "s" && copyArr[index + 1] !== "s" && copyArr[index - 1] !== "s" && copyArr[index + 3] !== "s" && copyArr[index - 3] !== "s") {
-
-      setIconHolders(update(iconHolders, {
-        [index]: {
-          singleFrameTemp: {
-            $set: true,
-          }
-        },
-      }));
-    } else {
-      setIconHolders(update(iconHolders, {
-        [index]: {
-          singleFrameTemp: {
-            $set: false,
-          }
-        },
-      }));
-    }
-  }, [iconHolders, chosenModel.dotLocation, chosenModel.lcdScreen, chosenModel.type, newFrame, tempFrame, chosenModel.centerColumnFrameWidth, chosenModel.multiRowFrameHeight,
-    chosenModel.oneRowFrameHeight, chosenModel.sideColumnFrameWidth, onAllowTextFrame, chosenFrameShape, changeFrameHoldersTemp]);
+    changeIconHolders(copyIconHolders)
+  }
 
 
   const handleChangeTextFrame = (text) => {
-    setTempFrameText(text.target.value.toUpperCase());
     changeFrameText(text.target.value.toUpperCase())
   }
 
-  const handleChangeFramseToSharp = () => {
-    if (frameHolders.length !== 0) {
-      changeFramesShapeToSharp()
-      setAllFramesSharpRound(prev => !prev)
-    }
+  const handleChangeFramesToSharp = () => {
+
+    changeFramesShapeToSharp()
+    setAllFramesSharpRound(prev => !prev)
+    changeFrameShape("sharp")
   }
 
-  const handleChangeFramseToRound = () => {
-    if (frameHolders.length !== 0) {
-      changeFramesShapeToRound()
-      setAllFramesSharpRound(prev => !prev)
-    }
+  const handleChangeFramesToRound = () => {
+    changeFramesShapeToRound()
+    setAllFramesSharpRound(prev => !prev)
+    changeFrameShape("round")
+
   }
 
 
@@ -2897,141 +2747,29 @@ const PanelPreview = ({
     copyArr.forEach((el) => {
       el.singleFrameTemp = false
     })
-    setIconHolders(copyArr)
+    changeIconHolders(copyArr)
     setNewFrame(arrNewFrame)
     setNewFrameHide(arrNewFrameHide)
     setNewFrameChange(arrNewFrameChange)
     setTempFrame(arrTempFrame)
-    setTempFrameText("")
     changeFrameText("")
     setTextFrame(false)
     changeFrameHoldersTemp(null)
+    frameTitle(false)
     overFrameReRender()
   }
 
   const handleResetAllFrames = () => {
-    frameHoldersReset([])
+    changeFrameHolders([])
     const copyArr = iconHolders;
     copyArr.forEach((element, index) => {
       element.singleFrame = false;
     })
-    setIconHolders(copyArr)
+    changeIconHolders(copyArr)
     overFrameReRender()
   }
 
-  useEffect(() => {
-    if (addNewFrameState) {
-      const arrNewFrame = [];
-      const arrNewFrameHide = [];
-      const arrNewFrameChange = [];
-      const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
 
-      chosenModel.dotLocation.forEach(element => {
-        arrNewFrame.push(element)
-      });
-      chosenModel.dotLocation.forEach(element => {
-        arrNewFrameHide.push(element)
-      });
-      chosenModel.dotLocation.forEach(element => {
-        arrNewFrameChange.push(element)
-      });
-
-
-      chosenModel.dotLocation.forEach(element => {
-        arrTempFrame.frameArr.push({
-          flag: element,
-          rtl: 0, rtr: 0, rbr: 0, rbl: 0,
-          t: 0, r: 0, b: 0, l: 0,
-          fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
-        })
-      });
-
-      const copyArr = iconHolders;
-      copyArr.forEach((element, index) => {
-
-        if (element.singleFrameTemp) {
-          element.singleFrameTemp = false;
-          element.singleFrame = true;
-        }
-      })
-
-      const copyFrameHolders = frameHolders
-
-      const checkFrameFontArr = []
-      copyFrameHolders.forEach((el) => {
-        if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
-          checkFrameFontArr.push(el.framePrint.frameFont)
-        }
-      })
-      if (checkFrameFontArr.length > 1) {
-        setDifferentFrameFont(true)
-      } else {
-        setDifferentFrameFont(false)
-      }
-
-
-      setNewFrame(arrNewFrame)
-      setNewFrameHide(arrNewFrameHide)
-      setNewFrameChange(arrNewFrameChange)
-      setTempFrame(arrTempFrame)
-      setIconHolders(copyArr)
-      setTempFrameText("")
-      changeFrameText("")
-      setTextFrame(false)
-      onAllowTextFrame(false)
-
-      addNewFrame(false)
-    }
-    // eslint-disable-next-line 
-  }, [addNewFrameState]);
-
-
-
-  useEffect(() => {
-    const copyFrameHolders = frameHolders
-    const checkSingleFramesArr = []
-    // let indexTest = 0
-    copyFrameHolders.forEach(element => {
-      if (element.type === "single") {
-        element.framePrint.forEach((el, index) => {
-          if (el !== 0) {
-            checkSingleFramesArr.push(index)
-          }
-        })
-      }
-    })
-    const copyArr = iconHolders;
-    copyArr.forEach((element, index) => {
-      if (!checkSingleFramesArr.includes(index)) {
-        element.singleFrame = false;
-      }
-    })
-    setIconHolders(copyArr)
-
-    const checkFrameFontArr = []
-    copyFrameHolders.forEach((el) => {
-      if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
-        checkFrameFontArr.push(el.framePrint.frameFont)
-      }
-    })
-    if (checkFrameFontArr.length > 1) {
-      setDifferentFrameFont(true)
-    } else {
-      setDifferentFrameFont(false)
-    }
-    overFrameReRender()
-    // eslint-disable-next-line 
-  }, [removeFrame]);
-
-
-
-  useEffect(() => {
-    if (!frameTitle) {
-      setTempFrameText("")
-      setTempFrameText("")
-      changeFrameText("")
-    }
-  }, [frameTitle, changeFrameText])
 
 
   return (
@@ -3044,8 +2782,19 @@ const PanelPreview = ({
           <div className="resize_container" style={resizeStyle}>
             <div className="panel_box" style={chosenModelStyle}>
 
-              <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
+              <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
 
+              <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                {removeAll &&
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <img src={Removeall} alt="removeall" style={{
+                      width: "100%",
+                      zIndex: "999999",
+                      opacity: "0.8"
+                    }} />
+                  </div>
+                }
+              </div>
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
                 {hideAll && !visual &&
@@ -3065,7 +2814,7 @@ const PanelPreview = ({
 
                         {el !== 0 && showFramBlackLight &&
                           <div style={el === 1 ? { ...frameCellStyle } :
-                            chosenColor.hex !== "#2fa32c" ?
+                            chosenColor.hex !== "#30a32c" ?
                               { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
                               : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.5)" }} >
                             <div style={frameClickStyle}
@@ -3133,7 +2882,7 @@ const PanelPreview = ({
                             )} >
 
                         <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
-                          < img src={chosenColor.hex !== "#2fa32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
+                          < img src={chosenColor.hex !== "#30a32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
                           < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
                         </div>
                       </div>
@@ -3248,8 +2997,9 @@ const PanelPreview = ({
                               <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                 { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                 <input className="text_input_frame"
+                                  autoComplete="off"
                                   type="text"
-                                  maxLength="25"
+                                  maxLength="16"
                                   style={(chosenColor.RAL === "9003" && visual) ?
                                     {
                                       ...textStyleFrame,
@@ -3280,7 +3030,8 @@ const PanelPreview = ({
                                 { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                 <input className="text_input_frame"
                                   type="text"
-                                  maxLength="25"
+                                  autoComplete="off"
+                                  maxLength="16"
                                   style={
                                     {
                                       ...textStyleFrame,
@@ -3388,17 +3139,20 @@ const PanelPreview = ({
                       </div>
                     )}
 
-                    {textFrame && chosenTab === "frame" && frameTitle &&
+                    {textFrame && chosenTab === "frame" && frameTitleFlag &&
                       <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
                         <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
                           <form onSubmit={handleSubmit}>
                             <div style={{ ...autoResizeInputStyle, top: `${tempFrame.textY * sc}px`, left: `${tempFrame.textX * sc}px`, transition: "0s" }}>
+
+
                               <input className="text_input_frame"
                                 type="text"
-                                maxLength="25"
+                                autoComplete="off"
+                                maxLength="16"
                                 style={(isFocusedInputFrame) ?
                                   (
-                                    (chosenColor.hex !== "#2fa32c") ? {
+                                    (chosenColor.hex !== "#30a32c") ? {
                                       ...textStyleFrame,
                                       fontFamily: chosenFrameFont,
                                       border: "2px dashed rgb(40, 167, 69)",
@@ -3420,15 +3174,18 @@ const PanelPreview = ({
                                 disabled={chosenTab !== "frame" && true}
                                 onMouseOver={showFrameBorder}
                                 onMouseLeave={hideFrameBorder}
-                                value={tempFrameText}
+                                value={frameText}
                                 onChange={(text) => handleChangeTextFrame(text)}
                                 onFocus={() => setIsFocusedInputFrame(true)}
-                                onBlur={() => setIsFocusedInputFrame(false)}
+                                onKeyDown={handleKeyPress}
+
                               />
                               <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                                {tempFrameText}
+                                {frameText}
                               </span>
-                              {(isFocusedInputFrame && chosenColor.hex !== "#2fa32c") &&
+
+
+                              {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
                                 <input type="image" src={Submitinput} alt="submitinput"
                                   style={{
                                     height: `${3.6 * sc}px`,
@@ -3438,7 +3195,7 @@ const PanelPreview = ({
                                   }}
                                 />
                               }
-                              {(isFocusedInputFrame && chosenColor.hex === "#2fa32c") &&
+                              {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
                                 <input type="image" src={Submitinputdark} alt="submitinput"
                                   style={{
                                     height: `${3.6 * sc}px`,
@@ -3446,6 +3203,19 @@ const PanelPreview = ({
                                     transform: "translate(75%, -50%)",
                                     gridArea: '1 / 1 / 2 / 2'
                                   }}
+                                />
+                              }
+
+                              {isFocusedInputFrame &&
+                                <img src={Clearinput} alt="clearinput"
+                                  style={{
+                                    height: `${3.6 * sc}px`,
+                                    width: `${3.6 * sc}px`,
+                                    transform: "translate(200%, -50%)",
+                                    gridArea: '1 / 1 / 2 / 2',
+                                    cursor: "pointer"
+                                  }}
+                                  onClick={handleClearInputFrame}
                                 />
                               }
                             </div>
@@ -3457,15 +3227,14 @@ const PanelPreview = ({
                   </>}
               </div>
 
-              {!visualChange &&
+              {!visualSmooth &&
                 <>
-                  <div className="visualization_frame" style={visual ? { ...vusialStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={visual ? { ...vusialStyle, border: `4px groove white`, opacity: "0.2" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...visualStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove white`, opacity: "0.2" } : { ...visualStyle, opacity: "0" }} />
                   {(lcdShow && visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-                  <div className="visualization_glass" style={visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  <div className="visualization_glass_bis" style={visual ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} />
-                  {/* <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...vusialStyle, opacity: "1" } : { ...vusialStyle, opacity: "0" }} /> */}
-                  <div className="visualization_frame" style={visual ? { ...vusialStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...vusialStyle, opacity: "0" }} />
+                  <div className="visualization_glass" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
+                  <div className="visualization_glass_bis" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
                   <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                 </>}
 
@@ -3473,8 +3242,12 @@ const PanelPreview = ({
 
                 {hideAll &&
                   <>
-                    {iconHolders.map(({ flag, lastDroppedIcon, lastDroppedDot, lastDroppedSlashUp, lastDroppedSlashDown, selected, selectedDot, selectedUp, selectedDown,
-                      textUp, fontUp, textDown, fontDown, singleFrameTemp, singleFrame
+                    {iconHolders.map(({
+                      flag,
+                      textUp,
+                      fontUp,
+                      textDown,
+                      fontDown,
                     }, index) =>
                       <div key={index}
                         style={
@@ -3499,10 +3272,11 @@ const PanelPreview = ({
                                       { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
                                       <input className="text_input"
                                         type="text"
-                                        maxLength="25"
+                                        autoComplete="off"
+                                        maxLength="16"
                                         style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
                                           (
-                                            (chosenColor.hex !== "#2fa32c") ? {
+                                            (chosenColor.hex !== "#30a32c") ? {
                                               ...textStyle,
                                               fontFamily: fontUp,
                                               border: "2px solid rgb(40, 167, 69)"
@@ -3524,14 +3298,13 @@ const PanelPreview = ({
                                         onChange={(text) => handleChangeTextUp(index, text)}
                                         onClick={() => handleChangeFontUp(index)}
                                         onFocus={() => { handleFocusInput(index, "up") }}
-                                        onBlur={handleBlurInput}
+                                        onKeyDown={handleKeyPress}
                                       />
-                                      {/* <button type="submit">SUBMIT</button> */}
-
                                       <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
                                         {textUp}
                                       </span>
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#2fa32c") &&
+
+                                      {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
                                         <input type="image" src={Submitinput} alt="submitinput"
                                           style={{
                                             height: `${3.6 * sc}px`,
@@ -3541,7 +3314,7 @@ const PanelPreview = ({
                                           }}
                                         />
                                       }
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#2fa32c") &&
+                                      {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
                                         <input type="image" src={Submitinputdark} alt="submitinput"
                                           style={{
                                             height: `${3.6 * sc}px`,
@@ -3551,6 +3324,18 @@ const PanelPreview = ({
                                           }}
                                         />
                                       }
+                                      {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                        <img src={Clearinput} alt="clearinput"
+                                          style={{
+                                            height: `${3.6 * sc}px`,
+                                            width: `${3.6 * sc}px`,
+                                            transform: "translate(200%, 0%)",
+                                            gridArea: '1 / 1 / 2 / 2',
+                                            cursor: "pointer"
+                                          }}
+                                          onClick={() => { handleClearInput(index, "up") }}
+                                        />
+                                      }
                                     </div>
                                   </form>
                                 }
@@ -3558,10 +3343,11 @@ const PanelPreview = ({
                                   <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
                                     <input className="text_input"
                                       type="text"
-                                      maxLength="25"
+                                      autoComplete="off"
+                                      maxLength="16"
                                       style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
                                         (
-                                          (chosenColor.hex !== "#2fa32c") ? {
+                                          (chosenColor.hex !== "#30a32c") ? {
                                             ...textStyle,
                                             fontFamily: fontDown,
                                             border: "2px solid rgb(40, 167, 69)"
@@ -3583,12 +3369,12 @@ const PanelPreview = ({
                                       onChange={(text) => handleChangeTextDown(index, text)}
                                       onClick={() => handleChangeFontDown(index)}
                                       onFocus={() => { handleFocusInput(index, "down") }}
-                                      onBlur={handleBlurInput}
+                                      onKeyDown={handleKeyPress}
                                     />
                                     <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
                                       {textDown}
                                     </span>
-                                    {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#2fa32c") &&
+                                    {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
                                       <input type="image" src={Submitinput} alt="submitinput"
                                         style={{
                                           height: `${3.6 * sc}px`,
@@ -3598,7 +3384,7 @@ const PanelPreview = ({
                                         }}
                                       />
                                     }
-                                    {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#2fa32c") &&
+                                    {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
                                       <input type="image" src={Submitinputdark} alt="submitinput"
                                         style={{
                                           height: `${3.6 * sc}px`,
@@ -3608,42 +3394,25 @@ const PanelPreview = ({
                                         }}
                                       />
                                     }
+                                    {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
+                                      <img src={Clearinput} alt="clearinput"
+                                        style={{
+                                          height: `${3.6 * sc}px`,
+                                          width: `${3.6 * sc}px`,
+                                          transform: "translate(200%, 0%)",
+                                          gridArea: '1 / 1 / 2 / 2',
+                                          cursor: "pointer"
+                                        }}
+                                        onClick={() => { handleClearInput(index, "down") }}
+                                      />
+                                    }
                                   </div>
                                 </form>
                               </div>
                             </div>
 
-
                             <IconHolder
-                              lastDroppedDot={lastDroppedDot} onDropDot={(item) => handleDropDot(index, item)}
-                              lastDroppedIcon={lastDroppedIcon} onDrop={(item) => handleDropIcon(index, item)}
-                              lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={(item) => handleDropSlashUp(index, item)}
-                              lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={(item) => handleDropSlashDown(index, item)}
-                              onReset={(item) => handleReset(index, item)}
-                              onResetDot={(item) => handleResetDot(index, item)}
-                              onResetUp={(item) => handleResetUp(index, item)}
-                              onResetDown={(item) => handleResetDown(index, item)}
-                              scale={sc}
-                              onSelect={(item) => handleSelect(index, item)}
-                              onSelectDot={(item) => handleSelectDot(index, item)}
-                              onSelectUp={(item) => handleSelectUp(index, item)}
-                              onSelectDown={(item) => handleSelectDown(index, item)}
-                              selectedDot={selectedDot}
-                              selected={selected}
-                              selectedUp={selectedUp}
-                              selectedDown={selectedDown}
-                              onDrag={(item) => handleDrag(index, item)}
-                              // onDrag={handleDrag}
-                              animations={animations}
-                              clear={clear}
-                              rotateRight={rotateRight}
-                              rotateLeft={rotateLeft}
-                              visual={!visual}
-                              showRemoveIcon={showRemoveIcon}
-                              showRemoveIcons={showRemoveIcons}
-                              singleFrameTemp={singleFrameTemp}
-                              singleFrame={singleFrame}
-                              chosenFrameShape={chosenFrameShape}
+                              index={index}
                             />
                           </>}
                       </div>
@@ -3745,7 +3514,10 @@ const PanelPreview = ({
         </div>
 
         <div className="side_box">
-          <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll} />
+          <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll}
+            onMouseOver={handleClearAllOver}
+            onMouseLeave={handleClearAllLeave}
+          />
           <span>Zresetuj wszystko</span>
         </div>
 
@@ -3759,19 +3531,21 @@ const PanelPreview = ({
           <>
             <div className="side_box">
               {animations ?
-                <img src={Animoff} alt="animationoff" className="side_icon" onClick={handleAnimation} />
-                : <img src={Anim} alt="animation" className="side_icon" onClick={handleAnimation} />
+                <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
+                : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
               }
               {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
             </div>
             <div className="side_box">
               <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={handleClearAllIcons}
-                onMouseOver={handleShowClearAllIcons} onMouseLeave={handleHideClearAllIcons} />
+                onMouseOver={() => showRemoveIcons(true)} onMouseLeave={() => showRemoveIcons(false)} />
+
               <span>Usuń wszystkie ikony</span>
             </div>
             <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
               <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-                onMouseOver={handleShowClearIcon} onMouseLeave={handleHideClearIcon} />
+                onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
+
               <span>Usuń zaznaczoną ikonę</span>
             </div>
             <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
@@ -3812,7 +3586,7 @@ const PanelPreview = ({
             {differentFont &&
               <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
                 <img src={Alert} alt="Alert" className="side_icon" />
-                <span style={{ color: "red" }}>Zastosowano różne fonty opisów</span>
+                <span style={{ color: "#dc3545" }}>Zastosowano różne fonty opisów</span>
               </div>
             }
           </>
@@ -3825,6 +3599,15 @@ const PanelPreview = ({
               {showFramBlackLight ? <span>Ukryj podświet- <br />lenie pól</span> : <span>Pokaż podświet- <br />lenie pól</span>}
             </div>
 
+            <div className="side_box"
+            // style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}
+            >
+              {allFramesSharpRound ?
+                <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
+                :
+                <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramesToRound} />}
+              {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
+            </div>
 
             <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
               <img src={Removeallframes} alt="ramoveallframes" className="side_icon" onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }} />
@@ -3836,41 +3619,23 @@ const PanelPreview = ({
               <span>Usuń tworzoną ramkę</span>
             </div>
 
-            {/* <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              {allFramesSharpRound ?
-                <img src={Framesharp} alt="framesharp" className="side_icon" onClick={() => { changeFramesShapeToSharp(); setAllFramesRound(prev => !prev) }} />
-                :
-                <img src={Frameround} alt="frameround" className="side_icon" onClick={() => { changeFramesShapeToRound(); setAllFramesRound(prev => !prev) }} />}
-              {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
-            </div>
 
-            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowFrameTextBorder(prev => !prev) }}  />
+
+            <div className="side_box" style={!frameTitleFlag ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+              <img src={Textborder} alt="textborder" className="side_icon"
+                onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
               <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
-            </div> */}
+            </div>
 
             <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              {allFramesSharpRound ?
-                <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramseToSharp} />
-                :
-                <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramseToRound} />}
-              {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
-            </div>
-
-            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowFrameTextBorder(prev => !prev) }} />
-              <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
-            </div>
-
-            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
+              <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
               <span>Wybrany font dla wszystkich tytułów</span>
             </div>
 
             {differentFrameFont &&
               <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
                 <img src={Alert} alt="Alert" className="side_icon" />
-                <span style={{ color: "red" }}>Zastosowano różne fonty tytułów ramek</span>
+                <span style={{ color: "#dc3545" }}>Zastosowano różne fonty tytułów ramek</span>
               </div>
             }
           </>
@@ -3906,21 +3671,36 @@ const mapStateToProps = state => ({
   overFrameRender: state.frame.overFrameRender,
   frameHolders: state.frame.frameHolders,
   frameHoldersTemp: state.frame.frameHoldersTemp,
-  visual: state.visual,
+  frameText: state.frame.frameText,
+  frameTitleFlag: state.frame.frameTitleFlag,
+  visual: state.visual.visual,
+  animations: state.visual.animations,
+  sc: state.visual.scale,
   chosenTextFont: state.text.chosenTextFont,
-  iconHoldersRED: state.icon.iconHolders,
+  textRender: state.text.textRender,
+  iconHolders: state.icon.iconHolders,
+  iconHoldersRender: state.icon.iconHoldersRender,
+  isAnySelected: state.icon.isAnySelected,
 })
 
 const mapDispatchToProps = dispatch => ({
   addNewFrame: (income) => dispatch(actionsFrame.addNewFrame(income)),
-  frameHoldersReset: (income) => dispatch(actionsFrame.frameHolders(income)),
+  changeFrameHolders: (income) => dispatch(actionsFrame.frameHolders(income)),
   changeFrameHoldersTemp: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
   changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
+  changeFrameShape: shape => dispatch(actionsFrame.changeFrameShape(shape)),
   changeFramesShapeToSharp: (income) => dispatch(actionsFrame.changeFramesShapeToSharp(income)),
   changeFramesShapeToRound: (income) => dispatch(actionsFrame.changeFramesShapeToRound(income)),
   overFrameReRender: (income) => dispatch(actionsFrame.overFrameReRender(income)),
+  frameTitle: (income) => dispatch(actionsFrame.frameTitle(income)),
+  allowFrameTitle: (income) => dispatch(actionsFrame.allowFrameTitle(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
+  toggleAnimations: (income) => dispatch(actionsVisual.toggleAnimations(income)),
+  changeScale: (income) => dispatch(actionsVisual.changeScale(income)),
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  changeIsAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
+  showRemoveIcon: (income) => dispatch(actionsVisual.showRemoveIcon(income)),
+  showRemoveIcons: (income) => dispatch(actionsVisual.showRemoveIcons(income)),
 })
 
 

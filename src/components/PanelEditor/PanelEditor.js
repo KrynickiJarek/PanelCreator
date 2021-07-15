@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { connect } from "react-redux"
 import actions from "./duck/actions"
+import actionsIcon from "../PanelEditor/IconEditor/duck/actions"
 import "./PanelEditor.scss"
 
 import Tab from 'react-bootstrap/Tab'
@@ -26,7 +27,7 @@ import FrameFill from "../../assets/editornav/frame_fill.svg"
 import Color from "../../assets/editornav/color.svg"
 import ColorFill from "../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame }) => {
+const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame, iconHolders, changeIconHolders, isAnySelected }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -38,6 +39,15 @@ const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame }) => {
   const handleClickModel = () => {
     setModelHover(true)
     change("model")
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    changeIconHolders(copyArr)
+    isAnySelected(false)
   }
   const handleClickIcons = () => {
     setIconsHover(true)
@@ -46,14 +56,41 @@ const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame }) => {
   const handleClickText = () => {
     setTextHover(true)
     change("text")
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    changeIconHolders(copyArr)
+    isAnySelected(false)
   }
   const handleClickFrame = () => {
     setFrameHover(true)
     change("frame")
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    changeIconHolders(copyArr)
+    isAnySelected(false)
   }
   const handleClickColor = () => {
     setColorHover(true)
     change("color")
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    changeIconHolders(copyArr)
+    isAnySelected(false)
   }
 
 
@@ -117,7 +154,7 @@ const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame }) => {
               <TextEditor />
             </Tab.Pane>
             <Tab.Pane eventKey="frame">
-              <FrameEditor onToggleFrameTitle={onToggleFrameTitle} allowTextFrame={allowTextFrame} />
+              <FrameEditor />
             </Tab.Pane>
 
           </Tab.Content>
@@ -130,11 +167,14 @@ const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame }) => {
 
 // export default PanelEditor;
 const mapStateToProps = state => ({
-  tab: state.tab
+  tab: state.tab,
+  iconHolders: state.icon.iconHolders,
 })
 
 const mapDispatchToProps = dispatch => ({
-  change: tab => dispatch(actions.change(tab))
+  change: tab => dispatch(actions.change(tab)),
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  isAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelEditor)

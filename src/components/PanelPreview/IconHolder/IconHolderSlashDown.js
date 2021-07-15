@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { connect } from "react-redux"
 import { useDrop } from 'react-dnd';
+import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
 import "./IconHolderSlash.scss"
 
 
@@ -11,38 +12,40 @@ import ReDragDown from './ReDrag/ReDragDown';
 
 
 export const IconHolderSlashDown = ({
-  lastDroppedSlashDown,
-  onDropSlashDown,
-  // chosenColor, 
   onDownActive,
   show,
   showNow,
   warning,
-  onResetDown,
   scale,
-  onSelectDown,
-  selectedDown,
   animations,
-  clear,
-  rotateRight,
-  rotateLeft,
-  visual,
-  // chosenTab, 
-  showRemoveIcon,
-  showRemoveIcons,
-  singleFrame,
-  singleFrameTemp,
-
-
-
+  removeIcon,
+  removeIcons,
   chosenColor,
   chosenTab,
+  changeIconHolders,
+  index,
+  iconHolders,
 }) => {
+
+
+  const handleDrop = (item) => {
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    copyArr[index].lastDroppedSlashDown = item
+    copyArr[index].lastDroppedIcon = null
+    changeIconHolders(copyArr)
+  }
+
 
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: "icon",
-    drop: onDropSlashDown,
+    drop: handleDrop,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -61,7 +64,7 @@ export const IconHolderSlashDown = ({
   let styleZIndex = {};
 
   if ((isActive && show) || (isActive && showNow)) {
-    if (chosenColor.hex !== "#2fa32c") {
+    if (chosenColor.hex !== "#30a32c") {
       styleDropping = {
         backgroundColor: "rgb(40, 167, 69)",
         // transform: "translate(52%, 125%) scale(1.8)",
@@ -117,7 +120,7 @@ export const IconHolderSlashDown = ({
         animation: "Ani 2s infinite",
       };
     };
-  } else if (selectedDown && chosenTab === "icons") {
+  } else if (iconHolders[index].selectedDown && chosenTab === "icons") {
     styleDroppingAni = {
       transform: "translate(13%, 87%) scale(2.2)",
     };
@@ -137,7 +140,7 @@ export const IconHolderSlashDown = ({
       };
     };
   }
-  if (!lastDroppedSlashDown && !show && !showNow && !isActive) {
+  if (!iconHolders[index].lastDroppedSlashDown && !show && !showNow && !isActive) {
     styleArea = {
       // transform: "translate(35%,35%) scale(0.01)",
       transform: "translate(50%,50%) scale(0.01)",
@@ -169,19 +172,26 @@ export const IconHolderSlashDown = ({
       </div>
       <div className="slash_down_area_dropping" style={{ ...styleDropping, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }} />
       <div ref={drop} className="slash_down_area" style={{ ...styleScale, ...styleArea, top: `${10.65 * scale}px` }} >
-        {lastDroppedSlashDown &&
+
+        {/* <div style={{ transform: "scale(1)" }}> */}
+
+        {iconHolders[index].lastDroppedSlashDown &&
           <ReDragDown
-            image={lastDroppedSlashDown.image} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown}
-            clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} singleFrame={singleFrame} singleFrameTemp={singleFrameTemp}
+            image={iconHolders[index].lastDroppedSlashDown.image}
+            // singleFrame={singleFrame}
+            // singleFrameTemp={singleFrameTemp}
+
+            index={index}
           />
         }
-        {!lastDroppedSlashDown &&
+        {!iconHolders[index].lastDroppedSlashDown &&
           (<img src={DownHolder} alt="downholder" className="slash_holder"
             style={chosenColor.iconColor === "white" ? { ...styleHolder, ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
               : { ...styleHolder, ...styleScale, filter: "grayscale(100%) brightness(0)" }}
           />)}
-        {(lastDroppedSlashDown && (warning || isActive || showRemoveIcons || (showRemoveIcon && selectedDown))) &&
+        {(iconHolders[index].lastDroppedSlashDown && (warning || isActive || removeIcons || (removeIcon && iconHolders[index].selectedDown))) &&
           (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)}
+        {/* </div> */}
       </div>
     </div>
   );
@@ -190,7 +200,15 @@ export const IconHolderSlashDown = ({
 const mapStateToProps = state => ({
   chosenColor: state.color,
   chosenTab: state.tab,
+  iconHolders: state.icon.iconHolders,
+  iconHoldersRender: state.icon.iconHoldersRender,
+  scale: state.visual.scale,
+  animations: state.visual.animations,
+  removeIcon: state.visual.removeIcon,
+  removeIcons: state.visual.removeIcons,
+})
+const mapDispatchToProps = dispatch => ({
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
 })
 
-
-export default connect(mapStateToProps, {})(IconHolderSlashDown)
+export default connect(mapStateToProps, mapDispatchToProps)(IconHolderSlashDown)

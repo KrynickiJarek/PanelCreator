@@ -1,6 +1,8 @@
 import { connect } from "react-redux"
 import { useDrop } from 'react-dnd';
 import "./IconHolderStatus.scss"
+import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
+
 
 import Dot from "../../../assets/preview/dot.svg"
 import Remove from "../../../assets/preview/remove.svg"
@@ -8,36 +10,42 @@ import Remove from "../../../assets/preview/remove.svg"
 import ReDragDot from './ReDrag/ReDragDot';
 
 const IconHolderStatus = ({
-  lastDroppedDot,
-  onDropDot,
-  // chosenColor, 
-  onResetDot,
   show,
   scale,
-  onSelectDot,
-  selectedDot,
   animations,
-  clear,
-  rotateRight,
-  rotateLeft,
   visual,
-  // chosenTab, 
-  showRemoveIcon,
-  showRemoveIcons,
-  // chosenModel,
+
+  removeIcon,
+  removeIcons,
+
 
   chosenColor,
   chosenModel,
   chosenTab,
-
+  changeIconHolders,
+  index,
+  iconHolders,
 
 
 
 }) => {
 
+  const handleDrop = (item) => {
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    copyArr[index].lastDroppedDot = item
+    changeIconHolders(copyArr)
+  }
+
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: "icon",
-    drop: onDropDot,
+    // drop: onDropDot,
+    drop: handleDrop,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -58,7 +66,7 @@ const IconHolderStatus = ({
   let styleZIndex = {};
 
   if (isActive) {
-    if (chosenColor.hex !== "#2fa32c") {
+    if (chosenColor.hex !== "#30a32c") {
       styleDropping = {
         backgroundColor: "rgb(40, 167, 69)",
         transform: "translateX(-50%) scale(3.2)",
@@ -97,7 +105,7 @@ const IconHolderStatus = ({
       zIndex: "99",
     };
   }
-  else if ((canDrop && lastDroppedDot) || (canDrop && show)) {
+  else if ((canDrop && iconHolders[index].lastDroppedDot) || (canDrop && show)) {
     styleDropping = {
       backgroundColor: "rgb(236, 105, 92)",
     };
@@ -107,7 +115,7 @@ const IconHolderStatus = ({
       };
     };
   }
-  else if (canDrop && !lastDroppedDot) {
+  else if (canDrop && !iconHolders[index].lastDroppedDot) {
     styleDot = {
       filter: "invert(47%) sepia(92%) saturate(1130%) hue-rotate(326deg) brightness(100%) contrast(86%)",
       height: `${1 * scale}px`,//było 1.25? sprawdź jakby co
@@ -122,7 +130,7 @@ const IconHolderStatus = ({
       };
     };
   }
-  else if (selectedDot && chosenTab === "icons") {
+  else if (iconHolders[index].selectedDot && chosenTab === "icons") {
     styleDropping = {
       backgroundColor: "rgb(236, 105, 92)",
       transform: "translateX(-50%) scale(3.2)",
@@ -161,17 +169,22 @@ const IconHolderStatus = ({
       <div ref={drop} className="status_area" style={(chosenModel.type === "MDOT-18 poziomy") ?
         { transform: "rotate(90deg)", ...styleArea, height: `${3.8 * scale}px`, width: `${3.8 * scale}px`, margin: `${1 * scale}px auto ${1.85 * scale}px` }
         : { ...styleArea, height: `${3.8 * scale}px`, width: `${3.8 * scale}px`, margin: `${1 * scale}px auto ${1.85 * scale}px` }}>
-        {lastDroppedDot
-          ? <ReDragDot image={lastDroppedDot.image}
-            // chosenColor={chosenColor} 
-            onResetDot={onResetDot} scale={scale} onSelectDot={onSelectDot} selectedDot={selectedDot}
-            clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
+
+        {/* <div style={{ transform: "scale(1)" }}> */}
+
+        {iconHolders[index].lastDroppedDot
+          ? <ReDragDot
+            image={iconHolders[index].lastDroppedDot.image}
+            index={index} />
           : (<img src={Dot} alt="dot" className="dot"
-            style={!visual ? { filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 3px rgba(255, 255, 255, 0.7))", ...styleDot }
+            style={visual ? { filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 3px rgba(255, 255, 255, 0.7))", ...styleDot }
               : chosenColor.iconColor === "white" ? { filter: "grayscale(100%) invert(1) brightness(10)", ...styleDot }
                 : { filter: "grayscale(100%) brightness(0)", ...styleDot }} />)}
-        {(lastDroppedDot && (isActive || showRemoveIcons || (showRemoveIcon && selectedDot))) &&
+        {(iconHolders[index].lastDroppedDot && (isActive || removeIcons || (removeIcon && iconHolders[index].selectedDot))) &&
           (<img src={Remove} alt="remove" className="dot_remove" style={styleScale} />)}
+        {/* </div> */}
+
+
       </div>
     </div>
   )
@@ -182,7 +195,16 @@ const mapStateToProps = state => ({
   chosenColor: state.color,
   chosenTab: state.tab,
   chosenModel: state.model,
+  iconHolders: state.icon.iconHolders,
+  iconHoldersRender: state.icon.iconHoldersRender,
+  visual: state.visual.visual,
+  scale: state.visual.scale,
+  animations: state.visual.animations,
+  removeIcon: state.visual.removeIcon,
+  removeIcons: state.visual.removeIcons,
+})
+const mapDispatchToProps = dispatch => ({
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
 })
 
-
-export default connect(mapStateToProps, {})(IconHolderStatus)
+export default connect(mapStateToProps, mapDispatchToProps)(IconHolderStatus)

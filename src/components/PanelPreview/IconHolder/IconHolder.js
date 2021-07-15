@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import { useDrop } from 'react-dnd';
+import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
 
 import "./IconHolder.scss"
 
@@ -17,57 +18,64 @@ import ReDrag from './ReDrag/ReDrag';
 
 
 const IconHolder = ({
-  lastDroppedDot, onDropDot,
-  lastDroppedIcon, onDrop,
-  lastDroppedSlashUp, onDropSlashUp,
-  lastDroppedSlashDown, onDropSlashDown,
-  onReset, onResetDot, onResetUp, onResetDown,
   scale,
-  onSelect, onSelectDot, onSelectUp, onSelectDown,
-  selected, selectedDot, selectedUp, selectedDown,
-  onDrag,
-  animations, clear,
-  rotateRight, rotateLeft,
+  animations,
   visual,
-  showRemoveIcon,
-  showRemoveIcons,
-  singleFrameTemp,
-  singleFrame,
+  removeIcon,
+  removeIcons,
   chosenFrameShape,
-
-
-
-
   chosenColor,
   chosenTab,
   chosenModel,
+  changeIconHolders,
+  index,
+  iconHolders,
 }) => {
 
-
-  // console.log(chosenColorRED)
-  // console.log(chosenTabRED)
-  // console.log(chosenModelRED)
+  const handleDrop = (item) => {
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    copyArr[index].lastDroppedIcon = item
+    copyArr[index].lastDroppedSlashDown = null
+    copyArr[index].lastDroppedSlashUp = null
+    changeIconHolders(copyArr)
+  }
 
   let warning = false
   const [show, setShow] = useState(false);
+  const [showHolder, setShowHolder] = useState(false);
 
   const [upActive, setUpActive] = useState(false);
   const [downActive, setDownActive] = useState(false);
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: "icon",
-    drop: onDrop,
+    drop: handleDrop,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
   });
 
-  useEffect(() => { //-------------------------------------------------------------------------------selected
+  useEffect(() => {
     if (canDrop) {
-      onDrag()
+      const copyArr = iconHolders
+      copyArr.forEach((el) => {
+        el.selectedDot = false;
+        el.selected = false;
+        el.selectedUp = false;
+        el.selectedDown = false;
+      })
+      changeIconHolders(copyArr)
     }
-  }, [canDrop, onDrag]);
+  }, [canDrop, changeIconHolders, iconHolders]);
+
+
 
   const isActive = isOver && canDrop;
   let styleDropping = {};
@@ -82,8 +90,9 @@ const IconHolder = ({
   let styleSignleFrameResize = {};
   styleSignleFrameResize.transform = "scale(1)";
 
+
   if (isActive) {
-    if (chosenColor.hex !== "#2fa32c") {
+    if (chosenColor.hex !== "#30a32c") {
       styleDropping = {
         backgroundColor: "rgb(40, 167, 69)",
         transform: "translateX(-50%) scale(2)",
@@ -118,7 +127,7 @@ const IconHolder = ({
     };
     warning = true;
   }
-  else if (canDrop || (selected && chosenTab === "icons")) {
+  else if (canDrop || (iconHolders[index].selected && chosenTab === "icons")) {
     styleDropping = {
       backgroundColor: "rgb(236, 105, 92)",
       transform: "translateX(-50%) scale(1.45)",
@@ -145,7 +154,7 @@ const IconHolder = ({
     if (isOverToShow) {
       const slashTimeout = setTimeout(() => {
         setShow(true)
-      }, 400);
+      }, 300); //było 400
       return () => clearTimeout(slashTimeout);
     }
   }, [isOverToShow]);
@@ -156,7 +165,7 @@ const IconHolder = ({
   }, [isOverToShow]);
 
 
-  if (singleFrameTemp && chosenFrameShape === "sharp" && chosenTab === "frame" && visual) {
+  if (iconHolders[index].singleFrameTemp && chosenFrameShape === "sharp" && chosenTab === "frame" && !visual) {
     styleSignleFrame = {
       border: "2px solid rgb(32, 114, 30)",
       borderRadius: "0px",
@@ -164,7 +173,7 @@ const IconHolder = ({
     styleSignleFrameResize = {
       transform: "scale(0.75)",
     }
-  } else if (singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame" && visual) {
+  } else if (iconHolders[index].singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame" && !visual) {
     styleSignleFrame = {
       border: "2px solid rgb(32, 114, 30)",
       borderRadius: `${scale}px`,
@@ -172,7 +181,7 @@ const IconHolder = ({
     styleSignleFrameResize = {
       transform: "scale(0.75)",
     }
-  } else if ((!singleFrameTemp && chosenFrameShape === "round") || chosenTab !== "frame") { //??
+  } else if ((!iconHolders[index].singleFrameTemp && chosenFrameShape === "round") || chosenTab !== "frame") { //??
     styleSignleFrame = {
       border: "2px solid transparent",
       borderRadius: `${scale}px`
@@ -180,7 +189,7 @@ const IconHolder = ({
     styleSignleFrameResize = {
       transform: "scale(1)",
     }
-  } else if ((!singleFrameTemp && chosenFrameShape === "sharp") || chosenTab !== "frame") { //??
+  } else if ((!iconHolders[index].singleFrameTemp && chosenFrameShape === "sharp") || chosenTab !== "frame") { //??
     styleSignleFrame = {
       border: "2px solid transparent"
     }
@@ -190,19 +199,18 @@ const IconHolder = ({
   }
 
 
-  if (singleFrame) {
+  if (iconHolders[index].singleFrame) {
     styleSignleFrameResize = {
       transform: "scale(0.75)",
     }
   }
 
   let showNow = false
-  if (isOverToShow && (lastDroppedSlashDown || lastDroppedSlashUp)) {
+  if (isOverToShow && (iconHolders[index].lastDroppedSlashDown || iconHolders[index].lastDroppedSlashUp)) {
     showNow = true
   }
 
 
-  const [showHolder, setShowHolder] = useState(false);
 
   useEffect(() => {
     if (isActive) {
@@ -223,14 +231,8 @@ const IconHolder = ({
       <div ref={over} style={(chosenModel.type !== "MDOT-18 poziomy") ? { height: "100%", width: "100%", position: "absolute" }
         : { height: "100%", width: "100%", position: "absolute", transform: "rotate(90deg)", transformOrigin: `center ${10.4 * scale}px`, transition: "0.4s ease" }}>
         <IconHolderStatus
-
-          // chosenColor={chosenColor} chosenModel={chosenModel} chosenTab={chosenTab} 
-
-
-          lastDroppedDot={lastDroppedDot} onDropDot={onDropDot} onResetDot={onResetDot} show={show} scale={scale}
-          onSelectDot={onSelectDot} selectedDot={selectedDot} animations={animations} clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft}
-          visual={visual} showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons}
-
+          show={show}
+          index={index}
         />
         <div style={styleZIndex}>
 
@@ -241,49 +243,46 @@ const IconHolder = ({
           <div ref={drop} className="icon_area" style={{ ...styleScale, ...styleArea, ...styleSignleFrame }} >
             <div className="icon_area" style={styleSignleFrameResize}>
 
-              {(lastDroppedIcon) &&
+              {(iconHolders[index].lastDroppedIcon) &&
                 <ReDrag
-                  image={lastDroppedIcon.image}
-                  // chosenColor={chosenColor} 
-                  onReset={onReset} scale={scale} onSelect={onSelect} selected={selected}
-                  clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual} />
+                  image={iconHolders[index].lastDroppedIcon.image}
+                  index={index} />
               }
-              {(!lastDroppedIcon && (show || showHolder)) &&
+              {(!iconHolders[index].lastDroppedIcon && (show || showHolder)) &&
                 (<img src={Holder} alt="holder" className="holder"
                   style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                     : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                 />)}
-              {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
+              {((iconHolders[index].lastDroppedSlashUp || iconHolders[index].lastDroppedSlashDown) && !show && !isActive) &&
                 (<img src={Slash} alt="slash" className="slash"
-                  style={!visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
+                  style={visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
                     : chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                       : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                 />)}
-              {(lastDroppedIcon && (upActive || downActive || isActive || showRemoveIcons || (showRemoveIcon && selected))) &&
+              {(iconHolders[index].lastDroppedIcon && (upActive || downActive || isActive || removeIcons || (removeIcon && iconHolders[index].selected))) &&
                 (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
 
             </div>
           </div>
         </div>
 
-        <IconHolderSlashUp lastDroppedSlashUp={lastDroppedSlashUp} onDropSlashUp={onDropSlashUp} onUpActive={(income) => setUpActive(income)}
-          show={show} showNow={showNow} warning={warning} onResetUp={onResetUp} scale={scale} onSelectUp={onSelectUp} selectedUp={selectedUp} animations={animations}
-          clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}
-          showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame} singleFrameTemp={singleFrameTemp}
+        <IconHolderSlashUp
+          onUpActive={(income) => setUpActive(income)}
+          show={show}
+          showNow={showNow}
+          warning={warning}
+          index={index}
         />
 
-        <IconHolderSlashDown lastDroppedSlashDown={lastDroppedSlashDown} onDropSlashDown={onDropSlashDown} onDownActive={(income) => setDownActive(income)}
-          show={show} showNow={showNow} warning={warning} onResetDown={onResetDown} scale={scale} onSelectDown={onSelectDown} selectedDown={selectedDown} animations={animations}
-          clear={clear} rotateRight={rotateRight} rotateLeft={rotateLeft} visual={visual}
-          showRemoveIcon={showRemoveIcon} showRemoveIcons={showRemoveIcons} singleFrame={singleFrame} singleFrameTemp={singleFrameTemp}
+        <IconHolderSlashDown
+          onDownActive={(income) => setDownActive(income)}
+          show={show}
+          showNow={showNow}
+          warning={warning}
+          index={index}
         />
       </div>
     </>
-
-
-
-
-
   );
 }
 
@@ -291,10 +290,21 @@ const mapStateToProps = state => ({
   chosenColor: state.color,
   chosenTab: state.tab,
   chosenModel: state.model,
+  iconHolders: state.icon.iconHolders,
+  iconHoldersRender: state.icon.iconHoldersRender,
+  visual: state.visual.visual,
+  scale: state.visual.scale,
+  animations: state.visual.animations,
+  removeIcon: state.visual.removeIcon,
+  removeIcons: state.visual.removeIcons,
+  chosenFrameShape: state.frame.chosenFrameShape,
+
+})
+const mapDispatchToProps = dispatch => ({
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
 })
 
-
-export default connect(mapStateToProps, {})(IconHolder)
+export default connect(mapStateToProps, mapDispatchToProps)(IconHolder)
 
 
 

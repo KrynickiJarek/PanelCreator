@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { connect } from "react-redux"
+import actionsIcon from "../../../PanelEditor/IconEditor/duck/actions"
+
 import "./../IconHolderSlash.scss"
 
 
@@ -8,48 +10,81 @@ import "./../IconHolderSlash.scss"
 
 export const ReDragDown = ({
   image,
-  // chosenColor, 
-  onResetDown,
   scale,
-  onSelectDown,
-  selectedDown,
-  clear,
-  rotateRight,
-  rotateLeft,
   visual,
-  singleFrame,
-  singleFrameTemp,
-  // chosenTab,
-
   chosenColor,
   chosenTab,
+  iconHolders,
+  index,
+  changeIconHolders,
+  isAnySelected
 
 }) => {
+
+
+  const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
+
+  const handleMouseDown = () => {
+    setBackgroundColorWhileDragging("rgba(255,255,255,0.33)")
+  }
+
+  const handleMouseUp = () => {
+    setBackgroundColorWhileDragging("transparent")
+  }
+  const handleSelect = () => {
+    const copyArr = iconHolders
+    copyArr.forEach((el, i) => {
+      if (i === index) {
+        el.selectedDot = false;
+        el.selected = false;
+        el.selectedUp = false;
+      } else {
+        el.selectedDot = false;
+        el.selected = false;
+        el.selectedUp = false;
+        el.selectedDown = false;
+      }
+    })
+    if (copyArr[index].selectedDown) {
+      copyArr[index].selectedDown = false
+      isAnySelected(false)
+    } else {
+      copyArr[index].selectedDown = true
+      isAnySelected(true)
+    }
+    changeIconHolders(copyArr)
+  }
+
+  const handleReset = () => {
+    const copyArr = iconHolders
+    copyArr.forEach((el) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    copyArr[index].lastDroppedSlashDown = null
+    copyArr[index].rotationDown = null
+    changeIconHolders(copyArr)
+  }
 
   let styleScale = {};
   styleScale.height = `${7.5 * scale}px`;
   styleScale.width = `${7.5 * scale}px`;
 
-  // if (singleFrame) {
-  //     styleScale = {
-  //         transform: "scale(0.5)",
-  //         // transformOrigin: "top left",
-  //     }
-  // }
 
-  const [turn, setTurn] = useState(0)
   let styleTurn = {};
-  styleTurn.transform = `rotate(${turn}deg) scale(0.466)`
+  styleTurn.transform = `rotate(${iconHolders[index].rotationDown}deg) scale(0.466)`
 
-  if ((singleFrame || (singleFrameTemp && chosenTab === "frame")) && !selectedDown) {
+  if ((iconHolders[index].singleFrame || (iconHolders[index].singleFrameTemp && chosenTab === "frame")) && !iconHolders[index].selectedDown) {
     styleTurn = {
-      transform: `rotate(${turn}deg) scale(0.35)`,
+      transform: `rotate(${iconHolders[index].rotationDown}deg) scale(0.35)`,
       marginRight: `${0.88 * scale}px`,
       marginBottom: `${0.88 * scale}px`
     }
-  } else if (singleFrame && selectedDown) {
+  } else if (iconHolders[index].singleFrame && iconHolders[index].selectedDown) {
     styleTurn = {
-      transform: `rotate(${turn}deg) scale(0.35)`,
+      transform: `rotate(${iconHolders[index].rotationDown}deg) scale(0.35)`,
     }
   }
 
@@ -64,43 +99,40 @@ export const ReDragDown = ({
 
   useEffect(() => {
     if (isDragging) {
-      onResetDown(image)
+      handleReset()
     }
-  }, [isDragging, onResetDown, image]);
+    // eslint-disable-next-line
+  }, [isDragging]);
 
-  useEffect(() => {
-    if (clear) {
-      if (selectedDown) {
-        onResetDown(image)
-      }
-    }
-  }, [selectedDown, clear, onResetDown, image]);
 
-  useEffect(() => {
-    if (selectedDown) {
-      setTurn(prev => prev + 90)
-    }
-  }, [rotateRight, selectedDown]);
-
-  useEffect(() => {
-    if (selectedDown) {
-      setTurn(prev => prev - 90)
-    }
-  }, [rotateLeft, selectedDown]);
 
   return (
-    < img ref={drag} src={image.default} alt="ICON" className="slash_icon"
-      style={!visual ? { ...styleScale, ...styleTurn, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
-        : chosenColor.iconColor === "white" ? { ...styleScale, ...styleTurn, filter: "grayscale(100%) invert(1) brightness(10)" }
+    < img ref={drag} src={iconHolders[index].lastDroppedSlashDown.image.default} alt="ICON" className="slash_icon"
+      style={visual ? { ...styleScale, ...styleTurn, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
+        : chosenColor.iconColor === "white" ? {
+          ...styleScale, ...styleTurn, filter: "grayscale(100%) invert(1) brightness(10)",
+          backgroundColor: backgroundColorWhileDragging
+        }
           : { ...styleScale, ...styleTurn, filter: "grayscale(100%) brightness(0)" }}
-      onClick={() => onSelectDown()} />
+      onClick={() => handleSelect()}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+    />
   )
 }
 
 const mapStateToProps = state => ({
   chosenColor: state.color,
   chosenTab: state.tab,
+  iconHolders: state.icon.iconHolders,
+  iconHoldersRender: state.icon.iconHoldersRender,
+  visual: state.visual.visual,
+  scale: state.visual.scale,
+  // overFrameRender: state.frame.overFrameRender,
+})
+const mapDispatchToProps = dispatch => ({
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  isAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
 })
 
-
-export default connect(mapStateToProps, {})(ReDragDown)
+export default connect(mapStateToProps, mapDispatchToProps)(ReDragDown)

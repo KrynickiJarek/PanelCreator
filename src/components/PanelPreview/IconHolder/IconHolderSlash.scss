@@ -47,10 +47,11 @@
 
 
   .slash_icon{
-    transition: 0.3s;
+    // transition: 0.3s;
     z-index: inherit;
     cursor: pointer;
     transform: scale(0.466);
+    transition: transform 0.3s, background-color 0.1s linear, height 0.4s ease, width 0.4s ease;
   }
 
   .slash_holder{

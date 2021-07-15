@@ -9,14 +9,16 @@ const INITIAL_STATE = {
   overFrameRender: false,
   frameHolders: [],
   frameHoldersTemp: null,
-  changeFrameText: ""
+  frameText: "",
+  frameTitleFlag: false,
+  allowFrameTitleFlag: false
 }
 
 const frameReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.CHANGE_FRAME_FONT:
       return {
-        ...state, chosenFrameFont: action.item
+        ...state, chosenFrameFont: action.item, overFrameRender: !state.overFrameRender
       }
     case types.CHANGE_FRAME_SHAPE:
       return {
@@ -30,8 +32,8 @@ const frameReducer = (state = INITIAL_STATE, action) => {
           newFrame.framePrint.shape = state.chosenFrameShape
           newFrame.frameInfo.shape = state.chosenFrameShape
           newFrame.framePrint.over = false
-          newFrame.framePrint.text = state.changeFrameText
-          if (state.changeFrameText !== "") {
+          newFrame.framePrint.text = state.frameText
+          if (state.frameText !== "") {
             newFrame.framePrint.frameFont = state.chosenFrameFont
           } else {
             newFrame.framePrint.frameFont = null
@@ -82,7 +84,7 @@ const frameReducer = (state = INITIAL_STATE, action) => {
       }
     case types.CHANGE_FRAME_TEXT:
       return {
-        ...state, changeFrameText: action.item
+        ...state, frameText: action.item
       }
     case types.CHANGE_FRAMES_SHAPE_TO_SHARP:
       const copyFrameHoldersForShapeChangeToSharp = state.frameHolders
@@ -123,6 +125,14 @@ const frameReducer = (state = INITIAL_STATE, action) => {
     case types.OVER_FRAME_RE_RENDER:
       return {
         ...state, overFrameRender: !state.overFrameRender
+      }
+    case types.FRAME_TITLE:
+      return {
+        ...state, frameTitleFlag: action.item
+      }
+    case types.ALLOW_FRAME_TITLE:
+      return {
+        ...state, allowFrameTitleFlag: action.item
       }
     default:
       return state

@@ -1,6 +1,8 @@
 import types from "./types"
 
-const tabReducer = (state = "model", action) => {
+
+
+const tabReducer = (state = "model", action, isAnySelected) => {
   switch (action.type) {
     case types.CHANGE_TAB:
       return action.item
@@ -8,5 +10,6 @@ const tabReducer = (state = "model", action) => {
       return state
   }
 }
+
 
 export default tabReducer

@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { memo } from 'react';
 import "./MainCreator.scss"
 
 import { DndProvider } from 'react-dnd'
@@ -11,32 +11,14 @@ import PanelPreview from "../components/PanelPreview/PanelPreview"
 
 export const MainCreator = memo(function MainCreator() {
 
-  const [frameTitle, setFrameTitle] = useState(false)
-  const [allowTextFrame, setAllowTextFrame] = useState(false)
-
-
-
-  const handleFrameTitle = (income) => {
-    setFrameTitle(income)
-  }
-
-  const handleAllowTextFrame = (income) => {
-    setAllowTextFrame(income)
-  }
-
-
   return (
     // <DndProvider debugMode={true} backend={HTML5Backend}>
     <DndProvider backend={HTML5Backend}>
       <div className="main_container">
         <CreatorHeader />
         <div className="content_container">
-          <PanelEditor
-            onToggleFrameTitle={handleFrameTitle}
-            allowTextFrame={allowTextFrame} />
-          <PanelPreview
-            frameTitle={frameTitle} onAllowTextFrame={handleAllowTextFrame}
-          />
+          <PanelEditor />
+          <PanelPreview />
         </div>
       </div>
     </DndProvider>
