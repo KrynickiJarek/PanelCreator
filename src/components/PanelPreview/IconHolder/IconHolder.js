@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import { useDrop } from 'react-dnd';
 import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../../components/duck/actions"
 
 import "./IconHolder.scss"
 
@@ -30,7 +31,35 @@ const IconHolder = ({
   changeIconHolders,
   index,
   iconHolders,
+
+  iconsBackEnd,
+  changeIconsBackEnd
 }) => {
+
+  // if (iconHolders[index].lastDroppedIcon) {
+
+  //   function toBase64svg(svg, callback) {
+  //     let xhr = new XMLHttpRequest();
+  //     xhr.onload = function () {
+  //       let reader = new FileReader();
+  //       reader.onloadend = function () {
+  //         callback(reader.result);
+  //       }
+  //       reader.readAsDataURL(xhr.response);
+  //     };
+  //     xhr.open('GET', svg);
+  //     xhr.responseType = 'blob';
+  //     xhr.send();
+  //   }
+
+  //   let base64svgX = toBase64svg(iconHolders[index].lastDroppedIcon.image.default, (svg) => {
+  //     // console.log(svg);
+  //     return svg
+  //   })
+  //   console.log(base64svgX);
+  // }
+
+
 
   const handleDrop = (item) => {
     const copyArr = iconHolders
@@ -44,7 +73,177 @@ const IconHolder = ({
     copyArr[index].lastDroppedSlashDown = null
     copyArr[index].lastDroppedSlashUp = null
     changeIconHolders(copyArr)
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // function toDataURL(url, callback) {
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.onload = function () {
+    //     var reader = new FileReader();
+    //     reader.onloadend = function () {
+    //       callback(reader.result);
+    //     }
+    //     reader.readAsDataURL(xhr.response);
+    //   };
+    //   xhr.open('GET', url);
+    //   xhr.responseType = 'blob';
+    //   xhr.send();
+    // }
+
+    // toDataURL(iconHolders[index].lastDroppedIcon.image.default, function (dataUrl) {
+    //   console.log('RESULT:', dataUrl)
+    // })
+
+
+    // function toBase64svg(svg, callback) {
+    //   let xhr = new XMLHttpRequest();
+    //   xhr.onload = function () {
+    //     let reader = new FileReader();
+    //     reader.onloadend = function () {
+    //       callback(reader.result);
+    //     }
+    //     reader.readAsDataURL(xhr.response);
+    //   };
+    //   xhr.open('GET', svg);
+    //   xhr.responseType = 'blob';
+    //   xhr.send();
+    // }
+
+    // toBase64svg(iconHolders[index].lastDroppedIcon.image.default, (svg) => {
+    //   console.log(svg);
+    // })
+
+
+
+
+
+    // function toBase64svg(svg) {
+    //   let xhr = new XMLHttpRequest();
+    //   xhr.onload = function () {
+    //     let reader = new FileReader();
+    //     reader.onloadend = function () {
+    //       console.log(reader.result)
+    //       // return reader.result
+    //     }
+    //     reader.readAsDataURL(xhr.response);
+    //   };
+    //   xhr.open('GET', svg);
+    //   xhr.responseType = 'blob';
+    //   xhr.send();
+    // }
+
+
+    // function toBase64svg(svg) {
+    //   let xhr = new XMLHttpRequest();
+    //   xhr.onload = function () {
+    //     let reader = new FileReader();
+    //     reader.onloadend = function () {
+    //       console.log(reader.result)
+    //       return reader.result
+    //     }
+    //     reader.readAsDataURL(xhr.response);
+    //   };
+    //   xhr.open('GET', svg);
+    //   xhr.responseType = 'blob';
+    //   xhr.send();
+    // }
+
+
+    // const blobToData = (blob: Blob) => {
+    //   return new Promise((resolve) => {
+    //     const reader = new FileReader()
+    //     reader.onloadend = () => resolve(reader.result)
+    //     reader.readAsDataURL(blob)
+    //   })
+    // }
+    // const resData = await blobToData(resBlob)
+    function Modulo(num, denom) {
+      if (num % denom >= 0) {
+        return Math.abs(num % denom);
+      }
+      else {
+        return num % denom + denom;
+      }
+    }
+
+    const toDataURL = svg => fetch(svg)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }))
+
+    toDataURL(iconHolders[index].lastDroppedIcon.image.default)
+      .then(svgBackEnd => {
+        console.log('RESULT:', svgBackEnd)
+        let recordIcon = {
+          number: index + 1,
+          type: 0,
+          rotation: Modulo((iconHolders[index].rotationIcon + chosenModel.panelRotation), 360),
+          svg: svgBackEnd
+        }
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
+        copyIconsBackEnd.push(recordIcon)
+        changeIconsBackEnd(copyIconsBackEnd)
+      })
+
+    // const getImg64 = async () => {
+    //   const convertImgToBase64URL = (url) => {
+    //     console.log(url)
+    //     return new Promise((resolve, reject) => {
+    //       const img = new Image();
+    //       img.crossOrigin = 'Anonymous';
+    //       img.onload = () => {
+    //         let canvas = document.createElement('CANVAS')
+    //         const ctx = canvas.getContext('2d')
+    //         canvas.height = img.height;
+    //         canvas.width = img.width;
+    //         ctx.drawImage(img, 0, 0);
+    //         const dataURL = canvas.toDataURL();
+    //         canvas = null;
+    //         resolve(dataURL)
+    //       }
+    //       img.src = url;
+    //     })
+    //   }
+    //   const image = await convertImgToBase64URL(iconHolders[index].lastDroppedIcon.image.default)
+    //   console.log(image)
+    // }
+    // getImg64()
+
+
+    // async function asyncCall() {
+    //   const result = await toBase64svg(iconHolders[index].lastDroppedIcon.image.default);
+    //   console.log(result);
+    // }
+
+
+    // toBase64svg(iconHolders[index].lastDroppedIcon.image.default)
+
+    // let svgBackEnd = toBase64svg(iconHolders[index].lastDroppedIcon.image.default)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+
+    // let recordIcon = {
+    //   number: index + 1,
+    //   type: 0,
+    //   rotation: iconHolders[index].rotationIcon,
+    //   svg: "test ikona główna"
+    //   // svg: svgBackEnd
+    // }
+    // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
+    // // const copyIconsBackEnd = []
+    // // iconsBackEnd.forEach(element => {
+    // //   if (((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2))) {
+    // //   } else {
+    // //     copyIconsBackEnd.push(element)
+    // //   }
+    // // })
+    // copyIconsBackEnd.push(recordIcon)
+    // changeIconsBackEnd(copyIconsBackEnd)
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
+
 
   let warning = false
   const [show, setShow] = useState(false);
@@ -228,7 +427,8 @@ const IconHolder = ({
 
   return (
     <>
-      <div ref={over} style={(chosenModel.type !== "MDOT-18 poziomy") ? { height: "100%", width: "100%", position: "absolute" }
+      {/* <div ref={over} style={(chosenModel.type !== "MDOT-18 poziomy") ? { height: "100%", width: "100%", position: "absolute" } */}
+      <div ref={over} style={(!chosenModel.panelRotation) ? { height: "100%", width: "100%", position: "absolute" }
         : { height: "100%", width: "100%", position: "absolute", transform: "rotate(90deg)", transformOrigin: `center ${10.4 * scale}px`, transition: "0.4s ease" }}>
         <IconHolderStatus
           show={show}
@@ -287,21 +487,24 @@ const IconHolder = ({
 }
 
 const mapStateToProps = state => ({
-  chosenColor: state.color,
-  chosenTab: state.tab,
-  chosenModel: state.model,
-  iconHolders: state.icon.iconHolders,
-  iconHoldersRender: state.icon.iconHoldersRender,
-  visual: state.visual.visual,
-  scale: state.visual.scale,
-  animations: state.visual.animations,
-  removeIcon: state.visual.removeIcon,
-  removeIcons: state.visual.removeIcons,
-  chosenFrameShape: state.frame.chosenFrameShape,
+  chosenColor: state.frontEndData.color,
+  chosenTab: state.frontEndData.tab,
+  chosenModel: state.frontEndData.model,
+  iconHolders: state.frontEndData.icon.iconHolders,
+  iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
+  visual: state.frontEndData.visual.visual,
+  scale: state.frontEndData.visual.scale,
+  animations: state.frontEndData.visual.animations,
+  removeIcon: state.frontEndData.visual.removeIcon,
+  removeIcons: state.frontEndData.visual.removeIcons,
+  chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
 
+  iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconHolder)

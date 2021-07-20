@@ -15,13 +15,6 @@ const iconReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state, iconHolders: action.item, iconHoldersRender: !state.iconHoldersRender
       }
-    // case types.UPDATE_ICON_HOLDERS:
-    //   const updatedIconHolders = state.iconHolders
-    //   let propertytype = action.property
-    //   updatedIconHolders[action.index].propertytype = action.item
-    //   return {
-    //     ...state, iconHolders: updatedIconHolders, iconHoldersRender: !state.iconHoldersRender
-    // }
     case types.ADD_ICON_TO_FAVORITE:
       const copyFavoriteIcons = state.favoriteIcons;
       if (copyFavoriteIcons.indexOf(action.item) === -1) {

@@ -20,12 +20,17 @@ const showRemoveIcons = item => ({
   type: types.SHOW_REMOVE_ICONS, item
 })
 
+const changePanelName = item => ({
+  type: types.CHANGE_PANEL_NAME, item
+})
+
 const actions = {
   toggleVisual,
   changeScale,
   toggleAnimations,
   showRemoveIcon,
-  showRemoveIcons
+  showRemoveIcons,
+  changePanelName
 }
 
 export default actions

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import { connect } from "react-redux"
 import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../../components/duck/actions"
 
 import "./IconHolderSlash.scss"
 import "./IconHolderSlash.scss"
@@ -23,10 +24,14 @@ export const IconHolderSlashUp = ({
   removeIcon,
   removeIcons,
   chosenColor,
+  chosenModel,
   chosenTab,
   changeIconHolders,
   index,
   iconHolders,
+
+  iconsBackEnd,
+  changeIconsBackEnd
 }) => {
 
   const handleDrop = (item) => {
@@ -40,6 +45,43 @@ export const IconHolderSlashUp = ({
     copyArr[index].lastDroppedSlashUp = item
     copyArr[index].lastDroppedIcon = null
     changeIconHolders(copyArr)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    function Modulo(num, denom) {
+      if (num % denom >= 0) {
+        return Math.abs(num % denom);
+      }
+      else {
+        return num % denom + denom;
+      }
+    }
+
+    const toDataURL = svg => fetch(svg)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }))
+
+    toDataURL(iconHolders[index].lastDroppedSlashUp.image.default)
+      .then(svgBackEnd => {
+        console.log('RESULT:', svgBackEnd)
+
+
+        let recordIcon = {
+          number: index + 1,
+          type: 1,
+          rotation: Modulo((iconHolders[index].rotationUp + chosenModel.panelRotation), 360),
+          svg: svgBackEnd
+        }
+
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1)) })
+        copyIconsBackEnd.push(recordIcon)
+        changeIconsBackEnd(copyIconsBackEnd)
+      })
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -172,15 +214,10 @@ export const IconHolderSlashUp = ({
       <div className="slash_up_area_dropping" style={{ ...styleDropping, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }} />
       <div ref={drop} className="slash_up_area" style={{ ...styleScale, ...styleArea, top: `${6.65 * scale}px` }} >
 
-        {/* <div style={{ transform: "scale(1)" }}> */}
 
         {iconHolders[index].lastDroppedSlashUp &&
           <ReDragUp
             image={iconHolders[index].lastDroppedSlashUp.image}
-            // scale={scale}
-            // singleFrame={singleFrame}
-            // singleFrameTemp={singleFrameTemp}
-
             index={index}
 
           />
@@ -196,24 +233,27 @@ export const IconHolderSlashUp = ({
           (iconHolders[index].lastDroppedSlashUp && (warning || isActive || removeIcons || (removeIcon && iconHolders[index].selectedUp))) &&
           (<img src={Remove} alt="remove" className="slash_remove" style={styleScale} />)
         }
-        {/* </div > */}
       </div >
     </div >
   );
 }
 
 const mapStateToProps = state => ({
-  chosenColor: state.color,
-  chosenTab: state.tab,
-  iconHolders: state.icon.iconHolders,
-  iconHoldersRender: state.icon.iconHoldersRender,
-  scale: state.visual.scale,
-  animations: state.visual.animations,
-  removeIcon: state.visual.removeIcon,
-  removeIcons: state.visual.removeIcons,
+  chosenColor: state.frontEndData.color,
+  chosenTab: state.frontEndData.tab,
+  chosenModel: state.frontEndData.model,
+  iconHolders: state.frontEndData.icon.iconHolders,
+  iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
+  scale: state.frontEndData.visual.scale,
+  animations: state.frontEndData.visual.animations,
+  removeIcon: state.frontEndData.visual.removeIcon,
+  removeIcons: state.frontEndData.visual.removeIcons,
+
+  iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconHolderSlashUp)

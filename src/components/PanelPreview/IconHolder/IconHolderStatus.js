@@ -2,7 +2,7 @@ import { connect } from "react-redux"
 import { useDrop } from 'react-dnd';
 import "./IconHolderStatus.scss"
 import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
-
+import actionsBackEnd from "../../../components/duck/actions"
 
 import Dot from "../../../assets/preview/dot.svg"
 import Remove from "../../../assets/preview/remove.svg"
@@ -27,6 +27,8 @@ const IconHolderStatus = ({
   iconHolders,
 
 
+  iconsBackEnd,
+  changeIconsBackEnd
 
 }) => {
 
@@ -40,6 +42,42 @@ const IconHolderStatus = ({
     })
     copyArr[index].lastDroppedDot = item
     changeIconHolders(copyArr)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    function Modulo(num, denom) {
+      if (num % denom >= 0) {
+        return Math.abs(num % denom);
+      }
+      else {
+        return num % denom + denom;
+      }
+    }
+
+    const toDataURL = svg => fetch(svg)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }))
+
+    toDataURL(iconHolders[index].lastDroppedDot.image.default)
+      .then(svgBackEnd => {
+        console.log('RESULT:', svgBackEnd)
+
+        let recordIcon = {
+          number: index + 1,
+          type: 3,
+          rotation: Modulo((iconHolders[index].rotationDot + chosenModel.panelRotation), 360),
+          svg: svgBackEnd
+        }
+
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 3)) })
+        copyIconsBackEnd.push(recordIcon)
+        changeIconsBackEnd(copyIconsBackEnd)
+      })
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -89,7 +127,8 @@ const IconHolderStatus = ({
         };
       };
     };
-    if (chosenModel.type === "MDOT-18 poziomy") {
+    // if (chosenModel.type === "MDOT-18 poziomy") {
+    if (chosenModel.panelRotaton) {
       styleArea = {
         transform: "scale(2.2) rotate(90deg)",
       };
@@ -136,7 +175,8 @@ const IconHolderStatus = ({
       transform: "translateX(-50%) scale(3.2)",
     };
 
-    if (chosenModel.type === "MDOT-18 poziomy") {
+    // if (chosenModel.type === "MDOT-18 poziomy") {
+    if (chosenModel.panelRotaton) {
       styleArea = {
         transform: "scale(2) rotate(90deg)",
       };
@@ -159,14 +199,16 @@ const IconHolderStatus = ({
   }
 
   return (
-    <div style={(chosenModel.type !== "MDOT-18 poziomy") ?
+    // <div style={(chosenModel.type !== "MDOT-18 poziomy") ?
+    <div style={(!chosenModel.panelRotaton) ?
       { ...styleZIndex, position: "relative" }
       : { ...styleZIndex, position: "relative", transform: "rotate(-90deg)", transformOrigin: `center ${9.4 * scale}px`, transition: "0.4s ease" }}>
       <div className="status_area_dropping_ani" style={{ ...styleDroppingAni, height: `${5.5 * scale}px`, width: `${5.5 * scale}px`, margin: `${-0.85 * scale}px auto 0` }}>
         <div className="status_area_dropping_pulse" style={styleDroppingPulse} />
       </div>
       <div className="status_area_dropping" style={{ ...styleScale, ...styleDropping, margin: `${0.65 * scale}px auto ${2.5 * scale}px` }} />
-      <div ref={drop} className="status_area" style={(chosenModel.type === "MDOT-18 poziomy") ?
+      {/* <div ref={drop} className="status_area" style={(chosenModel.type === "MDOT-18 poziomy") ? */}
+      <div ref={drop} className="status_area" style={(chosenModel.panelRotaton) ?
         { transform: "rotate(90deg)", ...styleArea, height: `${3.8 * scale}px`, width: `${3.8 * scale}px`, margin: `${1 * scale}px auto ${1.85 * scale}px` }
         : { ...styleArea, height: `${3.8 * scale}px`, width: `${3.8 * scale}px`, margin: `${1 * scale}px auto ${1.85 * scale}px` }}>
 
@@ -192,19 +234,23 @@ const IconHolderStatus = ({
 
 
 const mapStateToProps = state => ({
-  chosenColor: state.color,
-  chosenTab: state.tab,
-  chosenModel: state.model,
-  iconHolders: state.icon.iconHolders,
-  iconHoldersRender: state.icon.iconHoldersRender,
-  visual: state.visual.visual,
-  scale: state.visual.scale,
-  animations: state.visual.animations,
-  removeIcon: state.visual.removeIcon,
-  removeIcons: state.visual.removeIcons,
+  chosenColor: state.frontEndData.color,
+  chosenTab: state.frontEndData.tab,
+  chosenModel: state.frontEndData.model,
+  iconHolders: state.frontEndData.icon.iconHolders,
+  iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
+  visual: state.frontEndData.visual.visual,
+  scale: state.frontEndData.visual.scale,
+  animations: state.frontEndData.visual.animations,
+  removeIcon: state.frontEndData.visual.removeIcon,
+  removeIcons: state.frontEndData.visual.removeIcons,
+
+  iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconHolderStatus)

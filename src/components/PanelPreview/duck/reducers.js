@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   animations: true,
   removeIcon: false,
   removeIcons: false,
+  panelName: "",
 }
 
 const visualReducer = (state = INITIAL_STATE, action) => {
@@ -29,6 +30,10 @@ const visualReducer = (state = INITIAL_STATE, action) => {
     case types.SHOW_REMOVE_ICONS:
       return {
         ...state, removeIcons: action.item
+      }
+    case types.CHANGE_PANEL_NAME:
+      return {
+        ...state, panelName: action.item
       }
     default:
       return state

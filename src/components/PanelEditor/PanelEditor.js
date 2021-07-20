@@ -165,10 +165,9 @@ const PanelEditor = ({ tab, change, onToggleFrameTitle, allowTextFrame, iconHold
   );
 };
 
-// export default PanelEditor;
 const mapStateToProps = state => ({
-  tab: state.tab,
-  iconHolders: state.icon.iconHolders,
+  tab: state.frontEndData.tab,
+  iconHolders: state.frontEndData.icon.iconHolders,
 })
 
 const mapDispatchToProps = dispatch => ({

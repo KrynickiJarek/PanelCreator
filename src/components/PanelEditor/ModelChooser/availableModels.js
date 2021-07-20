@@ -3,6 +3,7 @@ const availablePanels = [
   {
     type: "MDOT-2",
     numberOfDots: 2,
+    panelRotation: 0,
     height: 90,
     width: 90,
     lcdScreen: false,
@@ -24,10 +25,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 0,
   },
   {
     type: "MDOT-4",
     numberOfDots: 4,
+    panelRotation: 0,
     height: 90,
     width: 90,
     lcdScreen: false,
@@ -49,10 +52,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 1,
   },
   {
     type: "MDOT-6",
     numberOfDots: 6,
+    panelRotation: 0,
     height: 90,
     width: 90,
     lcdScreen: {
@@ -80,10 +85,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 2,
   },
   {
     type: "MDOT-6 nowy",
     numberOfDots: 6,
+    panelRotation: 0,
     height: 90,
     width: 90,
     lcdScreen: {
@@ -111,10 +118,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 3,
   },
   {
     type: "MDOT-9",
     numberOfDots: 9,
+    panelRotation: 0,
     height: 90,
     width: 90,
     lcdScreen: false,
@@ -136,10 +145,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 4,
   },
   {
     type: "MDOT-15",
     numberOfDots: 15,
+    panelRotation: 0,
     height: 160,
     width: 90,
     lcdScreen: {
@@ -170,10 +181,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 5,
   },
   {
     type: "MDOT-18",
     numberOfDots: 18,
+    panelRotation: 0,
     height: 160,
     width: 90,
     lcdScreen: false,
@@ -198,10 +211,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 6,
   },
   {
     type: "MDOT-18 poziomy",
     numberOfDots: 18,
+    panelRotation: 90,
     height: 160,
     width: 90,
     lcdScreen: false,
@@ -226,10 +241,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 7,
   },
   {
     type: "MDOT-M18",
     numberOfDots: 18,
+    panelRotation: 0,
     height: 160,
     width: 90,
     lcdScreen: {
@@ -261,10 +278,12 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 8,
   },
   {
     type: "MDOT-M18 uniwersalny",
     numberOfDots: 18,
+    panelRotation: 0,
     height: 160,
     width: 90,
     lcdScreen: {
@@ -296,6 +315,7 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
+    backEndPanelType: 8,
 
   },
 ];

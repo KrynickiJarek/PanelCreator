@@ -21,11 +21,6 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
   const [unlock, setUnlock] = useState(false)
 
 
-
-
-
-
-
   return (<div className="scroll_container">
     <div className="visual_background" style={visual ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
       <div className="visual_container">
@@ -35,7 +30,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
             :
             <img src={Locked} alt="locked" className="visual_image" />
           }
-          <h2 className="visual_info">Niedostępne w trybie podglądu</h2>
+          <h2 className="visual_info">Niedostępne w trybie wizualizacji</h2>
         </div>
         <div className="visual_button"
           onClick={() => toggleVisual(!visual)}
@@ -105,9 +100,9 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
 }
 
 const mapStateToProps = state => ({
-  visual: state.visual.visual,
-  favoriteIcons: state.icon.favoriteIcons,
-  favoriteIconsRender: state.icon.favoriteIconsRender
+  visual: state.frontEndData.visual.visual,
+  favoriteIcons: state.frontEndData.icon.favoriteIcons,
+  favoriteIconsRender: state.frontEndData.icon.favoriteIconsRender
 
 })
 

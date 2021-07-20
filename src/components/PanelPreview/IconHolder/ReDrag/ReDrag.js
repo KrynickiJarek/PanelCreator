@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import { useDrag } from 'react-dnd';
 import actionsIcon from "../../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../../../components/duck/actions"
 
 import "./../IconHolder.scss"
 
@@ -13,7 +14,10 @@ export const ReDrag = ({
   iconHolders,
   index,
   changeIconHolders,
-  isAnySelected
+  isAnySelected,
+
+  iconsBackEnd,
+  changeIconsBackEnd
 }) => {
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
@@ -61,6 +65,11 @@ export const ReDrag = ({
     copyArr[index].lastDroppedIcon = null
     copyArr[index].rotationIcon = 0;
     changeIconHolders(copyArr)
+
+    // ---------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0)) })
+    changeIconsBackEnd(copyIconsBackEnd)
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
 
@@ -90,7 +99,7 @@ export const ReDrag = ({
 
 
   return (
-    < img ref={drag} src={iconHolders[index].lastDroppedIcon.image.default} alt="ICON" className="icon"
+    < img id="svg" ref={drag} src={iconHolders[index].lastDroppedIcon.image.default} alt="ICON" className="icon"
       style={visual ? { ...styleScale, transform: `rotate(${iconHolders[index].rotationIcon}deg)`, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
         : chosenColor.iconColor === "white" ? {
           ...styleScale, transform: `rotate(${iconHolders[index].rotationIcon}deg)`, filter: "grayscale(100%) invert(1) brightness(10)",
@@ -106,15 +115,18 @@ export const ReDrag = ({
 
 
 const mapStateToProps = state => ({
-  chosenColor: state.color,
-  iconHolders: state.icon.iconHolders,
-  iconHoldersRender: state.icon.iconHoldersRender,
-  visual: state.visual.visual,
-  scale: state.visual.scale,
+  chosenColor: state.frontEndData.color,
+  iconHolders: state.frontEndData.icon.iconHolders,
+  iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
+  visual: state.frontEndData.visual.visual,
+  scale: state.frontEndData.visual.scale,
+
+  iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   isAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReDrag)

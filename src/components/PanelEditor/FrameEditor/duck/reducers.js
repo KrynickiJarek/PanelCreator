@@ -11,7 +11,8 @@ const INITIAL_STATE = {
   frameHoldersTemp: null,
   frameText: "",
   frameTitleFlag: false,
-  allowFrameTitleFlag: false
+  allowFrameTitleFlag: false,
+  lastRemovedFrameIndex: null
 }
 
 const frameReducer = (state = INITIAL_STATE, action) => {
@@ -54,7 +55,9 @@ const frameReducer = (state = INITIAL_STATE, action) => {
       }
     case types.REMOVE_FRAME:
       return {
-        ...state, frameHolders: [...state.frameHolders.filter(function (element, index) { return index !== action.item })], removeFrame: !state.removeFrame
+        ...state, frameHolders: [...state.frameHolders.filter(function (element, index) { return index !== action.item })],
+        removeFrame: !state.removeFrame,
+        lastRemovedFrameIndex: action.item
       }
     case types.OVER_FRAME:
       const copyFrameHolders = state.frameHolders;

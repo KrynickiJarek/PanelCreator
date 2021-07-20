@@ -22,7 +22,7 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) =>
               :
               <img src={Locked} alt="locked" className="visual_image" />
             }
-            <h2 className="visual_info">Niedostępne w trybie podglądu</h2>
+            <h2 className="visual_info">Niedostępne w trybie wizualizacji</h2>
           </div>
           <div className="visual_button"
             onClick={() => toggleVisual(!visual)}
@@ -86,8 +86,8 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) =>
 };
 
 const mapStateToProps = state => ({
-  visual: state.visual.visual,
-  chosenTextFont: state.text.chosenTextFont,
+  visual: state.frontEndData.visual.visual,
+  chosenTextFont: state.frontEndData.text.chosenTextFont,
 })
 
 const mapDispatchToProps = dispatch => ({

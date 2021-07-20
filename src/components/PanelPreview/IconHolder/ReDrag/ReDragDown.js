@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { connect } from "react-redux"
 import actionsIcon from "../../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../../../components/duck/actions"
 
 import "./../IconHolderSlash.scss"
 
@@ -17,8 +18,10 @@ export const ReDragDown = ({
   iconHolders,
   index,
   changeIconHolders,
-  isAnySelected
+  isAnySelected,
 
+  iconsBackEnd,
+  changeIconsBackEnd
 }) => {
 
 
@@ -66,6 +69,10 @@ export const ReDragDown = ({
     copyArr[index].lastDroppedSlashDown = null
     copyArr[index].rotationDown = null
     changeIconHolders(copyArr)
+    // ---------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 2)) })
+    changeIconsBackEnd(copyIconsBackEnd)
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
   let styleScale = {};
@@ -122,17 +129,19 @@ export const ReDragDown = ({
 }
 
 const mapStateToProps = state => ({
-  chosenColor: state.color,
-  chosenTab: state.tab,
-  iconHolders: state.icon.iconHolders,
-  iconHoldersRender: state.icon.iconHoldersRender,
-  visual: state.visual.visual,
-  scale: state.visual.scale,
-  // overFrameRender: state.frame.overFrameRender,
+  chosenColor: state.frontEndData.color,
+  chosenTab: state.frontEndData.tab,
+  iconHolders: state.frontEndData.icon.iconHolders,
+  iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
+  visual: state.frontEndData.visual.visual,
+  scale: state.frontEndData.visual.scale,
+
+  iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   isAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReDragDown)

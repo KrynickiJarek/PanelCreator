@@ -48,8 +48,8 @@ const IconToDrag = ({
 }
 
 const mapStateToProps = state => ({
-  favoriteIcons: state.icon.favoriteIcons,
-  favoriteIconsRender: state.icon.favoriteIconsRender
+  favoriteIcons: state.frontEndData.icon.favoriteIcons,
+  favoriteIconsRender: state.frontEndData.icon.favoriteIconsRender
 })
 
 const mapDispatchToProps = dispatch => ({

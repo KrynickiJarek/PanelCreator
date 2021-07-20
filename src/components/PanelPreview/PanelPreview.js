@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
 import actionsVisual from "../PanelPreview/duck/actions"
 import actionsIcon from "../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../components/duck/actions"
 
 import moment from 'moment';
 
@@ -20,6 +21,7 @@ import Zoomout from "../../assets/scale/zoomout.svg"
 
 import Alert from "../../assets/side/alert.svg"
 
+import Savetopdf from "../../assets/side/savetopdf.svg"
 import Visual from "../../assets/side/visual.svg"
 import Clearall from "../../assets/side/clearall.svg"
 import Clearallicons from "../../assets/side/clearallicons.svg"
@@ -74,6 +76,7 @@ const PanelPreview = ({
   addNewFrameState,
   addNewFrame,
   removeFrame,
+  lastRemovedFrameIndex,
   frameHolders,
   frameHoldersTemp,
   changeFrameHolders,
@@ -97,6 +100,17 @@ const PanelPreview = ({
   changeIsAnySelected,
   showRemoveIcon,
   showRemoveIcons,
+
+  changePanelName,
+  panelName,
+
+  changePanelNameBackEnd,
+  changePanelTextBackEnd,
+  changeIconsBackEnd,
+  changeFramesBackEnd,
+  panelTextBackEnd,
+  iconsBackEnd,
+  framesBackEnd,
 
 
 }) => {
@@ -124,6 +138,8 @@ const PanelPreview = ({
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
 
+  const [isFocusedInputName, setIsFocusedInputName] = useState(false)
+
   const [time, setTime] = useState(moment().format('HH:mm'));
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
@@ -135,7 +151,9 @@ const PanelPreview = ({
 
   const [removeAll, setRemoveAll] = useState(false)
 
+
   const [differentFrameFont, setDifferentFrameFont] = useState(false)
+  const [frameTitles, setFrameTitles] = useState(false)
 
   const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
   const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
@@ -166,7 +184,7 @@ const PanelPreview = ({
     setHideAll(false)
     setDifferentFont(false)
     setDifferentFrameFont(false)
-
+    setFrameTitles(false)
 
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
@@ -200,13 +218,71 @@ const PanelPreview = ({
       setNewFrameChange(arrNewFrameChange)
       setTempFrame(arrTempFrame)
       changeIconHolders(arrIconHolders);
-      // setTempFrameText("")
       changeFrameText("")
       setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
       (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
       setVisualSmooth(false)
       changeFrameHolders([])
+      changeFramesBackEnd([])
+      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+      if (chosenModel.lcdScreen.lcdType === "slide") {
+        const copyIconsBackEnd = []
+
+        const universalIconArr = [
+          {
+            icon: Minusuni,
+            number: 1
+          },
+          {
+            icon: Minusuni,
+            number: 3
+          },
+          {
+            icon: Leftuni,
+            number: 4
+          },
+          {
+            icon: Rightuni,
+            number: 6
+          },
+          {
+            icon: Minusuni,
+            number: 7
+          },
+          {
+            icon: Minusuni,
+            number: 9
+          },
+        ]
+
+        universalIconArr.forEach(element => {
+          const toDataURL = svg => fetch(svg)
+            .then(response => response.blob())
+            .then(blob => new Promise((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onloadend = () => resolve(reader.result)
+              reader.onerror = reject
+              reader.readAsDataURL(blob)
+            }))
+
+          toDataURL(element.icon)
+            .then(svgBackEnd => {
+              let recordIcon = {
+                number: element.number,
+                type: 0,
+                rotation: 0,
+                svg: svgBackEnd
+              }
+              copyIconsBackEnd.push(recordIcon)
+              changeIconsBackEnd(copyIconsBackEnd)
+            })
+        })
+      } else {
+        changeIconsBackEnd([])
+      }
+      // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+      changePanelTextBackEnd([])
     }, 300);
     return () => clearTimeout(modeltimeout);
     // eslint-disable-next-line
@@ -228,8 +304,21 @@ const PanelPreview = ({
     } else {
       setDifferentFont(false)
     }
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    copyPanelTextBackEnd.forEach(element => {
+      if (element.number === isFocusedInputIndex + 1) {
+        if (element.type === 0 && isFocusedInputSide === "down") {
+          element.font = chosenTextFont
+        } else if (element.type === 1 && isFocusedInputSide === "up") {
+          element.font = chosenTextFont
+        }
+      }
+    })
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
-  }, [isFocusedInputIndex, isFocusedInputSide]);
+  }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont]);
 
   useEffect(() => {
     if (addNewFrameState) {
@@ -270,18 +359,77 @@ const PanelPreview = ({
       const copyFrameHolders = frameHolders
 
       const checkFrameFontArr = []
+      const checkFrameTitlesArr = []
+
+
       copyFrameHolders.forEach((el) => {
         if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
           checkFrameFontArr.push(el.framePrint.frameFont)
         }
+        if (el.framePrint.text !== "") {
+          checkFrameTitlesArr.push(el.framePrint.text)
+        }
       })
+
       if (checkFrameFontArr.length > 1) {
         setDifferentFrameFont(true)
       } else {
         setDifferentFrameFont(false)
       }
 
+      if (checkFrameTitlesArr.length > 0) {
+        setFrameTitles(true)
+      } else {
+        setFrameTitles(false)
+      }
+      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
 
+      let sizeXBackEnd = 1
+      let sizeYBackEnd = 1
+      // if (chosenModel.type !== "MDOT-18 poziomy") {
+      if (!chosenModel.panelRotation) {
+        sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns
+        sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
+      } else {
+        sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
+        sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns
+      }
+
+      let iconStartBackEnd = frameHolders[frameHolders.length - 1].frameInfo.startCell
+
+      let cornerRadiousBackEnd = 0
+      if (chosenFrameShape === "sharp") {
+        cornerRadiousBackEnd = 0
+      } else if (chosenFrameShape === "round") {
+        cornerRadiousBackEnd = 1
+      }
+
+
+      let titleBackEnd = null
+      let fontBackEnd = null
+      if (frameText !== "") {
+        titleBackEnd = frameText
+        fontBackEnd = chosenFrameFont
+      } else if (frameText === "") {
+        titleBackEnd = null
+        fontBackEnd = null
+      }
+
+
+      const copyIconsBackEnd = framesBackEnd
+      const newFrameBackEnd = {
+        sizeX: sizeXBackEnd, // szerokość, 1 to mała, 
+        sizeY: sizeYBackEnd, // wysokość,  
+        iconStart: iconStartBackEnd,
+        cornerRadious: cornerRadiousBackEnd,
+        title: titleBackEnd,
+        font: fontBackEnd,
+      }
+      copyIconsBackEnd.push(newFrameBackEnd)
+      changeFramesBackEnd(copyIconsBackEnd)
+
+
+      // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       setNewFrame(arrNewFrame)
       setNewFrameHide(arrNewFrameHide)
       setNewFrameChange(arrNewFrameChange)
@@ -298,6 +446,11 @@ const PanelPreview = ({
 
 
   useEffect(() => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyFramesBackEnd = framesBackEnd.filter(function (element, index) { return index !== lastRemovedFrameIndex })
+    changeFramesBackEnd(copyFramesBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+
     const copyFrameHolders = frameHolders
     const checkSingleFramesArr = []
     copyFrameHolders.forEach(element => {
@@ -318,9 +471,14 @@ const PanelPreview = ({
     changeIconHolders(copyArr)
 
     const checkFrameFontArr = []
+    const checkFrameTitlesArr = []
+
     copyFrameHolders.forEach((el) => {
       if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
         checkFrameFontArr.push(el.framePrint.frameFont)
+      }
+      if (el.framePrint.text !== "") {
+        checkFrameTitlesArr.push(el.framePrint.text)
       }
     })
     if (checkFrameFontArr.length > 1) {
@@ -328,10 +486,16 @@ const PanelPreview = ({
     } else {
       setDifferentFrameFont(false)
     }
+
+    if (checkFrameTitlesArr.length > 0) {
+      setFrameTitles(true)
+    } else {
+      setFrameTitles(false)
+    }
+
     overFrameReRender()
     // eslint-disable-next-line 
   }, [removeFrame]);
-
 
 
 
@@ -441,7 +605,8 @@ const PanelPreview = ({
 
   let panelPreviewStyle = {};
   panelPreviewStyle.width = `${(chosenModel.width * 5) + 280}px`;
-  if (chosenModel.type === "MDOT-18 poziomy") {
+  // if (chosenModel.type === "MDOT-18 poziomy") {
+  if (chosenModel.panelRotation) {
     panelPreviewStyle.width = `${(chosenModel.height * 5) + 450}px`;
   }
 
@@ -451,7 +616,8 @@ const PanelPreview = ({
   chosenModelStyle.height = `${chosenModel.height * sc}px`;
   chosenModelStyle.width = `${chosenModel.width * sc}px`;
   chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out";
-  if (chosenModel.type === "MDOT-18 poziomy") {
+  // if (chosenModel.type === "MDOT-18 poziomy") {
+  if (chosenModel.panelRotation) {
     chosenModelStyle.transform = "rotate(-90deg)"
   }
 
@@ -475,7 +641,6 @@ const PanelPreview = ({
   let resizeStyle = {};
   resizeStyle.transition = "400ms ease";
 
-
   let universalIconBoxStyle = {};
   universalIconBoxStyle.height = `${60 * sc}px`;
   universalIconBoxStyle.width = `${70.4 * sc}px`;
@@ -489,7 +654,8 @@ const PanelPreview = ({
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
   visualStyle.height = `${chosenModel.height * sc}px`;
-  if (chosenModel.type === "MDOT-18 poziomy") {
+  // if (chosenModel.type === "MDOT-18 poziomy") {
+  if (chosenModel.panelRotation) {
     visualStyle.width = `${chosenModel.height * sc}px`;
     visualStyle.height = `${chosenModel.width * sc}px`;
     visualStyle.transform = "rotate(90deg)";
@@ -511,9 +677,11 @@ const PanelPreview = ({
 
 
 
-  if ((chosenModel.type !== "MDOT-18 poziomy") && (panelContainerHeight < (chosenModel.height * sc))) {
+  // if ((chosenModel.type !== "MDOT-18 poziomy") && (panelContainerHeight < (chosenModel.height * sc))) {
+  if ((!chosenModel.panelRotation) && (panelContainerHeight < (chosenModel.height * sc))) {
     resizeStyle.height = `${(chosenModel.height * sc) + 50}px`;
-  } else if ((chosenModel.type === "MDOT-18 poziomy") && (panelContainerHeight < (chosenModel.width * sc))) {
+    // } else if ((chosenModel.type === "MDOT-18 poziomy") && (panelContainerHeight < (chosenModel.width * sc))) {
+  } else if ((chosenModel.panelRotation) && (panelContainerHeight < (chosenModel.width * sc))) {
     resizeStyle.height = `${(chosenModel.width * sc) + 50}px`;
   }
   else {
@@ -521,9 +689,11 @@ const PanelPreview = ({
   }
 
 
-  if (chosenModel.type !== "MDOT-18 poziomy" && panelContainerWidth < (chosenModel.width * sc)) { //TA LINIJKA
+  // if (chosenModel.type !== "MDOT-18 poziomy" && panelContainerWidth < (chosenModel.width * sc)) {
+  if (!chosenModel.panelRotation && panelContainerWidth < (chosenModel.width * sc)) {
     resizeStyle.width = `${(chosenModel.width * sc) + 50}px`;
-  } else if (chosenModel.type === "MDOT-18 poziomy" && (panelContainerWidth < chosenModel.height * sc)) { //TA LINIJKA
+    // } else if (chosenModel.type === "MDOT-18 poziomy" && (panelContainerWidth < chosenModel.height * sc)) {
+  } else if (chosenModel.panelRotation && (panelContainerWidth < chosenModel.height * sc)) {
     resizeStyle.width = `${(chosenModel.height * sc) + 50}px`;
   }
   else {
@@ -539,7 +709,8 @@ const PanelPreview = ({
   logoStyle.bottom = `${5 * sc}px`;
   logoStyle.right = `${5 * sc}px`;
 
-  if (chosenModel.type === "MDOT-18 poziomy") {
+  // if (chosenModel.type === "MDOT-18 poziomy") {
+  if (chosenModel.panelRotation) {
     logoStyle.bottom = `${5 * sc}px`;
     logoStyle.left = `${5 * sc}px`;
     logoStyle.transform = "translate(-100%,0) rotate(90deg)  ";
@@ -663,11 +834,11 @@ const PanelPreview = ({
 
   const handleClearAll = () => {
     setRemoveAll(false)
-
     const tempArr = [];
     setHideAll(false)
     setDifferentFont(false)
     setDifferentFrameFont(false)
+    setFrameTitles(false)
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
       chosenModel.dotLocation.forEach(element => {
@@ -709,6 +880,65 @@ const PanelPreview = ({
       setTempFrame(arrTempFrame)
       changeFrameText("")
       changeFrameHolders([])
+      changeFramesBackEnd([])
+      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+      if (chosenModel.lcdScreen.lcdType === "slide") {
+        const copyIconsBackEnd = []
+
+        const universalIconArr = [
+          {
+            icon: Minusuni,
+            number: 1
+          },
+          {
+            icon: Minusuni,
+            number: 3
+          },
+          {
+            icon: Leftuni,
+            number: 4
+          },
+          {
+            icon: Rightuni,
+            number: 6
+          },
+          {
+            icon: Minusuni,
+            number: 7
+          },
+          {
+            icon: Minusuni,
+            number: 9
+          },
+        ]
+
+        universalIconArr.forEach(element => {
+          const toDataURL = svg => fetch(svg)
+            .then(response => response.blob())
+            .then(blob => new Promise((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onloadend = () => resolve(reader.result)
+              reader.onerror = reject
+              reader.readAsDataURL(blob)
+            }))
+
+          toDataURL(element.icon)
+            .then(svgBackEnd => {
+              let recordIcon = {
+                number: element.number,
+                type: 0,
+                rotation: 0,
+                svg: svgBackEnd
+              }
+              copyIconsBackEnd.push(recordIcon)
+              changeIconsBackEnd(copyIconsBackEnd)
+            })
+        })
+      } else {
+        changeIconsBackEnd([])
+      }
+      // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+      changePanelTextBackEnd([])
       setTextFrame(false)
       chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
     }, 300);
@@ -736,62 +966,146 @@ const PanelPreview = ({
       el.selectedDown = false;
     })
     changeIconHolders(copyArr)
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    if (chosenModel.lcdScreen.lcdType === "slide") {
+      const copyIconsBackEnd = []
+
+      const universalIconArr = [
+        {
+          icon: Minusuni,
+          number: 1
+        },
+        {
+          icon: Minusuni,
+          number: 3
+        },
+        {
+          icon: Leftuni,
+          number: 4
+        },
+        {
+          icon: Rightuni,
+          number: 6
+        },
+        {
+          icon: Minusuni,
+          number: 7
+        },
+        {
+          icon: Minusuni,
+          number: 9
+        },
+      ]
+
+      universalIconArr.forEach(element => {
+        const toDataURL = svg => fetch(svg)
+          .then(response => response.blob())
+          .then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result)
+            reader.onerror = reject
+            reader.readAsDataURL(blob)
+          }))
+
+        toDataURL(element.icon)
+          .then(svgBackEnd => {
+            let recordIcon = {
+              number: element.number,
+              type: 0,
+              rotation: 0,
+              svg: svgBackEnd
+            }
+            copyIconsBackEnd.push(recordIcon)
+            changeIconsBackEnd(copyIconsBackEnd)
+          })
+      })
+    } else {
+      changeIconsBackEnd([])
+    }
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
   const handleClearIcon = () => {
     const copyArr = iconHolders;
-    copyArr.forEach((el) => {
+    const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    copyArr.forEach((el, index) => {
       if (el.selectedDot) {
         el.lastDroppedDot = null;
         el.selectedDot = false;
         el.rotationDot = 0;
+        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)), 1)
       } else if (el.selected) {
         el.lastDroppedIcon = null;
         el.selected = false;
         el.rotationIcon = 0;
+        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)), 1)
       } else if (el.selectedDown) {
         el.lastDroppedSlashDown = null;
         el.selectedDown = false;
         el.rotationDown = 0;
+        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)), 1)
       } else if (el.selectedUp) {
         el.lastDroppedSlashUp = null;
         el.selectedUp = false;
         el.rotationUp = 0;
+        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)), 1)
       }
     })
     changeIconHolders(copyArr)
+    changeIconsBackEnd(copyIconsBackEnd)
+  }
+
+  function Modulo(num, denom) {
+    if (num % denom >= 0) {
+      return Math.abs(num % denom);
+    }
+    else {
+      return num % denom + denom;
+    }
   }
 
   const handleRotateRight = () => {
     const copyArr = iconHolders;
-    copyArr.forEach((el) => {
+    const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    copyArr.forEach((el, index) => {
       if (el.selectedDot) {
         el.rotationDot = el.rotationDot + 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
       } else if (el.selected) {
         el.rotationIcon = el.rotationIcon + 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
       } else if (el.selectedDown) {
         el.rotationDown = el.rotationDown + 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
       } else if (el.selectedUp) {
         el.rotationUp = el.rotationUp + 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
       }
     })
     changeIconHolders(copyArr)
+    changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
   }
 
   const handleRotateLeft = () => {
     const copyArr = iconHolders;
-    copyArr.forEach((el) => {
+    const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    copyArr.forEach((el, index) => {
       if (el.selectedDot) {
         el.rotationDot = el.rotationDot - 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
       } else if (el.selected) {
         el.rotationIcon = el.rotationIcon - 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
       } else if (el.selectedDown) {
         el.rotationDown = el.rotationDown - 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
       } else if (el.selectedUp) {
         el.rotationUp = el.rotationUp - 90;
+        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
       }
     })
     changeIconHolders(copyArr)
+    changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
   }
 
 
@@ -803,6 +1117,13 @@ const PanelPreview = ({
       el.fontUp = null;
     })
     changeIconHolders(copyArr)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd.filter(element => element.type === 0)
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+
+
   }
 
   const handleClearAllText = () => {
@@ -814,6 +1135,7 @@ const PanelPreview = ({
       el.fontDown = null;
     })
     changeIconHolders(copyArr)
+    changePanelTextBackEnd([])
   }
 
 
@@ -828,6 +1150,37 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     copyArr[index].textUp = text.target.value.toUpperCase()
     changeIconHolders(copyArr)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+    // console.log(copyPanelTextBackEnd[recordTextIndex].type)
+
+    let recordText = {
+      number: index + 1,
+      type: 1,
+      title: text.target.value.toUpperCase(),
+      font: chosenTextFont
+    }
+    if (recordTextIndex > -1) {
+      if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+        copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
+      }
+      else if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+        let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(index + 1)
+        if (recordTextLastIndex > -1) {
+          if (copyPanelTextBackEnd[recordTextLastIndex].type === 1) {
+            copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
+          } else {
+            copyPanelTextBackEnd.push(recordText)
+          }
+        }
+      }
+    } else {
+      copyPanelTextBackEnd.push(recordText)
+    }
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   };
 
 
@@ -835,6 +1188,36 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     copyArr[index].textDown = text.target.value.toUpperCase()
     changeIconHolders(copyArr)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+
+    let recordText = {
+      number: index + 1,
+      type: 0,
+      title: text.target.value.toUpperCase(),
+      font: chosenTextFont
+    }
+    if (recordTextIndex > -1) {
+      if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+        copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
+      }
+      else if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+        let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(index + 1)
+        if (recordTextLastIndex > -1) {
+          if (copyPanelTextBackEnd[recordTextLastIndex].type === 0) {
+            copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
+          } else {
+            copyPanelTextBackEnd.push(recordText)
+          }
+        }
+      }
+    } else {
+      copyPanelTextBackEnd.push(recordText)
+    }
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   };
 
 
@@ -842,6 +1225,15 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     copyArr[index].fontDown = chosenTextFont
     changeIconHolders(copyArr)
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    copyPanelTextBackEnd.forEach(element => {
+      if ((element.number === index + 1) && element.type === 0) {
+        element.font = chosenTextFont
+      }
+    })
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
 
@@ -849,6 +1241,16 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     copyArr[index].fontUp = chosenTextFont
     changeIconHolders(copyArr)
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    copyPanelTextBackEnd.forEach(element => {
+      if ((element.number === index + 1) && element.type === 1) {
+        element.font = chosenTextFont
+      }
+    })
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
 
@@ -862,6 +1264,14 @@ const PanelPreview = ({
     })
     changeIconHolders(copyArr)
     setDifferentFont(false)
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    copyPanelTextBackEnd.forEach(element => {
+      element.font = chosenTextFont
+    })
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+
   }
 
   const handleSetOneFrameFont = () => {
@@ -880,6 +1290,7 @@ const PanelPreview = ({
     setIsFocusedInputIndex(null)
     setIsFocusedInputSide(null)
     setIsFocusedInputFrame(false)
+    setIsFocusedInputName(false)
   }
 
 
@@ -889,6 +1300,7 @@ const PanelPreview = ({
       setIsFocusedInputIndex(null)
       setIsFocusedInputSide(null)
       setIsFocusedInputFrame(false)
+      setIsFocusedInputName(false)
     }
   }
 
@@ -899,21 +1311,47 @@ const PanelPreview = ({
 
 
   const handleClearInput = (index, side) => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+
     const copyArr = iconHolders;
     if (side === "up") {
       copyArr[index].textUp = "";
       copyArr[index].fontUp = null;
+      if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+        copyPanelTextBackEnd.splice(recordTextIndex, 1)
+      }
     } else if (side === "down") {
       copyArr[index].textDown = "";
       copyArr[index].fontDown = null;
+      if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+        copyPanelTextBackEnd.splice(recordTextIndex, 1)
+      }
     }
     changeIconHolders(copyArr)
     setIsFocusedInputIndex(null)
     setIsFocusedInputSide(null)
+
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+
+
   }
+
+
+
+
+
   const handleClearInputFrame = () => {
     changeFrameText("")
     setIsFocusedInputFrame(false)
+  }
+
+  const handleClearInputName = () => {
+    changePanelName("")
+    changePanelNameBackEnd("")
+    setIsFocusedInputName(false)
   }
 
 
@@ -2617,7 +3055,8 @@ const PanelPreview = ({
       const columns = ((copyArr.lastIndexOf("s") % 3) + 1) - (copyArr.indexOf("s") % 3)
       const rows = Math.ceil((copyArr.lastIndexOf("s") + 1) / 3) - Math.floor(copyArr.indexOf("s") / 3)
 
-      if (chosenModel.type !== "MDOT-18 poziomy") {
+      // if (chosenModel.type !== "MDOT-18 poziomy") {
+      if (!chosenModel.panelRotation) {
         frameTemp.frameInfo =
         {
           startRow: Math.ceil((copyArr.indexOf("s") + 1) / 3),
@@ -2625,6 +3064,7 @@ const PanelPreview = ({
           rows: rows,
           columns: columns,
           shape: chosenFrameShape,
+          startCell: Math.ceil((copyArr.indexOf("s") + 1))
         }
       } else {
         const rowCalc = (copyArr.indexOf("s") % 3) + columns
@@ -2644,6 +3084,7 @@ const PanelPreview = ({
           rows: columns,
           columns: rows,
           shape: chosenFrameShape,
+          startCell: Math.ceil((copyArr.indexOf("s") + 1))
         }
       }
     } else if (checkArr.length === 1) {
@@ -2654,7 +3095,8 @@ const PanelPreview = ({
         if (el === "s") {
           currSingleFrames.push({ shape: chosenFrameShape, over: false })
 
-          if (chosenModel.type !== "MDOT-18 poziomy") {
+          // if (chosenModel.type !== "MDOT-18 poziomy") {
+          if (!chosenModel.panelRotation) {
             frameTemp.frameInfo =
             {
               startRow: Math.ceil((index + 1) / 3),
@@ -2662,6 +3104,7 @@ const PanelPreview = ({
               rows: 1,
               columns: 1,
               shape: chosenFrameShape,
+              startCell: Math.ceil((copyArr.indexOf("s") + 1))
             }
           } else {
             let startRow
@@ -2680,6 +3123,7 @@ const PanelPreview = ({
               rows: 1,
               columns: 1,
               shape: chosenFrameShape,
+              startCell: Math.ceil((copyArr.indexOf("s") + 1))
             }
           }
 
@@ -2700,6 +3144,11 @@ const PanelPreview = ({
 
   const handleChangeTextFrame = (text) => {
     changeFrameText(text.target.value.toUpperCase())
+  }
+
+  const handleChangePanelName = (text) => {
+    changePanelName(text.target.value)
+    changePanelNameBackEnd(text.target.value)
   }
 
   const handleChangeFramesToSharp = () => {
@@ -2761,12 +3210,14 @@ const PanelPreview = ({
 
   const handleResetAllFrames = () => {
     changeFrameHolders([])
+    changeFramesBackEnd([])
     const copyArr = iconHolders;
     copyArr.forEach((element, index) => {
       element.singleFrame = false;
     })
     changeIconHolders(copyArr)
     overFrameReRender()
+    setFrameTitles(false)
   }
 
 
@@ -2776,10 +3227,45 @@ const PanelPreview = ({
     <div className="panelpreview_container" style={panelPreviewStyle}>
       <div className="preview_container">
         <div className="preview_top">
-          <h2>PODGLĄD PANELU</h2>
+          <h2>PODGLĄD PANELU:</h2>
+
+          <form onSubmit={handleSubmit} className="panel_name_form" >
+            <input className="panel_name_input"
+              type="text"
+              autoComplete="off"
+              maxLength="18"
+              placeholder="[nazwa panelu]"
+              style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", } : { color: "white" }}
+              onMouseOver={showFrameBorder}
+              onMouseLeave={hideFrameBorder}
+              value={panelName}
+              onChange={(text) => handleChangePanelName(text)}
+              onFocus={() => setIsFocusedInputName(true)}
+              onKeyDown={handleKeyPress}
+            />
+
+            {isFocusedInputName &&
+              <input type="image" src={Submitinput} alt="submitinput" className="panel_name_image" />
+            }
+            {isFocusedInputName &&
+              <img src={Clearinput} alt="clearinput" className="panel_name_image" onClick={handleClearInputName} />
+            }
+          </form>
+
+
         </div>
         <div className="panel_container">
           <div className="resize_container" style={resizeStyle}>
+            {chosenColor.RAL === "9003" && visual &&
+              <p className="white_info"
+              // style={{ visibility: "hidden" }}
+              >Ewentualny brak widoczności elementów panelu wynika z ustawień monitora.<br />Elementy będą widoczne na gotowym panelu.</p>
+            }
+
+
+
+
+
             <div className="panel_box" style={chosenModelStyle}>
 
               <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
@@ -2883,7 +3369,8 @@ const PanelPreview = ({
 
                         <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
                           < img src={chosenColor.hex !== "#30a32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
-                          < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
+                          {/* < img src={chosenModel.type !== "MDOT-18 poziomy" ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} /> */}
+                          < img src={!chosenModel.panelRotation ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
                         </div>
                       </div>
                     )
@@ -3263,10 +3750,12 @@ const PanelPreview = ({
                         {flag === 1 &&
                           <>
                             <div className="text_box" style={chosenTab === "text" ? { zIndex: "999" } : { zIndex: "0" }}>
-                              <div className="text_box" style={chosenModel.type !== "MDOT-18 poziomy" ? { transition: "0.4s ease" } : { transform: "rotate(90deg)", transformOrigin: `center ${10.4 * sc}px`, transition: "0.4s ease" }}>
+                              {/* <div className="text_box" style={chosenModel.type !== "MDOT-18 poziomy" ? { transition: "0.4s ease" } : { transform: "rotate(90deg)", transformOrigin: `center ${10.4 * sc}px`, transition: "0.4s ease" }}> */}
+                              <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : { transform: "rotate(90deg)", transformOrigin: `center ${10.4 * sc}px`, transition: "0.4s ease" }}>
                                 {textUpOff &&
                                   <form onSubmit={handleSubmit}>
-                                    <div style={chosenModel.type !== "MDOT-18 poziomy" ?
+                                    {/* <div style={chosenModel.type !== "MDOT-18 poziomy" ? */}
+                                    <div style={!chosenModel.panelRotation ?
                                       { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }
                                       :
                                       { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
@@ -3482,6 +3971,10 @@ const PanelPreview = ({
                 }
               </div>
             </div>
+
+            {chosenColor.RAL === "9003" && visual &&
+              <p className="white_info"> Ewentualny brak widoczności elementów panelu wynika z ustawień monitora.<br />Elementy będą widoczne na gotowym panelu.</p>
+            }
           </div>
         </div>
         <div className="preview_bottom">
@@ -3506,141 +3999,148 @@ const PanelPreview = ({
           </div>
         </div>
       </div>
-      <div className="preview_side">
 
-        <div className="side_box">
-          <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
-          {!visual ? <span>Podgląd</span> : <span>Tryb edycji</span>}
-        </div>
 
-        <div className="side_box">
-          <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll}
-            onMouseOver={handleClearAllOver}
-            onMouseLeave={handleClearAllLeave}
-          />
-          <span>Zresetuj wszystko</span>
-        </div>
+      <div className="preview_side_container">
+        <div className="preview_side_scroll">
+          <div className="preview_side">
 
-        {/* <div className="side_box">
+            <div className="side_box">
+              <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handleVisual} />
+              <span>Zapisz do PDF</span>
+            </div>
+
+            <div className="side_box">
+              <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
+              {!visual ? <span>Tryb wizualizacji</span> : <span>Tryb edycji</span>}
+            </div>
+
+            <div className="side_box">
+              <img src={Clearall} alt="clearall" className="side_icon" onClick={handleClearAll}
+                onMouseOver={handleClearAllOver}
+                onMouseLeave={handleClearAllLeave}
+              />
+              <span>Zresetuj wszystko</span>
+            </div>
+
+            {/* <div className="side_box">
                       <img src={Addframe} alt="addframe" className="side_icon" onClick={handleAddFrame} />
                       <span>Zatwierdź</span>
                   </div> */}
 
 
-        {chosenTab === "icons" &&
-          <>
-            <div className="side_box">
-              {animations ?
-                <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
-                : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
-              }
-              {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
-            </div>
-            <div className="side_box">
-              <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={handleClearAllIcons}
-                onMouseOver={() => showRemoveIcons(true)} onMouseLeave={() => showRemoveIcons(false)} />
-
-              <span>Usuń wszystkie ikony</span>
-            </div>
-            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-                onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
-
-              <span>Usuń zaznaczoną ikonę</span>
-            </div>
-            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-              <span>Obróć o 90° w prawo</span>
-            </div>
-            <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-              <span >Obróć o 90° w lewo</span>
-            </div>
-          </>
-        }
-        {chosenTab === "text" &&
-          <>
-            <div className="side_box">
-              <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowTextBorder(prev => !prev) }} />
-              <span>{showTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
-            </div>
-
-            <div className="side_box">
-              {textUpOff ?
-                <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff} />
-                :
-                <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff} />}
-              {textUpOff ? <span>Wyłącz i usuń opisy nad ikonami</span> : <span>Włącz opisy nad ikonami</span>}
-            </div>
-
-            <div className="side_box">
-              <img src={Clearalltext} alt="clearalltext" className="side_icon" onClick={handleClearAllText} />
-              <span>Usuń wszystkie opisy</span>
-            </div>
-
-            <div className="side_box">
-              <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
-              <span>Wybrany font dla wszystkich opisów</span>
-            </div>
-
-            {differentFont &&
-              <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
-                <img src={Alert} alt="Alert" className="side_icon" />
-                <span style={{ color: "#dc3545" }}>Zastosowano różne fonty opisów</span>
-              </div>
+            {chosenTab === "icons" &&
+              <>
+                <div className="side_box">
+                  {animations ?
+                    <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
+                    : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
+                  }
+                  {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
+                </div>
+                <div className="side_box">
+                  <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={handleClearAllIcons}
+                    onMouseOver={() => showRemoveIcons(true)} onMouseLeave={() => showRemoveIcons(false)} />
+                  <span>Usuń wszystkie ikony</span>
+                </div>
+                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
+                    onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
+                  <span>Usuń zaznaczoną ikonę</span>
+                </div>
+                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                  <span>Obróć o 90° w prawo</span>
+                </div>
+                <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                  <span >Obróć o 90° w lewo</span>
+                </div>
+              </>
             }
-          </>
-        }
-        {chosenTab === "frame" &&
-          <>
+            {chosenTab === "text" &&
+              <>
+                <div className="side_box">
+                  <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowTextBorder(prev => !prev) }} />
+                  <span>{showTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                </div>
 
-            <div className="side_box">
-              <img src={Frameblacklight} alt="frameblacklight" className="side_icon" onClick={() => { setShowFramBlackLight(prev => !prev) }} />
-              {showFramBlackLight ? <span>Ukryj podświet- <br />lenie pól</span> : <span>Pokaż podświet- <br />lenie pól</span>}
-            </div>
+                <div className="side_box">
+                  {textUpOff ?
+                    <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff} />
+                    :
+                    <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff} />}
+                  {textUpOff ? <span>Wyłącz i usuń opisy nad ikonami</span> : <span>Włącz opisy nad ikonami</span>}
+                </div>
 
-            <div className="side_box"
-            // style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}
-            >
-              {allFramesSharpRound ?
-                <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
-                :
-                <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramesToRound} />}
-              {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
-            </div>
+                <div className="side_box">
+                  <img src={Clearalltext} alt="clearalltext" className="side_icon" onClick={handleClearAllText} />
+                  <span>Usuń wszystkie opisy</span>
+                </div>
 
-            <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Removeallframes} alt="ramoveallframes" className="side_icon" onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }} />
-              <span>Usuń wszystkie ramki</span>
-            </div>
+                <div className="side_box">
+                  <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
+                  <span>Wybrany font dla wszystkich opisów</span>
+                </div>
 
-            <div className="side_box" style={!frameHoldersTemp ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
-              <span>Usuń tworzoną ramkę</span>
-            </div>
-
-
-
-            <div className="side_box" style={!frameTitleFlag ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Textborder} alt="textborder" className="side_icon"
-                onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
-              <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
-            </div>
-
-            <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-              <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
-              <span>Wybrany font dla wszystkich tytułów</span>
-            </div>
-
-            {differentFrameFont &&
-              <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
-                <img src={Alert} alt="Alert" className="side_icon" />
-                <span style={{ color: "#dc3545" }}>Zastosowano różne fonty tytułów ramek</span>
-              </div>
+                {/* {differentFont &&
+                  <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
+                    <img src={Alert} alt="Alert" className="side_icon" />
+                    <span style={{ color: "#dc3545" }}>Różne fonty opisów</span>
+                  </div>
+                } */}
+              </>
             }
-          </>
-        }
-        {/* <OverlayTrigger
+            {chosenTab === "frame" &&
+              <>
+
+                <div className="side_box">
+                  <img src={Frameblacklight} alt="frameblacklight" className="side_icon" onClick={() => { setShowFramBlackLight(prev => !prev) }} />
+                  {showFramBlackLight ? <span>Ukryj podświet- <br />lenie pól</span> : <span>Pokaż podświet- <br />lenie pól</span>}
+                </div>
+
+                <div className="side_box"
+                // style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}
+                >
+                  {allFramesSharpRound ?
+                    <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
+                    :
+                    <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramesToRound} />}
+                  {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
+                </div>
+
+                <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Removeallframes} alt="ramoveallframes" className="side_icon" onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }} />
+                  <span>Usuń wszystkie ramki</span>
+                </div>
+
+                <div className="side_box" style={!frameHoldersTemp ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
+                  <span>Usuń tworzoną ramkę</span>
+                </div>
+
+
+
+                <div className="side_box" style={!frameTitleFlag ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Textborder} alt="textborder" className="side_icon"
+                    onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
+                  <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                </div>
+
+                <div className="side_box" style={!frameTitles ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
+                  <span>Wybrany font dla wszystkich tytułów</span>
+                </div>
+                {/* 
+                {differentFrameFont &&
+                  <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
+                    <img src={Alert} alt="Alert" className="side_icon" />
+                    <span style={{ color: "#dc3545" }}>Zastosowano różne fonty tytułów ramek</span>
+                  </div>
+                } */}
+              </>
+            }
+            {/* <OverlayTrigger
                       arrowProps
                       placement="left"
                       delay={{ show: 250, hide: 400 }}
@@ -3652,8 +4152,28 @@ const PanelPreview = ({
                       </div>
                   </OverlayTrigger> */}
 
-      </div>
+          </div>
+        </div>
+        {(differentFont || differentFrameFont) &&
+          <div className="side_alert_container">
 
+            {differentFont &&
+              <div className="side_box_alert" style={{ marginTop: "auto", cursor: "default" }}>
+                <img src={Alert} alt="Alert" className="side_icon" />
+                <span >Różne fonty opisów</span>
+              </div>
+            }
+
+            {differentFrameFont &&
+              <div className="side_box_alert" style={{ marginTop: "auto", cursor: "default" }}>
+                <img src={Alert} alt="Alert" className="side_icon" />
+                <span>Różne fonty tytułów ramek</span>
+              </div>
+            }
+
+          </div>
+        }
+      </div>
     </div >
   );
 }
@@ -3661,26 +4181,34 @@ const PanelPreview = ({
 
 
 const mapStateToProps = state => ({
-  chosenColor: state.color,
-  chosenTab: state.tab,
-  chosenModel: state.model,
-  chosenFrameFont: state.frame.chosenFrameFont,
-  chosenFrameShape: state.frame.chosenFrameShape,
-  addNewFrameState: state.frame.addNewFrame,
-  removeFrame: state.frame.removeFrame,
-  overFrameRender: state.frame.overFrameRender,
-  frameHolders: state.frame.frameHolders,
-  frameHoldersTemp: state.frame.frameHoldersTemp,
-  frameText: state.frame.frameText,
-  frameTitleFlag: state.frame.frameTitleFlag,
-  visual: state.visual.visual,
-  animations: state.visual.animations,
-  sc: state.visual.scale,
-  chosenTextFont: state.text.chosenTextFont,
-  textRender: state.text.textRender,
-  iconHolders: state.icon.iconHolders,
-  iconHoldersRender: state.icon.iconHoldersRender,
-  isAnySelected: state.icon.isAnySelected,
+  chosenColor: state.frontEndData.color,
+  chosenTab: state.frontEndData.tab,
+  chosenModel: state.frontEndData.model,
+  chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
+  chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
+  addNewFrameState: state.frontEndData.frame.addNewFrame,
+  removeFrame: state.frontEndData.frame.removeFrame,
+  lastRemovedFrameIndex: state.frontEndData.frame.lastRemovedFrameIndex,
+  overFrameRender: state.frontEndData.frame.overFrameRender,
+  frameHolders: state.frontEndData.frame.frameHolders,
+  frameHoldersTemp: state.frontEndData.frame.frameHoldersTemp,
+  frameText: state.frontEndData.frame.frameText,
+  frameTitleFlag: state.frontEndData.frame.frameTitleFlag,
+  visual: state.frontEndData.visual.visual,
+  animations: state.frontEndData.visual.animations,
+  sc: state.frontEndData.visual.scale,
+  panelName: state.frontEndData.visual.panelName,
+  chosenTextFont: state.frontEndData.text.chosenTextFont,
+  textRender: state.frontEndData.text.textRender,
+  iconHolders: state.frontEndData.icon.iconHolders,
+  iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
+  isAnySelected: state.frontEndData.icon.isAnySelected,
+
+
+
+  panelTextBackEnd: state.backEndData.panelText,
+  iconsBackEnd: state.backEndData.icons,
+  framesBackEnd: state.backEndData.frames,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -3695,12 +4223,19 @@ const mapDispatchToProps = dispatch => ({
   frameTitle: (income) => dispatch(actionsFrame.frameTitle(income)),
   allowFrameTitle: (income) => dispatch(actionsFrame.allowFrameTitle(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
+  changePanelName: (income) => dispatch(actionsVisual.changePanelName(income)),
   toggleAnimations: (income) => dispatch(actionsVisual.toggleAnimations(income)),
   changeScale: (income) => dispatch(actionsVisual.changeScale(income)),
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   changeIsAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
   showRemoveIcon: (income) => dispatch(actionsVisual.showRemoveIcon(income)),
   showRemoveIcons: (income) => dispatch(actionsVisual.showRemoveIcons(income)),
+
+  changePanelNameBackEnd: (income) => dispatch(actionsBackEnd.changePanelName(income)),
+  changePanelTextBackEnd: (income) => dispatch(actionsBackEnd.changePanelText(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+  changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
+
 })
 
 
