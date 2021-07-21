@@ -51,8 +51,6 @@
             cursor: pointer;
             border-radius: 15px;
 
-
-
             .color_box{
                 width: 75px;
                 height: 75px;
@@ -61,7 +59,6 @@
                 margin: 10px;
             }
 
-
             .color_name{
                 font-family: 'Montserrat', sans-serif;
                 font-size: 16px;
@@ -69,8 +66,7 @@
                 font-weight: 400;
                 margin: 0 10px;
 
-
-            }
+              }
             .color_ral{
                 font-family: 'Montserrat', sans-serif;
                 font-size: 12px;
@@ -81,7 +77,6 @@
 
         .color_link:hover{
             border: 3px solid #EC695C;
-            // border-radius: 15px;
         }
     }   
 }

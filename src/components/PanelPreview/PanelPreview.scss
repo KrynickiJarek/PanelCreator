@@ -4,7 +4,7 @@
   height: 100%; 
   min-width: 30%;
   max-width: 50%;
-  background-color: #ECECEC;
+  background-color: #ECECEC; 
   transition: 1000ms ease-in-out;
   transition-delay: 800ms;
 
@@ -112,7 +112,8 @@
     align-items: center;
     height: 100%;
     width: 100%;
-    background-color: #ECECEC;
+    background-color: #ECECEC; 
+
 
     .preview_top{
       background-color: #ec695c;
@@ -229,6 +230,7 @@
       overflow-x: overlay;
       position: relative;
 
+
       .resize_container {
         display: flex;
         justify-content: center;
@@ -258,11 +260,14 @@
           margin-top: auto;
           margin-bottom: auto;
 
+
           .visualization_frame{
             position: absolute;
             height: 100%;
             width: 100%;
             transition: 0.4s ease; 
+
+
           }
 
           .visualization_glass{
@@ -277,6 +282,7 @@
               rgba(255,255,255,0.55),
               rgba(255,255,255,0),
             );
+
           }
           .visualization_glass_bis{
             position: absolute;
@@ -293,7 +299,6 @@
             width: 100%;
             transition: 0.4s ease; 
             background-color: rgb(233, 233, 233);
-
           }
 
           .logo_pure{

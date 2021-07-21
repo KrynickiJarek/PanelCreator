@@ -112,6 +112,7 @@ const PanelPreview = ({
   iconsBackEnd,
   framesBackEnd,
 
+  backEndData
 
 }) => {
 
@@ -650,6 +651,9 @@ const PanelPreview = ({
   universalIconStyle.height = `${7.5 * sc}px`;
   universalIconStyle.width = `${7.5 * sc}px`;
   universalIconStyle.transition = "400ms ease";
+
+
+
 
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
@@ -3220,6 +3224,30 @@ const PanelPreview = ({
     setFrameTitles(false)
   }
 
+  const handlePrintPdf = () => {
+
+
+    fetch("http://192.168.0.80:4567/generatepdf", {
+      method: "POST",
+      body: JSON.stringify(),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    console.log(backEndData)
+  }
+
+
+
+
 
 
 
@@ -4006,7 +4034,7 @@ const PanelPreview = ({
           <div className="preview_side">
 
             <div className="side_box">
-              <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handleVisual} />
+              <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handlePrintPdf} />
               <span>Zapisz do PDF</span>
             </div>
 
@@ -4209,6 +4237,8 @@ const mapStateToProps = state => ({
   panelTextBackEnd: state.backEndData.panelText,
   iconsBackEnd: state.backEndData.icons,
   framesBackEnd: state.backEndData.frames,
+
+  backEndData: state.backEndData
 })
 
 const mapDispatchToProps = dispatch => ({

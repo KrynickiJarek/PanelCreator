@@ -26,6 +26,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 0,
+    picture: (require("../../../assets/panelpictures/mdot2v.jpg")).default,
+    info: "Dwupolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-2-polowego-mdot-2/"
   },
   {
     type: "MDOT-4",
@@ -53,6 +56,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 1,
+    picture: (require("../../../assets/panelpictures/mdot4v.jpg")).default,
+    info: "Czteropolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-4-polowego-mdot-4/"
   },
   {
     type: "MDOT-6",
@@ -86,6 +92,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 2,
+    picture: (require("../../../assets/panelpictures/mdot6v.jpg")).default,
+    info: "Sześciopolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm z przewijanym ekranem LCD.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-6-polowego-mdot-6-lcd/"
   },
   {
     type: "MDOT-6 nowy",
@@ -119,6 +128,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 3,
+    picture: (require("../../../assets/panelpictures/mdot6newv.jpg")).default,
+    info: "Sześciopolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm z przewijanym ekranem LCD.***",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-6-polowego-mdot-6-lcd/"
   },
   {
     type: "MDOT-9",
@@ -146,6 +158,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 4,
+    picture: (require("../../../assets/panelpictures/mdot9v.jpg")).default,
+    info: "Dziewięciopolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-9-polowego-mdot-9/"
   },
   {
     type: "MDOT-15",
@@ -182,6 +197,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 5,
+    picture: (require("../../../assets/panelpictures/mdot15v.jpg")).default,
+    info: "Piętnastopolowy, szklany panel dotykowy w rozmiarze 90 mm x 160 mm z przewijanym ekranem LCD.***",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-18-polowego-mdot-18/"
   },
   {
     type: "MDOT-18",
@@ -212,6 +230,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 6,
+    picture: (require("../../../assets/panelpictures/mdot18v.jpg")).default,
+    info: "Osiemnastopolowy, szklany panel dotykowy w rozmiarze 90 mm x 160 mm.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-18-polowego-mdot-18/"
   },
   {
     type: "MDOT-18 poziomy",
@@ -242,6 +263,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 7,
+    picture: (require("../../../assets/panelpictures/mdot18pozv.jpg")).default,
+    info: "Osiemnastopolowy, szklany panel dotykowy w rozmiarze 160 mm x 90 mm.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-18-polowego-mdot-18/"
   },
   {
     type: "MDOT-M18",
@@ -279,6 +303,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 8,
+    picture: (require("../../../assets/panelpictures/mdotm18v.jpg")).default,
+    info: "Osiemnastopolowy, szklany panel dotykowy w rozmiarze 90 mm x 160 mm z przewijanym ekranem LCD.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-18-polowego-mdot-m18/"
   },
   {
     type: "MDOT-M18 uniwersalny",
@@ -316,7 +343,9 @@ const availablePanels = [
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
     backEndPanelType: 8,
-
+    picture: (require("../../../assets/panelpictures/mdotm18univ.jpg")).default,
+    info: "Osiemnastopolowy, szklany panel dotykowy w rozmiarze 90 mm x 160 mm z przewijanym ekranem LCD wyposażony w sześć dedykowanych ikon.",
+    link: "https://help.ampio.pl/pl/kb/modul-wlacznika-dotykowego-18-polowego-mdot-m18/"
   },
 ];
 
