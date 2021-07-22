@@ -126,6 +126,8 @@ const PanelPreview = ({
   const [showFramBlackLight, setShowFramBlackLight] = useState(true)
   const [textUpOff, setTextUpOff] = useState(true)
 
+  const [noPanelName, setNoPanelName] = useState(false)
+
   const [newFrame, setNewFrame] = useState([])
   const [newFrameHide, setNewFrameHide] = useState([])
   const [newFrameChange, setNewFrameChange] = useState([])
@@ -151,7 +153,6 @@ const PanelPreview = ({
   const [hideAll, setHideAll] = useState(true)
 
   const [removeAll, setRemoveAll] = useState(false)
-
 
   const [differentFrameFont, setDifferentFrameFont] = useState(false)
   const [frameTitles, setFrameTitles] = useState(false)
@@ -3153,6 +3154,9 @@ const PanelPreview = ({
   const handleChangePanelName = (text) => {
     changePanelName(text.target.value)
     changePanelNameBackEnd(text.target.value)
+    if (panelName !== "") {
+      setNoPanelName(false)
+    }
   }
 
   const handleChangeFramesToSharp = () => {
@@ -3224,29 +3228,31 @@ const PanelPreview = ({
     setFrameTitles(false)
   }
 
+
   const handlePrintPdf = () => {
+    if (panelName === "") {
+      setNoPanelName(true)
+    } else {
+      let headers = new Headers();
 
+      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+      headers.append('Access-Control-Allow-Credentials', 'true');
 
-    fetch("http://192.168.0.80:4567/generatepdf", {
-      method: "POST",
-      body: JSON.stringify(),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
+      fetch("http://192.168.0.80:4567/generatepdf", {
+        method: "POST",
+        body: JSON.stringify(backEndData),
+        headers: headers
       })
-      .catch(error => {
-        console.log(error);
-      });
-
-    console.log(backEndData)
+        .then(res => res.blob())
+        .then(blob => {
+          let file = window.URL.createObjectURL(blob);
+          window.location.assign(file);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
-
-
-
 
 
 
@@ -3262,8 +3268,9 @@ const PanelPreview = ({
               type="text"
               autoComplete="off"
               maxLength="18"
-              placeholder="[nazwa panelu]"
-              style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", } : { color: "white" }}
+              placeholder="[wpisz nazwę]"
+              style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", border: "3px solid transparent" }
+                : noPanelName ? { color: "white", border: "3px solid #dc3545" } : { color: "white", border: "3px solid transparent" }}
               onMouseOver={showFrameBorder}
               onMouseLeave={hideFrameBorder}
               value={panelName}

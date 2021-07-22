@@ -57,7 +57,8 @@
 				align-self: flex-end;
 				position: relative;
 				margin-top: 30px;
-				.button_arrows {
+
+        .button_arrows {
 					position: absolute;
 					right: 0;
 					top: 50%;
@@ -78,11 +79,12 @@
 		flex-direction: column;
 		padding: 55px 55px 0 55px;
 		height: 100%;
-		// width: calc(100% - 12px);
 		width: 100%;
-		// overflow-y: auto;
 		background-color: white;
 		position: absolute;
+    overflow-y: overlay;
+
+
 		.frame_header {
 			font-size: 24px;
 			font-weight: 700;
@@ -252,7 +254,9 @@
       flex-direction: column;
       align-items: flex-start;
       list-style-type: disc;
-      margin-bottom: 45px;
+      margin-bottom: 60px;
+
+
       .frame_list_element {
         font-size: 14px;
         font-weight: 400;
@@ -276,12 +280,11 @@
 	}
 }
 
-.scroll_container::-webkit-scrollbar {
+.frame_container::-webkit-scrollbar {
 	width: 12px;
 }
 
-.scroll_container::-webkit-scrollbar-thumb {
-	background: #ECECEC;
-	background: rgb(217, 217, 217);
+.frame_container::-webkit-scrollbar-thumb {
+  background: rgb(217,217,217);
 	border-radius: 10px;
 }

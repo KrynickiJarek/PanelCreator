@@ -121,7 +121,7 @@
         .icons{
             display: flex;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
 
             .instruction, .instruction_bold{
                 font-size: 16px;
@@ -190,7 +190,6 @@
     width: 12px;
 }
 .icon_container::-webkit-scrollbar-thumb {
-    background: #ECECEC;
     background: rgb(217,217,217);
     border-radius: 10px;
 
@@ -200,12 +199,11 @@
     width: 180px;
     min-width: 180px;
     height: 100%;
+    margin-bottom: 40px;
 
     .favorite_nav{
         height: 20px;
         width: 20px;
-        // margin-left: 8px;
-        // margin-right: 8px;
         margin: 0 6px 2px 0;
     }
 }
@@ -260,8 +258,6 @@
 
 .nav-link {
     outline: none !important;
-    // box-shadow: none;
-    // padding: 0;
  }
 
 

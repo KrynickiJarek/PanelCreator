@@ -25,6 +25,7 @@ const FrameEditor = ({
   chosenFrameFont,
   chosenFrameShape,
   frameHolders,
+  frameHoldersTemp,
   visual,
   toggleVisual,
   changeFrameText,
@@ -35,9 +36,12 @@ const FrameEditor = ({
 
 
   const handleAddNewFrame = () => {
-    frameTitle(false)
-    allowFrameTitle(false)
-    addNewFrame(true)
+    if (frameHoldersTemp) {
+      frameTitle(false)
+      allowFrameTitle(false)
+      addNewFrame(true)
+    }
+
   }
 
   const toggleTitle = () => {
@@ -191,6 +195,7 @@ const mapStateToProps = state => ({
   frameList: state.frontEndData.frame.frameList,
   overFrameRender: state.frontEndData.frame.overFrameRender,
   frameHolders: state.frontEndData.frame.frameHolders,
+  frameHoldersTemp: state.frontEndData.frame.frameHoldersTemp,
   frameTitleFlag: state.frontEndData.frame.frameTitleFlag,
   allowFrameTitleFlag: state.frontEndData.frame.allowFrameTitleFlag,
   visual: state.frontEndData.visual.visual,

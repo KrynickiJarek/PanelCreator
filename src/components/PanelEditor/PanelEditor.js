@@ -7,7 +7,6 @@ import "./PanelEditor.scss"
 import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav'
 
-import 'antd/dist/antd.css'; //----------usuń jak zmienisz model
 
 
 import ModelChooser from './ModelChooser/ModelChooser';
