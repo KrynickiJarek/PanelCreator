@@ -3288,14 +3288,20 @@ const PanelPreview = ({
     if (panelName === "") {
       setNoPanelName(true)
     } else {
-      let headers = new Headers();
 
+
+      let frontEndDataStr = JSON.stringify(frontEndData);
+      let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+
+      console.log(frontEndDataB64)
+
+      let headers = new Headers();
       headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
       headers.append('Access-Control-Allow-Credentials', 'true');
 
-      fetch("http://192.168.0.80:4567/generatepdf", {
+      fetch("https://kreator.ampio.pl:443/generatepdf", {
         method: "POST",
-        body: JSON.stringify(backEndData),
+        body: JSON.stringify({ backEndData, frontEndDataB64 }),
         headers: headers
       })
         .then(res => res.blob())
