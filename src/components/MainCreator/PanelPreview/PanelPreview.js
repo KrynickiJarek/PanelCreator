@@ -794,8 +794,10 @@ const PanelPreview = ({
 
 
   const autoResizeInputStyle = {};
-  autoResizeInputStyle.fontSize = `${2 * sc}px`;
-  autoResizeInputStyle.lineHeight = `${2 * sc}px`;
+  // autoResizeInputStyle.fontSize = `${2 * sc}px`;
+  // autoResizeInputStyle.lineHeight = `${2 * sc}px`;
+  autoResizeInputStyle.fontSize = `${2.8 * sc}px`
+  autoResizeInputStyle.lineHeight = `${2.8 * sc}px`
   autoResizeInputStyle.height = `${3.6 * sc}px`;
   autoResizeInputStyle.width = `${8 * sc}px`;
   autoResizeInputStyle.transition = "400ms ease";
@@ -809,8 +811,10 @@ const PanelPreview = ({
   textStyle.color = chosenColor.iconColor;
   textStyle.border = "2px solid transparent"
   textStyle.borderRadius = `${0.9 * sc}px`;
-  textStyle.fontSize = `${2 * sc}px`
-  textStyle.lineHeight = `${2 * sc}px`;
+  // textStyle.fontSize = `${2 * sc}px`
+  // textStyle.lineHeight = `${2 * sc}px`;
+  textStyle.fontSize = `${2.8 * sc}px`
+  textStyle.lineHeight = `${2.8 * sc}px`
   textStyle.height = `${3.6 * sc}px`;
   textStyle.gridArea = "1 / 1 / 2 / 2";
   textStyle.width = "100%";
@@ -834,7 +838,9 @@ const PanelPreview = ({
   textStyleFrame.color = chosenColor.iconColor;
   textStyleFrame.border = "2px dashed transparent"
   textStyleFrame.borderRadius = `${0.9 * sc}px`;
-  textStyleFrame.fontSize = `${2 * sc}px`
+  // textStyleFrame.fontSize = `${2 * sc}px`
+  textStyleFrame.fontSize = `${2.8 * sc}px`
+  // textStyleFrame.lineHeight = `${2 * sc}px`;
   textStyleFrame.lineHeight = `${2 * sc}px`;
   textStyleFrame.height = `${3.6 * sc}px`;
   textStyleFrame.gridArea = "1 / 1 / 2 / 2";
@@ -3298,7 +3304,8 @@ const PanelPreview = ({
       headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
       headers.append('Access-Control-Allow-Credentials', 'true');
 
-      fetch("http://bitcoin.ampio.pl:4567/generatepdf", {
+      // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      fetch("https://kreator.ampio.pl/generatepdf", {
         method: "POST",
         body: JSON.stringify({ backEndData, frontEndDataB64 }),
         headers: headers

@@ -188,7 +188,7 @@ export const Dashboard = memo(function Dashboard({
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
 
-    fetch("http://bitcoin.ampio.pl:4567/generatepdf", {
+    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
       method: "POST",
       body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
       headers: headers
@@ -206,7 +206,7 @@ export const Dashboard = memo(function Dashboard({
 
 
   const upload = (file) => {
-    fetch("http://bitcoin.ampio.pl:4567/loadpdf", {
+    fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
       method: 'POST',
       body: file,
     })
@@ -216,7 +216,6 @@ export const Dashboard = memo(function Dashboard({
           return decodeURIComponent(escape(window.atob(str)));
         }
         let dataUtf8 = b64_to_utf8(data)
-        // let  endocedData = JSON.parse(atob(data))
         let endocedData = JSON.parse(dataUtf8)
         addPanel(endocedData)
         resetAllAfterModelChange(false)
