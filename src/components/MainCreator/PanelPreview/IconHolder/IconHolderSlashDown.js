@@ -84,10 +84,11 @@ export const IconHolderSlashDown = ({
         let recordIcon = {
           number: numberBackEnd,
           type: 2,
-          rotation: Modulo((iconHolders[index].rotationDown + chosenModel.panelRotation), 360),
+          rotation: Modulo((iconHolders[index].rotationDown), 360),
           svg: svgBackEnd
         }
-        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 2)) })
+        // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 2)) })
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 2)) })
         copyIconsBackEnd.push(recordIcon)
         changeIconsBackEnd(copyIconsBackEnd)
       })

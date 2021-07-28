@@ -83,11 +83,12 @@ const IconHolderStatus = ({
         let recordIcon = {
           number: numberBackEnd,
           type: 3,
-          rotation: Modulo((iconHolders[index].rotationDot + chosenModel.panelRotation), 360),
+          rotation: Modulo((iconHolders[index].rotationDot), 360),
           svg: svgBackEnd
         }
 
-        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 3)) })
+        // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 3)) })
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 3)) })
         copyIconsBackEnd.push(recordIcon)
         changeIconsBackEnd(copyIconsBackEnd)
       })

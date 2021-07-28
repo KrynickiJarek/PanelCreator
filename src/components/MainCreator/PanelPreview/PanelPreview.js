@@ -1096,26 +1096,63 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
     copyArr.forEach((el, index) => {
-      if (el.selectedDot) {
-        el.lastDroppedDot = null;
-        el.selectedDot = false;
-        el.rotationDot = 0;
-        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)), 1)
-      } else if (el.selected) {
-        el.lastDroppedIcon = null;
-        el.selected = false;
-        el.rotationIcon = 0;
-        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)), 1)
-      } else if (el.selectedDown) {
-        el.lastDroppedSlashDown = null;
-        el.selectedDown = false;
-        el.rotationDown = 0;
-        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)), 1)
-      } else if (el.selectedUp) {
-        el.lastDroppedSlashUp = null;
-        el.selectedUp = false;
-        el.rotationUp = 0;
-        copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)), 1)
+      if (chosenModel.panelRotation) {
+        let numberBackEnd = null
+        if (chosenModel.panelRotation) {
+          if (index % 3 === 0) {
+            numberBackEnd = index + 3
+          } else if (index % 3 === 2) {
+            numberBackEnd = index - 1
+          } else {
+            numberBackEnd = index + 1
+          }
+        } else {
+          numberBackEnd = index + 1
+        }
+
+        if (el.selectedDot) {
+          el.lastDroppedDot = null;
+          el.selectedDot = false;
+          el.rotationDot = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 3)), 1)
+        } else if (el.selected) {
+          el.lastDroppedIcon = null;
+          el.selected = false;
+          el.rotationIcon = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 0)), 1)
+        } else if (el.selectedDown) {
+          el.lastDroppedSlashDown = null;
+          el.selectedDown = false;
+          el.rotationDown = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 2)), 1)
+        } else if (el.selectedUp) {
+          el.lastDroppedSlashUp = null;
+          el.selectedUp = false;
+          el.rotationUp = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 1)), 1)
+        }
+      } else {
+        if (el.selectedDot) {
+          el.lastDroppedDot = null;
+          el.selectedDot = false;
+          el.rotationDot = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)), 1)
+        } else if (el.selected) {
+          el.lastDroppedIcon = null;
+          el.selected = false;
+          el.rotationIcon = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)), 1)
+        } else if (el.selectedDown) {
+          el.lastDroppedSlashDown = null;
+          el.selectedDown = false;
+          el.rotationDown = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)), 1)
+        } else if (el.selectedUp) {
+          el.lastDroppedSlashUp = null;
+          el.selectedUp = false;
+          el.rotationUp = 0;
+          copyIconsBackEnd.splice((copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)), 1)
+        }
       }
     })
     changeIconHolders(copyArr)
@@ -1135,18 +1172,47 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
     copyArr.forEach((el, index) => {
-      if (el.selectedDot) {
-        el.rotationDot = el.rotationDot + 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
-      } else if (el.selected) {
-        el.rotationIcon = el.rotationIcon + 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
-      } else if (el.selectedDown) {
-        el.rotationDown = el.rotationDown + 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
-      } else if (el.selectedUp) {
-        el.rotationUp = el.rotationUp + 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
+      if (chosenModel.panelRotation) {
+        let numberBackEnd = null
+        if (chosenModel.panelRotation) {
+          if (index % 3 === 0) {
+            numberBackEnd = index + 3
+          } else if (index % 3 === 2) {
+            numberBackEnd = index - 1
+          } else {
+            numberBackEnd = index + 1
+          }
+        } else {
+          numberBackEnd = index + 1
+        }
+
+        if (el.selectedDot) {
+          el.rotationDot = el.rotationDot + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selected) {
+          el.rotationIcon = el.rotationIcon + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedDown) {
+          el.rotationDown = el.rotationDown + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedUp) {
+          el.rotationUp = el.rotationUp + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
+        }
+      } else {
+        if (el.selectedDot) {
+          el.rotationDot = el.rotationDot + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selected) {
+          el.rotationIcon = el.rotationIcon + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedDown) {
+          el.rotationDown = el.rotationDown + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedUp) {
+          el.rotationUp = el.rotationUp + 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
+        }
       }
     })
     changeIconHolders(copyArr)
@@ -1157,18 +1223,47 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
     copyArr.forEach((el, index) => {
-      if (el.selectedDot) {
-        el.rotationDot = el.rotationDot - 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
-      } else if (el.selected) {
-        el.rotationIcon = el.rotationIcon - 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
-      } else if (el.selectedDown) {
-        el.rotationDown = el.rotationDown - 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
-      } else if (el.selectedUp) {
-        el.rotationUp = el.rotationUp - 90;
-        copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
+      if (chosenModel.panelRotation) {
+        let numberBackEnd = null
+        if (chosenModel.panelRotation) {
+          if (index % 3 === 0) {
+            numberBackEnd = index + 3
+          } else if (index % 3 === 2) {
+            numberBackEnd = index - 1
+          } else {
+            numberBackEnd = index + 1
+          }
+        } else {
+          numberBackEnd = index + 1
+        }
+
+        if (el.selectedDot) {
+          el.rotationDot = el.rotationDot - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selected) {
+          el.rotationIcon = el.rotationIcon - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedDown) {
+          el.rotationDown = el.rotationDown - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedUp) {
+          el.rotationUp = el.rotationUp - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
+        }
+      } else {
+        if (el.selectedDot) {
+          el.rotationDot = el.rotationDot - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selected) {
+          el.rotationIcon = el.rotationIcon - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedDown) {
+          el.rotationDown = el.rotationDown - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown + chosenModel.panelRotation), 360)//---BACKEND
+        } else if (el.selectedUp) {
+          el.rotationUp = el.rotationUp - 90;
+          copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp + chosenModel.panelRotation), 360)//---BACKEND
+        }
       }
     })
     changeIconHolders(copyArr)

@@ -87,11 +87,12 @@ export const IconHolderSlashUp = ({
         let recordIcon = {
           number: numberBackEnd,
           type: 1,
-          rotation: Modulo((iconHolders[index].rotationUp + chosenModel.panelRotation), 360),
+          rotation: Modulo((iconHolders[index].rotationUp), 360),
           svg: svgBackEnd
         }
 
-        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1)) })
+        // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1)) })
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 1)) })
         copyIconsBackEnd.push(recordIcon)
         changeIconsBackEnd(copyIconsBackEnd)
       })

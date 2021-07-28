@@ -25,6 +25,7 @@ export const ReDragDown = ({
   singleFrame,
   singleFrameTemp,
   selectedDown,
+  chosenModel,
 }) => {
 
 
@@ -75,7 +76,21 @@ export const ReDragDown = ({
     copyArr[index].rotationDown = null
     changeIconHolders(copyArr)
     // ---------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 2)) })
+    let numberBackEnd = null
+    if (chosenModel.panelRotation) {
+      if (index % 3 === 0) {
+        numberBackEnd = index + 3
+      } else if (index % 3 === 2) {
+        numberBackEnd = index - 1
+      } else {
+        numberBackEnd = index + 1
+      }
+    } else {
+      numberBackEnd = index + 1
+    }
+
+    // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 2)) })
+    const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 2)) })
     changeIconsBackEnd(copyIconsBackEnd)
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
@@ -139,6 +154,7 @@ const mapStateToProps = state => ({
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
   visual: state.frontEndData.visual.visual,
   scale: state.frontEndData.visual.scale,
+  chosenModel: state.frontEndData.model.chosenModel,
 
   iconsBackEnd: state.backEndData.icons,
 })

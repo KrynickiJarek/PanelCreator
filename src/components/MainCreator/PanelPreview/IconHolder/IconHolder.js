@@ -89,6 +89,7 @@ const IconHolder = ({
 
     toDataURL(iconHolders[index].lastDroppedIcon.image.default)
       .then(svgBackEnd => {
+
         let numberBackEnd = null
         if (chosenModel.panelRotation) {
           if (index % 3 === 0) {
@@ -105,10 +106,11 @@ const IconHolder = ({
         let recordIcon = {
           number: numberBackEnd,
           type: 0,
-          rotation: Modulo((iconHolders[index].rotationIcon + chosenModel.panelRotation), 360),
+          rotation: Modulo((iconHolders[index].rotationIcon), 360),
           svg: svgBackEnd
         }
-        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
+        // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 1 || element.type === 2)) })
         copyIconsBackEnd.push(recordIcon)
         changeIconsBackEnd(copyIconsBackEnd)
       })
