@@ -68,8 +68,21 @@ export const IconHolderSlashDown = ({
 
     toDataURL(iconHolders[index].lastDroppedSlashDown.image.default)
       .then(svgBackEnd => {
+        let numberBackEnd = null
+        if (chosenModel.panelRotation) {
+          if (index % 3 === 0) {
+            numberBackEnd = index + 3
+          } else if (index % 3 === 2) {
+            numberBackEnd = index - 1
+          } else {
+            numberBackEnd = index + 1
+          }
+        } else {
+          numberBackEnd = index + 1
+        }
+
         let recordIcon = {
-          number: index + 1,
+          number: numberBackEnd,
           type: 2,
           rotation: Modulo((iconHolders[index].rotationDown + chosenModel.panelRotation), 360),
           svg: svgBackEnd

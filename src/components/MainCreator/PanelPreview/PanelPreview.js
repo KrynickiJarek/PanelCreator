@@ -796,8 +796,8 @@ const PanelPreview = ({
   const autoResizeInputStyle = {};
   // autoResizeInputStyle.fontSize = `${2 * sc}px`;
   // autoResizeInputStyle.lineHeight = `${2 * sc}px`;
-  autoResizeInputStyle.fontSize = `${2.8 * sc}px`
-  autoResizeInputStyle.lineHeight = `${2.8 * sc}px`
+  autoResizeInputStyle.fontSize = `${2.55 * sc}px`
+  autoResizeInputStyle.lineHeight = `${2.55 * sc}px`
   autoResizeInputStyle.height = `${3.6 * sc}px`;
   autoResizeInputStyle.width = `${8 * sc}px`;
   autoResizeInputStyle.transition = "400ms ease";
@@ -813,8 +813,8 @@ const PanelPreview = ({
   textStyle.borderRadius = `${0.9 * sc}px`;
   // textStyle.fontSize = `${2 * sc}px`
   // textStyle.lineHeight = `${2 * sc}px`;
-  textStyle.fontSize = `${2.8 * sc}px`
-  textStyle.lineHeight = `${2.8 * sc}px`
+  textStyle.fontSize = `${2.55 * sc}px`
+  textStyle.lineHeight = `${2.55 * sc}px`
   textStyle.height = `${3.6 * sc}px`;
   textStyle.gridArea = "1 / 1 / 2 / 2";
   textStyle.width = "100%";
@@ -839,9 +839,9 @@ const PanelPreview = ({
   textStyleFrame.border = "2px dashed transparent"
   textStyleFrame.borderRadius = `${0.9 * sc}px`;
   // textStyleFrame.fontSize = `${2 * sc}px`
-  textStyleFrame.fontSize = `${2.8 * sc}px`
   // textStyleFrame.lineHeight = `${2 * sc}px`;
-  textStyleFrame.lineHeight = `${2 * sc}px`;
+  textStyleFrame.fontSize = `${2.55 * sc}px`
+  textStyleFrame.lineHeight = `${2.55 * sc}px`;
   textStyleFrame.height = `${3.6 * sc}px`;
   textStyleFrame.gridArea = "1 / 1 / 2 / 2";
   textStyleFrame.width = "100%";
@@ -3224,6 +3224,12 @@ const PanelPreview = ({
     changeFramesShapeToSharp()
     setAllFramesSharpRound(prev => !prev)
     changeFrameShape("sharp")
+
+    const copyFrameBackEnd = framesBackEnd
+    copyFrameBackEnd.forEach(frame => {
+      frame.cornerRadious = 0
+    })
+    changeFramesBackEnd(copyFrameBackEnd)
   }
 
   const handleChangeFramesToRound = () => {
@@ -3231,6 +3237,11 @@ const PanelPreview = ({
     setAllFramesSharpRound(prev => !prev)
     changeFrameShape("round")
 
+    const copyFrameBackEnd = framesBackEnd
+    copyFrameBackEnd.forEach(frame => {
+      frame.cornerRadious = 1
+    })
+    changeFramesBackEnd(copyFrameBackEnd)
   }
 
 
@@ -3418,7 +3429,7 @@ const PanelPreview = ({
                   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
                     <img src={Removeall} alt="removeall" style={{
                       width: "100%",
-                      zIndex: "999999",
+                      zIndex: "9999999",
                       opacity: "0.8"
                     }} />
                   </div>
@@ -3816,7 +3827,7 @@ const PanelPreview = ({
                                     height: `${3.6 * sc}px`,
                                     width: `${3.6 * sc}px`,
                                     transform: "translate(75%, -50%)",
-                                    gridArea: '1 / 1 / 2 / 2'
+                                    gridArea: '1 / 1 / 2 / 2',
                                   }}
                                 />
                               }
@@ -3826,7 +3837,7 @@ const PanelPreview = ({
                                     height: `${3.6 * sc}px`,
                                     width: `${3.6 * sc}px`,
                                     transform: "translate(75%, -50%)",
-                                    gridArea: '1 / 1 / 2 / 2'
+                                    gridArea: '1 / 1 / 2 / 2',
                                   }}
                                 />
                               }
@@ -3838,7 +3849,7 @@ const PanelPreview = ({
                                     width: `${3.6 * sc}px`,
                                     transform: "translate(200%, -50%)",
                                     gridArea: '1 / 1 / 2 / 2',
-                                    cursor: "pointer"
+                                    cursor: "pointer",
                                   }}
                                   onClick={handleClearInputFrame}
                                 />
@@ -3901,7 +3912,8 @@ const PanelPreview = ({
                             )}>
                         {flag === 1 &&
                           <>
-                            <div className="text_box" style={chosenTab === "text" ? { zIndex: "999" } : { zIndex: "0" }}>
+                            {/* <div className="text_box" style={chosenTab === "text" ? { zIndex: "999" } : { zIndex: "0" }}> */}
+                            <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
                               <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : { transform: "rotate(90deg)", transformOrigin: `center ${10.4 * sc}px`, transition: "0.4s ease" }}>
                                 {textUpOff &&
                                   <form onSubmit={handleSubmit}>
@@ -3949,7 +3961,8 @@ const PanelPreview = ({
                                             height: `${3.6 * sc}px`,
                                             width: `${3.6 * sc}px`,
                                             transform: "translateX(75%)",
-                                            gridArea: '1 / 1 / 2 / 2'
+                                            gridArea: '1 / 1 / 2 / 2',
+
                                           }}
                                         />
                                       }
@@ -3959,7 +3972,7 @@ const PanelPreview = ({
                                             height: `${3.6 * sc}px`,
                                             width: `${3.6 * sc}px`,
                                             transform: "translateX(75%)",
-                                            gridArea: '1 / 1 / 2 / 2'
+                                            gridArea: '1 / 1 / 2 / 2',
                                           }}
                                         />
                                       }
@@ -3970,7 +3983,7 @@ const PanelPreview = ({
                                             width: `${3.6 * sc}px`,
                                             transform: "translate(200%, 0%)",
                                             gridArea: '1 / 1 / 2 / 2',
-                                            cursor: "pointer"
+                                            cursor: "pointer",
                                           }}
                                           onClick={() => { handleClearInput(index, "up") }}
                                         />
@@ -4019,7 +4032,7 @@ const PanelPreview = ({
                                           height: `${3.6 * sc}px`,
                                           width: `${3.6 * sc}px`,
                                           transform: "translateX(75%)",
-                                          gridArea: '1 / 1 / 2 / 2'
+                                          gridArea: '1 / 1 / 2 / 2',
                                         }}
                                       />
                                     }
@@ -4029,7 +4042,7 @@ const PanelPreview = ({
                                           height: `${3.6 * sc}px`,
                                           width: `${3.6 * sc}px`,
                                           transform: "translateX(75%)",
-                                          gridArea: '1 / 1 / 2 / 2'
+                                          gridArea: '1 / 1 / 2 / 2',
                                         }}
                                       />
                                     }
@@ -4040,7 +4053,7 @@ const PanelPreview = ({
                                           width: `${3.6 * sc}px`,
                                           transform: "translate(200%, 0%)",
                                           gridArea: '1 / 1 / 2 / 2',
-                                          cursor: "pointer"
+                                          cursor: "pointer",
                                         }}
                                         onClick={() => { handleClearInput(index, "down") }}
                                       />
