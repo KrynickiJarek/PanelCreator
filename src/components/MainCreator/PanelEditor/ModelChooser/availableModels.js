@@ -2,6 +2,7 @@
 const availablePanels = [
   {
     type: "MDOT-2",
+    name: "mdot_2",
     numberOfDots: 2,
     panelRotation: 0,
     height: 90,
@@ -32,6 +33,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-4",
+    name: "mdot_4",
     numberOfDots: 4,
     panelRotation: 0,
     height: 90,
@@ -62,6 +64,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-6",
+    name: "mdot_6",
     numberOfDots: 6,
     panelRotation: 0,
     height: 90,
@@ -98,6 +101,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-6 nowy",
+    name: "mdot_6",
     numberOfDots: 6,
     panelRotation: 0,
     height: 90,
@@ -134,6 +138,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-9",
+    name: "mdot_9",
     numberOfDots: 9,
     panelRotation: 0,
     height: 90,
@@ -164,6 +169,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-15",
+    name: "mdot_15",
     numberOfDots: 15,
     panelRotation: 0,
     height: 160,
@@ -203,6 +209,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-18",
+    name: "mdot_18",
     numberOfDots: 18,
     panelRotation: 0,
     height: 160,
@@ -236,6 +243,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-18 poziomy",
+    name: "mdot_18_horizontal",
     numberOfDots: 18,
     panelRotation: 90,
     height: 160,
@@ -269,6 +277,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-M18",
+    name: "mdot_m18",
     numberOfDots: 18,
     panelRotation: 0,
     height: 160,
@@ -309,6 +318,7 @@ const availablePanels = [
   },
   {
     type: "MDOT-M18 uniwersalny",
+    name: "mdot_m18_universal",
     numberOfDots: 18,
     panelRotation: 0,
     height: 160,

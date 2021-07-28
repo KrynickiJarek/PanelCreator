@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { connect } from "react-redux"
+import { saveAs } from 'file-saver';
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
 import actionsVisual from "../PanelPreview/duck/actions"
 import actionsIcon from "../PanelEditor/IconEditor/duck/actions"
@@ -366,7 +367,6 @@ const PanelPreview = ({
         checkArr.push(el.fontUp)
       }
     })
-    console.log(checkArr)
     if (checkArr.length > 1) {
       setDifferentFont(true)
     } else {
@@ -3289,25 +3289,27 @@ const PanelPreview = ({
       setNoPanelName(true)
     } else {
 
-
-      let frontEndDataStr = JSON.stringify(frontEndData);
+      let dataToSend = { frontEndData, backEndData }
+      let frontEndDataStr = JSON.stringify(dataToSend);
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
-      console.log(frontEndDataB64)
 
       let headers = new Headers();
       headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
       headers.append('Access-Control-Allow-Credentials', 'true');
 
-      fetch("https://kreator.ampio.pl:443/generatepdf", {
+      fetch("http://bitcoin.ampio.pl:4567/generatepdf", {
         method: "POST",
         body: JSON.stringify({ backEndData, frontEndDataB64 }),
         headers: headers
       })
         .then(res => res.blob())
         .then(blob => {
-          let file = window.URL.createObjectURL(blob);
-          window.location.assign(file);
+          // let file = window.URL.createObjectURL(blob);
+          // window.location.assign(file);
+          // window.open(file);
+          let fileName = panelName + "_" + chosenModel.name + ".pdf"
+          saveAs(blob, fileName);
         })
         .catch(error => {
           console.log(error);

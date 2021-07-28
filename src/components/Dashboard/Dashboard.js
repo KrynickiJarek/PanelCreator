@@ -2,6 +2,8 @@ import { memo, useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { connect } from "react-redux";
+import { saveAs } from 'file-saver';
+
 import IconHolder from '../MainCreator/PanelPreview/IconHolder/IconHolder';
 
 import Newpanel from "../../assets/dashboard/newpanel.svg";
@@ -173,7 +175,62 @@ export const Dashboard = memo(function Dashboard({
     setSaveOver(false)
   }
 
+  const handlePrintPdf = (id) => {
 
+    let dataToSend = {
+      frontEndData: panels[id].frontEndData,
+      backEndData: panels[id].backEndData
+    }
+    let frontEndDataStr = JSON.stringify(dataToSend);
+    let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+
+    let headers = new Headers();
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append('Access-Control-Allow-Credentials', 'true');
+
+    fetch("http://bitcoin.ampio.pl:4567/generatepdf", {
+      method: "POST",
+      body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
+      headers: headers
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
+        saveAs(blob, fileName);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+
+
+  const upload = (file) => {
+    fetch("http://bitcoin.ampio.pl:4567/loadpdf", {
+      method: 'POST',
+      body: file,
+    })
+      .then(response => response.text())
+      .then(data => {
+        function b64_to_utf8(str) {
+          return decodeURIComponent(escape(window.atob(str)));
+        }
+        let dataUtf8 = b64_to_utf8(data)
+        // let  endocedData = JSON.parse(atob(data))
+        let endocedData = JSON.parse(dataUtf8)
+        addPanel(endocedData)
+        resetAllAfterModelChange(false)
+
+      })
+      .catch(
+        error => console.log(error)
+      );
+    setZoomId(null)
+  }
+
+  const onSelectFile = (e) => {
+    upload(e.target.files[0])
+  };
 
   return (
     // <DndProvider debugMode={true} backend={HTML5Backend}>
@@ -595,7 +652,7 @@ export const Dashboard = memo(function Dashboard({
                                 <img src={copyOver ? Copyfill : Copy} alt="copy" className="dashboard_img_button" />
                                 <span>Utwórz kopię</span>
                               </div>
-                              <div className="dashboard_button_box" onClick={() => { handleSelectPanel(id) }} onMouseOver={() => { setSaveOver(true) }} onMouseLeave={() => { setSaveOver(false) }}>
+                              <div className="dashboard_button_box" onClick={() => { handlePrintPdf(id) }} onMouseOver={() => { setSaveOver(true) }} onMouseLeave={() => { setSaveOver(false) }}>
                                 <img src={saveOver ? Savetopdffill : Savetopdf} alt="savetopdf" className="dashboard_img_button" />
                                 <span>Zapisz do PDF</span>
                               </div>
@@ -665,10 +722,22 @@ export const Dashboard = memo(function Dashboard({
                       <div className={`resieze-${"upload"}`} style={zoomId === "upload" ? { transition: "0.5s ease", opacity: "1", width: "300px" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "300px" }}>
                         <p className="dashboard_info" onClick={() => handleZoom("upload")}>Wybierz plik PDF z komputera aby wczytać zapisany panel. Możliwe jest wczytanie plików utworzonych w aktualnej wersji Kreatora.</p>
                         <div className="dashboard_button_container" style={{ justifyContent: "center" }}>
-                          <div className="select_button" onClick={handleAddPanel}>
-                            WYBIERZ
-                            <div className="button_arrows" />
-                          </div>
+
+
+                          <label htmlFor="inputUpload">
+                            <div className="select_button">
+                              WYBIERZ PLIK
+                              <div className="button_arrows" />
+                            </div>
+                          </label>
+                          <input type="file" id="inputUpload" style={{ display: "none" }} onChange={onSelectFile} />
+
+                          {/* <div className="select_button"
+                            // onClick={handleUploadPdf} >
+                            >
+                              WYBIERZ
+                              <div className="button_arrows" /> */}
+                          {/* </div> */}
                         </div>
                       </div>
                     </div>
@@ -687,7 +756,7 @@ export const Dashboard = memo(function Dashboard({
           <MainCreator />
         }
       </div>
-    </DndProvider>
+    </DndProvider >
   );
 });
 
