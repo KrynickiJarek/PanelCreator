@@ -188,7 +188,8 @@ export const Dashboard = memo(function Dashboard({
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
 
-    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+    // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+    fetch("https://kreator.ampio.pl/generatepdf", {
       method: "POST",
       body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
       headers: headers

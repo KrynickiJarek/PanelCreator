@@ -3312,9 +3312,6 @@ const PanelPreview = ({
       })
         .then(res => res.blob())
         .then(blob => {
-          // let file = window.URL.createObjectURL(blob);
-          // window.location.assign(file);
-          // window.open(file);
           let fileName = panelName + "_" + chosenModel.name + ".pdf"
           saveAs(blob, fileName);
         })
