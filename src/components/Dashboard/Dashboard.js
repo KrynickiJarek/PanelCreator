@@ -57,6 +57,9 @@ export const Dashboard = memo(function Dashboard({
   changeIndexOfLastPanel,
   dashboard,
   showDashboard,
+  hideCreator,
+  dashboardEnter,
+  dashboardSmoothEnter,
   setBackEndReducers,
   setFrontEndReducerColor,
   setFrontEndReducerTab,
@@ -97,7 +100,15 @@ export const Dashboard = memo(function Dashboard({
   useEffect(() => {
     if (dashboard) {
       setDashboardSmooth(true)
+      hideCreator(true)
+      // dashboardSmoothEnter(true)
+
+      const dahsboardTimeout = setTimeout(() => {
+        dashboardSmoothEnter(true)
+      }, 100);
+      return () => clearTimeout(dahsboardTimeout);
     }
+    // eslint-disable-next-line 
   }, [dashboard])
 
 
@@ -258,11 +269,11 @@ export const Dashboard = memo(function Dashboard({
         <CreatorHeader />
         {dashboardSmooth &&
 
-          <div className="dashboard_container" style={dashboard ? { opacity: "1" } : { opacity: "0" }}>
+          <div className="dashboard_container" style={dashboard && dashboardEnter ? { opacity: "1" } : { opacity: "0" }}>
             <div className="dashboard_scroll">
               <div className="dashboard_content">
                 <p className="dashboard_header">Menu główne</p>
-                <p className="dashboard_header_info">Dodaj nowy panel, lub edytuj istniejący:</p>
+                <p className="dashboard_header_info">Dodaj nowy panel, wczytaj z pliku PDF lub edytuj istniejący:</p>
 
                 <div className="dashboard_panels">
                   {panels.map((panel, id) => {
@@ -784,10 +795,13 @@ export const Dashboard = memo(function Dashboard({
 const mapStateToProps = state => ({
   panels: state.panels.panels,
   dashboard: state.panels.dashboard,
+  dashboardEnter: state.panels.dashboardEnter,
 })
 
 const mapDispatchToProps = dispatch => ({
   showDashboard: (income) => dispatch(actionsDashboard.showDashboard(income)),
+  dashboardSmoothEnter: (income) => dispatch(actionsDashboard.dashboardSmoothEnter(income)),
+  hideCreator: (income) => dispatch(actionsDashboard.hideCreator(income)),
   addPanel: (income) => dispatch(actionsDashboard.addPanel(income)),
   updatePanels: (income) => dispatch(actionsDashboard.updatePanels(income)),
   changeIndexOfLastPanel: (income) => dispatch(actionsDashboard.changeIndexOfLastPanel(income)),

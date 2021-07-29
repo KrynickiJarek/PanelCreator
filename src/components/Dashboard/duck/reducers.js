@@ -3,6 +3,8 @@ import types from "./types"
 const INITIAL_STATE = {
   panels: [],
   dashboard: true,
+  dashboardEnter: false,
+  creator: true,
   indexOfLastPanel: -1
 }
 
@@ -20,6 +22,17 @@ const dashboardRaducers = (state = INITIAL_STATE, action) => {
       return {
         ...state, dashboard: action.item
       }
+
+    case types.HIDE_CREATOR:
+      return {
+        ...state, creator: action.item
+      }
+
+    case types.DASHBOARD_SMOOTH_ENTER:
+      return {
+        ...state, dashboardEnter: action.item
+      }
+
     case types.CHANGE_INDEX_OF_LAST_PANEL:
       return {
         ...state, indexOfLastPanel: action.item
