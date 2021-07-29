@@ -453,42 +453,42 @@ const PanelPreview = ({
       }
       // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
 
-      let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
-      let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
+      // let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
+      // let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
       let iconStartBackEnd = 1
-      // let sizeXBackEnd = 1
-      // let sizeYBackEnd = 1
+      let sizeXBackEnd = 1
+      let sizeYBackEnd = 1
       if (!chosenModel.panelRotation) {
         iconStartBackEnd = frameHolders[frameHolders.length - 1].frameInfo.startCell
-        // if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-        //   sizeXBackEnd = 7.5
-        //   sizeYBackEnd = 7.5
-        // } else {
-        //   if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1) {
-        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth
-        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 2) {
-        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
-        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 3) {
-        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
-        //   }
-        //   sizeYBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.rows - 1) + chosenModel.oneRowFrameHeight
-        // }
+        if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+          sizeXBackEnd = 7.5
+          sizeYBackEnd = 7.5
+        } else {
+          if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1) {
+            sizeXBackEnd = chosenModel.sideColumnFrameWidth
+          } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 2) {
+            sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
+          } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 3) {
+            sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
+          }
+          sizeYBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.rows - 1) + chosenModel.oneRowFrameHeight
+        }
 
       } else {
         iconStartBackEnd = 3 * (frameHolders[frameHolders.length - 1].frameInfo.startColumn - 1) + frameHolders[frameHolders.length - 1].frameInfo.startRow
-        // if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-        //   sizeXBackEnd = 7.5
-        //   sizeYBackEnd = 7.5
-        // } else {
-        //   if (frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth
-        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 2) {
-        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
-        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 3) {
-        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
-        //   }
-        //   sizeXBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.columns - 1) + chosenModel.oneRowFrameHeight
-        // }
+        if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+          sizeXBackEnd = 7.5
+          sizeYBackEnd = 7.5
+        } else {
+          if (frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+            sizeYBackEnd = chosenModel.sideColumnFrameWidth
+          } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 2) {
+            sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
+          } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 3) {
+            sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
+          }
+          sizeXBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.columns - 1) + chosenModel.oneRowFrameHeight
+        }
       }
 
 
@@ -1309,7 +1309,6 @@ const PanelPreview = ({
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
 
-
   }
 
   const handleClearAllText = () => {
@@ -1339,11 +1338,24 @@ const PanelPreview = ({
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
-    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
-    // console.log(copyPanelTextBackEnd[recordTextIndex].type)
+
+    let numberBackEnd = null
+    if (chosenModel.panelRotation) {
+      if (index % 3 === 0) {
+        numberBackEnd = index + 3
+      } else if (index % 3 === 2) {
+        numberBackEnd = index - 1
+      } else {
+        numberBackEnd = index + 1
+      }
+    } else {
+      numberBackEnd = index + 1
+    }
+
+    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
 
     let recordText = {
-      number: index + 1,
+      number: numberBackEnd,
       type: 1,
       title: text.target.value.toUpperCase(),
       font: chosenTextFont
@@ -1353,7 +1365,7 @@ const PanelPreview = ({
         copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
       }
       else if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
-        let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(index + 1)
+        let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(numberBackEnd)
         if (recordTextLastIndex > -1) {
           if (copyPanelTextBackEnd[recordTextLastIndex].type === 1) {
             copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
@@ -1365,6 +1377,34 @@ const PanelPreview = ({
     } else {
       copyPanelTextBackEnd.push(recordText)
     }
+
+    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+
+    // let recordText = {
+    //   number: index + 1,
+    //   type: 1,
+    //   title: text.target.value.toUpperCase(),
+    //   font: chosenTextFont
+    // }
+    // if (recordTextIndex > -1) {
+    //   if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+    //     copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
+    //   }
+    //   else if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+    //     let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(index + 1)
+    //     if (recordTextLastIndex > -1) {
+    //       if (copyPanelTextBackEnd[recordTextLastIndex].type === 1) {
+    //         copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
+    //       } else {
+    //         copyPanelTextBackEnd.push(recordText)
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   copyPanelTextBackEnd.push(recordText)
+    // }
+
+
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   };
@@ -1377,10 +1417,25 @@ const PanelPreview = ({
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
-    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+
+    let numberBackEnd = null
+    if (chosenModel.panelRotation) {
+      if (index % 3 === 0) {
+        numberBackEnd = index + 3
+      } else if (index % 3 === 2) {
+        numberBackEnd = index - 1
+      } else {
+        numberBackEnd = index + 1
+      }
+    } else {
+      numberBackEnd = index + 1
+    }
+
+
+    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
 
     let recordText = {
-      number: index + 1,
+      number: numberBackEnd,
       type: 0,
       title: text.target.value.toUpperCase(),
       font: chosenTextFont
@@ -1390,7 +1445,7 @@ const PanelPreview = ({
         copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
       }
       else if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
-        let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(index + 1)
+        let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(numberBackEnd)
         if (recordTextLastIndex > -1) {
           if (copyPanelTextBackEnd[recordTextLastIndex].type === 0) {
             copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
@@ -1402,6 +1457,31 @@ const PanelPreview = ({
     } else {
       copyPanelTextBackEnd.push(recordText)
     }
+    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+
+    // let recordText = {
+    //   number: index + 1,
+    //   type: 0,
+    //   title: text.target.value.toUpperCase(),
+    //   font: chosenTextFont
+    // }
+    // if (recordTextIndex > -1) {
+    //   if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+    //     copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
+    //   }
+    //   else if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+    //     let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(index + 1)
+    //     if (recordTextLastIndex > -1) {
+    //       if (copyPanelTextBackEnd[recordTextLastIndex].type === 0) {
+    //         copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
+    //       } else {
+    //         copyPanelTextBackEnd.push(recordText)
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   copyPanelTextBackEnd.push(recordText)
+    // }
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   };
@@ -1499,7 +1579,21 @@ const PanelPreview = ({
   const handleClearInput = (index, side) => {
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
-    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(index + 1)
+
+    let numberBackEnd = null
+    if (chosenModel.panelRotation) {
+      if (index % 3 === 0) {
+        numberBackEnd = index + 3
+      } else if (index % 3 === 2) {
+        numberBackEnd = index - 1
+      } else {
+        numberBackEnd = index + 1
+      }
+    } else {
+      numberBackEnd = index + 1
+    }
+
+    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
 
     const copyArr = iconHolders;
     if (side === "up") {
@@ -3435,8 +3529,8 @@ const PanelPreview = ({
       headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
       headers.append('Access-Control-Allow-Credentials', 'true');
 
-      // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-      fetch("https://kreator.ampio.pl/generatepdf", {
+      fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+        // fetch("https://kreator.ampio.pl/generatepdf", {
         method: "POST",
         body: JSON.stringify({ backEndData, frontEndDataB64 }),
         headers: headers

@@ -159,7 +159,6 @@ const IconHolder = ({
   let styleZIndex = {};
   let styleSignleFrame = {};
   let styleSignleFrameResize = {};
-  // styleSignleFrameResize.transform = `scale(1) rotate(${panelRotation}deg)`
   styleSignleFrameResize.transform = "scale(1)"
 
 
@@ -226,7 +225,7 @@ const IconHolder = ({
     if (isOverToShow) {
       const slashTimeout = setTimeout(() => {
         setShow(true)
-      }, 300); //było 400
+      }, 300);
       return () => clearTimeout(slashTimeout);
     }
   }, [isOverToShow]);
@@ -243,7 +242,6 @@ const IconHolder = ({
       borderRadius: "0px",
     }
     styleSignleFrameResize = {
-      // transform: `scale(0.75) rotate(${panelRotation}deg)`,
       transform: "scale(0.75)",
     }
   } else if (singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame" && !visual) {
@@ -252,24 +250,21 @@ const IconHolder = ({
       borderRadius: `${scale}px`,
     }
     styleSignleFrameResize = {
-      // transform: `scale(0.75) rotate(${panelRotation}deg)`,
       transform: "scale(0.75)",
     }
-  } else if ((!singleFrameTemp && chosenFrameShape === "round") || chosenTab !== "frame") { //??
+  } else if ((!singleFrameTemp && chosenFrameShape === "round") || chosenTab !== "frame") {
     styleSignleFrame = {
       border: "2px solid transparent",
       borderRadius: `${scale}px`
     }
     styleSignleFrameResize = {
-      // transform: `scale(1) rotate(${panelRotation}deg)`,
       transform: "scale(1)",
     }
-  } else if ((!singleFrameTemp && chosenFrameShape === "sharp") || chosenTab !== "frame") { //??
+  } else if ((!singleFrameTemp && chosenFrameShape === "sharp") || chosenTab !== "frame") {
     styleSignleFrame = {
       border: "2px solid transparent"
     }
     styleSignleFrameResize = {
-      // transform: `scale(1) rotate(${panelRotation}deg)`,
       transform: "scale(1)",
     }
   }
@@ -277,7 +272,6 @@ const IconHolder = ({
 
   if (singleFrame) {
     styleSignleFrameResize = {
-      // transform: `scale(0.75) rotate(${panelRotation}deg)`,
       transform: "scale(0.75)",
     }
   }
@@ -305,7 +299,6 @@ const IconHolder = ({
 
   return (
     <>
-      {/* <div ref={over} style={{ height: "100%", width: "100%", position: "absolute" }}> */}
       <div ref={over} style={(!panelRotation) ? { height: "100%", width: "100%", position: "absolute" }
         : { height: "100%", width: "100%", position: "absolute", transform: "rotate(90deg)", transformOrigin: `center ${10.4 * scale}px`, transition: "0.4s ease" }}>
         <IconHolderStatus

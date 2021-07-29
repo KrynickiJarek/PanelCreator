@@ -94,6 +94,12 @@ export const Dashboard = memo(function Dashboard({
     return () => clearInterval(intervalID);
   }, [timeWithSeconds])
 
+  useEffect(() => {
+    if (dashboard) {
+      setDashboardSmooth(true)
+    }
+  }, [dashboard])
+
 
   const handleZoom = (id) => {
     setResize(document.querySelector(`.resieze-${id}`).clientHeight)
