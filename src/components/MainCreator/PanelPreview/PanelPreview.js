@@ -134,7 +134,9 @@ const PanelPreview = ({
   panels,
   indexOfLastPanel,
   updatePanels,
-  dashboard
+  dashboard,
+  hideCreator,
+  dashboardSmoothEnter
 }) => {
 
 
@@ -201,6 +203,7 @@ const PanelPreview = ({
 
   useEffect(() => {
     if (resetAllAfterModelChangeFlag) {
+      dashboardSmoothEnter(false)
       setVisualSmooth(true)
       const arrIconHolders = [];
       const arrNewFrame = [];
@@ -453,42 +456,42 @@ const PanelPreview = ({
       }
       // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
 
-      // let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
-      // let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
+      let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
+      let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
       let iconStartBackEnd = 1
-      let sizeXBackEnd = 1
-      let sizeYBackEnd = 1
+      // let sizeXBackEnd = 1
+      // let sizeYBackEnd = 1
       if (!chosenModel.panelRotation) {
         iconStartBackEnd = frameHolders[frameHolders.length - 1].frameInfo.startCell
-        if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-          sizeXBackEnd = 7.5
-          sizeYBackEnd = 7.5
-        } else {
-          if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1) {
-            sizeXBackEnd = chosenModel.sideColumnFrameWidth
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 2) {
-            sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 3) {
-            sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
-          }
-          sizeYBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.rows - 1) + chosenModel.oneRowFrameHeight
-        }
+        // if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+        //   sizeXBackEnd = 7.5
+        //   sizeYBackEnd = 7.5
+        // } else {
+        //   if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1) {
+        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 2) {
+        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 3) {
+        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
+        //   }
+        //   sizeYBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.rows - 1) + chosenModel.oneRowFrameHeight
+        // }
 
       } else {
         iconStartBackEnd = 3 * (frameHolders[frameHolders.length - 1].frameInfo.startColumn - 1) + frameHolders[frameHolders.length - 1].frameInfo.startRow
-        if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-          sizeXBackEnd = 7.5
-          sizeYBackEnd = 7.5
-        } else {
-          if (frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-            sizeYBackEnd = chosenModel.sideColumnFrameWidth
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 2) {
-            sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 3) {
-            sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
-          }
-          sizeXBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.columns - 1) + chosenModel.oneRowFrameHeight
-        }
+        // if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+        //   sizeXBackEnd = 7.5
+        //   sizeYBackEnd = 7.5
+        // } else {
+        //   if (frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 2) {
+        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 3) {
+        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
+        //   }
+        //   sizeXBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.columns - 1) + chosenModel.oneRowFrameHeight
+        // }
       }
 
 
@@ -1615,8 +1618,6 @@ const PanelPreview = ({
 
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
-
-
   }
 
 
@@ -3550,7 +3551,6 @@ const PanelPreview = ({
     if (panelName === "") {
       setNoPanelName(true)
     } else {
-
       if (indexOfLastPanel > -1) {
         const copyPanels = panels
         copyPanels.splice(indexOfLastPanel, 1)
@@ -3563,6 +3563,34 @@ const PanelPreview = ({
         frontEndData: frontEndDataCopy,
         backEndData,
       })
+
+      hideCreator(false)
+      const dahsboardTimeout = setTimeout(() => {
+        showDashboard(true)
+        handleClearAll()
+        changePanelName("")
+        changePanelNameBackEnd("")
+        resetColor()
+        resetPanelColorBackEnd()
+        resetTab("model")
+        resetModel()
+      }, 400);
+      return () => clearTimeout(dahsboardTimeout);
+    }
+
+
+
+
+
+
+
+  }
+
+
+  const handleBack = () => {
+    hideCreator(false)
+
+    const dahsboardTimeout = setTimeout(() => {
       showDashboard(true)
       handleClearAll()
       changePanelName("")
@@ -3571,19 +3599,8 @@ const PanelPreview = ({
       resetPanelColorBackEnd()
       resetTab("model")
       resetModel()
-    }
-  }
-
-
-  const handleBack = () => {
-    showDashboard(true)
-    handleClearAll()
-    changePanelName("")
-    changePanelNameBackEnd("")
-    resetColor()
-    resetPanelColorBackEnd()
-    resetTab("model")
-    resetModel()
+    }, 400);
+    return () => clearTimeout(dahsboardTimeout);
   }
 
 
@@ -4659,6 +4676,8 @@ const mapDispatchToProps = dispatch => ({
   addPanel: (income) => dispatch(actionsDashboard.addPanel(income)),
   updatePanels: (income) => dispatch(actionsDashboard.updatePanels(income)),
   showDashboard: (income) => dispatch(actionsDashboard.showDashboard(income)),
+  dashboardSmoothEnter: (income) => dispatch(actionsDashboard.dashboardSmoothEnter(income)),
+  hideCreator: (income) => dispatch(actionsDashboard.hideCreator(income)),
 
   resetAllAfterModelChange: (income) => dispatch(actionsModel.resetAllAfterModelChange(income)),
   resetModel: (income) => dispatch(actionsModel.resetModel(income)),
