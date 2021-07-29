@@ -139,24 +139,24 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
           </Nav.Link>
         </div>
         <div className="editor_box">
-          <Tab.Content>
-            <Tab.Pane eventKey="model">
-              <ModelChooser />
-            </Tab.Pane>
-            <Tab.Pane eventKey="color">
-              <ColorEditor />
-            </Tab.Pane>
-            <Tab.Pane eventKey="icon">
-              <IconEditor />
-            </Tab.Pane>
-            <Tab.Pane eventKey="text">
-              <TextEditor />
-            </Tab.Pane>
-            <Tab.Pane eventKey="frame">
-              <FrameEditor />
-            </Tab.Pane>
+          {/* <Tab.Content> */}
+          <Tab.Pane eventKey="model">
+            <ModelChooser />
+          </Tab.Pane>
+          <Tab.Pane eventKey="color">
+            <ColorEditor />
+          </Tab.Pane>
+          <Tab.Pane eventKey="icon">
+            <IconEditor />
+          </Tab.Pane>
+          <Tab.Pane eventKey="text">
+            <TextEditor />
+          </Tab.Pane>
+          <Tab.Pane eventKey="frame">
+            <FrameEditor />
+          </Tab.Pane>
 
-          </Tab.Content>
+          {/* </Tab.Content> */}
         </div>
       </div>
     </Tab.Container>

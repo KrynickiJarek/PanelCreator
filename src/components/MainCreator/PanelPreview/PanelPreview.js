@@ -453,42 +453,42 @@ const PanelPreview = ({
       }
       // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
 
-      // let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
-      // let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
+      let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
+      let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
       let iconStartBackEnd = 1
-      let sizeXBackEnd = 1
-      let sizeYBackEnd = 1
+      // let sizeXBackEnd = 1
+      // let sizeYBackEnd = 1
       if (!chosenModel.panelRotation) {
         iconStartBackEnd = frameHolders[frameHolders.length - 1].frameInfo.startCell
-        if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-          sizeXBackEnd = 7.5
-          sizeYBackEnd = 7.5
-        } else {
-          if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1) {
-            sizeXBackEnd = chosenModel.sideColumnFrameWidth
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 2) {
-            sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 3) {
-            sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
-          }
-          sizeYBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.rows - 1) + chosenModel.oneRowFrameHeight
-        }
+        // if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+        //   sizeXBackEnd = 7.5
+        //   sizeYBackEnd = 7.5
+        // } else {
+        //   if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1) {
+        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 2) {
+        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.columns === 3) {
+        //     sizeXBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
+        //   }
+        //   sizeYBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.rows - 1) + chosenModel.oneRowFrameHeight
+        // }
 
       } else {
         iconStartBackEnd = 3 * (frameHolders[frameHolders.length - 1].frameInfo.startColumn - 1) + frameHolders[frameHolders.length - 1].frameInfo.startRow
-        if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-          sizeXBackEnd = 7.5
-          sizeYBackEnd = 7.5
-        } else {
-          if (frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
-            sizeYBackEnd = chosenModel.sideColumnFrameWidth
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 2) {
-            sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
-          } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 3) {
-            sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
-          }
-          sizeXBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.columns - 1) + chosenModel.oneRowFrameHeight
-        }
+        // if (frameHolders[frameHolders.length - 1].frameInfo.columns === 1 && frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+        //   sizeXBackEnd = 7.5
+        //   sizeYBackEnd = 7.5
+        // } else {
+        //   if (frameHolders[frameHolders.length - 1].frameInfo.rows === 1) {
+        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 2) {
+        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + ((chosenModel.centerColumnFrameWidth - chosenModel.sideColumnFrameWidth) / 2)
+        //   } else if (frameHolders[frameHolders.length - 1].frameInfo.rows === 3) {
+        //     sizeYBackEnd = chosenModel.sideColumnFrameWidth * 2 + chosenModel.centerColumnFrameWidth
+        //   }
+        //   sizeXBackEnd = chosenModel.multiRowFrameHeight * (frameHolders[frameHolders.length - 1].frameInfo.columns - 1) + chosenModel.oneRowFrameHeight
+        // }
       }
 
 
@@ -3435,8 +3435,8 @@ const PanelPreview = ({
       headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
       headers.append('Access-Control-Allow-Credentials', 'true');
 
-      fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-        // fetch("https://kreator.ampio.pl/generatepdf", {
+      // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      fetch("https://kreator.ampio.pl/generatepdf", {
         method: "POST",
         body: JSON.stringify({ backEndData, frontEndDataB64 }),
         headers: headers

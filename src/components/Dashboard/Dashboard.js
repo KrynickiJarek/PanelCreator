@@ -73,6 +73,7 @@ export const Dashboard = memo(function Dashboard({
   const [resize, setResize] = useState(0)
   const [onTop, setOnTop] = useState(null)
   const [onBack, setOnBack] = useState(null)
+  const [dashboardSmooth, setDashboardSmooth] = useState(true)
 
 
   const [editOver, setEditOver] = useState(false)
@@ -130,6 +131,11 @@ export const Dashboard = memo(function Dashboard({
     changeIndexOfLastPanel(-1)
     setZoomId(null)
 
+    const dahsboardTimeout = setTimeout(() => {
+      setDashboardSmooth(false)
+    }, 400);
+    return () => clearTimeout(dahsboardTimeout);
+
   }
 
   const handleSelectPanel = (index) => {
@@ -148,6 +154,11 @@ export const Dashboard = memo(function Dashboard({
     setDeleteOver(false)
     setCopyOver(false)
     setSaveOver(false)
+
+    const dahsboardTimeout = setTimeout(() => {
+      setDashboardSmooth(false)
+    }, 400);
+    return () => clearTimeout(dahsboardTimeout);
   }
 
   const handleDeletePanel = (index) => {
@@ -188,8 +199,8 @@ export const Dashboard = memo(function Dashboard({
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
 
-    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-      // fetch("https://kreator.ampio.pl/generatepdf", {
+    // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+    fetch("https://kreator.ampio.pl/generatepdf", {
       method: "POST",
       body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
       headers: headers
@@ -207,7 +218,8 @@ export const Dashboard = memo(function Dashboard({
 
 
   const upload = (file) => {
-    fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
+    // fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
+    fetch("https://kreator.ampio.pl/loadpdf", {
       method: 'POST',
       body: file,
     })
@@ -238,9 +250,9 @@ export const Dashboard = memo(function Dashboard({
       <div className="main_container">
 
         <CreatorHeader />
-        {dashboard &&
+        {dashboardSmooth &&
 
-          <div className="dashboard_container">
+          <div className="dashboard_container" style={dashboard ? { opacity: "1" } : { opacity: "0" }}>
             <div className="dashboard_scroll">
               <div className="dashboard_content">
                 <p className="dashboard_header">Menu główne</p>
@@ -751,9 +763,8 @@ export const Dashboard = memo(function Dashboard({
             </div>
           </div>
         }
-
-        {!dashboard &&
-          <MainCreator />
+        {!dashboardSmooth &&
+          <MainCreator dashboardSmooth={dashboardSmooth} />
         }
       </div>
     </DndProvider >
