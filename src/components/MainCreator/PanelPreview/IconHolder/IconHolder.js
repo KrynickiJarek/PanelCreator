@@ -159,7 +159,8 @@ const IconHolder = ({
   let styleZIndex = {};
   let styleSignleFrame = {};
   let styleSignleFrameResize = {};
-  styleSignleFrameResize.transform = "scale(1)";
+  // styleSignleFrameResize.transform = `scale(1) rotate(${panelRotation}deg)`
+  styleSignleFrameResize.transform = "scale(1)"
 
 
   if (isActive) {
@@ -242,6 +243,7 @@ const IconHolder = ({
       borderRadius: "0px",
     }
     styleSignleFrameResize = {
+      // transform: `scale(0.75) rotate(${panelRotation}deg)`,
       transform: "scale(0.75)",
     }
   } else if (singleFrameTemp && chosenFrameShape === "round" && chosenTab === "frame" && !visual) {
@@ -250,6 +252,7 @@ const IconHolder = ({
       borderRadius: `${scale}px`,
     }
     styleSignleFrameResize = {
+      // transform: `scale(0.75) rotate(${panelRotation}deg)`,
       transform: "scale(0.75)",
     }
   } else if ((!singleFrameTemp && chosenFrameShape === "round") || chosenTab !== "frame") { //??
@@ -258,6 +261,7 @@ const IconHolder = ({
       borderRadius: `${scale}px`
     }
     styleSignleFrameResize = {
+      // transform: `scale(1) rotate(${panelRotation}deg)`,
       transform: "scale(1)",
     }
   } else if ((!singleFrameTemp && chosenFrameShape === "sharp") || chosenTab !== "frame") { //??
@@ -265,6 +269,7 @@ const IconHolder = ({
       border: "2px solid transparent"
     }
     styleSignleFrameResize = {
+      // transform: `scale(1) rotate(${panelRotation}deg)`,
       transform: "scale(1)",
     }
   }
@@ -272,6 +277,7 @@ const IconHolder = ({
 
   if (singleFrame) {
     styleSignleFrameResize = {
+      // transform: `scale(0.75) rotate(${panelRotation}deg)`,
       transform: "scale(0.75)",
     }
   }
@@ -299,6 +305,7 @@ const IconHolder = ({
 
   return (
     <>
+      {/* <div ref={over} style={{ height: "100%", width: "100%", position: "absolute" }}> */}
       <div ref={over} style={(!panelRotation) ? { height: "100%", width: "100%", position: "absolute" }
         : { height: "100%", width: "100%", position: "absolute", transform: "rotate(90deg)", transformOrigin: `center ${10.4 * scale}px`, transition: "0.4s ease" }}>
         <IconHolderStatus
@@ -308,6 +315,7 @@ const IconHolder = ({
           chosenColor={chosenColor}
           rotationDot={rotationDot}
           selectedDot={selectedDot}
+          panelRotation={panelRotation}
         />
         <div style={styleZIndex}>
 
@@ -323,7 +331,9 @@ const IconHolder = ({
                   image={lastDroppedIcon.image}
                   index={index}
                   chosenColor={chosenColor}
-                  rotationIcon={rotationIcon} />
+                  rotationIcon={rotationIcon}
+                  panelRotation={panelRotation}
+                />
               }
               {(!lastDroppedIcon && (show || showHolder)) &&
                 (<img src={Holder} alt="holder" className="holder"
@@ -355,6 +365,7 @@ const IconHolder = ({
           selectedUp={selectedUp}
           singleFrame={singleFrame}
           singleFrameTemp={singleFrameTemp}
+          panelRotation={panelRotation}
         />
 
         <IconHolderSlashDown
@@ -369,6 +380,7 @@ const IconHolder = ({
           selectedDown={selectedDown}
           singleFrame={singleFrame}
           singleFrameTemp={singleFrameTemp}
+          panelRotation={panelRotation}
         />
       </div>
     </>

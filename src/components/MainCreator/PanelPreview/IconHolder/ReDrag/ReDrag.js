@@ -19,7 +19,7 @@ export const ReDrag = ({
   iconsBackEnd,
   changeIconsBackEnd,
   rotationIcon,
-  chosenModel
+  chosenModel,
 }) => {
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")

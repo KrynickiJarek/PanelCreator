@@ -78,15 +78,17 @@
         .model_box{
           width: 190px;
           height: 220px;
-          // margin: 10px 10px 2px 10px;
           display: flex;
           justify-content: center;
           align-items: center;
           cursor: pointer;
+          transform: scale(0.5);
 
           .model_img {
-            max-width: 175px;
-            max-height: 200px;
+            // max-width: 175px;
+            // max-height: 200px;
+            max-width: 350px;
+            max-height: 400px;
           }
         }
 

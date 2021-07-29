@@ -188,8 +188,8 @@ export const Dashboard = memo(function Dashboard({
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
 
-    // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-    fetch("https://kreator.ampio.pl/generatepdf", {
+    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      // fetch("https://kreator.ampio.pl/generatepdf", {
       method: "POST",
       body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
       headers: headers
@@ -331,8 +331,8 @@ export const Dashboard = memo(function Dashboard({
                                           {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                                             <div style={{ position: "absolute", width: "100%" }}>
                                               <div style={{
-                                                fontSize: `${2 * sc}px`,
-                                                lineHeight: `${2 * sc}px`,
+                                                fontSize: `${2.55 * sc}px`,
+                                                lineHeight: `${2.55 * sc}px`,
                                                 height: `${3.6 * sc}px`,
                                                 width: `${8 * sc}px`,
                                                 position: "absolute",
@@ -350,8 +350,8 @@ export const Dashboard = memo(function Dashboard({
                                                     {
                                                       color: panel.frontEndData.color.iconColor,
                                                       borderRadius: `${0.9 * sc}px`,
-                                                      fontSize: `${2 * sc}px`,
-                                                      lineHeight: `${2 * sc}px`,
+                                                      fontSize: `${2.55 * sc}px`,
+                                                      lineHeight: `${2.55 * sc}px`,
                                                       height: `${3.6 * sc}px`,
                                                       gridArea: "1 / 1 / 2 / 2",
                                                       width: "100%",
@@ -481,8 +481,8 @@ export const Dashboard = memo(function Dashboard({
                                                 <form >
                                                   <div style={!panel.frontEndData.model.chosenModel.panelRotation ?
                                                     {
-                                                      fontSize: `${2 * sc}px`,
-                                                      lineHeight: `${2 * sc}px`,
+                                                      fontSize: `${2.55 * sc}px`,
+                                                      lineHeight: `${2.55 * sc}px`,
                                                       height: `${3.6 * sc}px`,
                                                       width: `${8 * sc}px`,
                                                       position: "absolute",
@@ -494,8 +494,8 @@ export const Dashboard = memo(function Dashboard({
                                                     }
                                                     :
                                                     {
-                                                      fontSize: `${2 * sc}px`,
-                                                      lineHeight: `${2 * sc}px`,
+                                                      fontSize: `${2.55 * sc}px`,
+                                                      lineHeight: `${2.55 * sc}px`,
                                                       height: `${3.6 * sc}px`,
                                                       width: `${8 * sc}px`,
                                                       position: "absolute",
@@ -514,8 +514,8 @@ export const Dashboard = memo(function Dashboard({
                                                         color: panel.frontEndData.color.iconColor,
                                                         border: "2px solid transparent",
                                                         borderRadius: `${0.9 * sc}px`,
-                                                        fontSize: `${2 * sc}px`,
-                                                        lineHeight: `${2 * sc}px`,
+                                                        fontSize: `${2.55 * sc}px`,
+                                                        lineHeight: `${2.55 * sc}px`,
                                                         height: `${3.6 * sc}px`,
                                                         gridArea: "1 / 1 / 2 / 2",
                                                         width: "100%",
@@ -532,8 +532,8 @@ export const Dashboard = memo(function Dashboard({
                                                 </form>
                                                 <form >
                                                   <div style={{
-                                                    fontSize: `${2 * sc}px`,
-                                                    lineHeight: `${2 * sc}px`,
+                                                    fontSize: `${2.55 * sc}px`,
+                                                    lineHeight: `${2.55 * sc}px`,
                                                     height: `${3.6 * sc}px`,
                                                     width: `${8 * sc}px`,
                                                     position: "absolute",
@@ -552,8 +552,8 @@ export const Dashboard = memo(function Dashboard({
                                                         color: panel.frontEndData.color.iconColor,
                                                         border: "2px solid transparent",
                                                         borderRadius: `${0.9 * sc}px`,
-                                                        fontSize: `${2 * sc}px`,
-                                                        lineHeight: `${2 * sc}px`,
+                                                        fontSize: `${2.55 * sc}px`,
+                                                        lineHeight: `${2.55 * sc}px`,
                                                         height: `${3.6 * sc}px`,
                                                         gridArea: "1 / 1 / 2 / 2",
                                                         width: "100%",

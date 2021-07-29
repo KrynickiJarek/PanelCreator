@@ -21,8 +21,9 @@ const ReDragDot = ({
   rotationDot,
   chosenModel,
   iconsBackEnd,
-  changeIconsBackEnd
+  changeIconsBackEnd,
 }) => {
+
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
 
@@ -85,7 +86,6 @@ const ReDragDot = ({
     } else {
       numberBackEnd = index + 1
     }
-    // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 3)) })
     const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 3)) })
     changeIconsBackEnd(copyIconsBackEnd)
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------

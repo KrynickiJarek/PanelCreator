@@ -35,7 +35,8 @@ export const IconHolderSlashUp = ({
   singleFrameTemp,
   iconsBackEnd,
   changeIconsBackEnd,
-  lastDroppedSlashUp
+  lastDroppedSlashUp,
+  panelRotation
 }) => {
 
   const handleDrop = (item) => {
@@ -220,6 +221,7 @@ export const IconHolderSlashUp = ({
 
   return (
     <div style={styleZIndex}>
+      {/* // <div style={{ ...styleZIndex, transform: `rotate(${panelRotation}deg)` }}> */}
       <div className="slash_up_area_dropping_ani" style={{ ...styleDroppingAni, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
         <div className="slash_area_dropping_pulse" style={styleDroppingPulse} />
       </div>
