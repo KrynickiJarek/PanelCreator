@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';//--------tooltip 
 import { connect } from "react-redux"
 import { saveAs } from 'file-saver';
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
@@ -14,8 +14,7 @@ import moment from 'moment';
 
 import "./PanelPreview.scss"
 
-// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-// import Tooltip from 'react-bootstrap/Tooltip'
+import Overlay from 'react-bootstrap/Overlay'//--------tooltip
 
 import LogoPure from "../../../assets/preview/logopure.svg"
 
@@ -141,11 +140,11 @@ const PanelPreview = ({
   dashboardSmoothEnter,
 
   updateFavoriteIcons,
-  updateOwnIcons
+  updateOwnIcons,
+
 }) => {
 
-
-
+  const target = useRef(null); //--------tooltip
 
   const [visualSmooth, setVisualSmooth] = useState(true)
 
@@ -3632,6 +3631,7 @@ const PanelPreview = ({
 
           <form onSubmit={handleSubmit} className="panel_name_form" >
             <input className="panel_name_input"
+              ref={target}
               type="text"
               autoComplete="off"
               maxLength="18"
@@ -4430,6 +4430,28 @@ const PanelPreview = ({
       <div className="preview_side_container">
         <div className="preview_side_scroll">
           <div className="preview_side">
+
+
+
+
+
+            <Overlay target={target.current} show={noPanelName} placement="top">
+              {({ placement, arrowProps, show: _show, popper, ...props }) => (
+                <div
+                  {...props}
+                  style={{
+                    backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                    fontFamily: "'Montserrat', sans-serif",
+                    padding: '5px 10px',
+                    color: 'white',
+                    borderRadius: 3,
+                    ...props.style,
+                  }}
+                >
+                  Wpisz nazwę panelu
+                </div>
+              )}
+            </Overlay>
 
             <div className="side_box">
 

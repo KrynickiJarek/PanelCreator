@@ -2,12 +2,13 @@ import types from "./types"
 
 const INITIAL_STATE = {
   visual: false,
-  scale: 5,
+  scale: 7,
   animations: true,
   removeIcon: false,
   removeIcons: false,
   panelName: "",
-  timeOfCreation: null
+  timeOfCreation: null,
+  version: "1.00"
 }
 
 const visualReducer = (state = INITIAL_STATE, action) => {

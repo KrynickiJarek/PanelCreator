@@ -48,6 +48,17 @@
       cursor: default;
     }
   }
+  .version{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 2px;
+    margin-right: 8px;
+    font-family: 'Montserrat', sans-serif;
+    color: #666666;
+    font-size: 12px;
+    cursor: default;
+  }
 }
 
 // @media (min-width: 1200px){
