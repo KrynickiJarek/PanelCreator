@@ -123,6 +123,13 @@
             flex-wrap: wrap;
             margin-bottom: 40px;
 
+            .instruction_box{
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+
             .instruction, .instruction_bold{
                 font-size: 16px;
                 font-weight: 400;
@@ -130,7 +137,8 @@
                 color: #333333;  
                 align-self: flex-start;
                 text-align: left;
-                margin-bottom: 16px;
+                margin-top: 0px;
+                margin-bottom: 15px;
                 cursor: default;
                 
                 .favorite_instruction{
@@ -142,7 +150,41 @@
             }
             .instruction_bold{
             font-weight: 700;
+            margin-bottom: 5px;
             }
+
+            .select_button {
+              display: flex;
+              align-items: center;
+              height: 45px;
+              width: 130px;
+              width: fit-content;
+              cursor: pointer;
+              font-weight: 700;
+              font-family: 'Montserrat', sans-serif;
+              color: #333333;
+              font-size: 14px;
+              padding: 5px 40px 5px 10px;
+              border: 3px solid transparent;
+              transition: 0.4s ease;
+              position: relative;
+              margin-left: 20px;
+              
+              .button_arrows {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                height: 15px;
+                width: 20px;
+                background-image:  url("../../../../assets/arrows.svg");
+                transform: translate(-50%,-50%);
+                background-repeat: no-repeat;
+              }
+            }
+            .select_button:hover {
+              border: 3px solid #EC695C;
+            }
+          }
 
         .icon_box {
                 height: 80px;
@@ -181,6 +223,7 @@
                         }
                 }  
             }
+
         }
     }
 }

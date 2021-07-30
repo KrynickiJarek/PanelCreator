@@ -6,6 +6,8 @@ const INITIAL_STATE = {
   iconHoldersRender: false,
   favoriteIcons: [],
   favoriteIconsRender: false,
+  ownIcons: [],
+  ownIconsRender: false,
   isAnySelected: false,
 }
 
@@ -29,6 +31,14 @@ const iconReducer = (state = INITIAL_STATE, action) => {
     case types.REMOVE_ICON_FROM_FAVORITE:
       return {
         ...state, favoriteIcons: [...state.favoriteIcons.filter(function (element) { return element !== action.item })], favoriteIconsChange: !state.favoriteIconsChange
+      }
+    case types.UPDATE_FAVORITE_ICONS:
+      return {
+        ...state, favoriteIcons: action.item, favoriteIconsChange: !state.favoriteIconsChange
+      }
+    case types.UPDATE_OWN_ICONS:
+      return {
+        ...state, ownIcons: action.item, ownIconsRender: !state.ownIconsRender
       }
     case types.IS_ANY_SELECTED:
       return {

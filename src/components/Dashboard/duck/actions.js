@@ -9,6 +9,7 @@ const updatePanels = item => ({
   type: types.UPDATE_PANELS, item
 })
 
+
 const showDashboard = item => ({
   type: types.SHOW_DASHBOARD, item
 })

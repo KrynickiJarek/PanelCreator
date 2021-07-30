@@ -18,6 +18,7 @@ const dashboardRaducers = (state = INITIAL_STATE, action) => {
       return {
         ...state, panels: action.item
       }
+
     case types.SHOW_DASHBOARD:
       return {
         ...state, dashboard: action.item

@@ -136,7 +136,10 @@ const PanelPreview = ({
   updatePanels,
   dashboard,
   hideCreator,
-  dashboardSmoothEnter
+  dashboardSmoothEnter,
+
+  updateFavoriteIcons,
+  updateOwnIcons
 }) => {
 
 
@@ -3547,6 +3550,12 @@ const PanelPreview = ({
     }
   }
 
+
+
+
+
+
+
   const handleSave = () => {
     if (panelName === "") {
       setNoPanelName(true)
@@ -3574,15 +3583,11 @@ const PanelPreview = ({
         resetPanelColorBackEnd()
         resetTab("model")
         resetModel()
+        updateFavoriteIcons([])
+        updateOwnIcons([])
       }, 400);
       return () => clearTimeout(dahsboardTimeout);
     }
-
-
-
-
-
-
 
   }
 
@@ -3599,6 +3604,8 @@ const PanelPreview = ({
       resetPanelColorBackEnd()
       resetTab("model")
       resetModel()
+      updateFavoriteIcons([])
+      updateOwnIcons([])
     }, 400);
     return () => clearTimeout(dahsboardTimeout);
   }
@@ -4639,6 +4646,7 @@ const mapStateToProps = state => ({
   indexOfLastPanel: state.panels.indexOfLastPanel,
   dashboard: state.panels.dashboard,
 
+
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -4681,6 +4689,10 @@ const mapDispatchToProps = dispatch => ({
 
   resetAllAfterModelChange: (income) => dispatch(actionsModel.resetAllAfterModelChange(income)),
   resetModel: (income) => dispatch(actionsModel.resetModel(income)),
+  updateOwnIcons: (income) => dispatch(actionsIcon.updateOwnIcons(income)),
+  updateFavoriteIcons: icon => dispatch(actionsIcon.updateFavoriteIcons(icon)),
+
+
 
 })
 

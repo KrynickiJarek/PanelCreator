@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
+import actions from "./duck/actions"
 import "./IconEditor.scss"
 
 import Favorite from "../../../../assets/favorite.svg"
+import Own from "../../../../assets/own.svg"
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
@@ -16,10 +18,65 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
+export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor }) => {
 
   const [unlock, setUnlock] = useState(false)
 
+  let orangeStyle = {
+    height: "20px",
+    width: "20px",
+    borderRadius: "50%",
+    backgroundColor: "rgb(236, 105, 92)",
+    display: "inline-block",
+    transform: "translateY(4px)"
+  }
+
+  let greenStyle = {
+    height: "20px",
+    width: "20px",
+    borderRadius: "50%",
+    backgroundColor: "rgb(40, 167, 69)",
+    display: "inline-block",
+    transform: "translateY(4px)"
+  }
+
+  if (chosenColor.hex === "#30a32c") {
+    greenStyle.backgroundColor = "rgb( 32, 114, 30)"
+  }
+
+
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+
+
+  const onSelectFile = (e) => {
+    if (e.target.files[0].type !== "image/svg+xml") {
+      alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .svg!")
+    } else {
+      getBase64(e.target.files[0]).then(
+        data => {
+          const image = {
+            default: data
+          }
+          let copyOwnIcons = ownIcons
+          copyOwnIcons.push(image)
+          updateOwnIcons(copyOwnIcons)
+          document.getElementById("inputUploadIcon").value = null
+        }
+      )
+    }
+  };
+
+  const containFavorite = (icon) => {
+    return !favoriteIcons.includes(icon)
+  }
 
   return (
     <div className="scroll_container">
@@ -50,8 +107,12 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
             <div className="nav_col">
               <Nav variant="pills" className="flex-column">
                 <Nav.Link eventKey="ulubione" >
-                  <img src={Favorite} alt="favorite" className="favorite_nav" />
+                  <img src={Favorite} alt="own" className="favorite_nav" />
                   Ulubione
+                </Nav.Link>
+                <Nav.Link eventKey="własne" >
+                  <img src={Own} alt="own" className="favorite_nav" />
+                  Własne
                 </Nav.Link>
                 {iconCategories.map((el, i) => (
                   <Nav.Link key={i} eventKey={el.name}>{el.name}</Nav.Link>
@@ -62,19 +123,111 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
               <Tab.Content>
                 <Tab.Pane eventKey="ulubione">
                   <div className="icons">
-                    <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsce na panelu. Kliknij ikonę aby dodać ją do Ulubionych.</p>
-                    {(favoriteIcons.length === 0) ?
-                      <>
-                        <p className="instruction">W tym miejscu pojawią się ikony zaznaczone jako Ulubione
-                          <img src={Favorite} alt="favorite" className="favorite_instruction" />
+                    <div className="instruction_box">
+                      <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsca na panelu. Będą one podświetlone kolorem  <div style={{ ...orangeStyle }} />.
+                        Aby zostawić ikonę należy ją upiścić w momencie, gdy pole jest podświetlone kolorem  <div style={{ ...greenStyle }} />.</p>
+                      <p className="instruction">Kliknięcie na ikonę spowoduje dodanie jej do Ulubionych.</p>
+
+                      {favoriteIcons.length === 0 &&
+                        <p className="instruction" style={{ margin: "28px" }}>(W tym miejscu pojawią się ikony dodane do Ulubionych
+                          <img src={Favorite} alt="favorite" className="favorite_instruction" />)
                         </p>
-
+                      }
+                    </div>
+                    {favoriteIcons.length !== 0 &&
+                      <>
+                        {
+                          favoriteIcons.map((image, index) =>
+                            <IconToDrag key={index} image={image} isInFavorite={true} />)
+                        }
                       </>
+                    }
 
-                      : favoriteIcons.map((image, index) =>
-                        <IconToDrag key={index} image={image}
-                          isInFavorite={true}
-                        />)}
+                    <div className="instruction_box">
+                      <p className="instruction_bold" style={{ marginTop: "20px" }}>Ulubione ikony z pozostałych projektów:</p>
+
+                      {panels.length === 0 || (panels.length === 1 && indexOfLastPanel !== -1) ?
+                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Nie dodano innych projektów)</p>
+                        :
+                        <>
+                          <p className="instruction" >Kliknięcie na ikonę spowoduje dodanie jej do Ulubionych w bieżącym projekcie.</p>
+                          {panels.map((panel, index) =>
+                            <div key={index}>
+                              {indexOfLastPanel !== index &&
+                                <>
+                                  <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
+                                  {panel.frontEndData.icon.favoriteIcons.length === 0 &&
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak ulubionych ikon w projekcie)</p>
+                                  }
+                                  {panel.frontEndData.icon.favoriteIcons.length !== 0 && panel.frontEndData.icon.favoriteIcons.filter(containFavorite).length === 0 &&
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak innych ulubonych ikon w projekcie )</p>
+                                  }
+
+                                  {!(panel.frontEndData.icon.favoriteIcons.length === 0 && panel.frontEndData.icon.favoriteIcons.filter(containFavorite).length === 0) &&
+                                    <div className="icons">
+                                      {panel.frontEndData.icon.favoriteIcons.map((image, index) =>
+                                        <IconToDrag key={index} image={image} isInOtherFavorite={true} />
+                                      )}
+                                    </div>
+                                  }
+                                </>
+                              }
+                            </div>
+                          )}
+                        </>
+                      }
+                    </div>
+                  </div>
+                </Tab.Pane>
+                <Tab.Pane eventKey="własne">
+                  <div className="icons">
+                    <div className="instruction_box">
+
+                      <p className="instruction_bold">Aby dodać własną ikonę należy wczytać ją z dysku.</p>
+                      <p className="instruction">Możliwe jest dodanie plików z rozszerzeniu SVG. Aby ikony wyświetlały się poprawnie powinny mieć przeźroczyste tło i jeden kolor.</p>
+                      <label htmlFor="inputUploadIcon" >
+                        <div className="select_button">
+                          WYBIERZ PLIK
+                          <div className="button_arrows" />
+                        </div>
+                      </label>
+                      <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
+                    </div>
+
+                    {ownIcons.map((image, index) =>
+                      <IconToDrag key={index} image={image} isInOwn={true} ownIconIndex={index} />)}
+
+
+                    <div className="instruction_box">
+                      <p className="instruction_bold" style={{ marginTop: "20px" }}>Własne ikony z pozostałych projektów:</p>
+
+                      {panels.length === 0 || (panels.length === 1 && indexOfLastPanel !== -1) ?
+                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Nie dodano innych projektów)</p>
+                        :
+                        <>
+                          <p className="instruction" >Kliknij na ikonę aby przekopiować ją do bieżącego projektu.</p>
+                          {panels.map((panel, index) =>
+                            <div key={index}>
+                              {indexOfLastPanel !== index &&
+                                <>
+                                  <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
+                                  {panel.frontEndData.icon.ownIcons.length === 0 ?
+
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak własnych ikon w projekcie)</p>
+                                    :
+                                    <div className="icons">
+                                      {panel.frontEndData.icon.ownIcons.map((image, index) =>
+                                        <IconToDrag key={index} image={image} isInOtherOwn={true} />)}
+                                    </div>
+                                  }
+                                </>
+                              }
+                            </div>
+                          )}
+                        </>
+                      }
+                    </div>
+
                   </div>
                 </Tab.Pane>
                 {iconCategories.map((el, i) => (
@@ -82,9 +235,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
                     <div className="icons">
                       {
                         el.listOfIcons.map(
-                          (image, index) => <IconToDrag key={index} image={image}
-                            isInFavorite={false}
-                          />
+                          (image, index) => <IconToDrag key={index} image={image} isInFavorite={false} />
                         )
                       }
                     </div>
@@ -101,14 +252,22 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons }) => {
 }
 
 const mapStateToProps = state => ({
+  chosenColor: state.frontEndData.color,
   visual: state.frontEndData.visual.visual,
   favoriteIcons: state.frontEndData.icon.favoriteIcons,
-  favoriteIconsRender: state.frontEndData.icon.favoriteIconsRender
+  ownIcons: state.frontEndData.icon.ownIcons,
+  favoriteIconsRender: state.frontEndData.icon.favoriteIconsRender,
+  ownIconsRender: state.frontEndData.icon.ownIconsRender,
+
+  panels: state.panels.panels,
+  indexOfLastPanel: state.panels.indexOfLastPanel,
+
 
 })
 
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
+  updateOwnIcons: (income) => dispatch(actions.updateOwnIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)

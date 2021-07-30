@@ -75,7 +75,7 @@ const FrameEditor = ({
         <h2 className="frame_header">Dodaj ramki (opcjonalne)</h2>
         <div className="frame_content">
           <p className="instruction_bold">Zaznacz pola, aby dodać je do obszaru tworzonej ramki. Ramka musi mieć kształt prostokąta. Dodaj ramkę przyciskiem "Zatwierdź". Zatwierdzone ramki wyświetlą się na liście na dole strony.</p>
-          <p className="instruction_normal">Wybierz rodzaj narożników.</p>
+          <p className="instruction_normal">Wybierz rodzaj narożników:</p>
 
           <div className="frame_choosing_box">
 

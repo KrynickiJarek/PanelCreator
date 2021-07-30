@@ -6,6 +6,15 @@ const changeIconHolders = item => ({
 const addIconToFavorite = item => ({
   type: types.ADD_ICON_TO_FAVORITE, item
 })
+
+const updateOwnIcons = item => ({
+  type: types.UPDATE_OWN_ICONS, item
+})
+
+const updateFavoriteIcons = item => ({
+  type: types.UPDATE_FAVORITE_ICONS, item
+})
+
 const removeIconFromFavorite = item => ({
   type: types.REMOVE_ICON_FROM_FAVORITE, item
 })
@@ -22,6 +31,8 @@ const setFrontEndReducerIcon = item => ({
 const actions = {
   changeIconHolders,
   addIconToFavorite,
+  updateOwnIcons,
+  updateFavoriteIcons,
   removeIconFromFavorite,
   isAnySelected,
   setFrontEndReducerIcon

@@ -52,8 +52,10 @@ import "../MainCreator/PanelPreview/PanelPreview.scss"
 
 export const Dashboard = memo(function Dashboard({
   panels,
+  // panelsList,
   addPanel,
   updatePanels,
+  // updatePanelsList,
   changeIndexOfLastPanel,
   dashboard,
   showDashboard,
@@ -77,6 +79,7 @@ export const Dashboard = memo(function Dashboard({
   const [onTop, setOnTop] = useState(null)
   const [onBack, setOnBack] = useState(null)
   const [dashboardSmooth, setDashboardSmooth] = useState(true)
+  const [deletePanel, setDeletePanel] = useState(null)
 
 
   const [editOver, setEditOver] = useState(false)
@@ -101,8 +104,6 @@ export const Dashboard = memo(function Dashboard({
     if (dashboard) {
       setDashboardSmooth(true)
       hideCreator(true)
-      // dashboardSmoothEnter(true)
-
       const dahsboardTimeout = setTimeout(() => {
         dashboardSmoothEnter(true)
       }, 100);
@@ -148,6 +149,8 @@ export const Dashboard = memo(function Dashboard({
     changeIndexOfLastPanel(-1)
     setZoomId(null)
 
+
+
     const dahsboardTimeout = setTimeout(() => {
       setDashboardSmooth(false)
     }, 400);
@@ -178,16 +181,25 @@ export const Dashboard = memo(function Dashboard({
     return () => clearTimeout(dahsboardTimeout);
   }
 
-  const handleDeletePanel = (index) => {
-    const copyPanels = panels
-    copyPanels.splice(index, 1)
-    updatePanels(copyPanels)
+  const handleDeletePanel = (index, timeOfCreation) => { ///---------------------------NATALECZKA
     setZoomId(null)
-    setEditOver(false)
-    setDeleteOver(false)
-    setCopyOver(false)
-    setSaveOver(false)
+    setDeletePanel(index)
+    const dahsboardTimeout = setTimeout(() => {
+      const copyPanels = panels
+      copyPanels.splice(index, 1)
+      updatePanels(copyPanels)
+      setZoomId(null)
+      setEditOver(false)
+      setDeleteOver(false)
+      setCopyOver(false)
+      setSaveOver(false)
+      setDeletePanel(null)
+    }, 400);
+    return () => clearTimeout(dahsboardTimeout);
   }
+
+
+
 
   const handleCopyPanel = (index) => {
     const deepCopyPanels = JSON.parse(JSON.stringify(panels));
@@ -216,8 +228,8 @@ export const Dashboard = memo(function Dashboard({
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
 
-    // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-    fetch("https://kreator.ampio.pl/generatepdf", {
+    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      // fetch("https://kreator.ampio.pl/generatepdf", {
       method: "POST",
       body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
       headers: headers
@@ -235,26 +247,30 @@ export const Dashboard = memo(function Dashboard({
 
 
   const upload = (file) => {
-    // fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
-    fetch("https://kreator.ampio.pl/loadpdf", {
-      method: 'POST',
-      body: file,
-    })
-      .then(response => response.text())
-      .then(data => {
-        function b64_to_utf8(str) {
-          return decodeURIComponent(escape(window.atob(str)));
-        }
-        let dataUtf8 = b64_to_utf8(data)
-        let endocedData = JSON.parse(dataUtf8)
-        addPanel(endocedData)
-        resetAllAfterModelChange(false)
-
+    if (file.type !== "application/pdf") {
+      alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .pdf!")
+    } else {
+      fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
+        // fetch("https://kreator.ampio.pl/loadpdf", {
+        method: 'POST',
+        body: file,
       })
-      .catch(
-        error => console.log(error)
-      );
-    setZoomId(null)
+        .then(response => response.text())
+        .then(data => {
+          function b64_to_utf8(str) {
+            return decodeURIComponent(escape(window.atob(str)));
+          }
+          let dataUtf8 = b64_to_utf8(data)
+          let endocedData = JSON.parse(dataUtf8)
+          addPanel(endocedData)
+          resetAllAfterModelChange(false)
+          document.getElementById("inputUploadProject").value = null
+        })
+        .catch(
+          error => console.log(error)
+        );
+      setZoomId(null)
+    }
   }
 
   const onSelectFile = (e) => {
@@ -278,7 +294,7 @@ export const Dashboard = memo(function Dashboard({
                 <div className="dashboard_panels">
                   {panels.map((panel, id) => {
                     return (
-                      <div className="dashboard_section" key={id}>
+                      <div className="dashboard_section" key={id} style={deletePanel === id ? { opacity: "0", width: "0", margin: "0" } : {}}>
 
                         <div className="dashboard_push"
                           style={
@@ -303,7 +319,6 @@ export const Dashboard = memo(function Dashboard({
 
 
 
-                              {/* //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
                               <div style={panel.frontEndData.model.chosenModel.height === 90 && panel.frontEndData.model.chosenModel.width === 90 ? { transform: "scale(0.55)", position: "absolute" } : { transform: "scale(0.4)", position: "absolute" }}>
                                 <div className="panel_box" style={panel.frontEndData.model.chosenModel.panelRotation ?
                                   { backgroundColor: panel.frontEndData.color.hex, height: `${panel.frontEndData.model.chosenModel.height * sc}px`, width: `${panel.frontEndData.model.chosenModel.width * sc}px`, transform: "rotate(-90deg)" }
@@ -654,7 +669,6 @@ export const Dashboard = memo(function Dashboard({
                                 </div>
                               </div>
 
-                              {/* //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
 
                             </div>
                             <p className="dashboard_name">{panel.backEndData.panelName}</p>
@@ -673,7 +687,7 @@ export const Dashboard = memo(function Dashboard({
                                 <img src={editOver ? Editfill : Edit} alt="edit" className="dashboard_img_button" />
                                 <span>Edytuj</span>
                               </div>
-                              <div className="dashboard_button_box" onClick={() => { handleDeletePanel(id) }} onMouseOver={() => { setDeleteOver(true) }} onMouseLeave={() => { setDeleteOver(false) }}>
+                              <div className="dashboard_button_box" onClick={() => { handleDeletePanel(id, panel.frontEndData.visual.timeOfCreation) }} onMouseOver={() => { setDeleteOver(true) }} onMouseLeave={() => { setDeleteOver(false) }}>
                                 <img src={deleteOver ? Deletefill : Delete} alt="delete" className="dashboard_img_button" />
                                 <span>Usuń</span>
                               </div>
@@ -753,20 +767,14 @@ export const Dashboard = memo(function Dashboard({
                         <div className="dashboard_button_container" style={{ justifyContent: "center" }}>
 
 
-                          <label htmlFor="inputUpload">
+                          <label htmlFor="inputUploadProject">
                             <div className="select_button">
                               WYBIERZ PLIK
                               <div className="button_arrows" />
                             </div>
                           </label>
-                          <input type="file" id="inputUpload" style={{ display: "none" }} onChange={onSelectFile} />
+                          <input type="file" id="inputUploadProject" style={{ display: "none" }} onChange={onSelectFile} />
 
-                          {/* <div className="select_button"
-                            // onClick={handleUploadPdf} >
-                            >
-                              WYBIERZ
-                              <div className="button_arrows" /> */}
-                          {/* </div> */}
                         </div>
                       </div>
                     </div>

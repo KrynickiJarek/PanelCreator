@@ -10,7 +10,7 @@ import RemoveFavorite from "../../../../assets/removefavorite.svg"
 const IconToDrag = ({
   image, isInFavorite,
 
-  favoriteIcons, addIconToFavorite, removeIconFromFavorite,
+  favoriteIcons, addIconToFavorite, removeIconFromFavorite, ownIcons, isInOwn, ownIconIndex, updateOwnIcons, updateFavorite, isInOtherOwn, isInOtherFavorite
 }) => {
 
 
@@ -25,36 +25,60 @@ const IconToDrag = ({
     }),
   }), [image]);
 
-  const handleAdd = () => {
-    if (!isInFavorite) {
+  const handleAdd = (image) => {
+    if (!isInFavorite && !isInOtherOwn && !isInOtherFavorite) {
+      addIconToFavorite(image)
+    }
+    if (isInOtherOwn) {
+      let copyOwnIcons = ownIcons
+      copyOwnIcons.push(image)
+      updateOwnIcons(copyOwnIcons)
+    }
+    if (isInOtherFavorite) {
       addIconToFavorite(image)
     }
   }
+  const removeIconFromOwn = (index) => {
+    let copyOwnIcons = ownIcons
+    copyOwnIcons.splice(index, 1)
+    updateOwnIcons(copyOwnIcons)
+  }
+
 
   return (
     <>
-      <div className="icon_box" style={{ border }} >
-        <img src={Favorite} alt="favorite" className="favorite_icon"
-          style={(favoriteIcons.indexOf(image) > -1) ? { opacity: "1" } : { opacity: "0" }} />
-        {isInFavorite && <img src={RemoveFavorite} alt="favorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromFavorite(image)} />}
-        <div ref={drag} className="icon_drag">
-          <img src={image.default} alt="info" className="icon" width="40pt" height="40pt"
-            style={{ opacity }}
-            onClick={handleAdd} />
+      {!(isInOtherFavorite && (favoriteIcons.indexOf(image) > -1)) &&
+
+        <div className="icon_box" style={{ border }} >
+          <img src={Favorite} alt="favorite" className="favorite_icon"
+            style={(favoriteIcons.indexOf(image) > -1) || (ownIcons.indexOf(image.default) > -1) ? { opacity: "1" } : { opacity: "0" }} />
+          {isInFavorite && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromFavorite(image)} />}
+          {isInOwn && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromOwn(ownIconIndex)} />}
+
+          <div ref={drag} className="icon_drag">
+            <img src={image.default} alt="icon" className="icon" width="40pt" height="40pt"
+              style={{ opacity }}
+              onClick={() => handleAdd(image)} />
+
+
+          </div>
         </div>
-      </div>
+      }
     </>
   )
 }
 
 const mapStateToProps = state => ({
   favoriteIcons: state.frontEndData.icon.favoriteIcons,
+  ownIcons: state.frontEndData.icon.ownIcons,
   favoriteIconsRender: state.frontEndData.icon.favoriteIconsRender
 })
 
 const mapDispatchToProps = dispatch => ({
   addIconToFavorite: icon => dispatch(actions.addIconToFavorite(icon)),
   removeIconFromFavorite: icon => dispatch(actions.removeIconFromFavorite(icon)),
+  updateFavorite: icon => dispatch(actions.updateFavorite(icon)),
+  updateOwnIcons: icon => dispatch(actions.updateOwnIcons(icon)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconToDrag)
