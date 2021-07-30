@@ -27,6 +27,8 @@ import Zoomout from "../../../assets/scale/zoomout.svg"
 import Alert from "../../../assets/side/alert.svg"
 
 import Savetopdf from "../../../assets/side/savetopdf.svg"
+import Savetopdfload from "../../../assets/side/savetopdf_load.svg"
+import Downloadpdfarrow from "../../../assets/side/downloadpdf_arrow.svg"
 import Saveandback from "../../../assets/side/saveandback.svg"
 import Back from "../../../assets/side/back.svg"
 import Visual from "../../../assets/side/visual.svg"
@@ -153,6 +155,7 @@ const PanelPreview = ({
   const [textUpOff, setTextUpOff] = useState(false)
 
   const [noPanelName, setNoPanelName] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   const [newFrame, setNewFrame] = useState([])
   const [newFrameHide, setNewFrameHide] = useState([])
@@ -356,6 +359,7 @@ const PanelPreview = ({
     setTempFrame(arrTempFrame)
     setVisualSmooth(false)
     changeIconHolders(arrIconHolders);
+    resetTab("model")
     // eslint-disable-next-line
   }, [dashboard]);
 
@@ -460,7 +464,7 @@ const PanelPreview = ({
       } else {
         setFrameTitles(false)
       }
-      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------fetch------
+      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
 
       let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
       let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
@@ -3523,7 +3527,7 @@ const PanelPreview = ({
     if (panelName === "") {
       setNoPanelName(true)
     } else {
-
+      setDownloading(true)
       let dataToSend = { frontEndData, backEndData }
       let frontEndDataStr = JSON.stringify(dataToSend);
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
@@ -3543,11 +3547,14 @@ const PanelPreview = ({
         .then(blob => {
           let fileName = panelName + "_" + chosenModel.name + ".pdf"
           saveAs(blob, fileName);
+          setDownloading(false)
         })
         .catch(error => {
-          console.log(error);
+          setDownloading(false)
+          alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
         });
     }
+
   }
 
 
@@ -4414,7 +4421,7 @@ const PanelPreview = ({
             </div>
           </div>
           <div className="bottom_info_ral">
-            <span>RAL: {chosenColor.RAL}</span>
+            <span>{chosenColor.RAL}</span>
           </div>
         </div>
       </div>
@@ -4425,8 +4432,23 @@ const PanelPreview = ({
           <div className="preview_side">
 
             <div className="side_box">
-              <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handlePrintPdf} />
-              <span>Zapisz do PDF</span>
+
+              {!downloading &&
+                <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handlePrintPdf} />
+              }
+              {downloading &&
+                <>
+                  <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
+                  <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
+                    style={{ animationName: "downloadnigPrewiev" }}
+                  />
+                </>
+              }
+              {downloading ?
+                <span>Zapis do PDF...<br />  </span>
+                :
+                <span>Zapisz do PDF</span>
+              }
             </div>
 
             <div className="side_box">

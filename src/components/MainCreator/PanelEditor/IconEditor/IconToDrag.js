@@ -51,7 +51,8 @@ const IconToDrag = ({
 
         <div className="icon_box" style={{ border }} >
           <img src={Favorite} alt="favorite" className="favorite_icon"
-            style={(favoriteIcons.indexOf(image) > -1) || (ownIcons.indexOf(image.default) > -1) ? { opacity: "1" } : { opacity: "0" }} />
+            // style={(favoriteIcons.indexOf(image) > -1) || (ownIcons.indexOf(image.default) > -1) ? { opacity: "1" } : { opacity: "0" }} />
+            style={(favoriteIcons.indexOf(image) > -1) ? { opacity: "1" } : { opacity: "0" }} />
           {isInFavorite && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromFavorite(image)} />}
           {isInOwn && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromOwn(ownIconIndex)} />}
 

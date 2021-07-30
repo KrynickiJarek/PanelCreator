@@ -154,6 +154,15 @@ body {
                   width: 240px;
                   height: 240px;
                 }
+
+                .dashboard_img_arrow {
+                  height: 110px;
+                  position: absolute;
+                  transform: translateY(40%);
+                  animation-duration: 1.5s;
+                  animation-iteration-count: infinite;
+                  animation-timing-function: ease-in-out;
+                }
               }
       
               .dashboard_name {
@@ -192,19 +201,28 @@ body {
                 justify-content: space-around;
 
                 .dashboard_button_box{
-                  width: 45px;
+                  width: 55px;
                   height: fit-content;
                   cursor: pointer;
                   margin-bottom: 15px;
                   display: flex;
                   flex-direction: column;
                   justify-content: flex-start;
+                  align-items: center;
+                  position: relative; 
 
                   .dashboard_img_button{
                     width: 45px;
                     height: 45px;
                   }
-
+                  .dashboard_img_button_arrow{
+                    height: 15px;
+                    position: absolute;
+                    transform: translate(30%,140%);
+                    animation-duration: 1.5s;
+                    animation-iteration-count: infinite;
+                    animation-timing-function: ease-in-out;
+                  }
                   span{
                     font-family: 'Montserrat', sans-serif;
                     color: #ec695c;
@@ -287,4 +305,16 @@ body {
 	z-index: -1;
 	background-repeat: no-repeat;
 	background-size: contain;
+}
+
+@keyframes uploading {
+  0%   {transform: translateY(40%)}
+  100% {transform: translateY(-40%)}
+}
+
+
+@keyframes downloading {
+  0%   {transform: translate(30%,140%)}
+  1%   {transform: translate(30%,60%)}
+  100% {transform: translate(30%,180%)}
 }

@@ -9,7 +9,9 @@ import IconHolder from '../MainCreator/PanelPreview/IconHolder/IconHolder';
 import Newpanel from "../../assets/dashboard/newpanel.svg";
 import Newpanelfill from "../../assets/dashboard/newpanel_fill.svg";
 import Uploadpdf from "../../assets/dashboard/uploadpdf.svg";
-import Uploadpdffill from "../../assets/dashboard/uploadpdf_fill.svg";
+import Pdfload from "../../assets/dashboard/uploadpdf_load.svg";
+import Uploadpdfarrow from "../../assets/dashboard/uploadpdf_arrow.svg";
+import Downloadpdfarrow from "../../assets/dashboard/downloadpdf_arrow.svg";
 import Copy from "../../assets/dashboard/copy.svg";
 import Copyfill from "../../assets/dashboard/copy_fill.svg";
 import Delete from "../../assets/dashboard/delete.svg";
@@ -17,7 +19,6 @@ import Deletefill from "../../assets/dashboard/delete_fill.svg";
 import Edit from "../../assets/dashboard/edit.svg";
 import Editfill from "../../assets/dashboard/edit_fill.svg";
 import Savetopdf from "../../assets/dashboard/savetopdf.svg";
-import Savetopdffill from "../../assets/dashboard/savetopdf_fill.svg";
 
 import Minusuni from "../../assets/lcd/minusuni.svg"
 import Leftuni from "../../assets/lcd/leftuni.svg"
@@ -78,6 +79,9 @@ export const Dashboard = memo(function Dashboard({
   const [onBack, setOnBack] = useState(null)
   const [dashboardSmooth, setDashboardSmooth] = useState(false)
   const [deletePanel, setDeletePanel] = useState(null)
+
+  const [uploading, setUploading] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
 
   const [editOver, setEditOver] = useState(false)
@@ -214,7 +218,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   const handlePrintPdf = (id) => {
-
+    setDownloading(true)
     let dataToSend = {
       frontEndData: panels[id].frontEndData,
       backEndData: panels[id].backEndData
@@ -236,9 +240,11 @@ export const Dashboard = memo(function Dashboard({
       .then(blob => {
         let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
         saveAs(blob, fileName);
+        setDownloading(false)
       })
       .catch(error => {
-        console.log(error);
+        setDownloading(false)
+        alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
       });
   }
 
@@ -248,6 +254,7 @@ export const Dashboard = memo(function Dashboard({
     if (file.type !== "application/pdf") {
       alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .pdf!")
     } else {
+      setUploading(true)
       fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
         // fetch("https://kreator.ampio.pl/loadpdf", {
         method: 'POST',
@@ -263,11 +270,17 @@ export const Dashboard = memo(function Dashboard({
           addPanel(endocedData)
           resetAllAfterModelChange(false)
           document.getElementById("inputUploadProject").value = null
+          setZoomId(null)
+          setUploading(false)
         })
         .catch(
-          error => console.log(error)
+          error => {
+            setZoomId(null)
+            setUploading(false)
+            alert("Niepoprawny plik. Upewnij się czy wybrałeś plik z projektem wygenerowanym w aktualnej wersji Kreatora Paneli.")
+            document.getElementById("inputUploadProject").value = null
+          }
         );
-      setZoomId(null)
     }
   }
 
@@ -694,8 +707,28 @@ export const Dashboard = memo(function Dashboard({
                                 <span>Utwórz kopię</span>
                               </div>
                               <div className="dashboard_button_box" onClick={() => { handlePrintPdf(id) }} onMouseOver={() => { setSaveOver(true) }} onMouseLeave={() => { setSaveOver(false) }}>
-                                <img src={saveOver ? Savetopdffill : Savetopdf} alt="savetopdf" className="dashboard_img_button" />
-                                <span>Zapisz do PDF</span>
+                                {saveOver && !downloading &&
+                                  <>
+                                    <img src={Pdfload} alt="savetopdf" className="dashboard_img_button" />
+                                    <img src={Downloadpdfarrow} alt="savetopdf" className="dashboard_img_button_arrow" />
+                                  </>
+                                }
+                                {!saveOver && !downloading &&
+                                  <img src={Savetopdf} alt="savetopdf" className="dashboard_img_button" />
+                                }
+                                {downloading &&
+                                  <>
+                                    <img src={Pdfload} alt="savetopdf" className="dashboard_img_button" />
+                                    <img src={Downloadpdfarrow} alt="savetopdf" className="dashboard_img_button_arrow"
+                                      style={{ animationName: "downloading" }}
+                                    />
+                                  </>
+                                }
+                                {downloading ?
+                                  <span>Zapis <br />do PDF...</span>
+                                  :
+                                  <span>Zapisz do PDF</span>
+                                }
                               </div>
                             </div>
                           </div>
@@ -721,7 +754,7 @@ export const Dashboard = memo(function Dashboard({
                     >
                       <div style={{ cursor: "pointer", zIndex: "10", backgroundColor: "white", margin: "0 auto" }} onClick={() => handleZoom("new")} >
                         <div className="dashboard_box">
-                          <img src={zoomId === "new" ? Newpanelfill : Newpanel} alt="clearinput" className="dashboard_img" />
+                          <img src={zoomId === "new" ? Newpanelfill : Newpanel} alt="newpanel" className="dashboard_img" />
                         </div>
                         <p className="dashboard_name">Dodaj nowy panel</p>
                       </div>
@@ -755,9 +788,27 @@ export const Dashboard = memo(function Dashboard({
                     >
                       <div style={{ cursor: "pointer", zIndex: "10", backgroundColor: "white", margin: "0 auto" }} onClick={() => handleZoom("upload")} >
                         <div className="dashboard_box">
-                          <img src={zoomId === "upload" ? Uploadpdffill : Uploadpdf} alt="clearinput" className="dashboard_img" />
+                          {zoomId === "upload" && !uploading &&
+                            <>
+                              <img src={Pdfload} alt="upload" className="dashboard_img" />
+                              <img src={Uploadpdfarrow} alt="upload" className="dashboard_img_arrow" />
+                            </>
+                          }
+                          {zoomId !== "upload" && !uploading &&
+                            <img src={Uploadpdf} alt="upload" className="dashboard_img" />
+                          }
+                          {uploading &&
+                            <>
+                              <img src={Pdfload} alt="upload" className="dashboard_img" />
+                              <img src={Uploadpdfarrow} alt="upload" className="dashboard_img_arrow" style={{ animationName: "uploading" }} />
+                            </>
+                          }
                         </div>
-                        <p className="dashboard_name">Wczytaj panel z pliku PDF</p>
+                        {uploading ?
+                          <p className="dashboard_name">Wczytywanie...</p>
+                          : <p className="dashboard_name">Wczytaj panel z pliku PDF</p>
+                        }
+
                       </div>
 
                       <div className={`resieze-${"upload"}`} style={zoomId === "upload" ? { transition: "0.5s ease", opacity: "1", width: "300px" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "300px" }}>

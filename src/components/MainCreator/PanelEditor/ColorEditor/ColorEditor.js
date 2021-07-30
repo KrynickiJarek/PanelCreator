@@ -26,7 +26,7 @@ const ColorEditor = ({ color, change, changePanelColorBackEnd }) => {
               onClick={() => { handleChangeColor(el) }} >
               <div style={{ backgroundColor: el.hex }} className="color_box" />
               < p className="color_name" style={color.hex === el.hex ? { fontWeight: "700", margin: "0 5px" } : {}}>{el.name}</p>
-              <p className="color_ral">RAL: {el.RAL}</p>
+              <p className="color_ral">{el.RAL}</p>
             </div>
           )
         })}
