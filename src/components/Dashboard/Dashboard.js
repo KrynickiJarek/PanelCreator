@@ -52,10 +52,8 @@ import "../MainCreator/PanelPreview/PanelPreview.scss"
 
 export const Dashboard = memo(function Dashboard({
   panels,
-  // panelsList,
   addPanel,
   updatePanels,
-  // updatePanelsList,
   changeIndexOfLastPanel,
   dashboard,
   showDashboard,
@@ -78,7 +76,7 @@ export const Dashboard = memo(function Dashboard({
   const [resize, setResize] = useState(0)
   const [onTop, setOnTop] = useState(null)
   const [onBack, setOnBack] = useState(null)
-  const [dashboardSmooth, setDashboardSmooth] = useState(true)
+  const [dashboardSmooth, setDashboardSmooth] = useState(false)
   const [deletePanel, setDeletePanel] = useState(null)
 
 

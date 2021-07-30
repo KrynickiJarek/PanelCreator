@@ -330,6 +330,7 @@ const PanelPreview = ({
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
     const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
+    const arrIconHolders = iconHolders
     chosenModel.dotLocation.forEach(element => {
       arrNewFrame.push(element)
     });
@@ -348,11 +349,13 @@ const PanelPreview = ({
         fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
       })
     });
+    arrIconHolders.forEach(element => element.singleFrameTemp = false)
     setNewFrame(arrNewFrame)
     setNewFrameHide(arrNewFrameHide)
     setNewFrameChange(arrNewFrameChange)
     setTempFrame(arrTempFrame)
     setVisualSmooth(false)
+    changeIconHolders(arrIconHolders);
     // eslint-disable-next-line
   }, [dashboard]);
 
@@ -457,7 +460,7 @@ const PanelPreview = ({
       } else {
         setFrameTitles(false)
       }
-      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------fetch------
 
       let sizeXBackEnd = frameHolders[frameHolders.length - 1].frameInfo.columns // po staremu
       let sizeYBackEnd = frameHolders[frameHolders.length - 1].frameInfo.rows
@@ -516,13 +519,10 @@ const PanelPreview = ({
         fontBackEnd = null
       }
 
-      console.log("Szerokość X = " + sizeXBackEnd)
-      console.log("Wysokość Y = " + sizeYBackEnd)
-
       const copyIconsBackEnd = framesBackEnd
       const newFrameBackEnd = {
-        sizeX: sizeXBackEnd, // szerokość, 1 to mała, 
-        sizeY: sizeYBackEnd, // wysokość,  
+        sizeX: sizeXBackEnd,
+        sizeY: sizeYBackEnd,
         iconStart: iconStartBackEnd,
         cornerRadious: cornerRadiousBackEnd,
         title: titleBackEnd,
@@ -3574,9 +3574,10 @@ const PanelPreview = ({
       })
 
       hideCreator(false)
+      handleClearAll()
       const dahsboardTimeout = setTimeout(() => {
         showDashboard(true)
-        handleClearAll()
+        // handleClearAll()
         changePanelName("")
         changePanelNameBackEnd("")
         resetColor()
@@ -3594,10 +3595,11 @@ const PanelPreview = ({
 
   const handleBack = () => {
     hideCreator(false)
+    handleClearAll()
 
     const dahsboardTimeout = setTimeout(() => {
       showDashboard(true)
-      handleClearAll()
+      // handleClearAll()
       changePanelName("")
       changePanelNameBackEnd("")
       resetColor()

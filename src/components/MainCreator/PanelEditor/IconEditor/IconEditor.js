@@ -78,6 +78,10 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
     return !favoriteIcons.includes(icon)
   }
 
+  // const containOwn = (icon) => {
+  //   return !ownIcons.includes(icon.default)
+  // }
+
   return (
     <div className="scroll_container">
       <div className="visual_background" style={visual ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
@@ -124,8 +128,8 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                 <Tab.Pane eventKey="ulubione">
                   <div className="icons">
                     <div className="instruction_box">
-                      <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsca na panelu. Będą one podświetlone kolorem  <div style={{ ...orangeStyle }} />.
-                        Aby zostawić ikonę należy ją upiścić w momencie, gdy pole jest podświetlone kolorem  <div style={{ ...greenStyle }} />.</p>
+                      <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsca na panelu. Będą one podświetlone kolorem  <span style={{ ...orangeStyle }} />.
+                        Aby zostawić ikonę należy ją upiścić w momencie, gdy pole jest podświetlone kolorem  <span style={{ ...greenStyle }} />.</p>
                       <p className="instruction">Kliknięcie na ikonę spowoduje dodanie jej do Ulubionych.</p>
 
                       {favoriteIcons.length === 0 &&
@@ -211,8 +215,25 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                               {indexOfLastPanel !== index &&
                                 <>
                                   <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
-                                  {panel.frontEndData.icon.ownIcons.length === 0 ?
 
+
+
+                                  {/* {panel.frontEndData.icon.ownIcons.length === 0 &&
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak własnych ikon w projekcie)</p>
+                                  }
+                                  {panel.frontEndData.icon.ownIcons.length !== 0 && panel.frontEndData.icon.ownIcons.filter(containOwn).length === 0 &&
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak innych własnych ikon w projekcie )</p>
+                                  }
+
+                                  {!(panel.frontEndData.icon.ownIcons.length === 0 && panel.frontEndData.icon.ownIcons.filter(containOwn).length === 0) &&
+                                    <div className="icons">
+                                      {panel.frontEndData.icon.ownIcons.map((image, index) =>
+                                        <IconToDrag key={index} image={image} isInOtherOwn={true} />)}
+                                    </div>
+                                  } */}
+
+
+                                  {panel.frontEndData.icon.ownIcons.length === 0 ?
                                     <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak własnych ikon w projekcie)</p>
                                     :
                                     <div className="icons">
