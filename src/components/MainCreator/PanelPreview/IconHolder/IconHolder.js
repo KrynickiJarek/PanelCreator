@@ -309,6 +309,7 @@ const IconHolder = ({
           rotationDot={rotationDot}
           selectedDot={selectedDot}
           panelRotation={panelRotation}
+          visual={visual}
         />
         <div style={styleZIndex}>
 
@@ -326,6 +327,7 @@ const IconHolder = ({
                   chosenColor={chosenColor}
                   rotationIcon={rotationIcon}
                   panelRotation={panelRotation}
+                  visual={visual}
                 />
               }
               {(!lastDroppedIcon && (show || showHolder)) &&
@@ -359,6 +361,7 @@ const IconHolder = ({
           singleFrame={singleFrame}
           singleFrameTemp={singleFrameTemp}
           panelRotation={panelRotation}
+          visual={visual}
         />
 
         <IconHolderSlashDown
@@ -374,6 +377,7 @@ const IconHolder = ({
           singleFrame={singleFrame}
           singleFrameTemp={singleFrameTemp}
           panelRotation={panelRotation}
+          visual={visual}
         />
       </div>
     </>
@@ -385,7 +389,6 @@ const mapStateToProps = state => ({
   chosenModel: state.frontEndData.model.chosenModel,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
-  visual: state.frontEndData.visual.visual,
   scale: state.frontEndData.visual.scale,
   animations: state.frontEndData.visual.animations,
   removeIcon: state.frontEndData.visual.removeIcon,

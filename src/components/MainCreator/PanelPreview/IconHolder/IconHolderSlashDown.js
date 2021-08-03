@@ -21,7 +21,6 @@ export const IconHolderSlashDown = ({
   removeIcon,
   removeIcons,
   chosenColor,
-  chosenModel,
   chosenTab,
   changeIconHolders,
   index,
@@ -32,7 +31,9 @@ export const IconHolderSlashDown = ({
   singleFrameTemp,
   iconsBackEnd,
   changeIconsBackEnd,
-  lastDroppedSlashDown
+  lastDroppedSlashDown,
+  panelRotation,
+  visual
 }) => {
 
 
@@ -69,7 +70,8 @@ export const IconHolderSlashDown = ({
     toDataURL(iconHolders[index].lastDroppedSlashDown.image.default)
       .then(svgBackEnd => {
         let numberBackEnd = null
-        if (chosenModel.panelRotation) {
+        // if (chosenModel.panelRotation) {
+        if (panelRotation) {
           if (index % 3 === 0) {
             numberBackEnd = index + 3
           } else if (index % 3 === 2) {
@@ -235,6 +237,8 @@ export const IconHolderSlashDown = ({
             singleFrame={singleFrame}
             singleFrameTemp={singleFrameTemp}
             selectedDown={selectedDown}
+            panelRotation={panelRotation}
+            visual={visual}
           />
         }
         {!lastDroppedSlashDown &&
@@ -259,7 +263,6 @@ const mapStateToProps = state => ({
   animations: state.frontEndData.visual.animations,
   removeIcon: state.frontEndData.visual.removeIcon,
   removeIcons: state.frontEndData.visual.removeIcons,
-
   iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({

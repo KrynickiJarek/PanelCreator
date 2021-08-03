@@ -68,6 +68,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
           let copyOwnIcons = ownIcons
           copyOwnIcons.push(image)
           updateOwnIcons(copyOwnIcons)
+          console.log(copyOwnIcons)
           document.getElementById("inputUploadIcon").value = null
         }
       )
@@ -78,9 +79,6 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
     return !favoriteIcons.includes(icon)
   }
 
-  // const containOwn = (icon) => {
-  //   return !ownIcons.includes(icon.default)
-  // }
 
   return (
     <div className="scroll_container">

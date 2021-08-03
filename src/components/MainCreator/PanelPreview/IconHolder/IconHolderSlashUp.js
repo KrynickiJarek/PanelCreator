@@ -24,7 +24,6 @@ export const IconHolderSlashUp = ({
   removeIcon,
   removeIcons,
   chosenColor,
-  chosenModel,
   chosenTab,
   changeIconHolders,
   index,
@@ -36,7 +35,8 @@ export const IconHolderSlashUp = ({
   iconsBackEnd,
   changeIconsBackEnd,
   lastDroppedSlashUp,
-  panelRotation
+  panelRotation,
+  visual
 }) => {
 
   const handleDrop = (item) => {
@@ -73,7 +73,8 @@ export const IconHolderSlashUp = ({
     toDataURL(iconHolders[index].lastDroppedSlashUp.image.default)
       .then(svgBackEnd => {
         let numberBackEnd = null
-        if (chosenModel.panelRotation) {
+        // if (chosenModel.panelRotation) {
+        if (panelRotation) {
           if (index % 3 === 0) {
             numberBackEnd = index + 3
           } else if (index % 3 === 2) {
@@ -238,6 +239,8 @@ export const IconHolderSlashUp = ({
             singleFrame={singleFrame}
             singleFrameTemp={singleFrameTemp}
             selectedUp={selectedUp}
+            panelRotation={panelRotation}
+            visual={visual}
           />
         }
         {

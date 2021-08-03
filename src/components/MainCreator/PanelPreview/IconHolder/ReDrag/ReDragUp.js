@@ -148,7 +148,6 @@ const mapStateToProps = state => ({
   chosenTab: state.frontEndData.tab,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
-  visual: state.frontEndData.visual.visual,
   scale: state.frontEndData.visual.scale,
   chosenModel: state.frontEndData.model.chosenModel,
 

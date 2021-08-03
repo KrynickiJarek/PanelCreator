@@ -32,6 +32,14 @@ const setFrontEndReducerVisual = item => ({
   type: types.SET_FRONT_END_REDUCER_VISUAL, item
 })
 
+const updateWarnings = item => ({
+  type: types.UPDATE_WARNINGS, item
+})
+
+const updateVersion = item => ({
+  type: types.UPDATE_VERSION, item
+})
+
 const actions = {
   toggleVisual,
   changeScale,
@@ -40,7 +48,9 @@ const actions = {
   showRemoveIcons,
   changePanelName,
   setTimeOfCreation,
-  setFrontEndReducerVisual
+  setFrontEndReducerVisual,
+  updateWarnings,
+  updateVersion
 }
 
 export default actions

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';//--------tooltip 
 import { connect } from "react-redux"
 import { saveAs } from 'file-saver';
+import Warning from './Warning/Warning';
 import actionsFrame from "../PanelEditor/FrameEditor/duck/actions"
 import actionsVisual from "../PanelPreview/duck/actions"
 import actionsIcon from "../PanelEditor/IconEditor/duck/actions"
@@ -142,7 +143,12 @@ const PanelPreview = ({
   updateFavoriteIcons,
   updateOwnIcons,
 
+  warnings,
+  updateWarnings,
+  iconHoldersRender
 }) => {
+
+
 
   const target = useRef(null); //--------tooltip
 
@@ -175,7 +181,6 @@ const PanelPreview = ({
   const [timeWithSeconds, setTimeWithSeconds] = useState(moment().format('HH:mm:ss'));
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
-  const [differentFont, setDifferentFont] = useState(false)
 
   const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
   const [lcdNew, setLcdNew] = useState((chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? true : false)
@@ -183,7 +188,6 @@ const PanelPreview = ({
 
   const [removeAll, setRemoveAll] = useState(false)
 
-  const [differentFrameFont, setDifferentFrameFont] = useState(false)
   const [frameTitles, setFrameTitles] = useState(false)
 
   const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
@@ -196,6 +200,19 @@ const PanelPreview = ({
   }, [panelContainerHeight, panelContainerWidth]);
 
 
+
+
+  useEffect(() => {
+    if (chosenColor.RAL === "RAL 9003" && visual) {
+      const copyWarnings = warnings.filter(element => element.code !== 0)
+      copyWarnings.push({ code: 0, show: true, hide: false })
+      updateWarnings(copyWarnings)
+    } else {
+      const copyWarnings = warnings.filter(element => element.code !== 0)
+      updateWarnings(copyWarnings)
+    }
+    // eslint-disable-next-line
+  }, [chosenColor, visual]);
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -216,8 +233,6 @@ const PanelPreview = ({
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
       setHideAll(false)
-      setDifferentFont(false)
-      setDifferentFrameFont(false)
       setFrameTitles(false)
 
       const modeltimeout = setTimeout(() => {
@@ -259,6 +274,13 @@ const PanelPreview = ({
         setVisualSmooth(false)
         changeFrameHolders([])
         changeFramesBackEnd([])
+        updateWarnings([])
+        if (chosenColor.RAL === "RAL 9003" && visual) {
+          const copyWarnings = []
+          copyWarnings.push({ code: 0, show: true, hide: false })
+          updateWarnings(copyWarnings)
+        }
+
         // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
         if (chosenModel.lcdScreen.lcdType === "slide") {
           const copyIconsBackEnd = []
@@ -359,32 +381,96 @@ const PanelPreview = ({
     setVisualSmooth(false)
     changeIconHolders(arrIconHolders);
     resetTab("model")
+    handleShowWarings()
     // eslint-disable-next-line
   }, [dashboard]);
 
 
 
 
+  useEffect(() => { //nataleczka
+    const copyIconHolders = iconHolders.filter(element => element.lastDroppedDot !== null)
+    if (copyIconHolders.length > 0) {
+      let copyWarnings = warnings
+      const checkWarnings = warnings.filter(element => element.code === 1)
+      if (checkWarnings.length === 0) {
+        copyWarnings.push({ code: 1, show: true, hide: false })
+        updateWarnings(copyWarnings)
+      }
+    } else {
+      const copyWarnings = warnings.filter(element => element.code !== 1)
+      updateWarnings(copyWarnings)
+    }
+
+
+
+    const copyIconHoldersText = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9)
+    if (copyIconHoldersText.length > 0) {
+      let copyWarningsText = warnings
+      const checkWarningsText = warnings.filter(element => element.code === 2)
+      if (checkWarningsText.length === 0) {
+        copyWarningsText.push({ code: 2, show: true, hide: false })
+        updateWarnings(copyWarningsText)
+      }
+    } else {
+      const copyWarnings = warnings.filter(element => element.code !== 2)
+      updateWarnings(copyWarnings)
+    }
+    // eslint-disable-next-line
+  }, [iconHolders, iconHoldersRender]);
+
+
+  // useEffect(() => { //nataleczka
+  //   const copyIconHolders = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9)
+  //   if (copyIconHolders.length > 0) {
+  //     let copyWarnings = warnings
+  //     const checkWarnings = warnings.filter(element => element.code === 2)
+  //     if (checkWarnings.length === 0) {
+  //       copyWarnings.push({ code: 2, show: true, hide: false })
+  //       updateWarnings(copyWarnings)
+  //       console.log("now")
+  //     }
+  //   } else {
+  //     const copyWarnings = warnings.filter(element => element.code !== 2)
+  //     updateWarnings(copyWarnings)
+  //   }
+  //   // eslint-disable-next-line
+  // }, [iconHolders, iconHoldersRender]);
 
 
 
 
-  useEffect(() => {
+
+  useEffect(() => { //nataleczka
     const copyArr = iconHolders;
+    if (isFocusedInputSide === "up") {
+      copyArr[isFocusedInputIndex].fontUp = chosenTextFont
+    } else if (isFocusedInputSide === "down") {
+      copyArr[isFocusedInputIndex].fontDown = chosenTextFont
+    }
+    changeIconHolders(copyArr)
+
+    // const copyArr = iconHolders;
     const checkArr = []
+
     copyArr.forEach((el) => {
       if (el.fontDown && el.textDown && !checkArr.includes(el.fontDown)) {
         checkArr.push(el.fontDown)
+
       }
       if (el.fontUp && el.textUp && !checkArr.includes(el.fontUp)) {
         checkArr.push(el.fontUp)
       }
     })
     if (checkArr.length > 1) {
-      setDifferentFont(true)
+      const copyWarnings = warnings.filter(element => element.code !== 3)
+      copyWarnings.push({ code: 3, show: true, hide: false })
+      updateWarnings(copyWarnings)
     } else {
-      setDifferentFont(false)
+      const copyWarnings = warnings.filter(element => element.code !== 3)
+      updateWarnings(copyWarnings)
     }
+
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
@@ -400,6 +486,7 @@ const PanelPreview = ({
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
   }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, iconHolders]);
+
 
   useEffect(() => {
     if (addNewFrameState) {
@@ -452,11 +539,17 @@ const PanelPreview = ({
         }
       })
 
-      if (checkFrameFontArr.length > 1) {
-        setDifferentFrameFont(true)
+      if (checkFrameFontArr.length > 1) { //natka
+        const copyWarnings = warnings.filter(element => element.code !== 4)
+        copyWarnings.push({ code: 4, show: true, hide: false })
+        updateWarnings(copyWarnings)
+        // setDifferentFrameFont(true)
       } else {
-        setDifferentFrameFont(false)
+        const copyWarnings = warnings.filter(element => element.code !== 4)
+        updateWarnings(copyWarnings)
+        // setDifferentFrameFont(false)
       }
+
 
       if (checkFrameTitlesArr.length > 0) {
         setFrameTitles(true)
@@ -587,10 +680,15 @@ const PanelPreview = ({
         checkFrameTitlesArr.push(el.framePrint.text)
       }
     })
-    if (checkFrameFontArr.length > 1) {
-      setDifferentFrameFont(true)
+    if (checkFrameFontArr.length > 1) { //natka
+      const copyWarnings = warnings.filter(element => element.code !== 4)
+      copyWarnings.push({ code: 4, show: true, hide: false })
+      updateWarnings(copyWarnings)
+      // setDifferentFrameFont(true)
     } else {
-      setDifferentFrameFont(false)
+      const copyWarnings = warnings.filter(element => element.code !== 4)
+      updateWarnings(copyWarnings)
+      // setDifferentFrameFont(false)
     }
 
     if (checkFrameTitlesArr.length > 0) {
@@ -616,16 +714,6 @@ const PanelPreview = ({
 
 
 
-  useEffect(() => { //przydało by się przenieść isFOcusedInputSite i Index do reduxa, żeby działało natychmiastowo, bo tak to jednocześnie zmienia się fontDown/fontUp i differentFont więc differentFont nie zaskakuej
-    const copyArr = iconHolders;
-    if (isFocusedInputSide === "up") {
-      copyArr[isFocusedInputIndex].fontUp = chosenTextFont
-    } else if (isFocusedInputSide === "down") {
-      copyArr[isFocusedInputIndex].fontDown = chosenTextFont
-    }
-    changeIconHolders(copyArr)
-    // eslint-disable-next-line 
-  }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, iconHolders]);
 
 
   let frameCellStyle = {}
@@ -919,6 +1007,9 @@ const PanelPreview = ({
   }
 
 
+
+
+
   const handleVisual = () => {
     toggleVisual(!visual)
     const copyArr = iconHolders;
@@ -936,8 +1027,6 @@ const PanelPreview = ({
     setRemoveAll(false)
     const tempArr = [];
     setHideAll(false)
-    setDifferentFont(false)
-    setDifferentFrameFont(false)
     setFrameTitles(false)
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
@@ -981,6 +1070,14 @@ const PanelPreview = ({
       changeFrameText("")
       changeFrameHolders([])
       changeFramesBackEnd([])
+      updateWarnings([])
+      if (chosenColor.RAL === "RAL 9003" && visual) {
+        const copyWarnings = []
+        copyWarnings.push({ code: 0, show: true, hide: false })
+        updateWarnings(copyWarnings)
+      }
+      // setDifferentFrameFont(false) //natka
+
       // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
       if (chosenModel.lcdScreen.lcdType === "slide") {
         const copyIconsBackEnd = []
@@ -1330,6 +1427,10 @@ const PanelPreview = ({
     })
     changeIconHolders(copyArr)
     changePanelTextBackEnd([])
+
+    const copyWarnings = warnings.filter(element => element.code !== 3)
+    updateWarnings(copyWarnings)
+    //nataleczka
   }
 
 
@@ -1538,7 +1639,10 @@ const PanelPreview = ({
       el.fontDown = chosenTextFont;
     })
     changeIconHolders(copyArr)
-    setDifferentFont(false)
+
+    const copyWarnings = warnings.filter(element => element.code !== 3)
+    updateWarnings(copyWarnings)
+    // nataleczka
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
@@ -1556,7 +1660,9 @@ const PanelPreview = ({
     })
     changeFrameHolders(copyFrameHolders)
     overFrameReRender()
-    setDifferentFrameFont(false)
+    // setDifferentFrameFont(false) //natka
+    const copyWarnings = warnings.filter(element => element.code !== 4)
+    updateWarnings(copyWarnings)
   }
 
 
@@ -1639,6 +1745,15 @@ const PanelPreview = ({
     changePanelName("")
     changePanelNameBackEnd("")
     setIsFocusedInputName(false)
+  }
+
+  const handleShowWarings = () => {
+    const copyWarnings = warnings
+    copyWarnings.forEach(warning => {
+      warning.show = true
+      warning.hide = false
+    })
+    updateWarnings(copyWarnings)
   }
 
 
@@ -3527,7 +3642,12 @@ const PanelPreview = ({
       setNoPanelName(true)
     } else {
       setDownloading(true)
-      let dataToSend = { frontEndData, backEndData }
+      let dataToSend = {
+        frontEndData,
+        backEndData,
+        show: true,
+        hide: false
+      }
       let frontEndDataStr = JSON.stringify(dataToSend);
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
@@ -3577,6 +3697,8 @@ const PanelPreview = ({
       addPanel({
         frontEndData: frontEndDataCopy,
         backEndData,
+        show: true,
+        hide: false
       })
 
       hideCreator(false)
@@ -3657,11 +3779,13 @@ const PanelPreview = ({
 
         </div>
         <div className="panel_container">
+          <Warning />
+
           <div className="resize_container" style={resizeStyle}>
-            {chosenColor.RAL === "9003" && visual &&
+            {/* {chosenColor.RAL === "9003" && visual &&
               <p className="white_info"
               >Ewentualny brak widoczności elementów panelu wynika z ustawień monitora.<br />Elementy będą widoczne na gotowym panelu.</p>
-            }
+            } */}
 
 
 
@@ -3669,7 +3793,7 @@ const PanelPreview = ({
 
             <div className="panel_box" style={chosenModelStyle}>
 
-              <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
+              <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "RAL 9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
 
               <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
                 {removeAll &&
@@ -3883,7 +4007,7 @@ const PanelPreview = ({
                                   autoComplete="off"
                                   type="text"
                                   maxLength="16"
-                                  style={(chosenColor.RAL === "9003" && visual) ?
+                                  style={(chosenColor.RAL === "RAL 9003" && visual) ?
                                     {
                                       ...textStyleFrame,
                                       fontFamily: frame.framePrint.frameFont,
@@ -4328,6 +4452,7 @@ const PanelPreview = ({
                               selectedUp={selectedUp}
                               singleFrame={singleFrame}
                               singleFrameTemp={singleFrameTemp}
+                              visual={visual}
                             />
                           </>}
                       </div>
@@ -4398,9 +4523,9 @@ const PanelPreview = ({
               </div>
             </div>
 
-            {chosenColor.RAL === "9003" && visual &&
+            {/* {chosenColor.RAL === "RAL 9003" && visual &&
               <p className="white_info"> Ewentualny brak widoczności elementów panelu wynika z ustawień monitora.<br />Elementy będą widoczne na gotowym panelu.</p>
-            }
+            } */}
           </div>
         </div>
         <div className="preview_bottom">
@@ -4556,12 +4681,6 @@ const PanelPreview = ({
                   <span>Wybrany font dla wszystkich opisów</span>
                 </div>
 
-                {/* {differentFont &&
-                  <div className="side_box" style={{ marginTop: "auto", cursor: "default" }}>
-                    <img src={Alert} alt="Alert" className="side_icon" />
-                    <span style={{ color: "#dc3545" }}>Różne fonty opisów</span>
-                  </div>
-                } */}
               </>
             }
             {chosenTab === "frame" &&
@@ -4631,29 +4750,22 @@ const PanelPreview = ({
 
           </div>
         </div>
-        {(differentFont || differentFrameFont) &&
+
+        {warnings.length !== 0 &&
           <div className="side_alert_container">
 
-            {differentFont &&
-              <div className="side_box_alert" style={{ marginTop: "auto", cursor: "default" }}>
-                <img src={Alert} alt="Alert" className="side_icon" />
-                <span >Różne fonty opisów</span>
-              </div>
-            }
-
-            {differentFrameFont &&
-              <div className="side_box_alert" style={{ marginTop: "auto", cursor: "default" }}>
-                <img src={Alert} alt="Alert" className="side_icon" />
-                <span>Różne fonty tytułów ramek</span>
-              </div>
-            }
-
+            <div className="side_box_alert" style={{ marginTop: "auto" }}>
+              <img src={Alert} alt="Alert" className="side_icon" onClick={handleShowWarings} />
+              <span >Zobacz ostrzeżenia</span>
+            </div>
           </div>
         }
       </div>
     </div >
   );
 }
+
+
 
 
 
@@ -4673,6 +4785,8 @@ const mapStateToProps = state => ({
   frameText: state.frontEndData.frame.frameText,
   frameTitleFlag: state.frontEndData.frame.frameTitleFlag,
   visual: state.frontEndData.visual.visual,
+  warnings: state.frontEndData.visual.warnings,
+  warningsReRender: state.frontEndData.visual.warningsReRender,
   animations: state.frontEndData.visual.animations,
   sc: state.frontEndData.visual.scale,
   panelName: state.frontEndData.visual.panelName,
@@ -4711,6 +4825,7 @@ const mapDispatchToProps = dispatch => ({
   changePanelName: (income) => dispatch(actionsVisual.changePanelName(income)),
   toggleAnimations: (income) => dispatch(actionsVisual.toggleAnimations(income)),
   changeScale: (income) => dispatch(actionsVisual.changeScale(income)),
+  updateWarnings: (income) => dispatch(actionsVisual.updateWarnings(income)),
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   changeIsAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
   showRemoveIcon: (income) => dispatch(actionsVisual.showRemoveIcon(income)),
@@ -4744,3 +4859,14 @@ const mapDispatchToProps = dispatch => ({
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelPreview)
+
+
+
+//     {differentFrameFont &&
+//       <div className="side_box_alert" style={{ marginTop: "auto" }}>
+//         <img src={Alert} alt="Alert" className="side_icon" />
+//         {/* <span>Różne fonty tytułów ramek</span> */}
+//       </div>
+//     }
+//   </div>
+// }

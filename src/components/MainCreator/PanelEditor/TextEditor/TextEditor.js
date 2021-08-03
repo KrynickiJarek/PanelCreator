@@ -37,6 +37,7 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) =>
       <div className="text_container">
         <h2 className="text_header">Dodaj podpisy do ikon (opcjonalne)</h2>
         <p className="instruction_bold">Wybierz font, a następnie dodaj opisy pod lub nad ikonami klikając w zaznaczone pola.</p>
+        <p className="instruction">Aby utworzyć opis nad ikoną użyj opcji "Włącz opisy nad ikonami" w menu bocznym</p>
         <div className="text_content">
 
 

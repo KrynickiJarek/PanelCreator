@@ -8,7 +8,9 @@ const INITIAL_STATE = {
   removeIcons: false,
   panelName: "",
   timeOfCreation: null,
-  version: "1.00"
+  version: "0.95",
+  warnings: [],
+  warningsReRender: false
 }
 
 const visualReducer = (state = INITIAL_STATE, action) => {
@@ -40,6 +42,14 @@ const visualReducer = (state = INITIAL_STATE, action) => {
     case types.SET_TIME_OF_CREATION:
       return {
         ...state, timeOfCreation: action.item
+      }
+    case types.UPDATE_WARNINGS:
+      return {
+        ...state, warnings: action.item, warningsReRender: !state.warningsReRender
+      }
+    case types.UPDATE_VERSION:
+      return {
+        ...state, version: action.item
       }
     case types.SET_FRONT_END_REDUCER_VISUAL:
       return action.item

@@ -26,7 +26,7 @@ const IconHolderStatus = ({
   changeIconsBackEnd,
   lastDroppedDot,
   rotationDot,
-  panelRotation
+  panelRotation,
 }) => {
 
 
@@ -50,6 +50,15 @@ const IconHolderStatus = ({
         return num % denom + denom;
       }
     }
+
+
+
+
+
+
+
+
+
 
     const toDataURL = svg => fetch(svg)
       .then(response => response.blob())
@@ -228,6 +237,7 @@ const IconHolderStatus = ({
             index={index}
             chosenColor={chosenColor}
             rotationDot={rotationDot}
+            visual={visual}
           />
           : (<img src={Dot} alt="dot" className="dot"
             style={visual ? { filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 3px rgba(255, 255, 255, 0.7))", ...styleDot }
@@ -235,8 +245,6 @@ const IconHolderStatus = ({
                 : { filter: "grayscale(100%) brightness(0)", ...styleDot }} />)}
         {(lastDroppedDot && (isActive || removeIcons || (removeIcon && selectedDot))) &&
           (<img src={Remove} alt="remove" className="dot_remove" style={styleScale} />)}
-
-
       </div>
     </div>
   )
@@ -247,12 +255,10 @@ const mapStateToProps = state => ({
   chosenTab: state.frontEndData.tab,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
-  visual: state.frontEndData.visual.visual,
   scale: state.frontEndData.visual.scale,
   animations: state.frontEndData.visual.animations,
   removeIcon: state.frontEndData.visual.removeIcon,
   removeIcons: state.frontEndData.visual.removeIcons,
-
   iconsBackEnd: state.backEndData.icons,
 })
 const mapDispatchToProps = dispatch => ({

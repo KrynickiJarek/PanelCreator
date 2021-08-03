@@ -21,8 +21,11 @@ const ReDragDot = ({
   rotationDot,
   chosenModel,
   iconsBackEnd,
-  changeIconsBackEnd,
+  changeIconsBackEnd
 }) => {
+
+
+
 
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
@@ -133,10 +136,8 @@ const mapStateToProps = state => ({
   chosenTab: state.frontEndData.tab,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
-  visual: state.frontEndData.visual.visual,
   scale: state.frontEndData.visual.scale,
   chosenModel: state.frontEndData.model.chosenModel,
-
   iconsBackEnd: state.backEndData.icons,
 })
 
@@ -144,6 +145,7 @@ const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   isAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReDragDot)
