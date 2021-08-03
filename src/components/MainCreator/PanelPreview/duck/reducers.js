@@ -2,7 +2,7 @@ import types from "./types"
 
 const INITIAL_STATE = {
   visual: false,
-  scale: 7,
+  scale: 5,
   animations: true,
   removeIcon: false,
   removeIcons: false,
