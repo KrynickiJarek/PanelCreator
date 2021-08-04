@@ -145,6 +145,8 @@ const PanelPreview = ({
 
   warnings,
   updateWarnings,
+  filterWarnings,
+  pushWarnings,
   iconHoldersRender
 }) => {
 
@@ -174,6 +176,7 @@ const PanelPreview = ({
 
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
+  const [rerenderTextWarning, setRerenderTextWarning] = useState(false)
 
   const [isFocusedInputName, setIsFocusedInputName] = useState(false)
 
@@ -204,12 +207,17 @@ const PanelPreview = ({
 
   useEffect(() => {
     if (chosenColor.RAL === "RAL 9003" && visual) {
-      const copyWarnings = warnings.filter(element => element.code !== 0)
-      copyWarnings.push({ code: 0, show: true, hide: false })
-      updateWarnings(copyWarnings)
+      // let copyWarnings = warnings
+      let checkWarnings = warnings.filter(element => element.code === 0)
+      if (checkWarnings.length === 0) {
+        // copyWarnings.push({ code: 0, show: true, hide: false })
+        // updateWarnings(copyWarnings)
+        pushWarnings(0)
+      }
     } else {
-      const copyWarnings = warnings.filter(element => element.code !== 0)
-      updateWarnings(copyWarnings)
+      // let copyWarnings = warnings.filter(element => element.code !== 0)
+      // updateWarnings(copyWarnings)
+      filterWarnings(0)
     }
     // eslint-disable-next-line
   }, [chosenColor, visual]);
@@ -276,9 +284,10 @@ const PanelPreview = ({
         changeFramesBackEnd([])
         updateWarnings([])
         if (chosenColor.RAL === "RAL 9003" && visual) {
-          const copyWarnings = []
-          copyWarnings.push({ code: 0, show: true, hide: false })
-          updateWarnings(copyWarnings)
+          // const copyWarnings = []
+          // copyWarnings.push({ code: 0, show: true, hide: false })
+          // updateWarnings(copyWarnings)
+          pushWarnings(0)
         }
 
         // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
@@ -388,60 +397,33 @@ const PanelPreview = ({
 
 
 
-  useEffect(() => { //nataleczka
+  useEffect(() => {
     const copyIconHolders = iconHolders.filter(element => element.lastDroppedDot !== null)
     if (copyIconHolders.length > 0) {
-      let copyWarnings = warnings
       const checkWarnings = warnings.filter(element => element.code === 1)
       if (checkWarnings.length === 0) {
-        copyWarnings.push({ code: 1, show: true, hide: false })
-        updateWarnings(copyWarnings)
+        pushWarnings(1)
       }
     } else {
-      const copyWarnings = warnings.filter(element => element.code !== 1)
-      updateWarnings(copyWarnings)
+      filterWarnings(1)
     }
-
-
 
     const copyIconHoldersText = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9)
     if (copyIconHoldersText.length > 0) {
-      let copyWarningsText = warnings
       const checkWarningsText = warnings.filter(element => element.code === 2)
       if (checkWarningsText.length === 0) {
-        copyWarningsText.push({ code: 2, show: true, hide: false })
-        updateWarnings(copyWarningsText)
+        pushWarnings(2)
       }
     } else {
-      const copyWarnings = warnings.filter(element => element.code !== 2)
-      updateWarnings(copyWarnings)
+      filterWarnings(2)
     }
     // eslint-disable-next-line
   }, [iconHolders, iconHoldersRender]);
 
 
-  // useEffect(() => { //nataleczka
-  //   const copyIconHolders = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9)
-  //   if (copyIconHolders.length > 0) {
-  //     let copyWarnings = warnings
-  //     const checkWarnings = warnings.filter(element => element.code === 2)
-  //     if (checkWarnings.length === 0) {
-  //       copyWarnings.push({ code: 2, show: true, hide: false })
-  //       updateWarnings(copyWarnings)
-  //       console.log("now")
-  //     }
-  //   } else {
-  //     const copyWarnings = warnings.filter(element => element.code !== 2)
-  //     updateWarnings(copyWarnings)
-  //   }
-  //   // eslint-disable-next-line
-  // }, [iconHolders, iconHoldersRender]);
 
-
-
-
-
-  useEffect(() => { //nataleczka
+  useEffect(() => {// -----------------------------------------------------------------------------------------------------------------4444
+    console.log("działa")
     const copyArr = iconHolders;
     if (isFocusedInputSide === "up") {
       copyArr[isFocusedInputIndex].fontUp = chosenTextFont
@@ -449,10 +431,7 @@ const PanelPreview = ({
       copyArr[isFocusedInputIndex].fontDown = chosenTextFont
     }
     changeIconHolders(copyArr)
-
-    // const copyArr = iconHolders;
     const checkArr = []
-
     copyArr.forEach((el) => {
       if (el.fontDown && el.textDown && !checkArr.includes(el.fontDown)) {
         checkArr.push(el.fontDown)
@@ -463,12 +442,10 @@ const PanelPreview = ({
       }
     })
     if (checkArr.length > 1) {
-      const copyWarnings = warnings.filter(element => element.code !== 3)
-      copyWarnings.push({ code: 3, show: true, hide: false })
-      updateWarnings(copyWarnings)
+      filterWarnings(3)
+      pushWarnings(3)
     } else {
-      const copyWarnings = warnings.filter(element => element.code !== 3)
-      updateWarnings(copyWarnings)
+      filterWarnings(3)
     }
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
@@ -485,7 +462,7 @@ const PanelPreview = ({
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
-  }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, iconHolders]);
+  }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, rerenderTextWarning]);
 
 
   useEffect(() => {
@@ -539,15 +516,11 @@ const PanelPreview = ({
         }
       })
 
-      if (checkFrameFontArr.length > 1) { //natka
-        const copyWarnings = warnings.filter(element => element.code !== 4)
-        copyWarnings.push({ code: 4, show: true, hide: false })
-        updateWarnings(copyWarnings)
-        // setDifferentFrameFont(true)
+      if (checkFrameFontArr.length > 1) {
+        filterWarnings(4)
+        pushWarnings(4)
       } else {
-        const copyWarnings = warnings.filter(element => element.code !== 4)
-        updateWarnings(copyWarnings)
-        // setDifferentFrameFont(false)
+        filterWarnings(4)
       }
 
 
@@ -680,15 +653,12 @@ const PanelPreview = ({
         checkFrameTitlesArr.push(el.framePrint.text)
       }
     })
-    if (checkFrameFontArr.length > 1) { //natka
-      const copyWarnings = warnings.filter(element => element.code !== 4)
-      copyWarnings.push({ code: 4, show: true, hide: false })
-      updateWarnings(copyWarnings)
-      // setDifferentFrameFont(true)
+    if (checkFrameFontArr.length > 1) {
+      filterWarnings(4)
+      pushWarnings(4)
+
     } else {
-      const copyWarnings = warnings.filter(element => element.code !== 4)
-      updateWarnings(copyWarnings)
-      // setDifferentFrameFont(false)
+      filterWarnings(4)
     }
 
     if (checkFrameTitlesArr.length > 0) {
@@ -1072,12 +1042,11 @@ const PanelPreview = ({
       changeFramesBackEnd([])
       updateWarnings([])
       if (chosenColor.RAL === "RAL 9003" && visual) {
-        const copyWarnings = []
-        copyWarnings.push({ code: 0, show: true, hide: false })
-        updateWarnings(copyWarnings)
+        // const copyWarnings = []
+        // copyWarnings.push({ code: 0, show: true, hide: false })
+        // updateWarnings(copyWarnings)
+        pushWarnings(0)
       }
-      // setDifferentFrameFont(false) //natka
-
       // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
       if (chosenModel.lcdScreen.lcdType === "slide") {
         const copyIconsBackEnd = []
@@ -1427,25 +1396,15 @@ const PanelPreview = ({
     })
     changeIconHolders(copyArr)
     changePanelTextBackEnd([])
-
-    const copyWarnings = warnings.filter(element => element.code !== 3)
-    updateWarnings(copyWarnings)
-    //nataleczka
+    filterWarnings(3)
   }
 
-
-
-  // const renderTooltip = (props) => (
-  //     <Tooltip id="button-tooltip" {...props}>
-  //         Simple tooltip
-  //     </Tooltip>
-  // );
 
   const handleChangeTextUp = (index, text) => {
     const copyArr = iconHolders;
     copyArr[index].textUp = text.target.value.toUpperCase()
     changeIconHolders(copyArr)
-
+    setRerenderTextWarning(prev => !prev)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
 
@@ -1524,6 +1483,7 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     copyArr[index].textDown = text.target.value.toUpperCase()
     changeIconHolders(copyArr)
+    setRerenderTextWarning(prev => !prev)
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
@@ -1639,10 +1599,8 @@ const PanelPreview = ({
       el.fontDown = chosenTextFont;
     })
     changeIconHolders(copyArr)
+    filterWarnings(3)
 
-    const copyWarnings = warnings.filter(element => element.code !== 3)
-    updateWarnings(copyWarnings)
-    // nataleczka
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
@@ -1660,9 +1618,7 @@ const PanelPreview = ({
     })
     changeFrameHolders(copyFrameHolders)
     overFrameReRender()
-    // setDifferentFrameFont(false) //natka
-    const copyWarnings = warnings.filter(element => element.code !== 4)
-    updateWarnings(copyWarnings)
+    filterWarnings(4)
   }
 
 
@@ -4826,6 +4782,8 @@ const mapDispatchToProps = dispatch => ({
   toggleAnimations: (income) => dispatch(actionsVisual.toggleAnimations(income)),
   changeScale: (income) => dispatch(actionsVisual.changeScale(income)),
   updateWarnings: (income) => dispatch(actionsVisual.updateWarnings(income)),
+  filterWarnings: (income) => dispatch(actionsVisual.filterWarnings(income)),
+  pushWarnings: (income) => dispatch(actionsVisual.pushWarnings(income)),
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   changeIsAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
   showRemoveIcon: (income) => dispatch(actionsVisual.showRemoveIcon(income)),

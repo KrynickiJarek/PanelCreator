@@ -8,7 +8,7 @@ const INITIAL_STATE = {
   removeIcons: false,
   panelName: "",
   timeOfCreation: null,
-  version: "0.95",
+  version: "0.96",
   warnings: [],
   warningsReRender: false
 }
@@ -46,6 +46,14 @@ const visualReducer = (state = INITIAL_STATE, action) => {
     case types.UPDATE_WARNINGS:
       return {
         ...state, warnings: action.item, warningsReRender: !state.warningsReRender
+      }
+    case types.FILTER_WARNINGS:
+      return {
+        ...state, warnings: state.warnings.filter(element => element.code !== action.item), warningsReRender: !state.warningsReRender
+      }
+    case types.PUSH_WARNINGS:
+      return {
+        ...state, warnings: [...state.warnings, { code: action.item, show: true, hide: false }], warningsReRender: !state.warningsReRender
       }
     case types.UPDATE_VERSION:
       return {

@@ -36,6 +36,14 @@ const updateWarnings = item => ({
   type: types.UPDATE_WARNINGS, item
 })
 
+const filterWarnings = item => ({
+  type: types.FILTER_WARNINGS, item
+})
+
+const pushWarnings = item => ({
+  type: types.PUSH_WARNINGS, item
+})
+
 const updateVersion = item => ({
   type: types.UPDATE_VERSION, item
 })
@@ -50,7 +58,9 @@ const actions = {
   setTimeOfCreation,
   setFrontEndReducerVisual,
   updateWarnings,
-  updateVersion
+  pushWarnings,
+  updateVersion,
+  filterWarnings
 }
 
 export default actions
