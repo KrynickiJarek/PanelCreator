@@ -10,7 +10,9 @@ const INITIAL_STATE = {
   timeOfCreation: null,
   version: "0.96",
   warnings: [],
-  warningsReRender: false
+  warningsReRender: false,
+  alert: null,
+  alertAnswer: null
 }
 
 const visualReducer = (state = INITIAL_STATE, action) => {
@@ -58,6 +60,18 @@ const visualReducer = (state = INITIAL_STATE, action) => {
     case types.UPDATE_VERSION:
       return {
         ...state, version: action.item
+      }
+    case types.SHOW_ALERT:
+      return {
+        ...state, alert: action.item
+      }
+    case types.REMOVE_ALERT:
+      return {
+        ...state, alert: null
+      }
+    case types.SET_ALERT_ANSWER:
+      return {
+        ...state, alertAnswer: action.item, alert: null
       }
     case types.SET_FRONT_END_REDUCER_VISUAL:
       return action.item

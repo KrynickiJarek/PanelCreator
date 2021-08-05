@@ -57,18 +57,110 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
 
   const onSelectFile = (e) => {
+
+
+
     if (e.target.files[0].type !== "image/svg+xml") {
       alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .svg!")
     } else {
+      // var reader = new FileReader();
+      // // Set the image once loaded into file reader
+      // reader.onload = function (e) {
+
+      //   var img = document.createElement("img");
+      //   img.src = e.target.result;
+
+      //   var canvas = document.createElement("canvas");
+      //   var ctx = canvas.getContext("2d");
+      //   ctx.drawImage(img, 0, 0);
+
+      //   var MAX_WIDTH = 280;
+      //   var MAX_HEIGHT = 280;
+      //   var width = img.width;
+      //   var height = img.height;
+
+      //   if (width > height) {
+      //     if (width > MAX_WIDTH) {
+      //       height *= MAX_WIDTH / width;
+      //       width = MAX_WIDTH;
+      //     }
+      //   } else {
+      //     if (height > MAX_HEIGHT) {
+      //       width *= MAX_HEIGHT / height;
+      //       height = MAX_HEIGHT;
+      //     }
+      //   }
+      //   canvas.width = width;
+      //   canvas.height = height;
+      //   ctx = canvas.getContext("2d");
+      //   ctx.drawImage(img, 0, 0, width, height);
+
+      //   let resizedFile = canvas.toDataURL()
+      //   const image = {
+      //     default: resizedFile
+      //   }
+      //   let copyOwnIcons = ownIcons
+      //   copyOwnIcons.push(image)
+      //   updateOwnIcons(copyOwnIcons)
+      //   console.log(copyOwnIcons)
+      //   document.getElementById("inputUploadIcon").value = null
+      // }
+      // reader.readAsDataURL(e.target.files[0]);
+
+
+      // console.log(e.target)
+      // console.log(e.target.files[0])
+
+
+      // var svgimg = document.createElementNS("http://www.w3.org/2000/svg", "image");
+      // svgimg.setAttribute('width', '88pt');
+      // svgimg.setAttribute('height', '88pt');
+      // svgimg.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', e.target.files[0]);
+      // document.getElementById("mySvg").appendChild(svgimg);
+
+
+
+
+
+
       getBase64(e.target.files[0]).then(
+
         data => {
           const image = {
             default: data
           }
+          // document.getElementById('output').src = data;
+
+          // var svgimg = document.createElementNS("http://www.w3.org/2000/svg", "image");
+
+          // svgimg.setAttribute('width', '88pt');
+          // svgimg.setAttribute('height', '88pt');
+          // svgimg.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', data);
+          // document.getElementById("mySvg").appendChild(svgimg);
+          // console.log(svgimg)
+
+          // let svgToJson = JSON.stringify(svgimg);
+          // let svgToBase64 = Buffer.from(svgToJson).toString("base64")
+          // console.log(svgToJson)
+          // console.log(svgToBase64)
+
+
+
+          // getBase64(svgimg).then(
+          //   data => {
+          //     console.log(data)
+          //   })
+
+
+
+
+
+
+
+          //-----------------------
           let copyOwnIcons = ownIcons
           copyOwnIcons.push(image)
           updateOwnIcons(copyOwnIcons)
-          console.log(copyOwnIcons)
           document.getElementById("inputUploadIcon").value = null
         }
       )
@@ -127,7 +219,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                   <div className="icons">
                     <div className="instruction_box">
                       <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsca na panelu. Będą one podświetlone kolorem  <span style={{ ...orangeStyle }} />.
-                        Aby zostawić ikonę należy ją upiścić w momencie, gdy pole jest podświetlone kolorem  <span style={{ ...greenStyle }} />.</p>
+                        Aby zostawić ikonę należy ją upuścić w momencie, gdy pole jest podświetlone kolorem  <span style={{ ...greenStyle }} />.</p>
                       <p className="instruction">Kliknięcie na ikonę spowoduje dodanie jej do Ulubionych.</p>
 
                       {favoriteIcons.length === 0 &&
@@ -193,6 +285,8 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                           <div className="button_arrows" />
                         </div>
                       </label>
+                      {/* <svg id="mySvg" style={{ display: "none" }} /> */}
+                      <svg id="mySvg" />
                       <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
                     </div>
 

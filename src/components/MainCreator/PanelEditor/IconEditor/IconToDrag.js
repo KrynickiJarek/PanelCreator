@@ -26,7 +26,7 @@ const IconToDrag = ({
   }), [image]);
 
   const handleAdd = (image) => {
-    if (!isInFavorite && !isInOtherOwn && !isInOtherFavorite) {
+    if (!isInFavorite && !isInOtherOwn && !isInOtherFavorite & !isInOwn) {
       addIconToFavorite(image)
     }
     if (isInOtherOwn) {
@@ -57,11 +57,10 @@ const IconToDrag = ({
           {isInOwn && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromOwn(ownIconIndex)} />}
 
           <div ref={drag} className="icon_drag">
-            <img src={image.default} alt="icon" className="icon" width="40pt" height="40pt"
+            <img src={image.default} alt="icon" className="icon"
+              // width="28pt" height="28pt"
               style={{ opacity }}
               onClick={() => handleAdd(image)} />
-
-
           </div>
         </div>
       }

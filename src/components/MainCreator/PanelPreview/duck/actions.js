@@ -48,6 +48,18 @@ const updateVersion = item => ({
   type: types.UPDATE_VERSION, item
 })
 
+const showAlert = item => ({
+  type: types.SHOW_ALERT, item
+})
+
+const removeAlert = item => ({
+  type: types.REMOVE_ALERT, item
+})
+
+const setAlertAnswer = item => ({
+  type: types.SET_ALERT_ANSWER, item
+})
+
 const actions = {
   toggleVisual,
   changeScale,
@@ -60,7 +72,10 @@ const actions = {
   updateWarnings,
   pushWarnings,
   updateVersion,
-  filterWarnings
+  filterWarnings,
+  showAlert,
+  removeAlert,
+  setAlertAnswer
 }
 
 export default actions

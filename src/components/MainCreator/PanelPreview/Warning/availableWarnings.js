@@ -10,7 +10,7 @@ const availableWarnings = [
   },
   {
     code: 2,
-    text: "Zastosowano długie opisy. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF."
+    text: "Zastosowano długie opisy ikon. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF."
   },
   {
     code: 3,
@@ -18,8 +18,16 @@ const availableWarnings = [
   },
   {
     code: 4,
-    text: "Zastosowano różne fonty opisów tytułów ramek. W zakładce \"Ramki\" wybierz w bocznym menu \"Wybrany font dla wszystkich tytułów\""
-  }
+    text: "Zastosowano różne fonty tytułów ramek. W zakładce \"Ramki\" wybierz w bocznym menu \"Wybrany font dla wszystkich tytułów\""
+  },
+  {
+    code: 5,
+    text: "Zastosowano długie tytuły ramek. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF."
+  },
+  {
+    code: 6,
+    text: "Zastosowano górny opis ikony w miejscu, w którym utworzono ramkę. Elementy będa na siebie nachodzić - usuń jeden z nich."
+  },
 ]
 
 export default availableWarnings

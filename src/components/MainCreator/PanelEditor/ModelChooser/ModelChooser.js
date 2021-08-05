@@ -66,7 +66,7 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
   return (
     <div className="model_container">
       <h2 className="model_header">Wybierz model panelu</h2>
-      <p className="instruction_bold">Kliknij na model, a następnie zatwierdź go przyciskiem "Wybierz". Wybranie modelu spowoduje zresetowanie aktualnego panelu.</p>
+      <p className="instruction_bold">Kliknij na model, a następnie zatwierdź go przyciskiem "Wybierz". Wybranie modelu spowoduje <span style={{ textDecoration: "underline" }}>zresetowanie</span> aktualnego panelu.</p>
       <div className="model_content">
         {availableModels.map((panel, id) => {
           return (

@@ -95,10 +95,9 @@ const FrameEditor = ({
           </div>
 
 
-          {/* {chosenModel.type !== "MDOT-18 poziomy" && */}
           {!chosenModel.panelRotation &&
             <>
-              <p className="instruction_normal">Wybierz font tytułu ramki. Aby dodać tytuł ramka musi mieć szerokość co najmniej 2 kolumn.</p>
+              <p className="instruction_normal">Wybierz font tytułu ramki. Aby dodać tytuł ramka musi mieć szerokość co najmniej 2 kolumn lub wysokość co najmniej 2 rzędów.</p>
               <div className="frame_choosing_box">
 
                 <div className="frame_link" style={(chosenFrameFont === "Calibri-bold") ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold" }

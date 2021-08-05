@@ -103,7 +103,7 @@ const frameReducer = (state = INITIAL_STATE, action) => {
       }
     case types.CHANGE_FRAME_TEXT:
       return {
-        ...state, frameText: action.item
+        ...state, frameText: action.item, textFrameRender: !state.textFrameRender
       }
     case types.CHANGE_FRAMES_SHAPE_TO_SHARP:
       const copyFrameHoldersForShapeChangeToSharp = state.frameHolders
