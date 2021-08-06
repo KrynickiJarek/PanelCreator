@@ -286,7 +286,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                         </div>
                       </label>
                       {/* <svg id="mySvg" style={{ display: "none" }} /> */}
-                      <svg id="mySvg" />
+                      {/* <svg id="mySvg" /> */}
                       <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
                     </div>
 

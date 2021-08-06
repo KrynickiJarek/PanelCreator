@@ -10,6 +10,7 @@ import Remove from "../../../../assets/preview/remove.svg"
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
+import ReactTooltip from "react-tooltip";
 
 const FrameEditor = ({
   frameTitle,
@@ -141,12 +142,33 @@ const FrameEditor = ({
                 </div>
               </div>
 
-              <div className="add_title_button"
+              {/* <div className="add_title_button"
                 onClick={!allowFrameTitleFlag ? null : toggleTitle}
                 style={!allowFrameTitleFlag ? { cursor: "not-allowed" } : { cursor: "pointer" }}>
                 {frameTitleFlag ? "Usuń tytuł" : "Dodaj tytuł"}
                 <div className="button_arrows" />
-              </div>
+              </div> */}
+
+              {allowFrameTitleFlag ?
+                <div className="add_title_button"
+                  onClick={toggleTitle}
+                  style={{ cursor: "pointer" }}>
+                  {frameTitleFlag ? "Usuń tytuł" : "Dodaj tytuł"}
+                  <div className="button_arrows" />
+                </div>
+                :
+                <div className="add_title_button"
+                  style={{ cursor: "not-allowed" }} data-tip data-for='addtitle'>
+                  {frameTitleFlag ? "Usuń tytuł" : "Dodaj tytuł"}
+                  <div className="button_arrows" />
+                </div>
+              }
+              {!allowFrameTitleFlag &&
+                <ReactTooltip className='tooltip_custom' id='addtitle' place="top" type="error" effect="float" >
+                  <span>Aby dodać tytuł utwórz ramkę <br />o szerokości co najmniej 2 kolumn <br />lub wysokości co najmniej 2 rzędów</span>
+                </ReactTooltip>
+              }
+
             </>
           }
           {chosenModel.panelRotation === 90 &&

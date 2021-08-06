@@ -17,6 +17,8 @@ import moment from 'moment';
 import "./PanelPreview.scss"
 
 import Overlay from 'react-bootstrap/Overlay'//--------tooltip
+import ReactTooltip from "react-tooltip";
+
 
 import LogoPure from "../../../assets/preview/logopure.svg"
 
@@ -401,6 +403,7 @@ const PanelPreview = ({
     changeIconHolders(arrIconHolders);
     resetTab("model")
     handleShowWarings()
+    allowFrameTitle(false)
     // eslint-disable-next-line
   }, [dashboard]);
 
@@ -3812,6 +3815,7 @@ const PanelPreview = ({
   return (
     <>
       <AlertBox />
+
       <div className="panelpreview_container" style={panelPreviewStyle}>
         <div className="preview_container">
           <div className="preview_top">
@@ -4598,14 +4602,28 @@ const PanelPreview = ({
             <div className="scale_container">
               <div className="scale_box">
                 <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut}
-                  style={sc === 4 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}} />
+                  style={sc === 4 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
+                  data-tip data-for='zoomout'
+                />
+                <div style={sc === 4 ? { opacity: "1" } : { opacity: "0" }}>
+                  <ReactTooltip className='tooltip_custom' id='zoomout' place="top" type="error" effect="float" >
+                    <span>Uzyskano minimalne skalowanie</span>
+                  </ReactTooltip>
+                </div>
               </div>
               <div className="scale_box">
                 <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} />
               </div>
               <div className="scale_box">
                 <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn}
-                  style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}} />
+                  style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
+                  data-tip data-for='zoomin'
+                />
+                <div style={sc === 8 ? { opacity: "1" } : { opacity: "0" }}>
+                  <ReactTooltip className='tooltip_custom' id='zoomin' place="top" type="error" effect="float" >
+                    <span>Uzyskano maksymalne skalowanie</span>
+                  </ReactTooltip>
+                </div>
               </div>
             </div>
             <div className="bottom_info_ral">
@@ -4625,9 +4643,9 @@ const PanelPreview = ({
                     {...props}
                     style={{
                       backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                      fontSize: "14px",
                       fontFamily: "'Montserrat', sans-serif",
-                      padding: '5px 10px',
-                      marginBottom: "5px",
+                      padding: '10px 15px',
                       color: 'white',
                       borderRadius: 3,
                       ...props.style,
@@ -4677,12 +4695,6 @@ const PanelPreview = ({
 
 
 
-
-
-
-
-
-
               <div className="side_box">
                 <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
                 {!visual ? <span>Tryb wizualizacji</span> : <span>Tryb edycji</span>}
@@ -4717,19 +4729,66 @@ const PanelPreview = ({
                       onMouseOver={() => showRemoveIcons(true)} onMouseLeave={() => showRemoveIcons(false)} />
                     <span>Usuń wszystkie ikony</span>
                   </div>
-                  <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+
+                  {/* <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
                       onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
                     <span>Usuń zaznaczoną ikonę</span>
-                  </div>
-                  <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  </div> */}
+
+                  {/* <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
                     <span>Obróć o 90° w prawo</span>
                   </div>
                   <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
                     <span >Obróć o 90° w lewo</span>
-                  </div>
+                  </div> */}
+                  {isAnySelected ?
+                    <>
+                      <div className="side_box">
+                        <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
+                          onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
+                        <span>Usuń zaznaczoną ikonę</span>
+                      </div>
+
+                      <div className="side_box">
+                        <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                        <span>Obróć o 90° w prawo</span>
+                      </div>
+                      <div className="side_box">
+                        <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                        <span >Obróć o 90° w lewo</span>
+                      </div>
+
+
+                    </>
+                    :
+                    <>
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę aby skorzystać z funkcji">
+                        <img src={Clear} alt="clear" className="side_icon" />
+                        <span>Usuń zaznaczoną ikonę</span>
+                      </div>
+
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę aby skorzystać z funkcji">
+                        <img src={Rotateright} alt="rotateright" className="side_icon" />
+                        <span>Obróć o 90° w prawo</span>
+                      </div>
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę aby skorzystać z funkcji">
+                        <img src={Rotateleft} alt="rotateleft" className="side_icon" />
+                        <span >Obróć o 90° w lewo</span>
+                      </div>
+                    </>
+                  }
+                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+
+
+
+
+
+
+
+
                 </>
               }
               {chosenTab === "text" &&
@@ -4767,9 +4826,7 @@ const PanelPreview = ({
                     {showFramBlackLight ? <span>Ukryj podświet- <br />lenie pól</span> : <span>Pokaż podświet- <br />lenie pól</span>}
                   </div>
 
-                  <div className="side_box"
-                  // style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}
-                  >
+                  <div className="side_box">
                     {allFramesSharpRound ?
                       <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
                       :
@@ -4777,34 +4834,97 @@ const PanelPreview = ({
                     {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
                   </div>
 
-                  <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+                  {/* <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Removeallframes} alt="ramoveallframes" className="side_icon"
                       onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }}
                       onMouseOver={() => { overFrameAll(true) }}
                       onMouseLeave={() => { overFrameAll(false) }}
                     />
                     <span>Usuń wszystkie ramki</span>
-                  </div>
+                  </div> */}
 
-                  <div className="side_box" style={!frameHoldersTemp ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+
+                  {frameHolders.length !== 0 ?
+
+                    <div className="side_box" >
+                      <img src={Removeallframes} alt="ramoveallframes" className="side_icon"
+                        onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }}
+                        onMouseOver={() => { overFrameAll(true) }}
+                        onMouseLeave={() => { overFrameAll(false) }}
+                      />
+                      <span>Usuń wszystkie ramki</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramkę aby skorzystać z funkcji">
+                      <img src={Removeallframes} alt="ramoveallframes" className="side_icon" />
+                      <span>Usuń wszystkie ramki</span>
+                    </div>
+                  }
+
+                  {/* <div className="side_box" style={!frameHoldersTemp ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
                     <span>Usuń tworzoną ramkę</span>
-                  </div>
+                  </div> */}
 
 
 
-                  <div className="side_box" style={!frameTitleFlag ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+
+                  {frameHoldersTemp ?
+
+                    <div className="side_box" >
+                      <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
+                      <span>Usuń tworzoną ramkę</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Utwórz ramkę aby skorzystać z funkcji">
+                      <img src={Removecurrframe} alt="removecurrframe" className="side_icon" />
+                      <span>Usuń tworzoną ramkę</span>
+                    </div>
+
+
+                  }
+
+                  {/* <div className="side_box" style={!frameTitleFlag ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Textborder} alt="textborder" className="side_icon"
                       onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
                     <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
-                  </div>
+                  </div> */}
 
-                  <div className="side_box" style={!frameTitles ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
+
+                  {frameTitleFlag ?
+
+                    <div className="side_box">
+                      <img src={Textborder} alt="textborder" className="side_icon"
+                        onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
+                      <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Dodaj tytuł aby skorzystać z funkcji" >
+                      <img src={Textborder} alt="textborder" className="side_icon" />
+                      <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                    </div>
+                  }
+
+
+                  {/* <div className="side_box" style={!frameTitles ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
                     <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
                     <span>Wybrany font dla wszystkich tytułów</span>
-                  </div>
+                  </div> */}
 
+                  {frameTitles ?
+                    <div className="side_box" >
+                      <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
+                      <span>Wybrany font dla wszystkich tytułów</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramki z tytułami aby skorzystać z funkcji">
+                      <img src={Setonefont} alt="setonefont" className="side_icon" />
+                      <span>Wybrany font dla wszystkich tytułów</span>
+                    </div>}
+
+                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
                 </>
+
               }
 
 
