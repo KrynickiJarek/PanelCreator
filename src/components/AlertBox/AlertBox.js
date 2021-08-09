@@ -22,18 +22,29 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer }) => {
             </div>
             <p className="alert_text">{availableAlerts.find(element => element.code === alert).text}</p>
             <div className="alert_button_container">
-              <div className="alert_button_back"
-                onClick={() => removeAlert()}
-              >
-                <div className="button_arrows_back" />
-                Anuluj
-              </div>
-              <div className="alert_button"
-                onClick={() => setAlertAnswer(alert)}
-              >
-                Zatwierdź
-                <div className="button_arrows" />
-              </div>
+              {alert < 4 ?
+                <>
+                  <div className="alert_button_back"
+                    onClick={() => removeAlert()}
+                  >
+                    <div className="button_arrows_back" />
+                    Anuluj
+                  </div>
+                  <div className="alert_button"
+                    onClick={() => setAlertAnswer(alert)}
+                  >
+                    Zatwierdź
+                    <div className="button_arrows" />
+                  </div>
+                </>
+                :
+                <div className="alert_button_back"
+                  onClick={() => removeAlert()}
+                >
+                  <div className="button_arrows_back" />
+                  Powrót
+                </div>
+              }
             </div>
           </div>
         </div>

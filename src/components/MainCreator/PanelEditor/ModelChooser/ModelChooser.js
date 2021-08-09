@@ -14,6 +14,7 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
   const [resize, setResize] = useState(0)
   const [onTop, setOnTop] = useState(null)
   const [onBack, setOnBack] = useState(null)
+  const [isChanging, setIsChanging] = useState(false)
 
 
   const handlePanelChange = (type) => {
@@ -26,28 +27,33 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
 
 
   const handleZoom = (id) => {
-    setResize(document.querySelector(`.resieze-${id}`).clientHeight)
+    setIsChanging(true)
 
-    document.querySelector(".model_container").scroll({
-      top: (document.querySelector(`.resieze-${id}`).parentElement.parentElement.offsetTop) - 180,
-      behavior: 'smooth'
-    });
+    if (!isChanging) {
+      setResize(document.querySelector(`.resieze-${id}`).clientHeight)
+      document.querySelector(".model_container").scroll({
+        top: (document.querySelector(`.resieze-${id}`).parentElement.parentElement.offsetTop) - 180,
+        behavior: 'smooth'
+      });
 
-    if (id !== zoomId) {
-      setOnBack(zoomId)
-      setZoomId(id)
-      setOnTop(id)
-      const modeltimeout = setTimeout(() => {
-        setOnBack(null)
-      }, 200);
-      return () => clearTimeout(modeltimeout);
-    } else {
-      setZoomId(null)
-      const modeltimeout = setTimeout(() => {
-        setOnTop(null)
-        setOnBack(null)
-      }, 400);
-      return () => clearTimeout(modeltimeout);
+      if (id !== zoomId) {
+        setOnBack(zoomId)
+        setZoomId(id)
+        setOnTop(id)
+        const modeltimeout = setTimeout(() => {
+          setOnBack(null)
+          setIsChanging(false)
+        }, 200);
+        return () => clearTimeout(modeltimeout);
+      } else {
+        setZoomId(null)
+        const modeltimeout = setTimeout(() => {
+          setOnTop(null)
+          setOnBack(null)
+          setIsChanging(false)
+        }, 400);
+        return () => clearTimeout(modeltimeout);
+      }
     }
   };
 

@@ -191,8 +191,13 @@ const FrameEditor = ({
                     onMouseOver={() => { overFrame({ index: index, flag: true }) }}
                     onMouseLeave={() => { overFrame({ index: index, flag: false }) }}
                   >
-                    Pole startowe (rząd, kolumna): {frame.frameInfo.startRow}, {frame.frameInfo.startColumn} ; Szerokość: {frame.frameInfo.columns}; Wysokość: {frame.frameInfo.rows};
-                    Narożniki: {frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}{frame.framePrint.text && `, Tytuł: ${frame.framePrint.text}; Font: ${frame.framePrint.frameFont}`}
+                    Pole startowe (rząd, kolumna): <span>{frame.frameInfo.startRow}</span>, <span>{frame.frameInfo.startColumn}</span> ; Szerokość: <span>{frame.frameInfo.columns}</span> ;
+                    Wysokość: <span>{frame.frameInfo.rows}</span> ;
+                    Narożniki: <span>{frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}</span>
+                    {frame.framePrint.text && ", Tytuł: "}
+                    {frame.framePrint.text && <span>{frame.framePrint.text}</span>}
+                    {frame.framePrint.text && "; Font: "}
+                    {frame.framePrint.text && <span>{frame.framePrint.frameFont}</span>}
                     <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
                       <img className="frame_list_img" src={Remove} alt="removeframe" />
                     </div>

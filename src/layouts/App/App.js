@@ -7,6 +7,7 @@ import { persistor, store } from './store';
 import Dashboard from "../../components/Dashboard/Dashboard"
 // import { RootComponent, LoadingView } from './components'; /// DODAJ WIDOK ŁADOWANIA
 
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -23,16 +24,3 @@ const App = () => {
 export default App;
 
 
-// import React from 'react';
-// import './App.scss';
-// import Dashboard from "../../components/Dashboard/Dashboard"
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <Dashboard />
-//     </div>
-//   );
-// }
-
-// export default App;

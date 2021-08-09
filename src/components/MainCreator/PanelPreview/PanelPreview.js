@@ -30,6 +30,7 @@ import Zoomout from "../../../assets/scale/zoomout.svg"
 import Alert from "../../../assets/side/alert.svg"
 
 import Savetopdf from "../../../assets/side/savetopdf.svg"
+import Savetopdfdebug from "../../../assets/side/savetopdfdebug.svg"
 import Savetopdfload from "../../../assets/side/savetopdf_load.svg"
 import Downloadpdfarrow from "../../../assets/side/downloadpdf_arrow.svg"
 import Saveandback from "../../../assets/side/saveandback.svg"
@@ -430,11 +431,21 @@ const PanelPreview = ({
     } else {
       filterWarnings(2)
     }
+
+    const copyIconHoldersSelected = iconHolders.filter(element => element.selectedDot || element.selected || element.selectedUp || element.selectedDown)
+    if (copyIconHoldersSelected.length > 0) {
+      changeIsAnySelected(true)
+    } else {
+      changeIsAnySelected(false)
+    }
+
+
     // eslint-disable-next-line
   }, [iconHolders, iconHoldersRender]);
 
   useEffect(() => {
-    const copyFrameHoldersText = frameHolders.filter(element => element.framePrint.text.length > 9)
+    // const copyFrameHoldersText = frameHolders.filter(element => element.framePrint.text.length > 9)
+    const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
 
     if (copyFrameHoldersText.length > 0 || frameText.length > 9) {
       const checkWarningsText = warnings.filter(element => element.code === 5)
@@ -466,13 +477,16 @@ const PanelPreview = ({
     const checkFrame = []
 
     frameHolders.forEach((element, index) => {
-      element.framePrint.frameArr.forEach((el, i) => {
-        if (el.t) {
-          if (!checkFrame.includes(i)) {
-            checkFrame.push(i)
+      if (element.type === "multi") {
+        element.framePrint.frameArr.forEach((el, i) => {
+          if (el.t) {
+            if (!checkFrame.includes(i)) {
+              checkFrame.push(i)
+            }
           }
-        }
-      })
+        })
+      }
+
     })
 
     let checkFrameAndTextUp = []
@@ -1080,6 +1094,7 @@ const PanelPreview = ({
   }
 
   const handleClearAll = () => {
+    setAlertAnswer(null)
     setRemoveAll(false)
     const tempArr = [];
     setHideAll(false)
@@ -1278,6 +1293,7 @@ const PanelPreview = ({
   }
 
   const handleClearIcon = () => {
+    showRemoveIcon(false)
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
     copyArr.forEach((el, index) => {
@@ -3452,7 +3468,7 @@ const PanelPreview = ({
         textY = (Math.ceil((copyArr.indexOf("s") + 1) / 3) - 1) * chosenModel.multiRowFrameHeight
         textX = ((chosenModel.sideColumnFrameWidth * 2) + chosenModel.centerColumnFrameWidth) / 2
       }
-      if (copyArr[i] === "s" && copyArr[i + 3] === "s" && copyArr[i - 1] && copyArr[i + 1] !== "s" && copyArr[i - 1] !== "s" && i % 3 === 2) {
+      if (copyArr[i] === "s" && copyArr[i + 3] === "s" && copyArr[i - 1] !== "s" && copyArr[i + 1] !== "s" && copyArr[i - 1] !== "s" && i % 3 === 2) {
         setTextFrame(true)
         allowFrameTitle(true)
         textY = (Math.ceil((copyArr.indexOf("s") + 1) / 3) - 1) * chosenModel.multiRowFrameHeight
@@ -3719,10 +3735,48 @@ const PanelPreview = ({
         })
         .catch(error => {
           setDownloading(false)
-          alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
+          // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.") //nataleczka
+          showAlert(4);
         });
     }
+  }
 
+  const handlePrintPdfDebug = () => {
+    if (panelName === "") {
+      setNoPanelName(true)
+    } else {
+      setDownloading(true)
+      let dataToSend = {
+        frontEndData,
+        backEndData,
+        show: true,
+        hide: false
+      }
+      let frontEndDataStr = JSON.stringify(dataToSend);
+      let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+
+
+      let headers = new Headers();
+      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+      headers.append('Access-Control-Allow-Credentials', 'true');
+
+      fetch("https://kreator.ampio.pl/generatepdf", {
+        method: "POST",
+        body: JSON.stringify({ backEndData, frontEndDataB64 }),
+        headers: headers
+      })
+        .then(res => res.blob())
+        .then(blob => {
+          let fileName = panelName + "_" + chosenModel.name + ".pdf"
+          saveAs(blob, fileName);
+          setDownloading(false)
+        })
+        .catch(error => {
+          setDownloading(false)
+          console.log(error)
+          // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
+        });
+    }
   }
 
 
@@ -3795,7 +3849,6 @@ const PanelPreview = ({
     handleClearAll()
 
     const dahsboardTimeout = setTimeout(() => {
-      console.log("teraz")
       showDashboard(true)
       changePanelName("")
       changePanelNameBackEnd("")
@@ -3807,7 +3860,6 @@ const PanelPreview = ({
       updateOwnIcons([])
     }, 400);
     return () => clearTimeout(dahsboardTimeout);
-
   }
 
 
@@ -4765,23 +4817,42 @@ const PanelPreview = ({
                     </>
                     :
                     <>
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę aby skorzystać z funkcji">
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę, aby skorzystać z funkcji">
                         <img src={Clear} alt="clear" className="side_icon" />
                         <span>Usuń zaznaczoną ikonę</span>
                       </div>
 
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę aby skorzystać z funkcji">
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę, aby skorzystać z funkcji">
                         <img src={Rotateright} alt="rotateright" className="side_icon" />
                         <span>Obróć o 90° w prawo</span>
                       </div>
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę aby skorzystać z funkcji">
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę, aby skorzystać z funkcji">
                         <img src={Rotateleft} alt="rotateleft" className="side_icon" />
                         <span >Obróć o 90° w lewo</span>
                       </div>
                     </>
                   }
                   <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+                  <div className="side_box">
 
+                    {!downloading &&
+                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} />
+                    }
+                    {downloading &&
+                      <>
+                        <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
+                        <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
+                          style={{ animationName: "downloadnigPrewiev" }}
+                        />
+                      </>
+                    }
+                    {downloading ?
+                      <span >Pobieram...<br />  </span>
+                      :
+                      <span
+                        style={{ color: "rgb(73, 75, 75)" }}>Debuguj</span>
+                    }
+                  </div>
 
 
 
@@ -4855,7 +4926,7 @@ const PanelPreview = ({
                       <span>Usuń wszystkie ramki</span>
                     </div>
                     :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramkę aby skorzystać z funkcji">
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramkę, aby skorzystać z funkcji">
                       <img src={Removeallframes} alt="ramoveallframes" className="side_icon" />
                       <span>Usuń wszystkie ramki</span>
                     </div>
@@ -4876,7 +4947,7 @@ const PanelPreview = ({
                       <span>Usuń tworzoną ramkę</span>
                     </div>
                     :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Utwórz ramkę aby skorzystać z funkcji">
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Utwórz ramkę, aby skorzystać z funkcji">
                       <img src={Removecurrframe} alt="removecurrframe" className="side_icon" />
                       <span>Usuń tworzoną ramkę</span>
                     </div>
@@ -4899,7 +4970,7 @@ const PanelPreview = ({
                       <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
                     </div>
                     :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Dodaj tytuł aby skorzystać z funkcji" >
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Dodaj tytuł, aby skorzystać z funkcji" >
                       <img src={Textborder} alt="textborder" className="side_icon" />
                       <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
                     </div>
@@ -4917,7 +4988,7 @@ const PanelPreview = ({
                       <span>Wybrany font dla wszystkich tytułów</span>
                     </div>
                     :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramki z tytułami aby skorzystać z funkcji">
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramki z tytułami, aby skorzystać z funkcji">
                       <img src={Setonefont} alt="setonefont" className="side_icon" />
                       <span>Wybrany font dla wszystkich tytułów</span>
                     </div>}

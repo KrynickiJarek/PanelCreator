@@ -11,6 +11,14 @@ const availableAlerts = [
   {
     code: 3,
     text: "Czy na pewno chcesz zresetować wszystko?",
+  },
+  {
+    code: 4,
+    text: "Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.",
+  },
+  {
+    code: 5,
+    text: "Niepoprawny plik. Upewnij się czy wybrałeś plik z projektem wygenerowanym w aktualnej wersji Kreatora Paneli.",
   }
 ]
 

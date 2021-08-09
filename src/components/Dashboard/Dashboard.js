@@ -96,7 +96,7 @@ export const Dashboard = memo(function Dashboard({
   let sc = 5
 
   useEffect(() => {
-    updateVersion("0.96a")
+    updateVersion("0.96b")
     // eslint-disable-next-line 
   }, [])
 
@@ -328,7 +328,8 @@ export const Dashboard = memo(function Dashboard({
       })
       .catch(error => {
         setDownloading(false)
-        alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
+        // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
+        showAlert(4);
       });
   }
 
@@ -370,7 +371,8 @@ export const Dashboard = memo(function Dashboard({
           error => {
             setZoomId(null)
             setUploading(false)
-            alert("Niepoprawny plik. Upewnij się czy wybrałeś plik z projektem wygenerowanym w aktualnej wersji Kreatora Paneli.")
+            // alert("Niepoprawny plik. Upewnij się czy wybrałeś plik z projektem wygenerowanym w aktualnej wersji Kreatora Paneli.")
+            showAlert(5);
             document.getElementById("inputUploadProject").value = null
           }
         );
