@@ -96,7 +96,7 @@ export const Dashboard = memo(function Dashboard({
   let sc = 5
 
   useEffect(() => {
-    updateVersion("0.96b")
+    updateVersion("0.97")
     // eslint-disable-next-line 
   }, [])
 
