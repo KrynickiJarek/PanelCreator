@@ -28,6 +28,10 @@ const availableWarnings = [
     code: 6,
     text: "Zastosowano górny opis ikony w miejscu, w którym utworzono ramkę. Elementy będa na siebie nachodzić - usuń jeden z nich."
   },
+  {
+    code: 7,
+    text: "Przy stosowaniu własnej ikony należy każdorazowo sprawdzić, czy wyświetla się ona poprawnie na wygenerowanym pliku PDF. W przypadku problemów z wymiarem ikony należy przekonwertować ją do rozmiaru 28px x 28px za pomocą strony ",
+  },
 ]
 
 export default availableWarnings

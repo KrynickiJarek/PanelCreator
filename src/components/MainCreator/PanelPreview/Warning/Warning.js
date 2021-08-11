@@ -30,7 +30,7 @@ const Warning = ({ warnings, updateWarnings }) => {
   return (
     <div className="warning_container">
       {warnings.map((warning, index) =>
-        <div key={index} style={{ zIndex: "9999999" }} >
+        <div key={index} style={{ zIndex: "999999" }} >
           {
             warning.show &&
             <div className={`warning_box minimalize-${index}`}
@@ -42,30 +42,16 @@ const Warning = ({ warnings, updateWarnings }) => {
                   onClick={() => handleMinimalize(index)}
                 />
               </div>
-              <p className="warning_text">{availableWarnings.find(element => element.code === warning.code).text}</p>
+              <p className="warning_text">{availableWarnings.find(element => element.code === warning.code).text}
+                {warning.code === 7 &&
+                  <a className="warning_link" target="blank" href="https://www.iloveimg.com/resize-image">iloveimg.com</a>
+                }
+              </p>
             </div>
           }
         </div>
       )
       }
-
-
-
-
-      {/* <div className="warning_header">
-          <span>UWAGA!</span>
-          <img src={Minimalize} alt="minimalize" className="minimalize_icon"></img>
-        </div>
-        <p className="warning_text">Ewentualny brak widoczności elementów panelu wynika z ustawień monitora. Elementy będą widoczne na gotowym panelu.</p>
-      </div >
-
-  <div className="warning_box">
-    <div className="warning_header">
-      <span>UWAGA!</span>
-      <img src={Minimalize} alt="minimalize" className="minimalize_icon"></img>
-    </div>
-    <p className="warning_text">Ewentualny brak widoczności elementów panelu wynika z ustawień monitora. Elementy będą widoczne na gotowym panelu.</p>
-  </div> */}
 
     </div >
   );

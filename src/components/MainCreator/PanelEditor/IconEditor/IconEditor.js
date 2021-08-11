@@ -55,115 +55,66 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
   }
 
 
-
   const onSelectFile = (e) => {
 
-
-
     if (e.target.files[0].type !== "image/svg+xml") {
-      // alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .svg!")
       showAlert(7);
 
     } else {
-      // var reader = new FileReader();
-      // // Set the image once loaded into file reader
-      // reader.onload = function (e) {
-
-      //   var img = document.createElement("img");
-      //   img.src = e.target.result;
-
-      //   var canvas = document.createElement("canvas");
-      //   var ctx = canvas.getContext("2d");
-      //   ctx.drawImage(img, 0, 0);
-
-      //   var MAX_WIDTH = 280;
-      //   var MAX_HEIGHT = 280;
-      //   var width = img.width;
-      //   var height = img.height;
-
-      //   if (width > height) {
-      //     if (width > MAX_WIDTH) {
-      //       height *= MAX_WIDTH / width;
-      //       width = MAX_WIDTH;
-      //     }
-      //   } else {
-      //     if (height > MAX_HEIGHT) {
-      //       width *= MAX_HEIGHT / height;
-      //       height = MAX_HEIGHT;
-      //     }
-      //   }
-      //   canvas.width = width;
-      //   canvas.height = height;
-      //   ctx = canvas.getContext("2d");
-      //   ctx.drawImage(img, 0, 0, width, height);
-
-      //   let resizedFile = canvas.toDataURL()
-      //   const image = {
-      //     default: resizedFile
-      //   }
-      //   let copyOwnIcons = ownIcons
-      //   copyOwnIcons.push(image)
-      //   updateOwnIcons(copyOwnIcons)
-      //   console.log(copyOwnIcons)
-      //   document.getElementById("inputUploadIcon").value = null
-      // }
-      // reader.readAsDataURL(e.target.files[0]);
-
-
-      // console.log(e.target)
-      // console.log(e.target.files[0])
-
-
-      // var svgimg = document.createElementNS("http://www.w3.org/2000/svg", "image");
-      // svgimg.setAttribute('width', '88pt');
-      // svgimg.setAttribute('height', '88pt');
-      // svgimg.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', e.target.files[0]);
-      // document.getElementById("mySvg").appendChild(svgimg);
-
-
-
-
-
 
       getBase64(e.target.files[0]).then(
-
         data => {
-          const image = {
-            default: data
-          }
-          // document.getElementById('output').src = data;
-
-          // var svgimg = document.createElementNS("http://www.w3.org/2000/svg", "image");
-
-          // svgimg.setAttribute('width', '88pt');
-          // svgimg.setAttribute('height', '88pt');
-          // svgimg.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', data);
-          // document.getElementById("mySvg").appendChild(svgimg);
-          // console.log(svgimg)
-
-          // let svgToJson = JSON.stringify(svgimg);
-          // let svgToBase64 = Buffer.from(svgToJson).toString("base64")
-          // console.log(svgToJson)
-          // console.log(svgToBase64)
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', data);
+          xhr.addEventListener('load', function (ev) {
+            var xml = ev.target.response;
+            var dom = new DOMParser();
+            var svg = dom.parseFromString(xml, 'image/svg+xml');
+            let svgDisplay = svg.rootElement
 
 
 
-          // getBase64(svgimg).then(
-          //   data => {
-          //     console.log(data)
-          //   })
+            svgDisplay.setAttribute("height", "28pt"); //wartość nie ma znaczenia
+            svgDisplay.setAttribute("width", "28pt"); //wartośc nie ma znaczenia
+            // console.log(svgDisplay.width.animVal.value)
+            // console.log(svgDisplay.viewBox)
+            // console.log(svgDisplay.height.animVal.value)
+
+            let vbw = svgDisplay.viewBox.animVal.width
+            let vhh = svgDisplay.viewBox.animVal.height
+            svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
+
+            // ----------------------------------------------------------------gotowe?-----------
+            // type = 1 - number 
+            // let vbw = svgDisplay.width.animVal.value
+            // let vhh = svgDisplay.height.animVal.value
+            // svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
+            // ----------------------------------------------------------------/gotowe----------
+
+            // svgDisplay.setAttribute("fill", "black")
+            // document.getElementById("mySvg").appendChild(svgDisplay);
+            // console.log(svgDisplay)
 
 
+            var svgSerializer = new XMLSerializer().serializeToString(svgDisplay)
+            // var svgB64 = window.btoa(svgSerializer);
+            var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgSerializer);
+            const image = {
+              default: svgB64
+            }
+            let copyOwnIcons = ownIcons
+            copyOwnIcons.push(image)
+            updateOwnIcons(copyOwnIcons)
+            document.getElementById("inputUploadIcon").value = null
+          });
+          xhr.send(null);
 
-
-
-
-
-          //-----------------------
-          let copyOwnIcons = ownIcons
-          copyOwnIcons.push(image)
-          updateOwnIcons(copyOwnIcons)
-          document.getElementById("inputUploadIcon").value = null
+          //     let copyOwnIcons = ownIcons
+          //     copyOwnIcons.push(image)
+          //     updateOwnIcons(copyOwnIcons)
+          //     document.getElementById("inputUploadIcon").value = null
+          //   }
+          // )
         }
       )
     }
@@ -280,14 +231,13 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                     <div className="instruction_box">
 
                       <p className="instruction_bold">Aby dodać własną ikonę należy wczytać ją z dysku.</p>
-                      <p className="instruction">Możliwe jest dodanie plików z rozszerzeniu SVG. Aby ikony wyświetlały się poprawnie powinny mieć przeźroczyste tło i jeden kolor.</p>
+                      <p className="instruction">Możliwe jest dodawanie plików z rozszerzeniem SVG. Aby ikona wyświetlała się poprawnie powinna mieć proporcje 1 : 1, przezroczyste tło i jeden kolor.</p>
                       <label htmlFor="inputUploadIcon" >
                         <div className="select_button">
                           WYBIERZ PLIK
                           <div className="button_arrows" />
                         </div>
                       </label>
-                      {/* <svg id="mySvg" style={{ display: "none" }} /> */}
                       {/* <svg id="mySvg" /> */}
                       <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
                     </div>
@@ -370,3 +320,22 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)
+
+
+// const onSelectFile = (e) => {
+//   if (e.target.files[0].type !== "image/svg+xml") {
+//     showAlert(7);
+//   } else {
+//     getBase64(e.target.files[0]).then(
+//       data => {
+//         const image = {
+//           default: data
+//         }
+//         let copyOwnIcons = ownIcons
+//         copyOwnIcons.push(image)
+//         updateOwnIcons(copyOwnIcons)
+//         document.getElementById("inputUploadIcon").value = null
+//       }
+//     )
+//   }
+// };

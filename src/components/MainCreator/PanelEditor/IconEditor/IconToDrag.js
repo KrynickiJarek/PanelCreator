@@ -10,7 +10,7 @@ import RemoveFavorite from "../../../../assets/removefavorite.svg"
 const IconToDrag = ({
   image, isInFavorite,
 
-  favoriteIcons, addIconToFavorite, removeIconFromFavorite, ownIcons, isInOwn, ownIconIndex, updateOwnIcons, updateFavorite, isInOtherOwn, isInOtherFavorite
+  favoriteIcons, addIconToFavorite, removeIconFromFavorite, ownIcons, isInOwn, ownIconIndex, updateOwnIcons, isInOtherOwn, isInOtherFavorite
 }) => {
 
 
@@ -51,14 +51,12 @@ const IconToDrag = ({
 
         <div className="icon_box" style={{ border }} >
           <img src={Favorite} alt="favorite" className="favorite_icon"
-            // style={(favoriteIcons.indexOf(image) > -1) || (ownIcons.indexOf(image.default) > -1) ? { opacity: "1" } : { opacity: "0" }} /> // po co to było?
             style={(favoriteIcons.indexOf(image) > -1) ? { opacity: "1" } : { opacity: "0" }} />
           {isInFavorite && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromFavorite(image)} />}
           {isInOwn && <img src={RemoveFavorite} alt="removefavorite" className="favorite_icon" style={{ cursor: "pointer" }} onClick={() => removeIconFromOwn(ownIconIndex)} />}
 
           <div ref={drag} className="icon_drag">
             <img src={image.default} alt="icon" className="icon"
-              // width="28pt" height="28pt"
               style={{ opacity }}
               onClick={() => handleAdd(image)} />
           </div>

@@ -19,6 +19,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    z-index: 999999;
 
     .preview_side_scroll{
       background-color: #3f4141;
@@ -187,6 +188,8 @@
       justify-content: space-between;
       align-items: center;
       background-color: #ec695c;
+      z-index: 999999;
+
       
       .bottom_info_model, .bottom_info_ral{
           height: 40px;
@@ -439,6 +442,7 @@
   font-size: 14px !important;
   border-radius: 3px!important;
   padding: 10px 15px!important; 
+  // z-index: 99999999999; //???
 }
 
 

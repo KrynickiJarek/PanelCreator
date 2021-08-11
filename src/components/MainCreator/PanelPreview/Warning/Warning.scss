@@ -11,7 +11,7 @@
   overflow: hidden;
 
   .warning_box{
-    width: 250px;
+    width: 240px;
     height: fit-content;
     min-height: 80px;
     border: 1px solid #ffc107;
@@ -22,14 +22,9 @@
     flex-direction: column;
     justify-content: flex-start;    
     align-items: flex-start;   
-    z-index: 9999999;
     transition: .8s ease;
     margin-bottom: 10px;
     margin-right: 10px;
-
-
-
-
     
     
     .warning_header{
@@ -42,6 +37,7 @@
       flex-direction: row;
       justify-content: space-between;
       cursor: default;
+      // position: absolute;
 
       .minimalize_icon{
         width: 14px;
@@ -58,6 +54,16 @@
         margin-top: 5px;
         margin-bottom: 10px;
         cursor: default;
+      }
+
+      .warning_link{
+        color: #b38704;
+        font-size: 12px;
+        font-weight: 400;
+        font-family:  'Montserrat', sans-serif;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
       }
 
 

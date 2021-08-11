@@ -107,7 +107,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("0.98")
+    updateVersion("0.98a")
     // eslint-disable-next-line 
   }, [])
 
@@ -144,9 +144,6 @@ export const Dashboard = memo(function Dashboard({
       let currPosition = ((document.querySelector(".dashboard_scroll").scrollTop) + dashboardScrollSize)
       let sctrollTop = document.querySelector(".dashboard_scroll").scrollTop + 100
       let modelOffsetTop = document.querySelector(`.resize-${id}`).parentElement.parentElement.offsetTop
-
-      console.log(currPosition)
-      console.log(checkPosition)
 
 
       if (currPosition < checkPosition || sctrollTop > modelOffsetTop) {
