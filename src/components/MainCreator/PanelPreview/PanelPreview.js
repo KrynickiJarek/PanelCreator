@@ -76,7 +76,6 @@ import Rightuni from "../../../assets/lcd/rightuni.svg"
 
 
 import IconHolder from './IconHolder/IconHolder';
-import AlertBox from '../../AlertBox/AlertBox';
 
 const PanelPreview = ({
   frameTitleFlag,
@@ -119,6 +118,8 @@ const PanelPreview = ({
   iconHolders,
   isAnySelected,
   changeIsAnySelected,
+  areThereAnyIcons,
+  setAreThereAnyIcons,
   showRemoveIcon,
   showRemoveIcons,
 
@@ -439,9 +440,14 @@ const PanelPreview = ({
       changeIsAnySelected(false)
     }
 
+    if (iconsBackEnd.length > 0) {
+      setAreThereAnyIcons(true)
+    } else {
+      setAreThereAnyIcons(false)
+    }
 
     // eslint-disable-next-line
-  }, [iconHolders, iconHoldersRender]);
+  }, [iconHolders, iconHoldersRender, iconsBackEnd]);
 
   useEffect(() => {
     // const copyFrameHoldersText = frameHolders.filter(element => element.framePrint.text.length > 9)
@@ -780,6 +786,9 @@ const PanelPreview = ({
     if (alertAnswer === 3) {
       handleClearAll()
     }
+    if (alertAnswer === 4) {
+      handleClearAllIcons()
+    }
     // eslint-disable-next-line 
   }, [alertAnswer])
 
@@ -867,9 +876,10 @@ const PanelPreview = ({
 
 
   let panelPreviewStyle = {};
+
   panelPreviewStyle.width = `${(chosenModel.width * 5) + 280}px`;
   if (chosenModel.panelRotation) {
-    panelPreviewStyle.width = `${(chosenModel.height * 5) + 450}px`;
+    panelPreviewStyle.width = `${(chosenModel.height * 5) + 450}px`; //nataleczka
   }
 
 
@@ -901,6 +911,7 @@ const PanelPreview = ({
 
   let resizeStyle = {};
   resizeStyle.transition = "400ms ease";
+  resizeStyle.alignSelf = "center"
 
   let universalIconBoxStyle = {};
   universalIconBoxStyle.height = `${60 * sc}px`;
@@ -1143,9 +1154,6 @@ const PanelPreview = ({
       changeFramesBackEnd([])
       updateWarnings([])
       if (chosenColor.RAL === "RAL 9003" && visual) {
-        // const copyWarnings = []
-        // copyWarnings.push({ code: 0, show: true, hide: false })
-        // updateWarnings(copyWarnings)
         pushWarnings(0)
       }
       // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
@@ -1212,15 +1220,16 @@ const PanelPreview = ({
     return () => clearTimeout(modeltimeout);
   }
 
-  const handleClearAllOver = () => {
-    setRemoveAll(true)
+  const handleHideRemoveIcons = () => {
+    if (alert !== 4) {
+      showRemoveIcons(false)
+    }
   }
 
-  const handleClearAllLeave = () => {
-    setRemoveAll(false)
-  }
 
   const handleClearAllIcons = () => {
+    setAlertAnswer(null)
+    showRemoveIcons(false)
     const copyArr = iconHolders;
     copyArr.forEach((el) => {
       el.lastDroppedDot = null;
@@ -3735,8 +3744,8 @@ const PanelPreview = ({
         })
         .catch(error => {
           setDownloading(false)
-          // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.") //nataleczka
-          showAlert(4);
+          // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.") 
+          showAlert(5);
         });
     }
   }
@@ -3866,10 +3875,10 @@ const PanelPreview = ({
 
   return (
     <>
-      <AlertBox />
+      {/* <AlertBox /> */}
 
       <div className="panelpreview_container" style={panelPreviewStyle}>
-        <div className="preview_container">
+        <div className="preview_container" >
           <div className="preview_top">
             <h2>PODGLĄD PANELU:</h2>
 
@@ -3922,7 +3931,7 @@ const PanelPreview = ({
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
                       <img src={Removeall} alt="removeall" style={{
                         width: "100%",
-                        zIndex: "9999999",
+                        zIndex: "99999",
                         opacity: "0.8"
                       }} />
                     </div>
@@ -4755,8 +4764,8 @@ const PanelPreview = ({
               <div className="side_box">
                 <img src={Clearall} alt="clearall" className="side_icon"
                   onClick={() => showAlert(3)}
-                  onMouseOver={handleClearAllOver}
-                  onMouseLeave={handleClearAllLeave}
+                  onMouseOver={() => setRemoveAll(true)}
+                  onMouseLeave={() => setRemoveAll(false)}
                 />
                 <span>Zresetuj wszystko</span>
               </div>
@@ -4776,26 +4785,22 @@ const PanelPreview = ({
                     }
                     {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
                   </div>
-                  <div className="side_box">
-                    <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={handleClearAllIcons}
-                      onMouseOver={() => showRemoveIcons(true)} onMouseLeave={() => showRemoveIcons(false)} />
-                    <span>Usuń wszystkie ikony</span>
-                  </div>
 
-                  {/* <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-                      onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
-                    <span>Usuń zaznaczoną ikonę</span>
-                  </div> */}
+                  {areThereAnyIcons ?
+                    <div className="side_box">
+                      <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
+                        onMouseOver={() => showRemoveIcons(true)}
+                        onMouseLeave={handleHideRemoveIcons}
+                      />
+                      <span>Usuń wszystkie ikony</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Dodaj ikony, aby skorzystać z funkcji">
+                      <img src={Clearallicons} alt="clearallicons" className="side_icon" />
+                      <span>Usuń wszystkie ikony</span>
+                    </div>
+                  }
 
-                  {/* <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-                    <span>Obróć o 90° w prawo</span>
-                  </div>
-                  <div className="side_box" style={!isAnySelected ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-                    <span >Obróć o 90° w lewo</span>
-                  </div> */}
                   {isAnySelected ?
                     <>
                       <div className="side_box">
@@ -4833,7 +4838,7 @@ const PanelPreview = ({
                     </>
                   }
                   <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-                  <div className="side_box">
+                  <div className="side_box" >
 
                     {!downloading &&
                       <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} />
@@ -4853,12 +4858,6 @@ const PanelPreview = ({
                         style={{ color: "rgb(73, 75, 75)" }}>Debuguj</span>
                     }
                   </div>
-
-
-
-
-
-
 
                 </>
               }
@@ -5049,6 +5048,7 @@ const mapStateToProps = state => ({
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
   isAnySelected: state.frontEndData.icon.isAnySelected,
+  areThereAnyIcons: state.frontEndData.icon.areThereAnyIcons,
 
   panelTextBackEnd: state.backEndData.panelText,
   iconsBackEnd: state.backEndData.icons,
@@ -5087,6 +5087,7 @@ const mapDispatchToProps = dispatch => ({
   pushWarnings: (income) => dispatch(actionsVisual.pushWarnings(income)),
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   changeIsAnySelected: (income) => dispatch(actionsIcon.isAnySelected(income)),
+  setAreThereAnyIcons: (income) => dispatch(actionsIcon.setAreThereAnyIcons(income)),
   showRemoveIcon: (income) => dispatch(actionsVisual.showRemoveIcon(income)),
   showRemoveIcons: (income) => dispatch(actionsVisual.showRemoveIcons(income)),
   setTimeOfCreation: (income) => dispatch(actionsVisual.setTimeOfCreation(income)),

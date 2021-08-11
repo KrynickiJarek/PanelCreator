@@ -1,7 +1,7 @@
 .model_container {
 	display: flex;
 	flex-direction: column;
-	padding: 55px 55px 0 55px;
+	padding: 55px 25px 0 35px;
 	height: 100%;
 	width: 100%;
 	overflow-y: auto;
@@ -43,6 +43,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: row;
+		// justify-content: space-around;
 		justify-content: flex-start;
 		flex-wrap: wrap;
     margin-bottom: 220px;
@@ -85,8 +86,6 @@
           transform: scale(0.5);
 
           .model_img {
-            // max-width: 175px;
-            // max-height: 200px;
             max-width: 350px;
             max-height: 400px;
           }
@@ -177,8 +176,6 @@
 
         .model_link:hover {
           border: 3px solid #EC695C;
-          // border: 3px solid rgba(236, 105, 92,0.35);
-          // transform: scale(1.5);
         }
       }
 	}
@@ -194,74 +191,3 @@
 }
 
 
-//-------
-
-// .model_container{
-//     display: flex;
-//     flex-direction: column;
-//     padding: 55px 55px 0 55px;
-//     height: 100%;
-//     width: 100%;
-//     overflow-y: auto;
-//     background-color: white;
-//     position: absolute;
-
-    
-//     .model_header{
-//         font-size: 24px;
-//         font-weight: 700;
-//         font-family: 'Montserrat', sans-serif;
-//         color: #333333;  
-//         align-self: flex-start;
-//         position: relative;
-//         margin-left: 10px;
-//         margin-bottom: 15px;
-//         cursor: default;
-//     }
-
-//     .model_header::before{
-//         content: "";
-//         position: absolute;
-//         top: -24px;
-//         width: 30px;
-//         height: 8px;
-//         background-color: rgb(236, 105, 92);
-//     }
-
-//     .model_content {
-//     width: 100%;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: flex-start;
-//     flex-wrap: wrap;
-
-//     .panel_form{
-//         margin-bottom: 1rem;
-//         text-align: left;
-        
-//         label{
-//             margin-right: 0.5rem;
-//         }
-//     }
-    
-//     .panel_list{
-//         text-align: left;
-    
-//         span {
-//             font-weight: bold;
-//         }
-//     }
-// }
-// }
-//     .color_container::-webkit-scrollbar {
-//         width: 12px;
-//     }
-//    .color_container::-webkit-scrollbar-thumb {
-//         background: #ECECEC;
-//         background: rgb(217,217,217);
-//         border-radius: 10px;
-
-//     }
-
-
-    

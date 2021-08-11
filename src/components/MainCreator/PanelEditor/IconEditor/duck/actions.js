@@ -21,6 +21,9 @@ const removeIconFromFavorite = item => ({
 const isAnySelected = item => ({
   type: types.IS_ANY_SELECTED, item
 })
+const setAreThereAnyIcons = item => ({
+  type: types.SET_ARE_THERE_ANY_ICONS, item
+})
 const setFrontEndReducerIcon = item => ({
   type: types.SET_FRONT_END_REDUCER_ICON, item
 })
@@ -35,7 +38,8 @@ const actions = {
   updateFavoriteIcons,
   removeIconFromFavorite,
   isAnySelected,
-  setFrontEndReducerIcon
+  setFrontEndReducerIcon,
+  setAreThereAnyIcons
 }
 
 export default actions

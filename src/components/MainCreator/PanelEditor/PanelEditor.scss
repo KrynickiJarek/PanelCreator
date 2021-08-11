@@ -1,10 +1,12 @@
 .editor_container{
     height: 100%;
-    width: 70%;
     display: flex;
     flex-direction: column;
-    // flex-grow: 1;
-    // overflow: hidden;
+    align-items: center;
+    flex-grow: 1;
+    min-width: 700px;
+    width: 60%;
+
 
 
     .editor_nav{
@@ -68,7 +70,9 @@
 
     .editor_box{
         flex-grow: 1;
-        margin: 0 65px 50px 65px;
+        min-width: 640px;
+        width: calc(100% - 130px);
+        margin-bottom: 50px;
         border: 3px solid #EC695C;
         position: relative;
         background-color: white;
@@ -76,19 +80,3 @@
 
 }
 
-// .btn:focus,.btn:active {
-//     outline: none !important;
-//     box-shadow: none;
-//  }
-
-// .nav-link {
-//     outline: none !important;
-//     box-shadow: none;
-//  }
-
-// .nav-link {
-//         outline: none !important;
-//         box-shadow: none;
-//         padding: 0;
-//      }
-    

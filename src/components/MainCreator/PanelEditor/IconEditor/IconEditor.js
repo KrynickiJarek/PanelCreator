@@ -18,7 +18,7 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor }) => {
+export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, showAlert }) => {
 
   const [unlock, setUnlock] = useState(false)
 
@@ -61,7 +61,9 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
 
     if (e.target.files[0].type !== "image/svg+xml") {
-      alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .svg!")
+      // alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .svg!")
+      showAlert(7);
+
     } else {
       // var reader = new FileReader();
       // // Set the image once loaded into file reader
@@ -308,23 +310,6 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                                 <>
                                   <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
 
-
-
-                                  {/* {panel.frontEndData.icon.ownIcons.length === 0 &&
-                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak własnych ikon w projekcie)</p>
-                                  }
-                                  {panel.frontEndData.icon.ownIcons.length !== 0 && panel.frontEndData.icon.ownIcons.filter(containOwn).length === 0 &&
-                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak innych własnych ikon w projekcie )</p>
-                                  }
-
-                                  {!(panel.frontEndData.icon.ownIcons.length === 0 && panel.frontEndData.icon.ownIcons.filter(containOwn).length === 0) &&
-                                    <div className="icons">
-                                      {panel.frontEndData.icon.ownIcons.map((image, index) =>
-                                        <IconToDrag key={index} image={image} isInOtherOwn={true} />)}
-                                    </div>
-                                  } */}
-
-
                                   {panel.frontEndData.icon.ownIcons.length === 0 ?
                                     <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak własnych ikon w projekcie)</p>
                                     :
@@ -380,6 +365,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
+  showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   updateOwnIcons: (income) => dispatch(actions.updateOwnIcons(income)),
 })
 

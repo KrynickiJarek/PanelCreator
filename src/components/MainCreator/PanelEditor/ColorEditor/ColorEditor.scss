@@ -1,7 +1,7 @@
 .color_container{
     display: flex;
     flex-direction: column;
-    padding: 55px 55px 0 55px;
+    padding: 55px 25px 0 35px;
     height: 100%;
     width: 100%;
     overflow-y: auto;
@@ -34,7 +34,8 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+		justify-content: flex-start;
+    // justify-content: space-around;
     flex-wrap: wrap;
     margin-bottom: 40px;
 
@@ -46,7 +47,7 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            margin: 10px;
+            margin:5px;
             border: 3px solid transparent;
             transition: 300ms ease;
             cursor: pointer;

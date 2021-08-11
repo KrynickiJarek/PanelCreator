@@ -77,7 +77,7 @@
 	.frame_container {
 		display: flex;
 		flex-direction: column;
-		padding: 55px 55px 0 55px;
+		padding: 55px 25px 0 35px;
 		height: 100%;
 		width: 100%;
 		background-color: white;
@@ -151,7 +151,7 @@
 					justify-content: flex-start;
 					align-items: flex-start;
 					text-align: left;
-					margin: 10px;
+					margin: 7px;
 					border: 3px solid transparent;
 					transition: 0.4s ease;
 					cursor: pointer;

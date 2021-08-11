@@ -28,13 +28,24 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
 
   const handleZoom = (id) => {
     setIsChanging(true)
-
     if (!isChanging) {
-      setResize(document.querySelector(`.resieze-${id}`).clientHeight)
-      document.querySelector(".model_container").scroll({
-        top: (document.querySelector(`.resieze-${id}`).parentElement.parentElement.offsetTop) - 180,
-        behavior: 'smooth'
-      });
+      setResize(document.querySelector(`.resize-${id}`).clientHeight)
+      let editorBoxSize = (document.querySelector(".editor_box").clientHeight)
+      let modelLinkSize = (((document.querySelector(`.resize-${id}`).parentElement.parentElement.clientHeight) + (document.querySelector(`.resize-${id}`).clientHeight)))
+      let checkPosition = (document.querySelector(`.resize-${id}`).parentElement.parentElement.offsetTop) + (((document.querySelector(`.resize-${id}`).parentElement.parentElement.clientHeight) + (document.querySelector(`.resize-${id}`).clientHeight)) * 1.3) - 70 //było -10
+      let currPosition = ((document.querySelector(".model_container").scrollTop) + editorBoxSize)
+
+      let containerSctrollTop = document.querySelector(".model_container").scrollTop + 70
+      let modelOffsetTop = document.querySelector(`.resize-${id}`).parentElement.parentElement.offsetTop
+
+
+      if (currPosition < checkPosition || containerSctrollTop > modelOffsetTop) {
+        document.querySelector(".model_container").scroll({
+          top: (document.querySelector(`.resize-${id}`).parentElement.parentElement.offsetTop) + modelLinkSize - editorBoxSize + 60,
+          behavior: 'smooth'
+        });
+      }
+
 
       if (id !== zoomId) {
         setOnBack(zoomId)
@@ -88,6 +99,7 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
 
 
               <div className="model_link"
+                onClick={() => handleZoom(id)}
                 style={panelModel.type === panel.type ?
                   zoomId === id ?
                     (onTop === id || onBack === id) ? { transform: "scale(1.3)", zIndex: "999", border: "3px solid #EC695C", maxHeight: `${275 + resize}px` } : { transform: "scale(1.3)", border: "3px solid #EC695C", maxHeight: `${275 + resize}px` }
@@ -101,7 +113,7 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
               >
 
 
-                <div style={{ cursor: "pointer", zIndex: "10", backgroundColor: "white", margin: "0 auto" }} onClick={() => handleZoom(id)} >
+                <div style={{ cursor: "pointer", zIndex: "10", backgroundColor: "white", margin: "0 auto" }} >
                   <div className="model_box">
                     <img src={panel.picture} alt="panelpicture" className="model_img" />
                   </div>
@@ -110,8 +122,8 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
 
 
 
-                <div className={`resieze-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5" }}>
-                  <p className="model_info" onClick={() => handleZoom(id)} >{panel.info}</p>
+                <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5" }}>
+                  <p className="model_info" >{panel.info}</p>
                   <div className="button_box">
                     <div className="more_info_button"
                       onClick={() => handleLink(panel.link)}

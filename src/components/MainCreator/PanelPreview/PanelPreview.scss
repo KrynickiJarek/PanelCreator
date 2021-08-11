@@ -2,8 +2,9 @@
 .panelpreview_container {
   display: flex;
   height: 100%; 
-  min-width: 30%;
-  max-width: 50%;
+  width: 40%;
+  min-width: 580px;
+  flex-grow: 0;
   background-color: #ECECEC; 
   transition: 1000ms ease-in-out;
   transition-delay: 800ms;
@@ -37,7 +38,6 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-
         position: absolute;
         left: 1px;
 
@@ -121,6 +121,7 @@
     align-items: center;
     height: 100%;
     width: 100%;
+    min-width: 500px;
     background-color: #ECECEC; 
 
 
@@ -235,7 +236,7 @@
       align-items: center;
       height: 100%;
       width: 100%;
-      overflow-y: overlay; // nie działa w Firefox!!
+      overflow-y: overlay; 
       overflow-x: overlay;
       position: relative;
 

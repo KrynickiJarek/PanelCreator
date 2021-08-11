@@ -1,6 +1,6 @@
 .header_container{
-  // width: 100vw;
   width: 100%;
+  min-width: 1280px;
   display: flex;
   justify-content: center;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 25px 0px;
@@ -15,7 +15,6 @@
     margin-right: auto;
     margin-left: auto;
     height: 45px;
-    // width: 100vw;
     width: 100%;
     max-width: 1640px;
     margin: 28px 0 18px;
@@ -28,6 +27,7 @@
       .nav_logo{
         width: auto;
         height: 45px;
+        margin-left: 50px;
       }
     }
     
@@ -53,47 +53,10 @@
     right: 0;
     bottom: 0;
     margin-bottom: 2px;
-    margin-right: 8px;
+    margin-right: 18px;
     font-family: 'Montserrat', sans-serif;
     color: #666666;
     font-size: 12px;
     cursor: default;
   }
 }
-
-// @media (min-width: 1200px){
-// .nav_container {
-//     max-width: 1140px;
-// }
-// }
-
-// :root {
-//   --blue: #007bff;
-//   --indigo: #6610f2;
-//   --purple: #6f42c1;
-//   --pink: #e83e8c;
-//   --red: #dc3545;
-//   --orange: #fd7e14;
-//   --yellow: #ffc107;
-//   --green: #28a745;
-//   --teal: #20c997;
-//   --cyan: #17a2b8;
-//   --white: #fff;
-//   --gray: #6c757d;
-//   --gray-dark: #343a40;
-//   --primary: #007bff;
-//   --secondary: #6c757d;
-//   --success: #28a745;
-//   --info: #17a2b8;
-//   --warning: #ffc107;
-//   --danger: #dc3545;
-//   --light: #f8f9fa;
-//   --dark: #343a40;
-//   --breakpoint-xs: 0;
-//   --breakpoint-sm: 576px;
-//   --breakpoint-md: 768px;
-//   --breakpoint-lg: 992px;
-//   --breakpoint-xl: 1200px;
-//   --font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-//   --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-// }

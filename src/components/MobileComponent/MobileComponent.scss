@@ -1,101 +1,105 @@
-.mobile_container{
-// overflow: hidden;
-width: 100%;
-height: 100vh;
-min-height: 700px;
-// border: 5px solid blue;
-overflow: hidden;
-display: flex;
-flex-direction: column;
-position: relative;
+.mobile_container {
+	width: 100%;
+	min-height: 100vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	position: relative;
 
+	.header_mobile_container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 25px 0px;
 
-  .header_mobile_container{
-    // width: 100vw;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 25px 0px;
-    // position: relative;
-    
+		.nav_mobile_container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-right: auto;
+			margin-left: auto;
+			height: 40px;
+			width: 100%;
+			margin: 17px 0 17px;
+			padding: 0 15px;
 
-    .nav_mobile_container{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-right: auto;
-      margin-left: auto;
-      height: 40px;
-      width: 100%;
-      margin: 17px 0 17px;
-      padding: 0 15px;
+			.nav_brand {
+				transition: opacity 300ms ease;
+				cursor: pointer;
 
-      .nav_brand{
-        transition: opacity 300ms ease;
-        cursor: pointer;
-        
-        .nav_logo{
-          width: auto;
-          height: 38px;
-        }
-      }
+				.nav_logo {
+					width: auto;
+					height: 38px;
+				}
+			}
       
-      .nav_brand:hover{
-        opacity: 0.6;
-      }
-    }
-  }
-  .content_mobile_container{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    height: 100%;
-    // background-image: url(../../assets/mobile.png);
+			.nav_brand:hover {
+				opacity: 0.6;
+			}
+		}
+	}
 
-    .mobile_header{
-      font-size: 30px;
-      line-height: 30px;
-      font-weight: 700;
-      font-family: 'Montserrat', sans-serif;
-      color: #333333;
-      cursor: default;
-      position: relative;
-      margin: 75px 0 30px 30px;
-    }
+	.content_mobile_container {
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-start;
+		align-content: flex-start;
+		flex-wrap: wrap;
+		width: 100%;
+		height: 100%;
+    background-color: white;
+    margin-top: 30px;
 
-    .mobile_header::before{
-      content: "";
-      position: absolute;
-      top: -24px;
-      width: 30px;
-      height: 8px;
-      background-color: rgb(236, 105, 92);
-    }
 
-    .mobile_instruction_normal {
-      font-size: 18px;
-      font-weight: 400;
-      font-family: 'Montserrat', sans-serif;
-      color: #333333;
-      align-self: flex-start;
-      text-align: left;
-      cursor: default;
-      margin-left: 30px;
-      margin-right: 30px;
-      // max-width: 350px;
-    }
+		.info_mobile_container {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: flex-start;
 
-    .mobile_icon{
-      height: 200px;
-      width: 200px;
-      align-self: center;
-      margin-top: 30px;
-      background-color: white;
-      border-radius: 50%;
-    }
-  }
+			.title_mobile {
+				font-size: 30px;
+				line-height: 30px;
+				font-weight: 700;
+				font-family: 'Montserrat', sans-serif;
+				color: #333333;
+				cursor: default;
+				position: relative;
+				margin: 75px 0 30px 30px;
+			}
+
+			.title_mobile::before {
+				content: "";
+				position: absolute;
+				top: -24px;
+				width: 30px;
+				height: 8px;
+				background-color: rgb(236, 105, 92);
+			}
+		}
+
+		.text_mobile {
+			font-size: 18px;
+			font-weight: 400;
+			font-family: 'Montserrat', sans-serif;
+			color: #333333;
+			align-self: flex-start;
+			text-align: left;
+			cursor: default;
+			margin-left: 30px;
+			margin-right: 30px;
+			max-width: 350px;
+		}
+
+		.mobile_icon {
+			height: 180px;
+			width: 180px;
+			align-self: center;
+			margin: 30px auto;
+			background-color: white;
+			border-radius: 50%;
+		}
+	}
 }
 
 .mobile_container:before {
@@ -111,41 +115,5 @@ position: relative;
 	background-repeat: no-repeat;
 	background-size: contain;
 }
-
-
-  // @media (min-width: 1200px){
-  // .nav_container {
-  //     max-width: 1140px;
-  // }
-  // }
-
-  // :root {
-  //   --blue: #007bff;
-  //   --indigo: #6610f2;
-  //   --purple: #6f42c1;
-  //   --pink: #e83e8c;
-  //   --red: #dc3545;
-  //   --orange: #fd7e14;
-  //   --yellow: #ffc107;
-  //   --green: #28a745;
-  //   --teal: #20c997;
-  //   --cyan: #17a2b8;
-  //   --white: #fff;
-  //   --gray: #6c757d;
-  //   --gray-dark: #343a40;
-  //   --primary: #007bff;
-  //   --secondary: #6c757d;
-  //   --success: #28a745;
-  //   --info: #17a2b8;
-  //   --warning: #ffc107;
-  //   --danger: #dc3545;
-  //   --light: #f8f9fa;
-  //   --dark: #343a40;
-  //   --breakpoint-xs: 0;
-  //   --breakpoint-sm: 576px;
-  //   --breakpoint-md: 768px;
-  //   --breakpoint-lg: 992px;
-  //   --breakpoint-xl: 1200px;
-  //   --font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-  //   --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  // }
+  
+  

@@ -6,9 +6,6 @@ import './App.scss';
 import {
   BrowserView,
   MobileView,
-  // isBrowser,
-  // isMobile,
-  // browserName
 } from "react-device-detect";
 
 import { persistor, store } from './store';
@@ -16,7 +13,6 @@ import Dashboard from "../../components/Dashboard/Dashboard"
 import MobileComponent from "../../components/MobileComponent/MobileComponent"
 // import { RootComponent, LoadingView } from './components'; /// DODAJ WIDOK ŁADOWANIA
 
-// console.log(browserName)
 
 
 const App = () => {

@@ -7,9 +7,16 @@ import availableAlerts from "./availableAlerts"
 
 import "./AlertBox.scss"
 
-const AlertBox = ({ alert, removeAlert, setAlertAnswer }) => {
+const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
 
-
+  const handleRemoveAlert = () => {
+    if (alert !== 4) {
+      removeAlert()
+    } else {
+      removeAlert()
+      showRemoveIcons(false)
+    }
+  }
 
   return (
 
@@ -22,10 +29,10 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer }) => {
             </div>
             <p className="alert_text">{availableAlerts.find(element => element.code === alert).text}</p>
             <div className="alert_button_container">
-              {alert < 4 ?
+              {alert < 5 ?
                 <>
                   <div className="alert_button_back"
-                    onClick={() => removeAlert()}
+                    onClick={handleRemoveAlert}
                   >
                     <div className="button_arrows_back" />
                     Anuluj
@@ -38,12 +45,26 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer }) => {
                   </div>
                 </>
                 :
-                <div className="alert_button_back"
-                  onClick={() => removeAlert()}
-                >
-                  <div className="button_arrows_back" />
-                  Powrót
-                </div>
+                <>
+                  {alert !== 8 &&
+                    <div className="alert_button_back"
+                      onClick={() => removeAlert()}
+                    >
+                      <div className="button_arrows_back" />
+                      Powrót
+                    </div>
+                  }
+                  {alert === 8 &&
+                    <a href="https://ampio.pl/" style={{ textDecoration: "none" }}>
+                      <div className="alert_button_back"
+                        onClick={() => removeAlert()}
+                      >
+                        <div className="button_arrows_back" />
+                        Wróć do strony Ampio.pl
+                      </div>
+                    </a>
+                  }
+                </>
               }
             </div>
           </div>
@@ -64,6 +85,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   removeAlert: (income) => dispatch(actionsVisual.removeAlert(income)),
   setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income)),
+  showRemoveIcons: (income) => dispatch(actionsVisual.showRemoveIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertBox)

@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   ownIcons: [],
   ownIconsRender: false,
   isAnySelected: false,
+  areThereAnyIcons: false,
 }
 
 const iconReducer = (state = INITIAL_STATE, action) => {
@@ -43,6 +44,10 @@ const iconReducer = (state = INITIAL_STATE, action) => {
     case types.IS_ANY_SELECTED:
       return {
         ...state, isAnySelected: action.item
+      }
+    case types.SET_ARE_THERE_ANY_ICONS:
+      return {
+        ...state, areThereAnyIcons: action.item
       }
     case types.SET_FRONT_END_REDUCER_ICON:
       return action.item
