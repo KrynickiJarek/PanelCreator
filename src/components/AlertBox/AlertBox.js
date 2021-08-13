@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../MainCreator/PanelPreview/duck/actions"
 import availableAlerts from "./availableAlerts"
+import { t } from "../../i18n";
 
 
 
@@ -25,9 +26,9 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
         <div className="alert_container">
           <div className="alert_box">
             <div className="alert_header_box">
-              <p className="alert_header">UWAGA!</p>
+              <p className="alert_header">{t("CAUTION")}</p>
             </div>
-            <p className="alert_text">{availableAlerts.find(element => element.code === alert).text}</p>
+            <p className="alert_text">{t(availableAlerts.find(element => element.code === alert).text)}</p>
             <div className="alert_button_container">
               {alert < 5 ?
                 <>
@@ -35,12 +36,12 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                     onClick={handleRemoveAlert}
                   >
                     <div className="button_arrows_back" />
-                    Anuluj
+                    {t("CANCEL")}
                   </div>
                   <div className="alert_button"
                     onClick={() => setAlertAnswer(alert)}
                   >
-                    Zatwierdź
+                    {t("CONFIRM")}
                     <div className="button_arrows" />
                   </div>
                 </>
@@ -51,7 +52,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                       onClick={() => removeAlert()}
                     >
                       <div className="button_arrows_back" />
-                      Powrót
+                      {t("BACK")}
                     </div>
                   }
                   {alert === 8 &&
@@ -60,7 +61,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                         onClick={() => removeAlert()}
                       >
                         <div className="button_arrows_back" />
-                        Wróć do strony Ampio.pl
+                        {t("BACK_TO_AMPIO")}
                       </div>
                     </a>
                   }
@@ -80,6 +81,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
 
 const mapStateToProps = state => ({
   alert: state.frontEndData.visual.alert,
+  languageRender: state.frontEndData.visual.languageRender,
 })
 
 const mapDispatchToProps = dispatch => ({

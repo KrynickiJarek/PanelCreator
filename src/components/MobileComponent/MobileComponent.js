@@ -3,6 +3,7 @@ import "./MobileComponent.scss"
 
 import AmpioLogo from "../../assets/ampio_logo.svg"
 import Mobile from "../../assets/mobile.svg"
+import { t } from "../../i18n";
 
 const MobileComponent = () => {
   return (
@@ -16,8 +17,8 @@ const MobileComponent = () => {
       </div>
       <div className="content_mobile_container">
         <div className="info_mobile_container">
-          <h1 className="title_mobile">Kreator Paneli</h1>
-          <p className="text_mobile">Strona nie działa na urządzeniach mobilnych. Do prawidłowego działania Kreatora Paneli wymagana jest przeglądarka Chrome, Opera lub Edge w desktopowej wersji.</p>
+          <h1 className="title_mobile">{t("PANELS_CREATOR_MOBILE")}</h1>
+          <p className="text_mobile">{t("MOBILE_INFO")}</p>
         </div >
         <img src={Mobile} alt="mobile" className="mobile_icon" />
       </div >

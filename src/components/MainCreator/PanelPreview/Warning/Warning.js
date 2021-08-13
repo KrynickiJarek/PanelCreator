@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import availableWarnings from "./availableWarnings"
+import { t } from "../../../../i18n";
 
 
 import Minimalize from "../../../../assets/side/minimalize.svg"
@@ -37,12 +38,12 @@ const Warning = ({ warnings, updateWarnings }) => {
               style={warning.hide ? { transform: `translate(${moveRight}px, ${moveDown}px) scale(0.25)` } : {}}
             >
               <div className="warning_header">
-                <span>UWAGA!</span>
+                <span>{t("CAUTION")}</span>
                 <img src={Minimalize} alt="minimalize" className="minimalize_icon"
                   onClick={() => handleMinimalize(index)}
                 />
               </div>
-              <p className="warning_text">{availableWarnings.find(element => element.code === warning.code).text}
+              <p className="warning_text">{t(availableWarnings.find(element => element.code === warning.code).text)}
                 {warning.code === 7 &&
                   <a className="warning_link" target="blank" href="https://www.iloveimg.com/resize-image">iloveimg.com</a>
                 }
@@ -60,6 +61,7 @@ const Warning = ({ warnings, updateWarnings }) => {
 const mapStateToProps = state => ({
   warnings: state.frontEndData.visual.warnings,
   warningsReRender: state.frontEndData.visual.warningsReRender,
+  languageRender: state.frontEndData.visual.languageRender,
 })
 
 const mapDispatchToProps = dispatch => ({

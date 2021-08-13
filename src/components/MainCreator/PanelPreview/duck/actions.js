@@ -60,6 +60,10 @@ const setAlertAnswer = item => ({
   type: types.SET_ALERT_ANSWER, item
 })
 
+const changeLanguage = item => ({
+  type: types.CHANGE_LANGUAGE, item
+})
+
 const actions = {
   toggleVisual,
   changeScale,
@@ -75,7 +79,8 @@ const actions = {
   filterWarnings,
   showAlert,
   removeAlert,
-  setAlertAnswer
+  setAlertAnswer,
+  changeLanguage
 }
 
 export default actions

@@ -89,7 +89,6 @@ const IconHolder = ({
 
     toDataURL(iconHolders[index].lastDroppedIcon.image.default)
       .then(svgBackEnd => {
-        // console.log(svgBackEnd)
         let numberBackEnd = null
         if (chosenModel.panelRotation) {
           if (index % 3 === 0) {

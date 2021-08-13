@@ -7,6 +7,8 @@
   position: relative;
   z-index: 9999;
 
+  // display: none;
+
 
   .nav_container{
     display: flex;
@@ -58,5 +60,31 @@
     color: #666666;
     font-size: 12px;
     cursor: default;
+  }
+  .languale_button_box{
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 5px;
+    margin-right: 18px;
+    display: flex;
+
+    .languale_button{
+      font-family: 'Montserrat', sans-serif;
+      color: #333333;
+      font-size: 12px;
+      line-height: 12px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .languale_slash{
+      font-family: 'Montserrat', sans-serif;
+      color: rgb(236, 105, 92);
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: 700;
+      cursor: default;
+    }
   }
 }

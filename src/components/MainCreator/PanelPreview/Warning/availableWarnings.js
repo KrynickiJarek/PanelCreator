@@ -2,39 +2,36 @@
 const availableWarnings = [
   {
     code: 0,
-    text: "Ewentualny brak widoczności elementów panelu wynika z ustawień monitora. Elementy będą widoczne na gotowym panelu."
+    text: "WARNING_0_WHITE_VISUALIZATION"
   },
   {
     code: 1,
-    text: "Zastosowano ikonę stasusową zamiast punktu podświetlenia. Może wystąpić problem z jej podświetleniem."
+    text: "WARNING_1_STATUS_ICON"
   },
   {
     code: 2,
-    text: "Zastosowano długie opisy ikon. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF."
+    text: "WARNING_2_LONG_DESCRIPTIONS"
   },
   {
     code: 3,
-    text: "Zastosowano różne fonty opisów ikon. W zakładce \"Napisy\" wybierz w bocznym menu \"Wybrany font dla wszystkich opisów\"",
+    text: "WARNING_3_DIFFERENT_DESCRIPTIONS_FONT",
   },
   {
     code: 4,
-    text: "Zastosowano różne fonty tytułów ramek. W zakładce \"Ramki\" wybierz w bocznym menu \"Wybrany font dla wszystkich tytułów\""
+    text: "WARNING_4_DIFFERENT_FRAMES_TITLES_FONT"
   },
   {
     code: 5,
-    text: "Zastosowano długie tytuły ramek. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF."
+    text: "WARNING_5_LONG_FRAME_TITLE"
   },
   {
     code: 6,
-    text: "Zastosowano górny opis ikony w miejscu, w którym utworzono ramkę. Elementy będa na siebie nachodzić - usuń jeden z nich."
+    text: "WARNING_6_FRAME_ON_DESCRIPTION"
   },
   {
     code: 7,
-    text: "Przy stosowaniu własnej ikony należy każdorazowo sprawdzić, czy wyświetla się ona poprawnie na wygenerowanym pliku PDF. W przypadku problemów z wymiarem ikony należy przekonwertować ją do rozmiaru 28px x 28px za pomocą strony ",
+    text: "WARNING_7_OWN_ICON",
   },
 ]
 
 export default availableWarnings
-
-
-

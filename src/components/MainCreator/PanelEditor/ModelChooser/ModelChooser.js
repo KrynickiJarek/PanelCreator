@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import actions from "./duck/actions"
 import actionsBackEnd from "../../duck/actions"
+import { t } from "../../../../i18n";
 
 import "./ModelChooser.scss"
 import availableModels from "./availableModels"
@@ -69,7 +70,7 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
   };
 
   const handleLink = (link) => {
-    window.open(`${link}`)
+    window.open(`${t(link)}`)
   };
 
   useEffect(() => {
@@ -82,8 +83,8 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
 
   return (
     <div className="model_container">
-      <h2 className="model_header">Wybierz model panelu</h2>
-      <p className="instruction_bold">Kliknij na model, a następnie zatwierdź go przyciskiem "Wybierz". Wybranie modelu spowoduje <span style={{ textDecoration: "underline" }}>zresetowanie</span> aktualnego panelu.</p>
+      <h2 className="model_header">{t("SELECT_PANEL_MODEL")}</h2>
+      <p className="instruction_bold">{t("MODEL_CHOOSER_INFO_BOLD_1")}<span style={{ textDecoration: "underline" }}>{t("MODEL_CHOOSER_INFO_BOLD_2")}</span>{t("MODEL_CHOOSER_INFO_BOLD_3")}</p>
       <div className="model_content">
         {availableModels.map((panel, id) => {
           return (
@@ -117,24 +118,22 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
                   <div className="model_box">
                     <img src={panel.picture} alt="panelpicture" className="model_img" />
                   </div>
-                  <p className="model_name" style={panelModel.type === panel.type ? { fontWeight: "700", margin: "0 5px" } : {}}>{panel.type}</p>
+                  <p className="model_name" style={panelModel.type === panel.type ? { fontWeight: "700", margin: "0 5px" } : {}}>{t(panel.type)}</p>
                 </div>
 
-
-
                 <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5" }}>
-                  <p className="model_info" >{panel.info}</p>
+                  <p className="model_info" >{t(panel.info)}</p>
                   <div className="button_box">
                     <div className="more_info_button"
                       onClick={() => handleLink(panel.link)}
                     >
-                      Więcej
+                      {t("MORE")}
                       <div className="button_arrows" />
                     </div>
                     <div className="select_button"
                       onClick={() => { handlePanelChange(panel.type) }}
                     >
-                      WYBIERZ
+                      {t("SELECT")}
                       <div className="button_arrows" />
                     </div>
                   </div>
@@ -150,7 +149,8 @@ const ModelChooser = ({ panelModel, change, changePanelTypeBackEnd, chosenTab, r
 
 const mapStateToProps = state => ({
   panelModel: state.frontEndData.model.chosenModel,
-  chosenTab: state.frontEndData.tab
+  chosenTab: state.frontEndData.tab,
+  languageRender: state.frontEndData.visual.languageRender,
 })
 
 const mapDispatchToProps = dispatch => ({

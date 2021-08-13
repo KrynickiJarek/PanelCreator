@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';//--------tooltip 
+import { useState, useEffect, useRef } from 'react';
 import { connect } from "react-redux"
 import { saveAs } from 'file-saver';
 import Warning from './Warning/Warning';
@@ -11,12 +11,13 @@ import actionsText from "../PanelEditor/TextEditor/duck/actions"
 import actionsTab from "../PanelEditor/duck/actions"
 import actionsBackEnd from "../duck/actions"
 import actionsDashboard from "../../Dashboard/duck/actions"
+import { t } from "../../../i18n";
 
 import moment from 'moment';
 
 import "./PanelPreview.scss"
 
-import Overlay from 'react-bootstrap/Overlay'//--------tooltip
+import Overlay from 'react-bootstrap/Overlay'
 import ReactTooltip from "react-tooltip";
 
 
@@ -213,6 +214,9 @@ const PanelPreview = ({
   const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
 
 
+  // const [fullScreen, setFullScreen] = useState(false)
+
+
   useEffect(() => {
     setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
     setPanelContainerWidth(document.querySelector(".panel_container").clientWidth)
@@ -338,7 +342,6 @@ const PanelPreview = ({
           ]
 
           universalIconArr.forEach(element => {
-            console.log(element.icon)
             const toDataURL = svg => fetch(svg)
               .then(response => response.blob())
               .then(blob => new Promise((resolve, reject) => {
@@ -880,6 +883,20 @@ const PanelPreview = ({
   const handleResize = () => {
     changeScale(5)
   }
+
+
+  // let fullScreenStyle = {};
+
+  // if (fullScreen) {
+  //   fullScreenStyle.width = "100%";
+  //   fullScreenStyle.height = "100%";
+  //   fullScreenStyle.position = "fixed";
+  //   fullScreenStyle.top = "0"
+  //   fullScreenStyle.zIndex = "9999999999"
+
+  // }
+
+
 
   const handleZoomIn = () => {
     let scaleCopy = sc;
@@ -3886,10 +3903,12 @@ const PanelPreview = ({
 
 
   return (
+    // <div className="panelpreview_container" style={{ ...panelPreviewStyle, ...fullScreenStyle }}>
     <div className="panelpreview_container" style={panelPreviewStyle}>
       <div className="preview_container" >
+        {/* <div className="preview_container" style={fullScreenStyle}> */}
         <div className="preview_top">
-          <h2>PODGLĄD PANELU:</h2>
+          <h2>{t("PANEL_PREVIEW")}:</h2>
 
           <form onSubmit={handleSubmit} className="panel_name_form" >
             <input className="panel_name_input"
@@ -3897,7 +3916,7 @@ const PanelPreview = ({
               type="text"
               autoComplete="off"
               maxLength="18"
-              placeholder="[wpisz nazwę]"
+              placeholder={t("ENTER_NAME")}
               style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", border: "3px solid transparent" }
                 : noPanelName ? { color: "white", border: "3px solid #dc3545" } : { color: "white", border: "3px solid transparent" }}
               onMouseOver={showFrameBorder}
@@ -4367,7 +4386,8 @@ const PanelPreview = ({
                 <>
                   <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...visualStyle, opacity: "0" }} />
                   <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove white`, opacity: "0.2" } : { ...visualStyle, opacity: "0" }} />
-                  {(lcdShow && visual) && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
+                  {(lcdShow && visual && chosenColor.RAL !== "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
+                  {(lcdShow && visual && chosenColor.RAL === "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "black" }} />}
                   <div className="visualization_glass" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
                   <div className="visualization_glass_bis" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
                   <div className="visualization_frame" style={visual ? { ...visualStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
@@ -4656,7 +4676,7 @@ const PanelPreview = ({
         </div>
         <div className="preview_bottom">
           <div className="bottom_info_model">
-            <span>{chosenModel.type}</span>
+            <span>{t(chosenModel.type)}</span>
           </div>
           <div className="scale_container">
             <div className="scale_box">
@@ -4666,13 +4686,16 @@ const PanelPreview = ({
               />
               <div style={sc === 4 ? { opacity: "1" } : { opacity: "0" }}>
                 <ReactTooltip className='tooltip_custom' id='zoomout' place="top" type="error" effect="float" >
-                  <span>Uzyskano minimalne skalowanie</span>
+                  <span>{t("MIN_SCALING")}</span>
                 </ReactTooltip>
               </div>
             </div>
             <div className="scale_box">
               <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} />
             </div>
+            {/* <div className="scale_box">
+              <img src={Resize} alt="resize" className="scale_icon" onClick={() => { setFullScreen(prev => !prev) }} />
+            </div> */}
             <div className="scale_box">
               <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn}
                 style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
@@ -4680,13 +4703,13 @@ const PanelPreview = ({
               />
               <div style={sc === 8 ? { opacity: "1" } : { opacity: "0" }}>
                 <ReactTooltip className='tooltip_custom' id='zoomin' place="top" type="error" effect="float" >
-                  <span>Uzyskano maksymalne skalowanie</span>
+                  <span>{t("MAX_SCALING")}</span>
                 </ReactTooltip>
               </div>
             </div>
           </div>
           <div className="bottom_info_ral">
-            <span>{chosenColor.RAL}</span>
+            <span>{t(chosenColor.RAL)}</span>
           </div>
         </div>
       </div>
@@ -4710,7 +4733,7 @@ const PanelPreview = ({
                     ...props.style,
                   }}
                 >
-                  Wpisz nazwę panelu
+                  {t("ENTER_PANEL_NAME")}
                 </div>
               )}
             </Overlay>
@@ -4731,20 +4754,20 @@ const PanelPreview = ({
                 </>
               }
               {downloading ?
-                <span>Zapis do PDF...<br />  </span>
+                <span>{t("SAVING")} <br />{t("TO_PDF")}<br />  </span>
                 :
-                <span>Zapisz do PDF</span>
+                <span>{t("SAVE_TO_PDF")}</span>
               }
             </div>
 
             <div className="side_box">
               <img src={Saveandback} alt="saveandback" className="side_icon" onClick={handleSave} />
-              <span>Zapisz i wróć do menu głównego</span>
+              <span>{t("SAVE_AND_GO_BACK")}</span>
             </div>
 
             <div className="side_box">
               <img src={Back} alt="back" className="side_icon" onClick={() => showAlert(2)} />
-              <span>Wróć bez zapisywania</span>
+              <span>{t("NO_SAVE_AND_GO_BACK")}</span>
             </div>
 
 
@@ -4756,7 +4779,7 @@ const PanelPreview = ({
 
             <div className="side_box">
               <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
-              {!visual ? <span>Tryb wizualizacji</span> : <span>Tryb edycji</span>}
+              {!visual ? <span>{t("VISUALIZATION_MODE")}</span> : <span>{t("EDIT_MODE")}</span>}
             </div>
 
             <div className="side_box">
@@ -4765,13 +4788,8 @@ const PanelPreview = ({
                 onMouseOver={() => setRemoveAll(true)}
                 onMouseLeave={() => setRemoveAll(false)}
               />
-              <span>Zresetuj wszystko</span>
+              <span>{t("RESET_ALL")}</span>
             </div>
-
-            {/* <div className="side_box">
-                      <img src={Addframe} alt="addframe" className="side_icon" onClick={handleAddFrame} />
-                      <span>Zatwierdź</span>
-                  </div> */}
 
 
             {chosenTab === "icons" &&
@@ -4781,7 +4799,7 @@ const PanelPreview = ({
                     <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
                     : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
                   }
-                  {animations ? <span>Wyłącz animacje</span> : <span>Włącz animacje</span>}
+                  {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
                 </div>
 
                 {areThereAnyIcons ?
@@ -4790,12 +4808,12 @@ const PanelPreview = ({
                       onMouseOver={() => showRemoveIcons(true)}
                       onMouseLeave={handleHideRemoveIcons}
                     />
-                    <span>Usuń wszystkie ikony</span>
+                    <span>{t("DALETE_ALL_ICONS")}</span>
                   </div>
                   :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Dodaj ikony, aby skorzystać z funkcji">
+                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
                     <img src={Clearallicons} alt="clearallicons" className="side_icon" />
-                    <span>Usuń wszystkie ikony</span>
+                    <span>{t("DALETE_ALL_ICONS")}</span>
                   </div>
                 }
 
@@ -4804,34 +4822,34 @@ const PanelPreview = ({
                     <div className="side_box">
                       <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
                         onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
-                      <span>Usuń zaznaczoną ikonę</span>
+                      <span>{t("DALETE_SELECTED_ICON")}</span>
                     </div>
 
                     <div className="side_box">
                       <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-                      <span>Obróć o 90° w prawo</span>
+                      <span>{t("ROTATE_RIGHT")}</span>
                     </div>
                     <div className="side_box">
                       <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-                      <span >Obróć o 90° w lewo</span>
+                      <span>{t("ROTATE_LEFT")}</span>
                     </div>
 
 
                   </>
                   :
                   <>
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę, aby skorzystać z funkcji">
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
                       <img src={Clear} alt="clear" className="side_icon" />
-                      <span>Usuń zaznaczoną ikonę</span>
+                      <span>{t("DALETE_SELECTED_ICON")}</span>
                     </div>
 
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę, aby skorzystać z funkcji">
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
                       <img src={Rotateright} alt="rotateright" className="side_icon" />
-                      <span>Obróć o 90° w prawo</span>
+                      <span>{t("ROTATE_RIGHT")}</span>
                     </div>
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zaznacz ikonę, aby skorzystać z funkcji">
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
                       <img src={Rotateleft} alt="rotateleft" className="side_icon" />
-                      <span >Obróć o 90° w lewo</span>
+                      <span>{t("ROTATE_LEFT")}</span>
                     </div>
                   </>
                 }
@@ -4850,10 +4868,10 @@ const PanelPreview = ({
                     </>
                   }
                   {downloading ?
-                    <span >Pobieram...<br />  </span>
+                    <span >{t("DOWNLOADING")}<br />  </span>
                     :
                     <span
-                      style={{ color: "rgb(73, 75, 75)" }}>Debuguj</span>
+                      style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
                   }
                 </div>
 
@@ -4863,7 +4881,7 @@ const PanelPreview = ({
               <>
                 <div className="side_box">
                   <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowTextBorder(prev => !prev) }} />
-                  <span>{showTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                  <span>{showTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
                 </div>
 
                 <div className="side_box">
@@ -4871,17 +4889,17 @@ const PanelPreview = ({
                     <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff} />
                     :
                     <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff} />}
-                  {textUpOff ? <span>Wyłącz i usuń opisy nad ikonami</span> : <span>Włącz opisy nad ikonami</span>}
+                  {textUpOff ? <span>{t("TRUN_OFF_UP_DESCRIPTION")}</span> : <span>{t("TRUN_ON_UP_DESCRIPTION")}</span>}
                 </div>
 
                 <div className="side_box">
                   <img src={Clearalltext} alt="clearalltext" className="side_icon" onClick={handleClearAllText} />
-                  <span>Usuń wszystkie opisy</span>
+                  <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
                 </div>
 
                 <div className="side_box">
                   <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
-                  <span>Wybrany font dla wszystkich opisów</span>
+                  <span>{t("CHOSEN_FONT_FOR_ALL_DESCRIPTIONS")}</span>
                 </div>
 
               </>
@@ -4891,7 +4909,7 @@ const PanelPreview = ({
 
                 <div className="side_box">
                   <img src={Frameblacklight} alt="frameblacklight" className="side_icon" onClick={() => { setShowFramBlackLight(prev => !prev) }} />
-                  {showFramBlackLight ? <span>Ukryj podświet- <br />lenie pól</span> : <span>Pokaż podświet- <br />lenie pól</span>}
+                  {showFramBlackLight ? <span>{t("HIDE_BACKLIGHT")}</span> : <span>{t("SHOW_BACKLIGHT")}</span>}
                 </div>
 
                 <div className="side_box">
@@ -4899,18 +4917,8 @@ const PanelPreview = ({
                     <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
                     :
                     <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramesToRound} />}
-                  {allFramesSharpRound ? <span>Wszystkie narożniki proste</span> : <span>Wszystkie narożniki zaokrąglone</span>}
+                  {allFramesSharpRound ? <span>{t("ALL_CORNERS_STRAIGHT")}</span> : <span>{t("ALL_CORNERS_ROUNDED")}</span>}
                 </div>
-
-                {/* <div className="side_box" style={frameHolders.length === 0 ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Removeallframes} alt="ramoveallframes" className="side_icon"
-                      onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }}
-                      onMouseOver={() => { overFrameAll(true) }}
-                      onMouseLeave={() => { overFrameAll(false) }}
-                    />
-                    <span>Usuń wszystkie ramki</span>
-                  </div> */}
-
 
                 {frameHolders.length !== 0 ?
 
@@ -4920,74 +4928,52 @@ const PanelPreview = ({
                       onMouseOver={() => { overFrameAll(true) }}
                       onMouseLeave={() => { overFrameAll(false) }}
                     />
-                    <span>Usuń wszystkie ramki</span>
+                    <span>{t("DELETE_ALL_FRAMES")}</span>
                   </div>
                   :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramkę, aby skorzystać z funkcji">
+                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CONFIRM_FRAME_TOOLTIP")}>
                     <img src={Removeallframes} alt="ramoveallframes" className="side_icon" />
-                    <span>Usuń wszystkie ramki</span>
+                    <span>{t("DELETE_ALL_FRAMES")}</span>
                   </div>
                 }
-
-                {/* <div className="side_box" style={!frameHoldersTemp ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
-                    <span>Usuń tworzoną ramkę</span>
-                  </div> */}
-
-
-
 
                 {frameHoldersTemp ?
 
                   <div className="side_box" >
                     <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
-                    <span>Usuń tworzoną ramkę</span>
+                    <span>{t("DELETE_CURRENT_FRAME")}</span>
                   </div>
                   :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Utwórz ramkę, aby skorzystać z funkcji">
+                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CREATE_FRAME_TOOLTIP")}>
                     <img src={Removecurrframe} alt="removecurrframe" className="side_icon" />
-                    <span>Usuń tworzoną ramkę</span>
+                    <span>{t("DELETE_CURRENT_FRAME")}</span>
                   </div>
-
-
                 }
-
-                {/* <div className="side_box" style={!frameTitleFlag ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Textborder} alt="textborder" className="side_icon"
-                      onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
-                    <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
-                  </div> */}
-
 
                 {frameTitleFlag ?
 
                   <div className="side_box">
                     <img src={Textborder} alt="textborder" className="side_icon"
                       onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
-                    <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                    <span>{showFrameTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
                   </div>
                   :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Dodaj tytuł, aby skorzystać z funkcji" >
+                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_TITLE_TOOLTIP")} >
                     <img src={Textborder} alt="textborder" className="side_icon" />
-                    <span>{showFrameTextBorder ? "Ukryj granice" : "Pokaż granice"}</span>
+                    <span>{showFrameTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
                   </div>
                 }
 
 
-                {/* <div className="side_box" style={!frameTitles ? { filter: "grayscale(100%)", cursor: "not-allowed" } : {}}>
-                    <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
-                    <span>Wybrany font dla wszystkich tytułów</span>
-                  </div> */}
-
                 {frameTitles ?
                   <div className="side_box" >
                     <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
-                    <span>Wybrany font dla wszystkich tytułów</span>
+                    <span>{t("CHOSEN_FONT_FOR_ALL_TITLES")}</span>
                   </div>
                   :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip="Zatwierdź ramki z tytułami, aby skorzystać z funkcji">
+                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CONFIRM_TITLE_FRAME_TOOLTIP")}>
                     <img src={Setonefont} alt="setonefont" className="side_icon" />
-                    <span>Wybrany font dla wszystkich tytułów</span>
+                    <span>{t("CHOSEN_FONT_FOR_ALL_TITLES")}</span>
                   </div>}
 
                 <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
@@ -5004,7 +4990,7 @@ const PanelPreview = ({
 
             <div className="side_box_alert" style={{ marginTop: "auto" }}>
               <img src={Alert} alt="Alert" className="side_icon" onClick={handleShowWarnings} />
-              <span >Zobacz ostrzeżenia</span>
+              <span >{t("SHOW_WARNINGS")}</span>
             </div>
           </div>
         }
@@ -5063,6 +5049,7 @@ const mapStateToProps = state => ({
 
   ownIcons: state.frontEndData.icon.ownIcons,
   ownIconsRender: state.frontEndData.icon.ownIconsRender,
+  languageRender: state.frontEndData.visual.languageRender,
 
 
 })
@@ -5117,21 +5104,7 @@ const mapDispatchToProps = dispatch => ({
   updateFavoriteIcons: icon => dispatch(actionsIcon.updateFavoriteIcons(icon)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income)),
-
-
-
 })
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelPreview)
-
-
-
-//     {differentFrameFont &&
-//       <div className="side_box_alert" style={{ marginTop: "auto" }}>
-//         <img src={Alert} alt="Alert" className="side_icon" />
-//         {/* <span>Różne fonty tytułów ramek</span> */}
-//       </div>
-//     }
-//   </div>
-// }

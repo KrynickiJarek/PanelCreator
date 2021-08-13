@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import actions from "./duck/actions"
 import "./IconEditor.scss"
+import { t } from "../../../../i18n";
 
 import Favorite from "../../../../assets/favorite.svg"
 import Own from "../../../../assets/own.svg"
@@ -56,12 +57,12 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
 
   const onSelectFile = (e) => {
-
     if (e.target.files[0].type !== "image/svg+xml") {
       showAlert(7);
-
+    } else if (e.target.files[0].size > 100000) {
+      showAlert(9);
     } else {
-
+      console.log(e.target.files[0])
       getBase64(e.target.files[0]).then(
         data => {
           var xhr = new XMLHttpRequest();
@@ -72,33 +73,17 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
             var svg = dom.parseFromString(xml, 'image/svg+xml');
             let svgDisplay = svg.rootElement
 
-
-
-            svgDisplay.setAttribute("height", "28pt"); //wartość nie ma znaczenia
-            svgDisplay.setAttribute("width", "28pt"); //wartośc nie ma znaczenia
-            // console.log(svgDisplay.width.animVal.value)
-            // console.log(svgDisplay.viewBox)
-            // console.log(svgDisplay.height.animVal.value)
+            svgDisplay.setAttribute("height", "28pt");
+            svgDisplay.setAttribute("width", "28pt");
 
             let vbw = svgDisplay.viewBox.animVal.width
             let vhh = svgDisplay.viewBox.animVal.height
             svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
 
-            // ----------------------------------------------------------------gotowe?-----------
-            // type = 1 - number 
-            // let vbw = svgDisplay.width.animVal.value
-            // let vhh = svgDisplay.height.animVal.value
-            // svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
-            // ----------------------------------------------------------------/gotowe----------
-
-            // svgDisplay.setAttribute("fill", "black")
-            // document.getElementById("mySvg").appendChild(svgDisplay);
-            // console.log(svgDisplay)
-
 
             var svgSerializer = new XMLSerializer().serializeToString(svgDisplay)
-            // var svgB64 = window.btoa(svgSerializer);
-            var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgSerializer);
+            // var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgSerializer);
+            var svgB64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgSerializer)));
             const image = {
               default: svgB64
             }
@@ -108,13 +93,6 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
             document.getElementById("inputUploadIcon").value = null
           });
           xhr.send(null);
-
-          //     let copyOwnIcons = ownIcons
-          //     copyOwnIcons.push(image)
-          //     updateOwnIcons(copyOwnIcons)
-          //     document.getElementById("inputUploadIcon").value = null
-          //   }
-          // )
         }
       )
     }
@@ -135,34 +113,34 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
               :
               <img src={Locked} alt="locked" className="visual_image" />
             }
-            <h2 className="visual_info">Niedostępne w trybie wizualizacji</h2>
+            <h2 className="visual_info">{t("NOT_AVALIBLE_IN_VISUALIZATION_MODE")}</h2>
           </div>
           <div className="visual_button"
             onClick={() => toggleVisual(!visual)}
             onMouseOver={() => setUnlock(true)}
             onMouseLeave={() => setUnlock(false)}
           >
-            Tryb edycji
+            {t("EDIT_MODE")}
             <div className="button_arrows" />
           </div>
         </div>
       </div>
       <div className="icon_container">
-        <h2 className="icon_header">Ikony</h2>
+        <h2 className="icon_header">{t("ICONS")}</h2>
         <div className="icon_content">
           <Tab.Container defaultActiveKey="ulubione" mountOnEnter>
             <div className="nav_col">
               <Nav variant="pills" className="flex-column">
                 <Nav.Link eventKey="ulubione" >
                   <img src={Favorite} alt="own" className="favorite_nav" />
-                  Ulubione
+                  {t("FAVOURITE")}
                 </Nav.Link>
                 <Nav.Link eventKey="własne" >
                   <img src={Own} alt="own" className="favorite_nav" />
-                  Własne
+                  {t("CUSTOM")}
                 </Nav.Link>
                 {iconCategories.map((el, i) => (
-                  <Nav.Link key={i} eventKey={el.name}>{el.name}</Nav.Link>
+                  <Nav.Link key={i} eventKey={el.name}>{t(el.name)}</Nav.Link>
                 ))}
               </Nav>
             </div>
@@ -171,12 +149,13 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                 <Tab.Pane eventKey="ulubione">
                   <div className="icons">
                     <div className="instruction_box">
-                      <p className="instruction_bold">Wybierz kategorię ikon, a następie przeciągaj wybrane ikony w odpowiednie miejsca na panelu. Będą one podświetlone kolorem  <span style={{ ...orangeStyle }} />.
-                        Aby zostawić ikonę należy ją upuścić w momencie, gdy pole jest podświetlone kolorem  <span style={{ ...greenStyle }} />.</p>
-                      <p className="instruction">Kliknięcie na ikonę spowoduje dodanie jej do Ulubionych.</p>
+                      <p className="instruction_bold">{t("FAVOURITE_ICONS_INSTRUCTION_BOLD_1")}<span style={{ ...orangeStyle }} />.
+                        {t("FAVOURITE_ICONS_INSTRUCTION_BOLD_2")}
+                        <span style={{ ...greenStyle }} />.</p>
+                      <p className="instruction">{t("FAVOURITE_ICONS_INSTRUCTION_NORMAL_1")}</p>
 
                       {favoriteIcons.length === 0 &&
-                        <p className="instruction" style={{ margin: "28px" }}>(W tym miejscu pojawią się ikony dodane do Ulubionych
+                        <p className="instruction" style={{ margin: "28px" }}>({t("FAVOURITE_ICONS_INSTRUCTION_NORMAL_2")}
                           <img src={Favorite} alt="favorite" className="favorite_instruction" />)
                         </p>
                       }
@@ -191,23 +170,23 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                     }
 
                     <div className="instruction_box">
-                      <p className="instruction_bold" style={{ marginTop: "20px" }}>Ulubione ikony z pozostałych projektów:</p>
+                      <p className="instruction_bold" style={{ marginTop: "20px" }}>{t("FAVOURITE_ICONS_INSTRUCTION_BOLD_3")}</p>
 
                       {panels.length === 0 || (panels.length === 1 && indexOfLastPanel !== -1) ?
-                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Nie dodano innych projektów)</p>
+                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_OTHER_PROJECTS")}</p>
                         :
                         <>
-                          <p className="instruction" >Kliknięcie na ikonę spowoduje dodanie jej do Ulubionych w bieżącym projekcie.</p>
+                          <p className="instruction">{t("FAVOURITE_ICONS_INSTRUCTION_NORMAL_3")}</p>
                           {panels.map((panel, index) =>
                             <div key={index}>
                               {indexOfLastPanel !== index &&
                                 <>
                                   <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
                                   {panel.frontEndData.icon.favoriteIcons.length === 0 &&
-                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak ulubionych ikon w projekcie)</p>
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_FAVOURITE_ICONS")}</p>
                                   }
                                   {panel.frontEndData.icon.favoriteIcons.length !== 0 && panel.frontEndData.icon.favoriteIcons.filter(containFavorite).length === 0 &&
-                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak innych ulubonych ikon w projekcie )</p>
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_OTHER_FAVOURITE_ICONS")}</p>
                                   }
 
                                   {!(panel.frontEndData.icon.favoriteIcons.length === 0 && panel.frontEndData.icon.favoriteIcons.filter(containFavorite).length === 0) &&
@@ -230,11 +209,11 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                   <div className="icons">
                     <div className="instruction_box">
 
-                      <p className="instruction_bold">Aby dodać własną ikonę należy wczytać ją z dysku.</p>
-                      <p className="instruction">Możliwe jest dodawanie plików z rozszerzeniem SVG. Aby ikona wyświetlała się poprawnie powinna mieć proporcje 1 : 1, przezroczyste tło i jeden kolor.</p>
+                      <p className="instruction_bold">{t("CUSTOM_ICONS_INSTRUCTION_BOLD_1")}</p>
+                      <p className="instruction">{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_1")}</p>
                       <label htmlFor="inputUploadIcon" >
                         <div className="select_button">
-                          WYBIERZ PLIK
+                          {t("SELECT_FILE")}
                           <div className="button_arrows" />
                         </div>
                       </label>
@@ -247,13 +226,13 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
 
                     <div className="instruction_box">
-                      <p className="instruction_bold" style={{ marginTop: "20px" }}>Własne ikony z pozostałych projektów:</p>
+                      <p className="instruction_bold" style={{ marginTop: "20px" }}>{t("CUSTOM_ICONS_INSTRUCTION_BOLD_2")}</p>
 
                       {panels.length === 0 || (panels.length === 1 && indexOfLastPanel !== -1) ?
-                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Nie dodano innych projektów)</p>
+                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_OTHER_PROJECTS")}</p>
                         :
                         <>
-                          <p className="instruction" >Kliknij na ikonę aby przekopiować ją do bieżącego projektu.</p>
+                          <p className="instruction" >{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_1")}</p>
                           {panels.map((panel, index) =>
                             <div key={index}>
                               {indexOfLastPanel !== index &&
@@ -261,7 +240,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                                   <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
 
                                   {panel.frontEndData.icon.ownIcons.length === 0 ?
-                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>(Brak własnych ikon w projekcie)</p>
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_CUSTOM_ICONS")}</p>
                                     :
                                     <div className="icons">
                                       {panel.frontEndData.icon.ownIcons.map((image, index) =>
@@ -309,6 +288,7 @@ const mapStateToProps = state => ({
 
   panels: state.panels.panels,
   indexOfLastPanel: state.panels.indexOfLastPanel,
+  languageRender: state.frontEndData.visual.languageRender,
 
 
 })
@@ -321,20 +301,76 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)
 
+// function getBase64(file) {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = () => resolve(reader.result);
+//     reader.onerror = error => reject(error);
+//   });
+// }
+
 
 // const onSelectFile = (e) => {
+
 //   if (e.target.files[0].type !== "image/svg+xml") {
 //     showAlert(7);
+
 //   } else {
+
 //     getBase64(e.target.files[0]).then(
 //       data => {
-//         const image = {
-//           default: data
-//         }
-//         let copyOwnIcons = ownIcons
-//         copyOwnIcons.push(image)
-//         updateOwnIcons(copyOwnIcons)
-//         document.getElementById("inputUploadIcon").value = null
+//         var xhr = new XMLHttpRequest();
+//         xhr.open('GET', data);
+//         xhr.addEventListener('load', function (ev) {
+//           var xml = ev.target.response;
+//           var dom = new DOMParser();
+//           var svg = dom.parseFromString(xml, 'image/svg+xml');
+//           let svgDisplay = svg.rootElement
+
+
+
+//           svgDisplay.setAttribute("height", "28pt"); //wartość nie ma znaczenia
+//           svgDisplay.setAttribute("width", "28pt"); //wartośc nie ma znaczenia
+//           // console.log(svgDisplay.width.animVal.value)
+//           // console.log(svgDisplay.viewBox)
+//           // console.log(svgDisplay.height.animVal.value)
+
+//           let vbw = svgDisplay.viewBox.animVal.width
+//           let vhh = svgDisplay.viewBox.animVal.height
+//           svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
+
+//           // ----------------------------------------------------------------gotowe?-----------
+//           // type = 1 - number 
+//           // let vbw = svgDisplay.width.animVal.value
+//           // let vhh = svgDisplay.height.animVal.value
+//           // svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
+//           // ----------------------------------------------------------------/gotowe----------
+
+//           // svgDisplay.setAttribute("fill", "black")
+//           // document.getElementById("mySvg").appendChild(svgDisplay);
+//           // console.log(svgDisplay)
+
+
+//           var svgSerializer = new XMLSerializer().serializeToString(svgDisplay)
+//           // var svgB64 = window.btoa(svgSerializer);
+//           var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgSerializer);
+//           const image = {
+//             default: svgB64
+//           }
+//           let copyOwnIcons = ownIcons
+//           copyOwnIcons.push(image)
+//           updateOwnIcons(copyOwnIcons)
+//           document.getElementById("inputUploadIcon").value = null
+//         });
+//         xhr.send(null);
+
+//         //     let copyOwnIcons = ownIcons
+//         //     copyOwnIcons.push(image)
+//         //     updateOwnIcons(copyOwnIcons)
+//         //     document.getElementById("inputUploadIcon").value = null
+//         //   }
+//         // )
 //       }
 //     )
 //   }

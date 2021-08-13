@@ -5,72 +5,72 @@ const importAll = (r) => {
 
 const iconCategories = [
   {
-    name: "Bezpieczeństwo",
+    name: "SAFETY",
     directory: "bezpieczenstwo",
     listOfIcons: importAll(require.context("../../../../assets/icons/bezpieczenstwo", true, /\.(svg)$/))
   },
   {
-    name: "Bramy i rolety",
+    name: "GATES_AND_ROLLERS",
     directory: "bramyrolety",
     listOfIcons: importAll(require.context("../../../../assets/icons/bramyrolety", true, /\.(svg)$/))
   },
   {
-    name: "Dom",
+    name: "HOUSE",
     directory: "dom",
     listOfIcons: importAll(require.context("../../../../assets/icons/dom", true, /\.(svg)$/))
   },
   {
-    name: "Oświetlenie",
+    name: "LIGHTS",
     directory: "lights",
     listOfIcons: importAll(require.context("../../../../assets/icons/lights", true, /\.(svg)$/))
   },
   {
-    name: "Meble",
+    name: "FURNITURE",
     directory: "meble",
     listOfIcons: importAll(require.context("../../../../assets/icons/meble", true, /\.(svg)$/))
   },
   {
-    name: "Muzyka",
+    name: "MUSIC",
     directory: "muzyka",
     listOfIcons: importAll(require.context("../../../../assets/icons/muzyka", true, /\.(svg)$/))
   },
   {
-    name: "Ogród",
+    name: "GARDEN",
     directory: "ogrod",
     listOfIcons: importAll(require.context("../../../../assets/icons/ogrod", true, /\.(svg)$/))
   },
   {
-    name: "Ogrzewanie",
+    name: "HEATING",
     directory: "ogrzewanie",
     listOfIcons: importAll(require.context("../../../../assets/icons/ogrzewanie", true, /\.(svg)$/))
   },
   {
-    name: "Pełne ikony",
+    name: "FULL_ICONS",
     directory: "pelneikony",
     listOfIcons: importAll(require.context("../../../../assets/icons/pelneikony", true, /\.(svg)$/))
   },
   {
-    name: "Pomieszczenia",
+    name: "ROOMS",
     directory: "pomieszczenia",
     listOfIcons: importAll(require.context("../../../../assets/icons/pomieszczenia", true, /\.(svg)$/))
   },
   {
-    name: "Sceny",
+    name: "SCENES",
     directory: "sceny",
     listOfIcons: importAll(require.context("../../../../assets/icons/sceny", true, /\.(svg)$/))
   },
   {
-    name: "Urządzenia",
+    name: "DEVICES",
     directory: "urzadzenia",
     listOfIcons: importAll(require.context("../../../../assets/icons/urzadzenia", true, /\.(svg)$/))
   },
   {
-    name: "Znaki",
+    name: "SIGNS",
     directory: "znaki",
     listOfIcons: importAll(require.context("../../../../assets/icons/znaki", true, /\.(svg)$/))
   },
   {
-    name: "Numery",
+    name: "NUMBERS",
     directory: "numery",
     listOfIcons: importAll(require.context("../../../../assets/icons/numery", true, /\.(svg)$/))
   },

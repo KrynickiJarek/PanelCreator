@@ -4,6 +4,8 @@ import actions from "./duck/actions"
 import actionsVisual from "../../PanelPreview/duck/actions"
 
 import "./FrameEditor.scss"
+import { t } from "../../../../i18n";
+
 import Roundframe from "../../../../assets/frame/roundframe.svg"
 import Sharpframe from "../../../../assets/frame/sharpframe.svg"
 import Remove from "../../../../assets/preview/remove.svg"
@@ -60,37 +62,37 @@ const FrameEditor = ({
               :
               <img src={Locked} alt="locked" className="visual_image" />
             }
-            <h2 className="visual_info">Niedostępne w trybie wizualizacji</h2>
+            <h2 className="visual_info">{t("NOT_AVALIBLE_IN_VISUALIZATION_MODE")}</h2>
           </div>
           <div className="visual_button"
             onClick={() => toggleVisual(!visual)}
             onMouseOver={() => setUnlock(true)}
             onMouseLeave={() => setUnlock(false)}
           >
-            Tryb edycji
+            {t("EDIT_MODE")}
             <div className="button_arrows" />
           </div>
         </div>
       </div>
       <div className="frame_container">
-        <h2 className="frame_header">Dodaj ramki (opcjonalne)</h2>
+        <h2 className="frame_header">{t("FRAMES_HEADER")}</h2>
         <div className="frame_content">
-          <p className="instruction_bold">Zaznacz pola, aby dodać je do obszaru tworzonej ramki. Ramka musi mieć kształt prostokąta. Dodaj ramkę przyciskiem "Zatwierdź". Zatwierdzone ramki wyświetlą się na liście na dole strony.</p>
-          <p className="instruction_normal">Wybierz rodzaj narożników:</p>
+          <p className="instruction_bold">{t("FRAMES_INSTRUCTION_BOLD")}</p>
+          <p className="instruction_normal">{t("FRAMES_INSTRUCTION_NORMAL_1")}</p>
 
           <div className="frame_choosing_box">
 
             <div className="frame_shape_link" style={(chosenFrameShape === "sharp") ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
               onClick={() => { changeFrameShape("sharp") }} >
               {(chosenFrameShape === "sharp") && <div className="frame_chosen" />}
-              < p className="shape_name">Proste<br />narożniki</p>
+              < p className="shape_name">{t("STRAIGHT")}</p>
               <img src={Sharpframe} alt="sharpframe" className="shape_image" />
             </div>
 
             <div className="frame_shape_link" style={chosenFrameShape === "round" ? { border: "3px solid #EC695C" } : {}}
               onClick={() => { changeFrameShape("round") }} >
               {chosenFrameShape === "round" && <div className="frame_chosen" />}
-              < p className="shape_name">Zaokrąglone<br />narożniki</p>
+              < p className="shape_name">{t("ROUNDED")}</p>
               <img src={Roundframe} alt="roundframe" className="shape_image" />
             </div>
           </div>
@@ -98,7 +100,7 @@ const FrameEditor = ({
 
           {!chosenModel.panelRotation &&
             <>
-              <p className="instruction_normal">Wybierz font tytułu ramki. Aby dodać tytuł ramka musi mieć szerokość co najmniej 2 kolumn lub wysokość co najmniej 2 rzędów.</p>
+              <p className="instruction_normal">{t("FRAMES_INSTRUCTION_NORMAL_2")}</p>
               <div className="frame_choosing_box">
 
                 <div className="frame_link" style={(chosenFrameFont === "Calibri-bold") ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold" }
@@ -106,7 +108,7 @@ const FrameEditor = ({
                   onClick={() => { changeFrameFont("Calibri-bold") }} >
                   {(chosenFrameFont === "Calibri-bold") && <div className="frame_chosen" />}
                   < p className="font_name" style={{ fontSize: "18px" }}>Calibri bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Calibri-bold</p>
+                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri-bold</p>
                 </div>
 
                 <div className="frame_link" style={chosenFrameFont === "Calibri" ? { border: "3px solid #EC695C", fontFamily: "Calibri" }
@@ -114,7 +116,7 @@ const FrameEditor = ({
                   onClick={() => { changeFrameFont("Calibri") }} >
                   {chosenFrameFont === "Calibri" && <div className="frame_chosen" />}
                   < p className="font_name" style={{ fontSize: "18px" }}>Calibri</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Calibri</p>
+                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri</p>
                 </div>
 
                 <div className="frame_link" style={chosenFrameFont === "Helvetica-bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica-bold" }
@@ -122,7 +124,7 @@ const FrameEditor = ({
                   onClick={() => { changeFrameFont("Helvetica-bold") }} >
                   {chosenFrameFont === "Helvetica-bold" && <div className="frame_chosen" />}
                   < p className="font_name" style={{ fontSize: "18px" }}>Helvetica bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Helvetica Bold</p>
+                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Helvetica Bold</p>
                 </div>
 
                 <div className="frame_link" style={chosenFrameFont === "Helvetica" ? { border: "3px solid #EC695C", fontFamily: "Helvetica" }
@@ -130,7 +132,7 @@ const FrameEditor = ({
                   onClick={() => { changeFrameFont("Helvetica") }} >
                   {chosenFrameFont === "Helvetica" && <div className="frame_chosen" />}
                   < p className="font_name" style={{ fontSize: "18px" }}>Helvetica</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Helvetica</p>
+                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Helvetica</p>
                 </div>
 
                 <div className="frame_link" style={chosenFrameFont === "Arial" ? { border: "3px solid #EC695C", fontFamily: "Arial" }
@@ -138,52 +140,46 @@ const FrameEditor = ({
                   onClick={() => { changeFrameFont("Arial") }} >
                   {chosenFrameFont === "Arial" && <div className="frame_chosen" />}
                   < p className="font_name" style={{ fontSize: "18px" }}>Arial</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>Przykładowy tekst napisany fontem Arial</p>
+                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Arial</p>
                 </div>
               </div>
 
-              {/* <div className="add_title_button"
-                onClick={!allowFrameTitleFlag ? null : toggleTitle}
-                style={!allowFrameTitleFlag ? { cursor: "not-allowed" } : { cursor: "pointer" }}>
-                {frameTitleFlag ? "Usuń tytuł" : "Dodaj tytuł"}
-                <div className="button_arrows" />
-              </div> */}
 
               {allowFrameTitleFlag ?
                 <div className="add_title_button"
                   onClick={toggleTitle}
                   style={{ cursor: "pointer" }}>
-                  {frameTitleFlag ? "Usuń tytuł" : "Dodaj tytuł"}
+                  {frameTitleFlag ? t("REMOVE_TITLE") : t("ADD_TITLE")}
                   <div className="button_arrows" />
                 </div>
                 :
                 <div className="add_title_button"
                   style={{ cursor: "not-allowed" }} data-tip data-for='addtitle'>
-                  {frameTitleFlag ? "Usuń tytuł" : "Dodaj tytuł"}
+                  {frameTitleFlag ? t("REMOVE_TITLE") : t("ADD_TITLE")}
                   <div className="button_arrows" />
                 </div>
               }
               {!allowFrameTitleFlag &&
                 <ReactTooltip className='tooltip_custom' id='addtitle' place="top" type="error" effect="float" >
-                  <span>Aby dodać tytuł utwórz ramkę <br />o szerokości co najmniej 2 kolumn <br />lub wysokości co najmniej 2 rzędów</span>
+                  <span>{t("FRAME_TITLE_TOOLTIP_1")}<br />{t("FRAME_TITLE_TOOLTIP_2")}<br />{t("FRAME_TITLE_TOOLTIP_3")}</span>
                 </ReactTooltip>
               }
 
             </>
           }
           {chosenModel.panelRotation === 90 &&
-            <p className="instruction_normal">W wybranym modelu nie ma możliośći dodawania tytułów ramek.</p>
+            <p className="instruction_normal">{t("NO_TITLE_IN_CHOSEN_MODEL")}</p>
           }
 
           <div className="add_frame_button"
             onClick={handleAddNewFrame} >
-            ZATWIERDŹ
+            {t("CONFIRM_UPPERCASE")}
             <div className="button_arrows" />
           </div>
 
           {frameHolders.length > 0 &&
             <>
-              <p className="instruction_bold" style={{ marginTop: "0" }}>Lista dodanych ramek:</p>
+              <p className="instruction_bold" style={{ marginTop: "0" }}>{t("FRAME_LIST")}</p>
 
               <ol className="frame_list" >
                 {frameHolders.map((frame, index) =>
@@ -191,12 +187,12 @@ const FrameEditor = ({
                     onMouseOver={() => { overFrame({ index: index, flag: true }) }}
                     onMouseLeave={() => { overFrame({ index: index, flag: false }) }}
                   >
-                    Pole startowe (rząd, kolumna): <span>{frame.frameInfo.startRow}</span>, <span>{frame.frameInfo.startColumn}</span> ; Szerokość: <span>{frame.frameInfo.columns}</span> ;
-                    Wysokość: <span>{frame.frameInfo.rows}</span> ;
-                    Narożniki: <span>{frame.frameInfo.shape === "sharp" ? "proste" : "zaokrąglone"}</span>
-                    {frame.framePrint.text && ", Tytuł: "}
+                    {t("FRAME_LIST_START_AREA")} <span>{frame.frameInfo.startRow}</span>, <span>{frame.frameInfo.startColumn}</span> ; {t("FRAME_LIST_WIDTH")}<span>{frame.frameInfo.columns}</span> ;
+                    {t("FRAME_LIST_HEIGHT")}<span>{frame.frameInfo.rows}</span> ;
+                    {t("FRAME_LIST_CORNERS")}<span>{frame.frameInfo.shape === "sharp" ? t("STRAIGHT_LOWERCASE") : t("ROUNDED_LOWERCASE")}</span>
+                    {frame.framePrint.text && t("FRAME_LIST_TITLE")}
                     {frame.framePrint.text && <span>{frame.framePrint.text}</span>}
-                    {frame.framePrint.text && "; Font: "}
+                    {frame.framePrint.text && t("FRAME_LIST_FONT")}
                     {frame.framePrint.text && <span>{frame.framePrint.frameFont}</span>}
                     <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
                       <img className="frame_list_img" src={Remove} alt="removeframe" />
@@ -224,6 +220,7 @@ const mapStateToProps = state => ({
   frameTitleFlag: state.frontEndData.frame.frameTitleFlag,
   allowFrameTitleFlag: state.frontEndData.frame.allowFrameTitleFlag,
   visual: state.frontEndData.visual.visual,
+  languageRender: state.frontEndData.visual.languageRender,
 })
 
 const mapDispatchToProps = dispatch => ({

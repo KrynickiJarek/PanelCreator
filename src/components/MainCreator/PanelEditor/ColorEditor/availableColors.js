@@ -2,271 +2,138 @@
 const availableColors = [
   {
     RAL: "RAL 9005",
-    name: "Czarny",
+    name: "BLACK",
     hex: "#060707",
     iconColor: "white"
   },
   {
     RAL: "RAL 9003",
-    name: "Extra biały",
+    name: "EXTRA_WHITE",
     hex: "#f3f5f5",
     iconColor: "black"
   },
   {
     RAL: "RAL 1013",
-    name: "Perłowo biały",
+    name: "PEARL_WHITE",
     hex: "#e8e0ce",
     iconColor: "black"
   },
   {
     RAL: "RAL 1014",
-    name: "Kość słoniowa",
+    name: "IVORY",
     hex: "#ddc8a3",
     iconColor: "black"
   },
   {
     RAL: "RAL 1015",
-    name: "Kość słoniowa jasna",
+    name: "LIGHT_IVORY",
     hex: "#e6d2b5",
     iconColor: "black"
   },
   {
     RAL: "REF 1236",
-    name: "Jasno brązowy",
+    name: "LIGHT_BROWN",
     hex: "#9c7e61",
     iconColor: "black"
   },
   {
     RAL: "RAL 9006",
-    name: "Srebrny",
+    name: "SILVER",
     hex: "#a6abb5",
     iconColor: "black"
   },
   {
     RAL: "RAL 7045",
-    name: "Popielaty",
+    name: "GRAY",
     hex: "#8f949e",
     iconColor: "black"
   },
   {
     RAL: "REF 1603",
-    name: "Pastelowy niebieski",
+    name: "PASTEL_BLUE",
     hex: "#d2e7ea",
     iconColor: "black"
   },
   {
     RAL: "REF 1435",
-    name: "Niebieski metaliczny",
+    name: "METAL_BLUE",
     hex: "#8da1b3",
     iconColor: "black"
   },
   {
     RAL: "RAL 7035",
-    name: "Jasny szary",
+    name: "BRIGHT_GRAY",
     hex: "#d4d9db",
     iconColor: "black"
   },
   ,
   {
     RAL: "RAL 7012",
-    name: "Bazaltowy szary",
+    name: "BAZALT_GRAY",
     hex: "#4a5459",
     iconColor: "white"
   },
   {
     RAL: "REF 1586",
-    name: "Lśniący czerwony",
+    name: "SHINING_RED",
     hex: "#b10522",
     iconColor: "white"
   },
   {
     RAL: "REF 0627",
-    name: "Brunatny",
+    name: "BROWN",
     hex: "#9d908f",
     iconColor: "black"
   },
   {
     RAL: "RAL 8017",
-    name: "Brązowo czekoladowy",
+    name: "CHOCOLATE_BROWN",
     hex: "#2e1c1c",
     iconColor: "white"
   },
   {
     RAL: "RAL 4007",
-    name: "Fioletowy",
+    name: "VIOLET",
     hex: "#380a2e",
     iconColor: "white"
   },
   ,
   {
     RAL: "RAL 4006",
-    name: "Fuksja",
+    name: "FUCHSIA",
     hex: "#910f66",
     iconColor: "white"
   },
   {
     RAL: "RAL 5002",
-    name: "Błękit marynowy",
+    name: "MARY_BLUE",
     hex: "#001075",
     iconColor: "white"
   },
   {
     RAL: "REF 1164",
-    name: "Lśniący zielony",
+    name: "SHINING_GREEN",
     hex: "#30a32c",
     iconColor: "white"
   },
   {
     RAL: "RAL 2001",
-    name: "Czerwono pomarańczowy",
+    name: "ORANGE_RED",
     hex: "#b84920",
     iconColor: "white"
   },
   {
     RAL: "REF 3004",
-    name: "Purpurowy czerwony",
+    name: "PURPLE_RED",
     hex: "#6b1c23",
     iconColor: "white"
   },
   {
     RAL: "RAL 7021",
-    name: "Antracytowy",
+    name: "ANTHRACITE",
     hex: "#1a2129",
     iconColor: "white"
   }
 ];
 
 export default availableColors
-
-
-
-// // eslint-disable-next-line 
-// const availableColors = [
-//   {
-//     RAL: "9005",
-//     name: "Czarny",
-//     hex: "#060707",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "9003",
-//     name: "Extra biały",
-//     hex: "#f3f5f5",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "1013",
-//     name: "Perłowo biały",
-//     hex: "#e8e0ce",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "1014",
-//     name: "Kość słoniowa",
-//     hex: "#ddc8a3",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "1236",
-//     name: "Jasno brązowy",
-//     hex: "#9c7e61",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "9006",
-//     name: "Srebrny",
-//     hex: "#a6abb5",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "7045",
-//     name: "Popielaty",
-//     hex: "#8f949e",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "1603",
-//     name: "Pastelowy niebieski",
-//     hex: "#d2e7ea",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "1435",
-//     name: "Niebieski metal",
-//     hex: "#8da1b3",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "7035",
-//     name: "Jasny szary",
-//     hex: "#d4d9db",
-//     iconColor: "black"
-//   },
-//   ,
-//   {
-//     RAL: "7012",
-//     name: "Bazaltowy szary",
-//     hex: "#4a5459",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "1586",
-//     name: "Lśniący czerwony",
-//     hex: "#b10522",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "0627",
-//     name: "Brunatny",
-//     hex: "#9d908f",
-//     iconColor: "black"
-//   },
-//   {
-//     RAL: "8017",
-//     name: "Brązowo czekoladowy",
-//     hex: "#2e1c1c",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "4007",
-//     name: "Fioletowy",
-//     hex: "#380a2e",
-//     iconColor: "white"
-//   },
-//   ,
-//   {
-//     RAL: "4006",
-//     name: "Fuksja",
-//     hex: "#910f66",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "5002",
-//     name: "Błękit marynowy",
-//     hex: "#001075",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "1164",
-//     name: "Lśniący zielony",
-//     hex: "#30a32c",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "2001",
-//     name: "Czerwono pomarańczowy",
-//     hex: "#b84920",
-//     iconColor: "white"
-//   },
-//   {
-//     RAL: "7021",
-//     name: "Antracytowy",
-//     hex: "#1a2129",
-//     iconColor: "white"
-//   }
-// ];
-
-// export default availableColors
-
-
-

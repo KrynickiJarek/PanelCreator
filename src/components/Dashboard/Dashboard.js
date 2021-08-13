@@ -8,6 +8,8 @@ import {
   isOpera,
   isEdge
 } from "react-device-detect";
+import { t } from "../../i18n";
+import i18n from 'i18next';
 
 import IconHolder from '../MainCreator/PanelPreview/IconHolder/IconHolder';
 import AlertBox from '../AlertBox/AlertBox';
@@ -78,6 +80,8 @@ export const Dashboard = memo(function Dashboard({
   setAlertAnswer
 }) {
 
+
+
   const [zoomId, setZoomId] = useState(null)
   const [resize, setResize] = useState(0)
   const [onTop, setOnTop] = useState(null)
@@ -107,7 +111,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("0.98a")
+    updateVersion("0.99")
     // eslint-disable-next-line 
   }, [])
 
@@ -287,26 +291,41 @@ export const Dashboard = memo(function Dashboard({
 
 
 
-
-
   const handleCopyPanel = (index) => {
     const copyPanels = panels
     const deepCopyPanels = JSON.parse(JSON.stringify(panels));
     let copyPanel = deepCopyPanels[index]
     copyPanel.frontEndData.visual.timeOfCreation = date + ", " + timeWithSeconds
-    if (copyPanel.frontEndData.visual.panelName.includes("- kopia")) {
-      if (Number.isInteger(parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)))) {
-        let number = parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)) + 1
-        copyPanel.frontEndData.visual.panelName = copyPanel.frontEndData.visual.panelName.slice(0, -2) + number.toString() + ")"
-        copyPanel.backEndData.panelName = copyPanel.backEndData.panelName.slice(0, -2) + number.toString() + ")"
+    if (i18n.language === "pl") {
+      if (copyPanel.frontEndData.visual.panelName.includes("- kopia")) {
+        if (Number.isInteger(parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)))) {
+          let number = parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+          copyPanel.frontEndData.visual.panelName = copyPanel.frontEndData.visual.panelName.slice(0, -2) + number.toString() + ")"
+          copyPanel.backEndData.panelName = copyPanel.backEndData.panelName.slice(0, -2) + number.toString() + ")"
+        } else {
+          copyPanel.frontEndData.visual.panelName += " (2)"
+          copyPanel.backEndData.panelName += " (2)"
+        }
       } else {
-        copyPanel.frontEndData.visual.panelName += " (2)"
-        copyPanel.backEndData.panelName += " (2)"
+        copyPanel.frontEndData.visual.panelName += " - kopia"
+        copyPanel.backEndData.panelName += " - kopia"
       }
     } else {
-      copyPanel.frontEndData.visual.panelName += " - kopia"
-      copyPanel.backEndData.panelName += " - kopia"
+      if (copyPanel.frontEndData.visual.panelName.includes("- copy")) {
+        if (Number.isInteger(parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)))) {
+          let number = parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+          copyPanel.frontEndData.visual.panelName = copyPanel.frontEndData.visual.panelName.slice(0, -2) + number.toString() + ")"
+          copyPanel.backEndData.panelName = copyPanel.backEndData.panelName.slice(0, -2) + number.toString() + ")"
+        } else {
+          copyPanel.frontEndData.visual.panelName += " (2)"
+          copyPanel.backEndData.panelName += " (2)"
+        }
+      } else {
+        copyPanel.frontEndData.visual.panelName += " - copy"
+        copyPanel.backEndData.panelName += " - copy"
+      }
     }
+
 
     copyPanel.hide = true
     copyPanels.push(copyPanel)
@@ -416,8 +435,8 @@ export const Dashboard = memo(function Dashboard({
             <div className="dashboard_scroll">
               <CreatorHeader />
               <div className="dashboard_content">
-                <p className="dashboard_header">Menu główne</p>
-                <p className="dashboard_header_info">Dodaj nowy panel, wczytaj z pliku PDF lub edytuj istniejący:</p>
+                <p className="dashboard_header">{t("MAIN_MENU")}</p>
+                <p className="dashboard_header_info">{t("DASHBOARD_INSTRUCTION")}</p>
 
                 <div className="dashboard_panels">
                   {panels.map((panel, id) => {
@@ -808,24 +827,24 @@ export const Dashboard = memo(function Dashboard({
 
                               <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1", width: "250px", cursor: "default" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "250px", cursor: "default" }}>
                                 <ol className="dashboard_info_list" >
-                                  <li>Model: <span>{panel.frontEndData.model.chosenModel.type}</span></li>
-                                  <li>Kolor: <span>{panel.frontEndData.color.name}</span></li>
-                                  <li>Data utworzenia : <span>{panel.frontEndData.visual.timeOfCreation}</span></li>
+                                  <li>{t("MODEL")}: <span>{panel.frontEndData.model.chosenModel.type}</span></li>
+                                  <li>{t("COLOR")}: <span>{panel.frontEndData.color.name}</span></li>
+                                  <li>{t("CREATION_DATE")} : <span>{panel.frontEndData.visual.timeOfCreation}</span></li>
                                 </ol>
 
 
                                 <div className="dashboard_button_container">
                                   <div className="dashboard_button_box" onClick={() => { handleSelectPanel(id) }} onMouseOver={() => { setEditOver(true) }} onMouseLeave={() => { setEditOver(false) }}>
                                     <img src={editOver ? Editfill : Edit} alt="edit" className="dashboard_img_button" />
-                                    <span>Edytuj</span>
+                                    <span>{t("EDIT")}</span>
                                   </div>
                                   <div className="dashboard_button_box" onClick={() => { handleDeletePanel(id) }} onMouseOver={() => { setDeleteOver(true) }} onMouseLeave={() => { setDeleteOver(false) }}>
                                     <img src={deleteOver ? Deletefill : Delete} alt="delete" className="dashboard_img_button" />
-                                    <span>Usuń</span>
+                                    <span>{t("DELETE")}</span>
                                   </div>
                                   <div className="dashboard_button_box" onClick={() => { handleCopyPanel(id) }} onMouseOver={() => { setCopyOver(true) }} onMouseLeave={() => { setCopyOver(false) }}>
                                     <img src={copyOver ? Copyfill : Copy} alt="copy" className="dashboard_img_button" />
-                                    <span>Utwórz kopię</span>
+                                    <span>{t("CREATE_COPY")}</span>
                                   </div>
                                   <div className="dashboard_button_box" onClick={() => { handlePrintPdf(id) }} onMouseOver={() => { setSaveOver(true) }} onMouseLeave={() => { setSaveOver(false) }}>
                                     {saveOver && !downloading &&
@@ -846,9 +865,9 @@ export const Dashboard = memo(function Dashboard({
                                       </>
                                     }
                                     {downloading ?
-                                      <span>Zapis <br />do PDF...</span>
+                                      <span>{t("SAVING")} <br />{t("TO_PDF")}</span>
                                       :
-                                      <span>Zapisz do PDF</span>
+                                      <span>{t("SAVE_TO_PDF")}</span>
                                     }
                                   </div>
                                 </div>
@@ -880,14 +899,14 @@ export const Dashboard = memo(function Dashboard({
                         <div className="dashboard_box">
                           <img src={zoomId === "new" ? Newpanelfill : Newpanel} alt="newpanel" className="dashboard_img" />
                         </div>
-                        <p className="dashboard_name">Dodaj nowy panel</p>
+                        <p className="dashboard_name">{t("ADD_NEW_PANEL")}</p>
                       </div>
 
                       <div className={`resize-${"new"}`} style={zoomId === "new" ? { transition: "0.5s ease", opacity: "1", width: "300px", cursor: "default" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "300px", cursor: "default" }}>
-                        <p className="dashboard_info" >Przejdź do edytora aby utworzyć nowy panel od podstaw.</p>
+                        <p className="dashboard_info" >{t("ADD_NEW_PANEL_DESCRIPTION")}</p>
                         <div className="dashboard_button_container" style={{ justifyContent: "center" }}>
                           <div className="select_button" onClick={handleAddPanel}>
-                            UTWÓRZ
+                            {t("CREATE")}
                             <div className="button_arrows" />
                           </div>
                         </div>
@@ -930,20 +949,20 @@ export const Dashboard = memo(function Dashboard({
                           }
                         </div>
                         {uploading ?
-                          <p className="dashboard_name">Wczytywanie...</p>
-                          : <p className="dashboard_name">Wczytaj panel z pliku PDF</p>
+                          <p className="dashboard_name">{t("LOADING")}</p>
+                          : <p className="dashboard_name">{t("LOAD_PANEL")}</p>
                         }
 
                       </div>
 
                       <div className={`resize-${"upload"}`} style={zoomId === "upload" ? { transition: "0.5s ease", opacity: "1", width: "300px", cursor: "default" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "300px", cursor: "default" }}>
-                        <p className="dashboard_info" >Wybierz plik PDF z komputera aby wczytać zapisany panel. Możliwe jest wczytanie plików utworzonych w aktualnej wersji Kreatora.</p>
+                        <p className="dashboard_info">{t("LOAD_PANEL_DESCRIPTION")}</p>
                         <div className="dashboard_button_container" style={{ justifyContent: "center" }}>
 
 
                           <label htmlFor="inputUploadProject">
                             <div className="select_button">
-                              WYBIERZ PLIK
+                              {t("SELECT_FILE")}
                               <div className="button_arrows" />
                             </div>
                           </label>
