@@ -1,19 +1,18 @@
 import React from 'react';
 import "./CreatorHeader.scss"
 import { connect } from "react-redux"
-import { t } from "../../../i18n";
-import { useTranslation } from 'react-i18next';
+import i18n, { t } from "../../../i18n";
 
 import AmpioLogo from "../../../assets/ampio_logo.svg"
 import actionsVisual from "../../MainCreator/PanelPreview/duck/actions"
 
 const CreatorHeader = ({ version, changeLanguage }) => {
 
-  const { i18n } = useTranslation();
-
   const rerenderAll = () => {
     changeLanguage()
   }
+  // console.log(i18n)
+  // console.log(i18n.language)
 
 
   return (

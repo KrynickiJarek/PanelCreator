@@ -1,3 +1,4 @@
+// import React, { memo, useState, useEffect, Suspense } from 'react';
 import { memo, useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -80,7 +81,7 @@ export const Dashboard = memo(function Dashboard({
   setAlertAnswer
 }) {
 
-
+  // const CreatorHeader = React.lazy(() => import("../MainCreator/CreatorHeader/CreatorHeader"));
 
   const [zoomId, setZoomId] = useState(null)
   const [resize, setResize] = useState(0)
@@ -434,6 +435,9 @@ export const Dashboard = memo(function Dashboard({
           <div className="dashboard_container" style={dashboard && dashboardEnter ? { opacity: "1" } : { opacity: "0" }}>
             <div className="dashboard_scroll">
               <CreatorHeader />
+              {/* <Suspense fallback={<div>Loading...</div>}>
+                <CreatorHeader />
+              </Suspense> */}
               <div className="dashboard_content">
                 <p className="dashboard_header">{t("MAIN_MENU")}</p>
                 <p className="dashboard_header_info">{t("DASHBOARD_INSTRUCTION")}</p>
