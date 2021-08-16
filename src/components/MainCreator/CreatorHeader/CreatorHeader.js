@@ -11,8 +11,6 @@ const CreatorHeader = ({ version, changeLanguage }) => {
   const rerenderAll = () => {
     changeLanguage()
   }
-  // console.log(i18n)
-  // console.log(i18n.language)
 
 
   return (
@@ -27,11 +25,11 @@ const CreatorHeader = ({ version, changeLanguage }) => {
 
 
       <div className="languale_button_box">
-        <button className="languale_button" style={{ fontWeight: i18n.language === "pl" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("pl"); rerenderAll() }}>
+        <button className="languale_button" style={{ fontWeight: i18n.language.split('-')[0] === "pl" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("pl"); rerenderAll() }}>
           PL
         </button>
         <span className="languale_slash">/</span>
-        <button className="languale_button" style={{ fontWeight: i18n.language === "en" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("en"); rerenderAll() }}>
+        <button className="languale_button" style={{ fontWeight: i18n.language.split('-')[0] === "en" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("en"); rerenderAll() }}>
           ENG
         </button>
       </div>

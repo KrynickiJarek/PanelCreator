@@ -199,6 +199,6 @@
   "FRAME_TITLE_TOOLTIP_1": "In order to add a title,",
   "FRAME_TITLE_TOOLTIP_2": "create a frame first that is at least",
   "FRAME_TITLE_TOOLTIP_3": "2-columns-wide or 2-rows-high",
-  "SMOKED_GLASS_TOOLTIP_1": "Smoked glass gives the effect of a darkened LCD screen.",
-  "SMOKED_GLASS_TOOLTIP_2": "Available only for MDOT-M18 and MDOT-M18 Universal panels."
+  "SMOKED_GLASS_TOOLTIP_1": "Smoked glass makes the screen look dimmed.",
+  "SMOKED_GLASS_TOOLTIP_2": "Available only in MDOT-M18 and MDOT-M18 Universal panels."
 }
