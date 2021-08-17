@@ -30,7 +30,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
             </div>
             <p className="alert_text">{t(availableAlerts.find(element => element.code === alert).text)}</p>
             <div className="alert_button_container">
-              {alert < 5 ?
+              {alert < 10 ?
                 <>
                   <div className="alert_button_back"
                     onClick={handleRemoveAlert}
@@ -47,7 +47,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                 </>
                 :
                 <>
-                  {alert !== 8 &&
+                  {alert !== 20 &&
                     <div className="alert_button_back"
                       onClick={() => removeAlert()}
                     >
@@ -55,7 +55,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                       {t("BACK")}
                     </div>
                   }
-                  {alert === 8 &&
+                  {alert === 20 &&
                     <a href="https://ampio.pl/" style={{ textDecoration: "none" }}>
                       <div className="alert_button_back"
                         onClick={() => removeAlert()}

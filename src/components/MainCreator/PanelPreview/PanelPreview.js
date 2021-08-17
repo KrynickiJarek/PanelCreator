@@ -12,6 +12,7 @@ import actionsTab from "../PanelEditor/duck/actions"
 import actionsBackEnd from "../duck/actions"
 import actionsDashboard from "../../Dashboard/duck/actions"
 import { t } from "../../../i18n";
+import availableModels from "../PanelEditor/ModelChooser/availableModels"
 
 import moment from 'moment';
 
@@ -90,6 +91,7 @@ const PanelPreview = ({
   resetModel,
   resetAllAfterModelChange,
   resetAllAfterModelChangeFlag,
+  changePanelTypeBackEnd,
   chosenFrameFont,
   chosenFrameShape,
   addNewFrameState,
@@ -179,6 +181,7 @@ const PanelPreview = ({
   const [showFramBlackLight, setShowFramBlackLight] = useState(true)
 
   const [noPanelName, setNoPanelName] = useState(false)
+  const [occupiedPanelName, setOccupiedPanelName] = useState(false)
   const [downloading, setDownloading] = useState(false)
 
   const [newFrame, setNewFrame] = useState([])
@@ -186,10 +189,16 @@ const PanelPreview = ({
   const [newFrameChange, setNewFrameChange] = useState([])
   const [tempFrame, setTempFrame] = useState({ textX: 0, textY: 0, frameArr: [], text: "" })
 
+  const [overCurrFrame, setOverCurrFrame] = useState(false)
+  // const [overCurrFrameTemp, setOverCurrFrameTemp] = useState(null)
+
 
   const [textFrame, setTextFrame] = useState(false)
   const [isFocusedInputFrame, setIsFocusedInputFrame] = useState(false)
   const [allFramesSharpRound, setAllFramesSharpRound] = useState(true)
+
+  const [overDescriptions, setOverDescriptions] = useState(false)
+  const [overUpDescriptions, setOverUpDescriptions] = useState(false)
 
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
@@ -523,7 +532,7 @@ const PanelPreview = ({
 
 
 
-  useEffect(() => {// -----------------------------------------------------------------------------------------------------------------4444
+  useEffect(() => {
     const copyArr = iconHolders;
     if (isFocusedInputSide === "up") {
       copyArr[isFocusedInputIndex].fontUp = chosenTextFont
@@ -794,8 +803,16 @@ const PanelPreview = ({
     if (alertAnswer === 4) {
       handleClearAllIcons()
     }
+    if (alertAnswer === 5) {
+      handleResetAllFrames()
+      handleResetCurrFrame()
+    }
+    if (alertAnswer === 6) {
+      handleClearAllText()
+    }
     // eslint-disable-next-line 
   }, [alertAnswer])
+
 
   useEffect(() => {
     if (ownIcons.length !== 0) {
@@ -850,8 +867,11 @@ const PanelPreview = ({
   frameTempStyle.borderColor = "rgb(40, 167, 69)";
   frameTempStyle.opacity = "0";
 
-  if (chosenColor.hex === "#30a32c") {
+  if (chosenColor.hex === "#30a32c" && !overCurrFrame) { //nataleczka
     frameTempStyle.borderColor = "rgb(32, 114, 30)";
+  }
+  if (overCurrFrame) { //nataleczka
+    frameTempStyle.borderColor = "#dc3545";
   }
   if ((chosenTab === "frame")) {
     frameTempStyle.opacity = "1";
@@ -1031,8 +1051,8 @@ const PanelPreview = ({
 
 
   const autoResizeInputStyle = {};
-  autoResizeInputStyle.fontSize = `${2.55 * sc}px`
-  autoResizeInputStyle.lineHeight = `${2.55 * sc}px`
+  autoResizeInputStyle.fontSize = `${2.5 * sc}px`
+  autoResizeInputStyle.lineHeight = `${2.5 * sc}px`
   autoResizeInputStyle.height = `${3.6 * sc}px`;
   autoResizeInputStyle.width = `${8 * sc}px`;
   autoResizeInputStyle.transition = "400ms ease";
@@ -1046,14 +1066,28 @@ const PanelPreview = ({
   textStyle.color = chosenColor.iconColor;
   textStyle.border = "2px solid transparent"
   textStyle.borderRadius = `${0.9 * sc}px`;
-  textStyle.fontSize = `${2.55 * sc}px`
-  textStyle.lineHeight = `${2.55 * sc}px`
+  // textStyle.fontSize = `${2.55 * sc}px`
+  // textStyle.lineHeight = `${2.55 * sc}px`
+  textStyle.fontSize = `${2.5 * sc}px`
+  textStyle.lineHeight = `${2.5 * sc}px`
+
+
+
   textStyle.height = `${3.6 * sc}px`;
   textStyle.gridArea = "1 / 1 / 2 / 2";
   textStyle.width = "100%";
   textStyle.transition = "400ms ease";
 
+  if (overDescriptions) {
+    textStyle.color = "#dc3545";
+  }
 
+  const textUpStyle = {};
+
+  if (overUpDescriptions) {
+    textUpStyle.color = "#dc3545";
+    textUpStyle.border = "2px solid #dc3545"
+  }
 
 
   if (chosenTab === "text" && showTextBorder && !visual) {
@@ -1071,8 +1105,8 @@ const PanelPreview = ({
   textStyleFrame.color = chosenColor.iconColor;
   textStyleFrame.border = "2px dashed transparent"
   textStyleFrame.borderRadius = `${0.9 * sc}px`;
-  textStyleFrame.fontSize = `${2.55 * sc}px`
-  textStyleFrame.lineHeight = `${2.55 * sc}px`;
+  textStyleFrame.fontSize = `${2.5 * sc}px`
+  textStyleFrame.lineHeight = `${2.5 * sc}px`;
   textStyleFrame.height = `${3.6 * sc}px`;
   textStyleFrame.gridArea = "1 / 1 / 2 / 2";
   textStyleFrame.width = "100%";
@@ -1528,6 +1562,7 @@ const PanelPreview = ({
   }
 
   const handleClearAllText = () => {
+    setAlertAnswer(null)
     const copyArr = iconHolders;
     copyArr.forEach((el) => {
       el.textUp = "";
@@ -3470,6 +3505,7 @@ const PanelPreview = ({
         copyTempArr[i].b = 0
         copyTempArr[i].l = 0
         copyIconHolders[i].singleFrameTemp = true
+        //tutaj dodaj setOverCurrFrameTemp
       } else {
         copyIconHolders[i].singleFrameTemp = false
       }
@@ -3653,6 +3689,7 @@ const PanelPreview = ({
   const handleChangePanelName = (text) => {
     changePanelName(text.target.value)
     changePanelNameBackEnd(text.target.value)
+    setOccupiedPanelName(false)
     if (panelName !== "") {
       setNoPanelName(false)
     }
@@ -3686,7 +3723,7 @@ const PanelPreview = ({
 
   const handleResetCurrFrame = () => {
     const copyArr = iconHolders;
-
+    setOverCurrFrame(false)
     const arrNewFrame = [];
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
@@ -3727,6 +3764,7 @@ const PanelPreview = ({
   }
 
   const handleResetAllFrames = () => {
+    setAlertAnswer(null)
     changeFrameHolders([])
     changeFramesBackEnd([])
     const copyArr = iconHolders;
@@ -3736,7 +3774,6 @@ const PanelPreview = ({
     changeIconHolders(copyArr)
     overFrameReRender()
     setFrameTitles(false)
-
   }
 
 
@@ -3774,7 +3811,7 @@ const PanelPreview = ({
         .catch(error => {
           setDownloading(false)
           // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.") 
-          showAlert(5);
+          showAlert(13);
         });
     }
   }
@@ -3812,7 +3849,6 @@ const PanelPreview = ({
         .catch(error => {
           setDownloading(false)
           console.log(error)
-          // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.")
         });
     }
   }
@@ -3826,6 +3862,8 @@ const PanelPreview = ({
   const handleSave = () => {
     if (panelName === "") {
       setNoPanelName(true)
+    } else if (((panels.filter(function (el, i) { return i !== indexOfLastPanel })).filter(function (panel) { return panel.backEndData.panelName === panelName })).length) {
+      setOccupiedPanelName(true)
     } else {
       if (indexOfLastPanel > -1) {
         const copyPanels = panels
@@ -3846,13 +3884,13 @@ const PanelPreview = ({
       handleClearAll()
       const dahsboardTimeout = setTimeout(() => {
         showDashboard(true)
-        // handleClearAll()
         changePanelName("")
         changePanelNameBackEnd("")
         resetColor()
         resetPanelColorBackEnd()
         resetTab("model")
         resetModel()
+        changePanelTypeBackEnd(availableModels[0].backEndPanelType)
         updateFavoriteIcons([])
         updateOwnIcons([])
       }, 400);
@@ -3885,6 +3923,7 @@ const PanelPreview = ({
     setAlertAnswer(null)
     hideCreator(false)
     handleClearAll()
+    setOccupiedPanelName(false)
 
     const dahsboardTimeout = setTimeout(() => {
       showDashboard(true)
@@ -3894,6 +3933,7 @@ const PanelPreview = ({
       resetPanelColorBackEnd()
       resetTab("model")
       resetModel()
+      changePanelTypeBackEnd(availableModels[0].backEndPanelType)
       updateFavoriteIcons([])
       updateOwnIcons([])
     }, 400);
@@ -3915,10 +3955,10 @@ const PanelPreview = ({
               ref={target}
               type="text"
               autoComplete="off"
-              maxLength="18"
+              maxLength="23"
               placeholder={t("ENTER_NAME")}
               style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", border: "3px solid transparent" }
-                : noPanelName ? { color: "white", border: "3px solid #dc3545" } : { color: "white", border: "3px solid transparent" }}
+                : (noPanelName || occupiedPanelName) ? { color: "white", border: "3px solid #dc3545" } : { color: "white", border: "3px solid transparent" }}
               onMouseOver={showFrameBorder}
               onMouseLeave={hideFrameBorder}
               value={panelName}
@@ -4068,7 +4108,9 @@ const PanelPreview = ({
 
                               {el !== 0 && !visual &&
                                 <div style={frame.framePrint.shape === "sharp" ? {
-                                  ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: "0",
+                                  ...frameStyle,
+                                  borderColor: chosenColor.iconColor,
+                                  borderRadius: "0",
                                   height: `${el.fh * sc}px`,
                                   width: `${el.fw * sc}px`,
                                   marginBottom: `${el.mb * sc}px`,
@@ -4089,6 +4131,7 @@ const PanelPreview = ({
                                   className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
                                 />
                               }
+
                               {el !== 0 && visual &&
                                 <div style={frame.framePrint.shape === "sharp" ? {
                                   ...frameStyle,
@@ -4097,7 +4140,7 @@ const PanelPreview = ({
                                   height: `${el.fh * sc}px`,
                                   width: `${el.fw * sc}px`,
                                   marginBottom: `${el.mb * sc}px`,
-                                  margin: `${el.ml * sc}px`,
+                                  marginLeft: `${el.ml * sc}px`,
                                   marginRight: `${el.mr * sc}px`,
                                   transition: "0.4s ease",
                                 }
@@ -4417,7 +4460,7 @@ const PanelPreview = ({
                       selectedDown,
                       selectedUp,
                       singleFrame,
-                      singleFrameTemp,
+                      singleFrameTemp
                     }, index) =>
                       <div key={index}
                         style={
@@ -4449,17 +4492,20 @@ const PanelPreview = ({
                                           (
                                             (chosenColor.hex !== "#30a32c") ? {
                                               ...textStyle,
+                                              ...textUpStyle,
                                               fontFamily: fontUp,
                                               border: "2px solid rgb(40, 167, 69)"
                                             } :
                                               {
                                                 ...textStyle,
+                                                ...textUpStyle,
                                                 fontFamily: fontUp,
                                                 border: "2px solid rgb(32, 114, 30)",
                                               }
                                           )
                                           : {
                                             ...textStyle,
+                                            ...textUpStyle,
                                             fontFamily: fontUp,
                                           }}
                                         disabled={chosenTab !== "text" && true}
@@ -4602,6 +4648,7 @@ const PanelPreview = ({
                               singleFrame={singleFrame}
                               singleFrameTemp={singleFrameTemp}
                               visual={visual}
+                            // overCurrFrameTemp={overCurrFrameTemp}
                             />
                           </>}
                       </div>
@@ -4739,6 +4786,26 @@ const PanelPreview = ({
             </Overlay>
 
 
+            <Overlay target={target.current} show={occupiedPanelName} placement="top">
+              {({ placement, arrowProps, show: _show, popper, ...props }) => (
+                <div
+                  {...props}
+                  style={{
+                    backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                    fontSize: "14px",
+                    fontFamily: "'Montserrat', sans-serif",
+                    padding: '10px 15px',
+                    color: 'white',
+                    borderRadius: 3,
+                    ...props.style,
+                  }}
+                >
+                  {t("BUSY_PANEL_NAME")}
+                </div>
+              )}
+            </Overlay>
+
+
 
             <div className="side_box">
 
@@ -4794,14 +4861,14 @@ const PanelPreview = ({
 
             {chosenTab === "icons" &&
               <>
-                <div className="side_box">
+                <div className="side_box" data-for="animation_tooltip" data-tip={t("ANIMATION_TOOLTIP")}>
                   {animations ?
                     <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
                     : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
                   }
                   {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
                 </div>
-
+                <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
                 {areThereAnyIcons ?
                   <div className="side_box">
                     <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
@@ -4886,21 +4953,40 @@ const PanelPreview = ({
 
                 <div className="side_box">
                   {textUpOff ?
-                    <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff} />
+                    <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff}
+                      onMouseOver={() => { setOverUpDescriptions(true) }}
+                      onMouseLeave={() => { setOverUpDescriptions(false) }}
+                    />
                     :
-                    <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff} />}
+                    <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff}
+                      onMouseOver={() => { setOverUpDescriptions(true) }}
+                      onMouseLeave={() => { setOverUpDescriptions(false) }}
+                    />}
                   {textUpOff ? <span>{t("TRUN_OFF_UP_DESCRIPTION")}</span> : <span>{t("TRUN_ON_UP_DESCRIPTION")}</span>}
                 </div>
 
-                <div className="side_box">
-                  <img src={Clearalltext} alt="clearalltext" className="side_icon" onClick={handleClearAllText} />
-                  <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
-                </div>
+                {panelTextBackEnd.length !== 0 ?
+                  <div className="side_box" >
+                    <img src={Clearalltext} alt="clearalltext" className="side_icon"
+                      onClick={() => showAlert(6)}
+                      onMouseOver={() => { setOverDescriptions(true) }}
+                      onMouseLeave={() => { setOverDescriptions(false) }}
+                    />
+                    <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
+                  </div>
+                  :
+                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_DESCRIPTION_TOOLTIP")}>
+                    <img src={Clearalltext} alt="clearalltext" className="side_icon" />
+                    <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
+                  </div>
+                }
 
                 <div className="side_box">
                   <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
                   <span>{t("CHOSEN_FONT_FOR_ALL_DESCRIPTIONS")}</span>
                 </div>
+
+                <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
 
               </>
             }
@@ -4924,9 +5010,9 @@ const PanelPreview = ({
 
                   <div className="side_box" >
                     <img src={Removeallframes} alt="ramoveallframes" className="side_icon"
-                      onClick={() => { handleResetAllFrames(); handleResetCurrFrame() }}
-                      onMouseOver={() => { overFrameAll(true) }}
-                      onMouseLeave={() => { overFrameAll(false) }}
+                      onClick={() => showAlert(5)}
+                      onMouseOver={() => { overFrameAll(true); setOverCurrFrame(true) }}
+                      onMouseLeave={() => { overFrameAll(false); setOverCurrFrame(false) }}
                     />
                     <span>{t("DELETE_ALL_FRAMES")}</span>
                   </div>
@@ -5091,6 +5177,7 @@ const mapDispatchToProps = dispatch => ({
   resetPanelColorBackEnd: (income) => dispatch(actionsBackEnd.resetPanelColor(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
   changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
+  changePanelTypeBackEnd: (income) => dispatch(actionsBackEnd.changePanelType(income)),
 
   addPanel: (income) => dispatch(actionsDashboard.addPanel(income)),
   updatePanels: (income) => dispatch(actionsDashboard.updatePanels(income)),
@@ -5100,6 +5187,7 @@ const mapDispatchToProps = dispatch => ({
 
   resetAllAfterModelChange: (income) => dispatch(actionsModel.resetAllAfterModelChange(income)),
   resetModel: (income) => dispatch(actionsModel.resetModel(income)),
+
   updateOwnIcons: (income) => dispatch(actionsIcon.updateOwnIcons(income)),
   updateFavoriteIcons: icon => dispatch(actionsIcon.updateFavoriteIcons(icon)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),

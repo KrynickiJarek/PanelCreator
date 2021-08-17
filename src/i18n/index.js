@@ -23,7 +23,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en",
-    load: "languageOnly",
+    // load: "languageOnly",
 
     keySeparator: false,
     debug: false,
@@ -34,7 +34,6 @@ i18n
 
 
 console.log(i18n.language)
-// console.log(i18n.language.split('-')[0])
 
 export const t = i18n.t.bind(i18n);
 

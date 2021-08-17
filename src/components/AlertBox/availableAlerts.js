@@ -18,23 +18,40 @@ const availableAlerts = [
   },
   {
     code: 5,
-    text: "SERVER_ERROR_ALERT",
+    text: "RESET_ALL_FRAMES_ALERT",
   },
   {
     code: 6,
-    text: "WRONG_PROJECT_FILE_ALERT",
+    text: "RESET_ALL_DESCRIPTIONS_ALERT",
   },
   {
     code: 7,
+    text: "CHANGE_MODEL_ALERT",
+  },
+
+
+
+  {
+    code: 10,
+    text: "WRONG_PROJECT_FILE_ALERT",
+  },
+  {
+    code: 11,
     text: "WRONG_ICON_FILE_ALERT",
   },
+
   {
-    code: 8,
-    text: "WRONG_BROWSER_ALERT",
+    code: 12,
+    text: "WRONG_ICON_SIZE_FILE_ALERT",
   },
   {
-    code: 9,
-    text: "WRONG_ICON_SIZE_FILE_ALERT",
+    code: 13,
+    text: "SERVER_ERROR_ALERT",
+  },
+
+  {
+    code: 20,
+    text: "WRONG_BROWSER_ALERT",
   },
 ]
 

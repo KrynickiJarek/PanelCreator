@@ -58,9 +58,9 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
   const onSelectFile = (e) => {
     if (e.target.files[0].type !== "image/svg+xml") {
-      showAlert(7);
+      showAlert(11);
     } else if (e.target.files[0].size > 100000) {
-      showAlert(9);
+      showAlert(12);
     } else {
       console.log(e.target.files[0])
       getBase64(e.target.files[0]).then(

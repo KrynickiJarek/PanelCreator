@@ -10,7 +10,6 @@ import {
   isEdge
 } from "react-device-detect";
 import { t } from "../../i18n";
-import i18n from 'i18next';
 
 import IconHolder from '../MainCreator/PanelPreview/IconHolder/IconHolder';
 import AlertBox from '../AlertBox/AlertBox';
@@ -108,7 +107,7 @@ export const Dashboard = memo(function Dashboard({
   let sc = 5
 
   if (!(isChrome || isEdge || isOpera)) {
-    showAlert(8)
+    showAlert(20)
   }
 
   useEffect(() => {
@@ -222,31 +221,6 @@ export const Dashboard = memo(function Dashboard({
   const handleDeletePanel = (index) => {
     showAlert(1)
     setIndexToDelete(index)
-    // setZoomId(null)
-    // const copyPanels = JSON.parse(JSON.stringify(panels))
-    // copyPanels[index].hide = true
-    // updatePanels(copyPanels)
-
-    // const dahsboardTimeout = setTimeout(() => {
-    //   const copyPanels = JSON.parse(JSON.stringify(panels))
-    //   copyPanels[index].show = false
-    //   copyPanels[index].hide = true
-    //   updatePanels(copyPanels)
-    //   setZoomId(null)
-    //   setEditOver(false)
-    //   setDeleteOver(false)
-    //   setCopyOver(false)
-    //   setSaveOver(false)
-    // }, 400);
-
-    // const dahsboardTimeout2 = setTimeout(() => {
-    //   const copyPanels = JSON.parse(JSON.stringify(panels))
-    //   copyPanels[index].show = false
-    //   copyPanels[index].hide = true
-    //   copyPanels.splice(index, 1)
-    //   updatePanels(copyPanels)
-    // }, 500);
-    // return () => clearTimeout(dahsboardTimeout, dahsboardTimeout2);
   }
 
   useEffect(() => {
@@ -297,35 +271,56 @@ export const Dashboard = memo(function Dashboard({
     const deepCopyPanels = JSON.parse(JSON.stringify(panels));
     let copyPanel = deepCopyPanels[index]
     copyPanel.frontEndData.visual.timeOfCreation = date + ", " + timeWithSeconds
-    if (i18n.language === "pl") {
-      if (copyPanel.frontEndData.visual.panelName.includes("- kopia")) {
-        if (Number.isInteger(parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)))) {
-          let number = parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)) + 1
-          copyPanel.frontEndData.visual.panelName = copyPanel.frontEndData.visual.panelName.slice(0, -2) + number.toString() + ")"
-          copyPanel.backEndData.panelName = copyPanel.backEndData.panelName.slice(0, -2) + number.toString() + ")"
-        } else {
-          copyPanel.frontEndData.visual.panelName += " (2)"
-          copyPanel.backEndData.panelName += " (2)"
+
+
+    if (copyPanel.frontEndData.visual.panelName.includes(t("COPY"))) {
+      let pureName = copyPanel.frontEndData.visual.panelName.slice(0, copyPanel.frontEndData.visual.panelName.indexOf(t("COPY")))
+      let copyNumber = 0
+      deepCopyPanels.forEach(panel => {
+        if (panel.frontEndData.visual.panelName.includes(pureName + t("COPY"))) {
+          if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+            let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+            if (numberTemp > copyNumber) {
+              copyNumber = numberTemp
+            }
+          } else {
+            copyNumber = 2
+          }
         }
+      })
+      if (copyNumber > 0) {
+        copyPanel.frontEndData.visual.panelName = pureName + t("COPY") + ` (${copyNumber})`
+        copyPanel.backEndData.panelName = pureName + t("COPY") + ` (${copyNumber})`
       } else {
-        copyPanel.frontEndData.visual.panelName += " - kopia"
-        copyPanel.backEndData.panelName += " - kopia"
+        copyPanel.frontEndData.visual.panelName = pureName + t("COPY")
+        copyPanel.backEndData.panelName = pureName + t("COPY")
       }
     } else {
-      if (copyPanel.frontEndData.visual.panelName.includes("- copy")) {
-        if (Number.isInteger(parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)))) {
-          let number = parseInt(copyPanel.frontEndData.visual.panelName.slice(-2, -1)) + 1
-          copyPanel.frontEndData.visual.panelName = copyPanel.frontEndData.visual.panelName.slice(0, -2) + number.toString() + ")"
-          copyPanel.backEndData.panelName = copyPanel.backEndData.panelName.slice(0, -2) + number.toString() + ")"
-        } else {
-          copyPanel.frontEndData.visual.panelName += " (2)"
-          copyPanel.backEndData.panelName += " (2)"
+      let copyNumber = 0
+      deepCopyPanels.forEach(panel => {
+        if (panel.frontEndData.visual.panelName.includes(copyPanel.frontEndData.visual.panelName + t("COPY"))) {
+          if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+            let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+            if (numberTemp > copyNumber) {
+              copyNumber = numberTemp
+            }
+          } else {
+            copyNumber = 2
+          }
         }
+      })
+
+      if (copyNumber > 0) {
+        let name = copyPanel.frontEndData.visual.panelName
+        copyPanel.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
+        copyPanel.backEndData.panelName = name + t("COPY") + ` (${copyNumber})`
       } else {
-        copyPanel.frontEndData.visual.panelName += " - copy"
-        copyPanel.backEndData.panelName += " - copy"
+        let name = copyPanel.frontEndData.visual.panelName
+        copyPanel.frontEndData.visual.panelName = name + t("COPY")
+        copyPanel.backEndData.panelName = name + t("COPY")
       }
     }
+
 
 
     copyPanel.hide = true
@@ -373,7 +368,7 @@ export const Dashboard = memo(function Dashboard({
       })
       .catch(error => {
         setDownloading(false)
-        showAlert(5);
+        showAlert(13);
       });
   }
 
@@ -398,6 +393,76 @@ export const Dashboard = memo(function Dashboard({
           let endocedData = JSON.parse(dataUtf8)
           const copyPanels = panels
           endocedData.hide = true
+
+          //---------------------------------------------------------------------------------
+
+
+          if (endocedData.frontEndData.visual.panelName.includes(t("COPY"))) {
+            let pureName = endocedData.frontEndData.visual.panelName.slice(0, endocedData.frontEndData.visual.panelName.indexOf(t("COPY")))
+            let copyNumber = 0
+            copyPanels.forEach(panel => {
+              if (panel.frontEndData.visual.panelName.includes(pureName + t("COPY"))) {
+                if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+                  let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+                  if (numberTemp > copyNumber) {
+                    copyNumber = numberTemp
+                  }
+                } else {
+                  copyNumber = 2
+                }
+              }
+            })
+            if (copyNumber > 0) {
+              endocedData.frontEndData.visual.panelName = pureName + t("COPY") + ` (${copyNumber})`
+              endocedData.backEndData.panelName = pureName + t("COPY") + ` (${copyNumber})`
+            } else {
+              endocedData.frontEndData.visual.panelName = pureName + t("COPY")
+              endocedData.backEndData.panelName = pureName + t("COPY")
+            }
+          } else {
+            let copyNumber = 0
+            copyPanels.forEach(panel => {
+              if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
+                if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+                  let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+                  if (numberTemp > copyNumber) {
+                    copyNumber = numberTemp
+                  }
+                } else {
+                  copyNumber = 2
+                }
+              }
+            })
+
+            if (copyNumber > 0) {
+              let name = endocedData.frontEndData.visual.panelName
+              endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
+              endocedData.backEndData.panelName = name + t("COPY") + ` (${copyNumber})`
+            } else {
+              let name = endocedData.frontEndData.visual.panelName
+              endocedData.frontEndData.visual.panelName = name + t("COPY")
+              endocedData.backEndData.panelName = name + t("COPY")
+            }
+          }
+
+
+
+
+
+          // endocedData.frontEndData.visual.panelName = endocedData.frontEndData.visual.panelName + " nowa nazwa"
+          // endocedData.backEndData.panelName = endocedData.backEndData.panelName + " nowa nazwa"
+          // ---------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
           copyPanels.push(endocedData)
           updatePanels(copyPanels)
           resetAllAfterModelChange(false)
@@ -406,6 +471,7 @@ export const Dashboard = memo(function Dashboard({
           setUploading(false)
           const dahsboardTimeout = setTimeout(() => {
             copyPanels[copyPanels.length - 1].hide = false
+
             updatePanels(copyPanels)
           }, 200);
           return () => clearTimeout(dahsboardTimeout);
@@ -415,7 +481,7 @@ export const Dashboard = memo(function Dashboard({
           error => {
             setZoomId(null)
             setUploading(false)
-            showAlert(6);
+            showAlert(10);
             document.getElementById("inputUploadProject").value = null
           }
         );
@@ -529,8 +595,8 @@ export const Dashboard = memo(function Dashboard({
                                               {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                                                 <div style={{ position: "absolute", width: "100%" }}>
                                                   <div style={{
-                                                    fontSize: `${2.55 * sc}px`,
-                                                    lineHeight: `${2.55 * sc}px`,
+                                                    fontSize: `${2.5 * sc}px`,
+                                                    lineHeight: `${2.5 * sc}px`,
                                                     height: `${3.6 * sc}px`,
                                                     width: `${8 * sc}px`,
                                                     position: "absolute",
@@ -548,8 +614,8 @@ export const Dashboard = memo(function Dashboard({
                                                         {
                                                           color: panel.frontEndData.color.iconColor,
                                                           borderRadius: `${0.9 * sc}px`,
-                                                          fontSize: `${2.55 * sc}px`,
-                                                          lineHeight: `${2.55 * sc}px`,
+                                                          fontSize: `${2.5 * sc}px`,
+                                                          lineHeight: `${2.5 * sc}px`,
                                                           height: `${3.6 * sc}px`,
                                                           gridArea: "1 / 1 / 2 / 2",
                                                           width: "100%",
@@ -679,8 +745,8 @@ export const Dashboard = memo(function Dashboard({
                                                     <form >
                                                       <div style={!panel.frontEndData.model.chosenModel.panelRotation ?
                                                         {
-                                                          fontSize: `${2.55 * sc}px`,
-                                                          lineHeight: `${2.55 * sc}px`,
+                                                          fontSize: `${2.5 * sc}px`,
+                                                          lineHeight: `${2.5 * sc}px`,
                                                           height: `${3.6 * sc}px`,
                                                           width: `${8 * sc}px`,
                                                           position: "absolute",
@@ -692,8 +758,8 @@ export const Dashboard = memo(function Dashboard({
                                                         }
                                                         :
                                                         {
-                                                          fontSize: `${2.55 * sc}px`,
-                                                          lineHeight: `${2.55 * sc}px`,
+                                                          fontSize: `${2.5 * sc}px`,
+                                                          lineHeight: `${2.5 * sc}px`,
                                                           height: `${3.6 * sc}px`,
                                                           width: `${8 * sc}px`,
                                                           position: "absolute",
@@ -712,8 +778,8 @@ export const Dashboard = memo(function Dashboard({
                                                             color: panel.frontEndData.color.iconColor,
                                                             border: "2px solid transparent",
                                                             borderRadius: `${0.9 * sc}px`,
-                                                            fontSize: `${2.55 * sc}px`,
-                                                            lineHeight: `${2.55 * sc}px`,
+                                                            fontSize: `${2.5 * sc}px`,
+                                                            lineHeight: `${2.5 * sc}px`,
                                                             height: `${3.6 * sc}px`,
                                                             gridArea: "1 / 1 / 2 / 2",
                                                             width: "100%",
@@ -730,8 +796,8 @@ export const Dashboard = memo(function Dashboard({
                                                     </form>
                                                     <form >
                                                       <div style={{
-                                                        fontSize: `${2.55 * sc}px`,
-                                                        lineHeight: `${2.55 * sc}px`,
+                                                        fontSize: `${2.5 * sc}px`,
+                                                        lineHeight: `${2.5 * sc}px`,
                                                         height: `${3.6 * sc}px`,
                                                         width: `${8 * sc}px`,
                                                         position: "absolute",
@@ -750,8 +816,8 @@ export const Dashboard = memo(function Dashboard({
                                                             color: panel.frontEndData.color.iconColor,
                                                             border: "2px solid transparent",
                                                             borderRadius: `${0.9 * sc}px`,
-                                                            fontSize: `${2.55 * sc}px`,
-                                                            lineHeight: `${2.55 * sc}px`,
+                                                            fontSize: `${2.5 * sc}px`,
+                                                            lineHeight: `${2.5 * sc}px`,
                                                             height: `${3.6 * sc}px`,
                                                             gridArea: "1 / 1 / 2 / 2",
                                                             width: "100%",
@@ -831,8 +897,8 @@ export const Dashboard = memo(function Dashboard({
 
                               <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1", width: "250px", cursor: "default" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "250px", cursor: "default" }}>
                                 <ol className="dashboard_info_list" >
-                                  <li>{t("MODEL")}: <span>{panel.frontEndData.model.chosenModel.type}</span></li>
-                                  <li>{t("COLOR")}: <span>{panel.frontEndData.color.name}</span></li>
+                                  <li>{t("MODEL")}: <span>{t(panel.frontEndData.model.chosenModel.type)}</span></li>
+                                  <li>{t("COLOR")}: <span>{t(panel.frontEndData.color.name)}</span></li>
                                   <li>{t("CREATION_DATE")} : <span>{panel.frontEndData.visual.timeOfCreation}</span></li>
                                 </ol>
 
