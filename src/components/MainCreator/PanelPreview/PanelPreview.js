@@ -25,6 +25,7 @@ import ReactTooltip from "react-tooltip";
 import LogoPure from "../../../assets/preview/logopure.svg"
 
 import Resize from "../../../assets/scale/resize.svg"
+import Fullscreen from "../../../assets/scale/fullscreen.svg"
 import Zoomin from "../../../assets/scale/zoomin.svg"
 import Zoomout from "../../../assets/scale/zoomout.svg"
 
@@ -78,6 +79,7 @@ import Rightuni from "../../../assets/lcd/rightuni.svg"
 
 
 import IconHolder from './IconHolder/IconHolder';
+import PanelPreviewFullScreen from './PanelPreviewFullScreen';
 
 const PanelPreview = ({
   frameTitleFlag,
@@ -167,7 +169,9 @@ const PanelPreview = ({
   alert,
   showAlert,
   alertAnswer,
-  setAlertAnswer
+  setAlertAnswer,
+  fullScreen,
+  setFullScreen
 }) => {
 
 
@@ -190,7 +194,6 @@ const PanelPreview = ({
   const [tempFrame, setTempFrame] = useState({ textX: 0, textY: 0, frameArr: [], text: "" })
 
   const [overCurrFrame, setOverCurrFrame] = useState(false)
-  // const [overCurrFrameTemp, setOverCurrFrameTemp] = useState(null)
 
 
   const [textFrame, setTextFrame] = useState(false)
@@ -229,23 +232,24 @@ const PanelPreview = ({
   useEffect(() => {
     setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
     setPanelContainerWidth(document.querySelector(".panel_container").clientWidth)
-  }, [panelContainerHeight, panelContainerWidth]);
+
+    const resizeTimeout = setTimeout(() => {
+      setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
+      setPanelContainerWidth(document.querySelector(".panel_container").clientWidth)
+    }, 850);
+    return () => clearTimeout(resizeTimeout);
+  }, [panelContainerHeight, panelContainerWidth, chosenModel]);
 
 
 
 
   useEffect(() => {
     if (chosenColor.RAL === "RAL 9003" && visual) {
-      // let copyWarnings = warnings
       let checkWarnings = warnings.filter(element => element.code === 0)
       if (checkWarnings.length === 0) {
-        // copyWarnings.push({ code: 0, show: true, hide: false })
-        // updateWarnings(copyWarnings)
         pushWarnings(0)
       }
     } else {
-      // let copyWarnings = warnings.filter(element => element.code !== 0)
-      // updateWarnings(copyWarnings)
       filterWarnings(0)
     }
     // eslint-disable-next-line
@@ -313,9 +317,6 @@ const PanelPreview = ({
         changeFramesBackEnd([])
         updateWarnings([])
         if (chosenColor.RAL === "RAL 9003" && visual) {
-          // const copyWarnings = []
-          // copyWarnings.push({ code: 0, show: true, hide: false })
-          // updateWarnings(copyWarnings)
           pushWarnings(0)
         }
 
@@ -465,7 +466,6 @@ const PanelPreview = ({
   }, [iconHolders, iconHoldersRender, iconsBackEnd]);
 
   useEffect(() => {
-    // const copyFrameHoldersText = frameHolders.filter(element => element.framePrint.text.length > 9)
     const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
 
     if (copyFrameHoldersText.length > 0 || frameText.length > 9) {
@@ -867,10 +867,10 @@ const PanelPreview = ({
   frameTempStyle.borderColor = "rgb(40, 167, 69)";
   frameTempStyle.opacity = "0";
 
-  if (chosenColor.hex === "#30a32c" && !overCurrFrame) { //nataleczka
+  if (chosenColor.hex === "#30a32c" && !overCurrFrame) {
     frameTempStyle.borderColor = "rgb(32, 114, 30)";
   }
-  if (overCurrFrame) { //nataleczka
+  if (overCurrFrame) {
     frameTempStyle.borderColor = "#dc3545";
   }
   if ((chosenTab === "frame")) {
@@ -904,17 +904,6 @@ const PanelPreview = ({
     changeScale(5)
   }
 
-
-  // let fullScreenStyle = {};
-
-  // if (fullScreen) {
-  //   fullScreenStyle.width = "100%";
-  //   fullScreenStyle.height = "100%";
-  //   fullScreenStyle.position = "fixed";
-  //   fullScreenStyle.top = "0"
-  //   fullScreenStyle.zIndex = "9999999999"
-
-  // }
 
 
 
@@ -1002,9 +991,10 @@ const PanelPreview = ({
 
   if ((!chosenModel.panelRotation) && (panelContainerHeight < (chosenModel.height * sc))) {
     resizeStyle.height = `${(chosenModel.height * sc) + 50}px`;
-  } else if ((chosenModel.panelRotation) && (panelContainerHeight < (chosenModel.width * sc))) {
-    resizeStyle.height = `${(chosenModel.width * sc) + 50}px`;
+  } else if ((chosenModel.panelRotation) && (panelContainerHeight < (chosenModel.height * sc))) {
+    resizeStyle.height = `${(chosenModel.height * sc) + 50}px`;
   }
+
   else {
     resizeStyle.height = "100%";
   }
@@ -3943,596 +3933,670 @@ const PanelPreview = ({
 
 
   return (
-    // <div className="panelpreview_container" style={{ ...panelPreviewStyle, ...fullScreenStyle }}>
-    <div className="panelpreview_container" style={panelPreviewStyle}>
-      <div className="preview_container" >
-        {/* <div className="preview_container" style={fullScreenStyle}> */}
-        <div className="preview_top">
-          <h2>{t("PANEL_PREVIEW")}:</h2>
+    <>
+      {fullScreen &&
+        <PanelPreviewFullScreen />
+      }
+      <div className="panelpreview_container" style={panelPreviewStyle}>
+        <div className="preview_container" >
+          <div className="preview_top">
+            <h2>{t("PANEL_PREVIEW")}:</h2>
+            <form onSubmit={handleSubmit} className="panel_name_form" >
+              <input className="panel_name_input"
+                ref={target}
+                type="text"
+                autoComplete="off"
+                maxLength="23"
+                placeholder={t("ENTER_NAME")}
+                style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", border: "3px solid transparent" }
+                  : (noPanelName || occupiedPanelName) ? { color: "white", border: "3px solid #dc3545" } : { color: "white", border: "3px solid transparent" }}
+                onMouseOver={showFrameBorder}
+                onMouseLeave={hideFrameBorder}
+                value={panelName}
+                onChange={(text) => handleChangePanelName(text)}
+                onFocus={() => setIsFocusedInputName(true)}
+                onKeyDown={handleKeyPress}
+              />
 
-          <form onSubmit={handleSubmit} className="panel_name_form" >
-            <input className="panel_name_input"
-              ref={target}
-              type="text"
-              autoComplete="off"
-              maxLength="23"
-              placeholder={t("ENTER_NAME")}
-              style={isFocusedInputName ? { backgroundColor: "white", color: "#333333", border: "3px solid transparent" }
-                : (noPanelName || occupiedPanelName) ? { color: "white", border: "3px solid #dc3545" } : { color: "white", border: "3px solid transparent" }}
-              onMouseOver={showFrameBorder}
-              onMouseLeave={hideFrameBorder}
-              value={panelName}
-              onChange={(text) => handleChangePanelName(text)}
-              onFocus={() => setIsFocusedInputName(true)}
-              onKeyDown={handleKeyPress}
-            />
-
-            {isFocusedInputName &&
-              <input type="image" src={Submitinput} alt="submitinput" className="panel_name_image" />
-            }
-            {isFocusedInputName &&
-              <img src={Clearinput} alt="clearinput" className="panel_name_image" onClick={handleClearInputName} />
-            }
-          </form>
-
-
-        </div>
-        <div className="panel_container">
-          <Warning />
-          <div className="resize_container" style={resizeStyle}>
-            <div className="panel_box" style={chosenModelStyle}>
-              <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "RAL 9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
-
-              <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {(removeAll || alert === 3) &&
-                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                    <img src={Removeall} alt="removeall" style={{
-                      width: "100%",
-                      zIndex: "99999",
-                      opacity: "0.8"
-                    }} />
-                  </div>
-                }
-              </div>
-
-              <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll && !visual &&
-                  <>
-                    {newFrame.map((el, index) =>
-                      <div key={index}
-                        style={
-                          ((index + 2) % 3 === 0) ?
-                            (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )
-                            : (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )} >
-
-                        {el !== 0 && showFramBlackLight &&
-                          <div style={el === 1 ? { ...frameCellStyle } :
-                            chosenColor.hex !== "#30a32c" ?
-                              { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
-                              : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.5)" }} >
-                            <div style={frameClickStyle}
-                              onClick={() => handleFrameClick(index)}
-                              onMouseOver={() => handleFrameOver(index)}
-                              onMouseLeave={() => handleFrameLeave()}
-                            />
-                          </div>
-                        }
-
-                        {el !== 0 && !showFramBlackLight &&
-                          <div style={{ ...frameCellStyle, backgroundColor: "transparent" }} >
-                            <div style={frameClickStyle}
-                              onClick={() => handleFrameClick(index)}
-                              onMouseOver={() => handleFrameOver(index)}
-                              onMouseLeave={() => handleFrameLeave()}
-                            />
-                          </div>
-                        }
-                      </div>
-                    )
-                    }
-                  </>}
-              </div>
-
-              <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll && !visual &&
-                  <>
-                    {newFrameHide.map((el, index) =>
-                      <div key={index}
-                        style={
-                          ((index + 2) % 3 === 0) ?
-                            (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )
-                            : (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )} >
-                        {el === 0 &&
-                          <div style={{ ...frameCellStyle, backgroundColor: chosenColor.hex, height: `${18 * sc}px`, width: `${18 * sc}px`, margin: `${1 * sc}px auto` }} />
-                        }
-                      </div>
-                    )
-                    }
-                  </>}
-              </div>
+              {isFocusedInputName &&
+                <input type="image" src={Submitinput} alt="submitinput" className="panel_name_image" />
+              }
+              {isFocusedInputName &&
+                <img src={Clearinput} alt="clearinput" className="panel_name_image" onClick={handleClearInputName} />
+              }
+            </form>
 
 
-              <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                {hideAll && !visual &&
-                  <>
-                    {newFrameChange.map((el, index) =>
-                      <div key={index}
-                        style={
-                          ((index + 2) % 3 === 0) ?
-                            (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )
-                            : (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )} >
+          </div>
+          <div className="panel_container" >
+            <Warning />
+            <div className="resize_container" style={resizeStyle}>
+              <div className="panel_box" style={chosenModelStyle}>
+                <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "RAL 9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
 
-                        <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
-                          < img src={chosenColor.hex !== "#30a32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
-                          < img src={!chosenModel.panelRotation ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
+                <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                  {(removeAll || alert === 3) &&
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                      <img src={Removeall} alt="removeall" style={{
+                        width: "100%",
+                        zIndex: "99999",
+                        opacity: "0.8"
+                      }} />
+                    </div>
+                  }
+                </div>
+
+                <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                  {hideAll && !visual &&
+                    <>
+                      {newFrame.map((el, index) =>
+                        <div key={index}
+                          style={
+                            ((index + 2) % 3 === 0) ?
+                              (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )
+                              : (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )} >
+
+                          {el !== 0 && showFramBlackLight &&
+                            <div style={el === 1 ? { ...frameCellStyle } :
+                              chosenColor.hex !== "#30a32c" ?
+                                { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
+                                : { ...frameCellStyle, backgroundColor: "rgba(32, 114, 30, 0.5)" }} >
+                              <div style={frameClickStyle}
+                                onClick={() => handleFrameClick(index)}
+                                onMouseOver={() => handleFrameOver(index)}
+                                onMouseLeave={() => handleFrameLeave()}
+                              />
+                            </div>
+                          }
+
+                          {el !== 0 && !showFramBlackLight &&
+                            <div style={{ ...frameCellStyle, backgroundColor: "transparent" }} >
+                              <div style={frameClickStyle}
+                                onClick={() => handleFrameClick(index)}
+                                onMouseOver={() => handleFrameOver(index)}
+                                onMouseLeave={() => handleFrameLeave()}
+                              />
+                            </div>
+                          }
                         </div>
-                      </div>
-                    )
-                    }
-                  </>}
-              </div>
+                      )
+                      }
+                    </>}
+                </div>
+
+                <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                  {hideAll && !visual &&
+                    <>
+                      {newFrameHide.map((el, index) =>
+                        <div key={index}
+                          style={
+                            ((index + 2) % 3 === 0) ?
+                              (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )
+                              : (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )} >
+                          {el === 0 &&
+                            <div style={{ ...frameCellStyle, backgroundColor: chosenColor.hex, height: `${18 * sc}px`, width: `${18 * sc}px`, margin: `${1 * sc}px auto` }} />
+                          }
+                        </div>
+                      )
+                      }
+                    </>}
+                </div>
 
 
-              {hideAll &&
-                <>
-                  {frameHolders.map((frame, i) =>
-                    <div key={i} >
-                      {frame.type === "multi" &&
-                        <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
+                <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
+                  {hideAll && !visual &&
+                    <>
+                      {newFrameChange.map((el, index) =>
+                        <div key={index}
+                          style={
+                            ((index + 2) % 3 === 0) ?
+                              (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )
+                              : (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )} >
 
-                          {frame.framePrint.frameArr.map((el, index) =>
-                            <div key={index}
-                              style={
-                                ((index + 2) % 3 === 0) ?
-                                  { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-                                  : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-                              } >
+                          <div style={{ ...frameCellStyle, backgroundColor: "none" }} >
+                            < img src={chosenColor.hex !== "#30a32c" ? Addframe : Addframedark} alt="addframe" style={el === "a" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
+                            < img src={!chosenModel.panelRotation ? Removeframe : Removeframehorizontal} alt="removeframe" style={el === "r" ? { ...frameChangeStyle, opacity: "1" } : { ...frameChangeStyle, opacity: "0" }} />
+                          </div>
+                        </div>
+                      )
+                      }
+                    </>}
+                </div>
 
-                              {el !== 0 && !visual &&
-                                <div style={frame.framePrint.shape === "sharp" ? {
-                                  ...frameStyle,
-                                  borderColor: chosenColor.iconColor,
-                                  borderRadius: "0",
-                                  height: `${el.fh * sc}px`,
-                                  width: `${el.fw * sc}px`,
-                                  marginBottom: `${el.mb * sc}px`,
-                                  marginLeft: `${el.ml * sc}px`,
-                                  marginRight: `${el.mr * sc}px`,
-                                  transition: "0s",
-                                }
-                                  : {
-                                    ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+
+                {hideAll &&
+                  <>
+                    {frameHolders.map((frame, i) =>
+                      <div key={i} >
+                        {frame.type === "multi" &&
+                          <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
+
+                            {frame.framePrint.frameArr.map((el, index) =>
+                              <div key={index}
+                                style={
+                                  ((index + 2) % 3 === 0) ?
+                                    { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
+                                    : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
+                                } >
+
+                                {el !== 0 && !visual &&
+                                  <div style={frame.framePrint.shape === "sharp" ? {
+                                    ...frameStyle,
+                                    borderColor: chosenColor.iconColor,
+                                    borderRadius: "0",
                                     height: `${el.fh * sc}px`,
                                     width: `${el.fw * sc}px`,
                                     marginBottom: `${el.mb * sc}px`,
                                     marginLeft: `${el.ml * sc}px`,
                                     marginRight: `${el.mr * sc}px`,
                                     transition: "0s",
-                                  }}
+                                  }
+                                    : {
+                                      ...frameStyle, borderColor: chosenColor.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                      height: `${el.fh * sc}px`,
+                                      width: `${el.fw * sc}px`,
+                                      marginBottom: `${el.mb * sc}px`,
+                                      marginLeft: `${el.ml * sc}px`,
+                                      marginRight: `${el.mr * sc}px`,
+                                      transition: "0s",
+                                    }}
 
-                                  className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                                />
-                              }
-
-                              {el !== 0 && visual &&
-                                <div style={frame.framePrint.shape === "sharp" ? {
-                                  ...frameStyle,
-                                  borderColor: "white",
-                                  borderRadius: "0",
-                                  height: `${el.fh * sc}px`,
-                                  width: `${el.fw * sc}px`,
-                                  marginBottom: `${el.mb * sc}px`,
-                                  marginLeft: `${el.ml * sc}px`,
-                                  marginRight: `${el.mr * sc}px`,
-                                  transition: "0.4s ease",
+                                    className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                  />
                                 }
-                                  : {
+
+                                {el !== 0 && visual &&
+                                  <div style={frame.framePrint.shape === "sharp" ? {
                                     ...frameStyle,
                                     borderColor: "white",
-                                    borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                    borderRadius: "0",
                                     height: `${el.fh * sc}px`,
                                     width: `${el.fw * sc}px`,
                                     marginBottom: `${el.mb * sc}px`,
                                     marginLeft: `${el.ml * sc}px`,
                                     marginRight: `${el.mr * sc}px`,
                                     transition: "0.4s ease",
-                                  }}
+                                  }
+                                    : {
+                                      ...frameStyle,
+                                      borderColor: "white",
+                                      borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                      height: `${el.fh * sc}px`,
+                                      width: `${el.fw * sc}px`,
+                                      marginBottom: `${el.mb * sc}px`,
+                                      marginLeft: `${el.ml * sc}px`,
+                                      marginRight: `${el.mr * sc}px`,
+                                      transition: "0.4s ease",
+                                    }}
 
-                                  className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                                />
-                              }
-                              {el !== 0 && frame.framePrint.over && !visual &&
-                                <div style={frame.framePrint.shape === "sharp" ? {
-                                  ...frameStyle,
-                                  borderColor: "#dc3545",
-                                  zIndex: "9999",
-                                  borderRadius: "0",
-                                  height: `${el.fh * sc}px`,
-                                  width: `${el.fw * sc}px`,
-                                  marginBottom: `${el.mb * sc}px`,
-                                  marginLeft: `${el.ml * sc}px`,
-                                  marginRight: `${el.mr * sc}px`,
-                                  transition: "0.4s ease",
+                                    className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                  />
                                 }
-                                  : {
+                                {el !== 0 && frame.framePrint.over && !visual &&
+                                  <div style={frame.framePrint.shape === "sharp" ? {
                                     ...frameStyle,
                                     borderColor: "#dc3545",
                                     zIndex: "9999",
-                                    borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                    borderRadius: "0",
                                     height: `${el.fh * sc}px`,
                                     width: `${el.fw * sc}px`,
                                     marginBottom: `${el.mb * sc}px`,
                                     marginLeft: `${el.ml * sc}px`,
                                     marginRight: `${el.mr * sc}px`,
                                     transition: "0.4s ease",
-                                  }}
-
-                                  className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                                />
-                              }
-                            </div>
-                          )}
-                          {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
-                            <div style={{ position: "absolute", width: "100%" }}>
-                              <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
-                                { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
-                                <input className="text_input_frame"
-                                  autoComplete="off"
-                                  type="text"
-                                  maxLength="16"
-                                  style={(chosenColor.RAL === "RAL 9003" && visual) ?
-                                    {
-                                      ...textStyleFrame,
-                                      fontFamily: frame.framePrint.frameFont,
-                                      backgroundColor: "rgb(233,233,233)",
-                                      border: "none",
-                                    }
-                                    :
-                                    {
-                                      ...textStyleFrame,
-                                      fontFamily: frame.framePrint.frameFont,
-                                      backgroundColor: chosenColor.hex,
-                                      border: "none",
-                                    }
                                   }
-                                  disabled={true}
-                                  value={frame.framePrint.text}
-                                />
-                                <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                                  {frame.framePrint.text}
-                                </span>
+                                    : {
+                                      ...frameStyle,
+                                      borderColor: "#dc3545",
+                                      zIndex: "9999",
+                                      borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                      height: `${el.fh * sc}px`,
+                                      width: `${el.fw * sc}px`,
+                                      marginBottom: `${el.mb * sc}px`,
+                                      marginLeft: `${el.ml * sc}px`,
+                                      marginRight: `${el.mr * sc}px`,
+                                      transition: "0.4s ease",
+                                    }}
+
+                                    className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                                  />
+                                }
                               </div>
-                            </div>
-                          }
-                          {(frame.framePrint.text !== "" && frame.framePrint.over) &&
-                            <div style={{ position: "absolute", width: "100%" }}>
-                              <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
-                                { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
-                                <input className="text_input_frame"
-                                  type="text"
-                                  autoComplete="off"
-                                  maxLength="16"
-                                  style={
-                                    {
-                                      ...textStyleFrame,
-                                      fontFamily: frame.framePrint.frameFont,
-                                      backgroundColor: chosenColor.hex,
-                                      border: "none",
-                                      zIndex: "99999",
-                                      color: "#dc3545",
+                            )}
+                            {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
+                              <div style={{ position: "absolute", width: "100%" }}>
+                                <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
+                                  { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
+                                  <input className="text_input_frame"
+                                    autoComplete="off"
+                                    type="text"
+                                    maxLength="16"
+                                    style={(chosenColor.RAL === "RAL 9003" && visual) ?
+                                      {
+                                        ...textStyleFrame,
+                                        fontFamily: frame.framePrint.frameFont,
+                                        backgroundColor: "rgb(233,233,233)",
+                                        border: "none",
+                                      }
+                                      :
+                                      {
+                                        ...textStyleFrame,
+                                        fontFamily: frame.framePrint.frameFont,
+                                        backgroundColor: chosenColor.hex,
+                                        border: "none",
+                                      }
                                     }
-                                  }
-                                  disabled={true}
-                                  value={frame.framePrint.text}
-                                />
-                                <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                                  {frame.framePrint.text}
-                                </span>
+                                    disabled={true}
+                                    value={frame.framePrint.text}
+                                  />
+                                  <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                    {frame.framePrint.text}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          }
-                        </div>
-                      }
-                    </div>
-                  )}
-                </>
-              }
+                            }
+                            {(frame.framePrint.text !== "" && frame.framePrint.over) &&
+                              <div style={{ position: "absolute", width: "100%" }}>
+                                <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
+                                  { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
+                                  <input className="text_input_frame"
+                                    type="text"
+                                    autoComplete="off"
+                                    maxLength="16"
+                                    style={
+                                      {
+                                        ...textStyleFrame,
+                                        fontFamily: frame.framePrint.frameFont,
+                                        backgroundColor: chosenColor.hex,
+                                        border: "none",
+                                        zIndex: "99999",
+                                        color: "#dc3545",
+                                      }
+                                    }
+                                    disabled={true}
+                                    value={frame.framePrint.text}
+                                  />
+                                  <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                    {frame.framePrint.text}
+                                  </span>
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    )}
+                  </>
+                }
 
 
-              {hideAll &&
-                <>
-                  {frameHolders.map((frame, i) =>
-                    <div key={i} >
-                      {frame.type === "single" &&
-                        <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-
-                          {frame.framePrint.map((el, index) =>
-                            <div key={index}
-                              style={
-                                ((index + 2) % 3 === 0) ?
-                                  (
-                                    ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                      : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                                  )
-                                  : (
-                                    ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                      : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                                  )} >
-                              {el !== 0 && !visual &&
-                                <div style={el.shape === "sharp" ?
-                                  { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
-                                  : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px` }}
-                                />
-                              }
-                              {el !== 0 && visual &&
-                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", zIndex: "99999" }
-                                  : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, zIndex: "99999" }}
-                                />
-                              }
-                              {el !== 0 && el.over && !visual &&
-                                <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: "0", zIndex: "9999", }
-                                  : { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: `${sc}px`, zIndex: "9999", }}
-                                />
-                              }
-                            </div>
-                          )}
-                        </div>
-                      }
-                    </div>
-                  )}
-                </>
-              }
-
-              <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
-                {hideAll && !visual &&
+                {hideAll &&
                   <>
-                    {tempFrame.frameArr.map((el, index) =>
-                      <div key={index}
-                        style={
-                          ((index + 2) % 3 === 0) ?
-                            { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-                            : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
-                        } >
+                    {frameHolders.map((frame, i) =>
+                      <div key={i} >
+                        {frame.type === "single" &&
+                          <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
 
-                        {el !== 0 &&
-                          <div style={chosenFrameShape === "sharp" ? {
-                            ...frameTempStyle, borderRadius: "0",
-                            height: `${el.fh * sc}px`,
-                            width: `${el.fw * sc}px`,
-                            marginBottom: `${el.mb * sc}px`,
-                            marginLeft: `${el.ml * sc}px`,
-                            marginRight: `${el.mr * sc}px`,
-                            transition: "0s",
-                          }
-                            : {
-                              ...frameTempStyle, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                            {frame.framePrint.map((el, index) =>
+                              <div key={index}
+                                style={
+                                  ((index + 2) % 3 === 0) ?
+                                    (
+                                      ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                        : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                    )
+                                    : (
+                                      ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                        : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                    )} >
+                                {el !== 0 && !visual &&
+                                  <div style={el.shape === "sharp" ?
+                                    { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: "0", }
+                                    : { ...singleFrameStyle, borderColor: chosenColor.iconColor, borderRadius: `${sc}px` }}
+                                  />
+                                }
+                                {el !== 0 && visual &&
+                                  <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "white", borderRadius: "0", zIndex: "99999" }
+                                    : { ...singleFrameStyle, borderColor: "White", borderRadius: `${sc}px`, zIndex: "99999" }}
+                                  />
+                                }
+                                {el !== 0 && el.over && !visual &&
+                                  <div style={el.shape === "sharp" ? { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: "0", zIndex: "9999", }
+                                    : { ...singleFrameStyle, borderColor: "#dc3545", borderRadius: `${sc}px`, zIndex: "9999", }}
+                                  />
+                                }
+                              </div>
+                            )}
+                          </div>
+                        }
+                      </div>
+                    )}
+                  </>
+                }
+
+                <div className="panel_content" style={{ ...contentFrameStyle, position: "absolute" }}>
+                  {hideAll && !visual &&
+                    <>
+                      {tempFrame.frameArr.map((el, index) =>
+                        <div key={index}
+                          style={
+                            ((index + 2) % 3 === 0) ?
+                              { ...cellStyle, width: `${chosenModel.centerColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
+                              : { ...cellStyle, width: `${chosenModel.sideColumnFrameWidth * sc}px`, height: `${chosenModel.multiRowFrameHeight * sc}px` }
+                          } >
+
+                          {el !== 0 &&
+                            <div style={chosenFrameShape === "sharp" ? {
+                              ...frameTempStyle, borderRadius: "0",
                               height: `${el.fh * sc}px`,
                               width: `${el.fw * sc}px`,
                               marginBottom: `${el.mb * sc}px`,
                               marginLeft: `${el.ml * sc}px`,
                               marginRight: `${el.mr * sc}px`,
-                              transition: "0s"
-                            }}
-                            className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
-                          />
-                        }
-                      </div>
-                    )}
+                              transition: "0s",
+                            }
+                              : {
+                                ...frameTempStyle, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                height: `${el.fh * sc}px`,
+                                width: `${el.fw * sc}px`,
+                                marginBottom: `${el.mb * sc}px`,
+                                marginLeft: `${el.ml * sc}px`,
+                                marginRight: `${el.mr * sc}px`,
+                                transition: "0s"
+                              }}
+                              className={`border_top${el.t} border_right${el.r} border_bottom${el.b} border_left${el.l}`}
+                            />
+                          }
+                        </div>
+                      )}
 
-                    {textFrame && chosenTab === "frame" && frameTitleFlag &&
-                      <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
-                        <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
-                          <form onSubmit={handleSubmit}>
-                            <div style={{ ...autoResizeInputStyle, top: `${tempFrame.textY * sc}px`, left: `${tempFrame.textX * sc}px`, transition: "0s" }}>
+                      {textFrame && chosenTab === "frame" && frameTitleFlag &&
+                        <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
+                          <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
+                            <form onSubmit={handleSubmit}>
+                              <div style={{ ...autoResizeInputStyle, top: `${tempFrame.textY * sc}px`, left: `${tempFrame.textX * sc}px`, transition: "0s" }}>
 
 
-                              <input className="text_input_frame"
-                                type="text"
-                                autoComplete="off"
-                                maxLength="16"
-                                style={(isFocusedInputFrame) ?
-                                  (
-                                    (chosenColor.hex !== "#30a32c") ? {
-                                      ...textStyleFrame,
-                                      fontFamily: chosenFrameFont,
-                                      border: "2px dashed rgb(40, 167, 69)",
-                                      backgroundColor: chosenColor.hex
-                                    } :
-                                      {
+                                <input className="text_input_frame"
+                                  type="text"
+                                  autoComplete="off"
+                                  maxLength="16"
+                                  style={(isFocusedInputFrame) ?
+                                    (
+                                      (chosenColor.hex !== "#30a32c") ? {
                                         ...textStyleFrame,
                                         fontFamily: chosenFrameFont,
-                                        border: "2px dashed rgb(32, 114, 30)",
+                                        border: "2px dashed rgb(40, 167, 69)",
                                         backgroundColor: chosenColor.hex
-                                      }
-                                  )
-                                  : {
-                                    ...textStyleFrame,
-                                    fontFamily: chosenFrameFont,
-                                    backgroundColor: chosenColor.hex
+                                      } :
+                                        {
+                                          ...textStyleFrame,
+                                          fontFamily: chosenFrameFont,
+                                          border: "2px dashed rgb(32, 114, 30)",
+                                          backgroundColor: chosenColor.hex
+                                        }
+                                    )
+                                    : {
+                                      ...textStyleFrame,
+                                      fontFamily: chosenFrameFont,
+                                      backgroundColor: chosenColor.hex
 
-                                  }}
-                                disabled={chosenTab !== "frame" && true}
-                                onMouseOver={showFrameBorder}
-                                onMouseLeave={hideFrameBorder}
-                                value={frameText}
-                                onChange={(text) => handleChangeTextFrame(text)}
-                                onFocus={() => setIsFocusedInputFrame(true)}
-                                onKeyDown={handleKeyPress}
+                                    }}
+                                  disabled={chosenTab !== "frame" && true}
+                                  onMouseOver={showFrameBorder}
+                                  onMouseLeave={hideFrameBorder}
+                                  value={frameText}
+                                  onChange={(text) => handleChangeTextFrame(text)}
+                                  onFocus={() => setIsFocusedInputFrame(true)}
+                                  onKeyDown={handleKeyPress}
 
-                              />
-                              <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                                {frameText}
-                              </span>
-
-
-                              {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
-                                <input type="image" src={Submitinput} alt="submitinput"
-                                  style={{
-                                    height: `${3.6 * sc}px`,
-                                    width: `${3.6 * sc}px`,
-                                    transform: "translate(75%, -50%)",
-                                    gridArea: '1 / 1 / 2 / 2',
-                                  }}
                                 />
-                              }
-                              {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
-                                <input type="image" src={Submitinputdark} alt="submitinput"
-                                  style={{
-                                    height: `${3.6 * sc}px`,
-                                    width: `${3.6 * sc}px`,
-                                    transform: "translate(75%, -50%)",
-                                    gridArea: '1 / 1 / 2 / 2',
-                                  }}
-                                />
-                              }
+                                <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                  {frameText}
+                                </span>
 
-                              {isFocusedInputFrame &&
-                                <img src={Clearinput} alt="clearinput"
-                                  style={{
-                                    height: `${3.6 * sc}px`,
-                                    width: `${3.6 * sc}px`,
-                                    transform: "translate(200%, -50%)",
-                                    gridArea: '1 / 1 / 2 / 2',
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={handleClearInputFrame}
-                                />
-                              }
-                            </div>
-                          </form>
+
+                                {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
+                                  <input type="image" src={Submitinput} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translate(75%, -50%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                    }}
+                                  />
+                                }
+                                {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
+                                  <input type="image" src={Submitinputdark} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translate(75%, -50%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                    }}
+                                  />
+                                }
+
+                                {isFocusedInputFrame &&
+                                  <img src={Clearinput} alt="clearinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translate(200%, -50%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={handleClearInputFrame}
+                                  />
+                                }
+                              </div>
+                            </form>
+                          </div>
                         </div>
-                      </div>
-                    }
+                      }
 
-                  </>}
-              </div>
+                    </>}
+                </div>
 
-              {!visualSmooth &&
-                <>
-                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...visualStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove white`, opacity: "0.2" } : { ...visualStyle, opacity: "0" }} />
-                  {(lcdShow && visual && chosenColor.RAL !== "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
-                  {(lcdShow && visual && chosenColor.RAL === "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "black" }} />}
-                  <div className="visualization_glass" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
-                  <div className="visualization_glass_bis" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
-                  <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
-                </>}
-
-              <div className="panel_content" style={contentStyle}>
-
-                {hideAll &&
+                {!visualSmooth &&
                   <>
-                    {iconHolders.map(({
-                      flag,
-                      textUp,
-                      fontUp,
-                      textDown,
-                      fontDown,
-                      lastDroppedDot,
-                      lastDroppedIcon,
-                      lastDroppedSlashUp,
-                      lastDroppedSlashDown,
-                      rotationDot,
-                      rotationIcon,
-                      rotationDown,
-                      rotationUp,
-                      selectedDot,
-                      selected,
-                      selectedDown,
-                      selectedUp,
-                      singleFrame,
-                      singleFrameTemp
-                    }, index) =>
-                      <div key={index}
-                        style={
-                          ((index + 2) % 3 === 0) ?
-                            (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )
-                            : (
-                              ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
-                                : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
-                            )}>
-                        {flag === 1 &&
-                          <>
-                            {/* <div className="text_box" style={chosenTab === "text" ? { zIndex: "999" } : { zIndex: "0" }}> */}
-                            <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
-                              <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : { transform: "rotate(90deg)", transformOrigin: `center ${10.4 * sc}px`, transition: "0.4s ease" }}>
-                                {textUpOff &&
+                    <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...visualStyle, opacity: "0" }} />
+                    <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove white`, opacity: "0.2" } : { ...visualStyle, opacity: "0" }} />
+                    {(lcdShow && visual && chosenColor.RAL !== "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
+                    {(lcdShow && visual && chosenColor.RAL === "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "black" }} />}
+                    <div className="visualization_glass" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
+                    <div className="visualization_glass_bis" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
+                    <div className="visualization_frame" style={visual ? { ...visualStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
+                    <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
+                  </>}
+
+                <div className="panel_content" style={contentStyle}>
+
+                  {hideAll &&
+                    <>
+                      {iconHolders.map(({
+                        flag,
+                        textUp,
+                        fontUp,
+                        textDown,
+                        fontDown,
+                        lastDroppedDot,
+                        lastDroppedIcon,
+                        lastDroppedSlashUp,
+                        lastDroppedSlashDown,
+                        rotationDot,
+                        rotationIcon,
+                        rotationDown,
+                        rotationUp,
+                        selectedDot,
+                        selected,
+                        selectedDown,
+                        selectedUp,
+                        singleFrame,
+                        singleFrameTemp
+                      }, index) =>
+                        <div key={index}
+                          style={
+                            ((index + 2) % 3 === 0) ?
+                              (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )
+                              : (
+                                ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                  : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                              )}>
+                          {flag === 1 &&
+                            <>
+                              <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
+                                <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : {
+                                  transform: "rotate(90deg)",
+                                  transformOrigin: `center ${10.4 * sc}px`,
+                                  transition: "0.4s ease"
+                                }}>
+                                  {textUpOff &&
+                                    <form onSubmit={handleSubmit}>
+                                      <div style={!chosenModel.panelRotation ?
+                                        { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }
+                                        :
+                                        { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
+                                        <input className="text_input"
+                                          type="text"
+                                          autoComplete="off"
+                                          maxLength="16"
+                                          style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
+                                            (
+                                              (chosenColor.hex !== "#30a32c") ? {
+                                                ...textStyle,
+                                                ...textUpStyle,
+                                                fontFamily: fontUp,
+                                                border: "2px solid rgb(40, 167, 69)"
+                                              } :
+                                                {
+                                                  ...textStyle,
+                                                  ...textUpStyle,
+                                                  fontFamily: fontUp,
+                                                  border: "2px solid rgb(32, 114, 30)",
+                                                }
+                                            )
+                                            : {
+                                              ...textStyle,
+                                              ...textUpStyle,
+                                              fontFamily: fontUp,
+                                            }}
+                                          disabled={chosenTab !== "text" && true}
+                                          onMouseOver={showBorder}
+                                          onMouseLeave={hideBorder}
+                                          value={textUp}
+                                          onChange={(text) => handleChangeTextUp(index, text)}
+                                          onClick={() => handleChangeFontUp(index)}
+                                          onFocus={() => { handleFocusInput(index, "up") }}
+                                          onKeyDown={handleKeyPress}
+                                        />
+                                        <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                          {textUp}
+                                        </span>
+
+                                        {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
+                                          <input type="image" src={Submitinput} alt="submitinput"
+                                            style={{
+                                              height: `${3.6 * sc}px`,
+                                              width: `${3.6 * sc}px`,
+                                              transform: "translateX(75%)",
+                                              gridArea: '1 / 1 / 2 / 2',
+
+                                            }}
+                                          />
+                                        }
+                                        {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
+                                          <input type="image" src={Submitinputdark} alt="submitinput"
+                                            style={{
+                                              height: `${3.6 * sc}px`,
+                                              width: `${3.6 * sc}px`,
+                                              transform: "translateX(75%)",
+                                              gridArea: '1 / 1 / 2 / 2',
+                                            }}
+                                          />
+                                        }
+                                        {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                          <img src={Clearinput} alt="clearinput"
+                                            style={{
+                                              height: `${3.6 * sc}px`,
+                                              width: `${3.6 * sc}px`,
+                                              transform: "translate(200%, 0%)",
+                                              gridArea: '1 / 1 / 2 / 2',
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() => { handleClearInput(index, "up") }}
+                                          />
+                                        }
+                                      </div>
+                                    </form>
+                                  }
                                   <form onSubmit={handleSubmit}>
-                                    <div style={!chosenModel.panelRotation ?
-                                      { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }
-                                      :
-                                      { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
+                                    <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
                                       <input className="text_input"
                                         type="text"
                                         autoComplete="off"
                                         maxLength="16"
-                                        style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
+                                        style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
                                           (
                                             (chosenColor.hex !== "#30a32c") ? {
                                               ...textStyle,
-                                              ...textUpStyle,
-                                              fontFamily: fontUp,
+                                              fontFamily: fontDown,
                                               border: "2px solid rgb(40, 167, 69)"
                                             } :
                                               {
                                                 ...textStyle,
-                                                ...textUpStyle,
-                                                fontFamily: fontUp,
-                                                border: "2px solid rgb(32, 114, 30)",
+                                                fontFamily: fontDown,
+                                                border: "2px solid rgb(32, 114, 30)"
                                               }
                                           )
                                           : {
                                             ...textStyle,
-                                            ...textUpStyle,
-                                            fontFamily: fontUp,
+                                            fontFamily: fontDown
                                           }}
                                         disabled={chosenTab !== "text" && true}
                                         onMouseOver={showBorder}
                                         onMouseLeave={hideBorder}
-                                        value={textUp}
-                                        onChange={(text) => handleChangeTextUp(index, text)}
-                                        onClick={() => handleChangeFontUp(index)}
-                                        onFocus={() => { handleFocusInput(index, "up") }}
+                                        value={textDown}
+                                        onChange={(text) => handleChangeTextDown(index, text)}
+                                        onClick={() => handleChangeFontDown(index)}
+                                        onFocus={() => { handleFocusInput(index, "down") }}
                                         onKeyDown={handleKeyPress}
                                       />
                                       <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                                        {textUp}
+                                        {textDown}
                                       </span>
-
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
+                                      {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
                                         <input type="image" src={Submitinput} alt="submitinput"
                                           style={{
                                             height: `${3.6 * sc}px`,
                                             width: `${3.6 * sc}px`,
                                             transform: "translateX(75%)",
                                             gridArea: '1 / 1 / 2 / 2',
-
                                           }}
                                         />
                                       }
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
+                                      {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
                                         <input type="image" src={Submitinputdark} alt="submitinput"
                                           style={{
                                             height: `${3.6 * sc}px`,
@@ -4542,7 +4606,7 @@ const PanelPreview = ({
                                           }}
                                         />
                                       }
-                                      {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                      {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
                                         <img src={Clearinput} alt="clearinput"
                                           style={{
                                             height: `${3.6 * sc}px`,
@@ -4551,537 +4615,471 @@ const PanelPreview = ({
                                             gridArea: '1 / 1 / 2 / 2',
                                             cursor: "pointer",
                                           }}
-                                          onClick={() => { handleClearInput(index, "up") }}
+                                          onClick={() => { handleClearInput(index, "down") }}
                                         />
                                       }
                                     </div>
                                   </form>
-                                }
-                                <form onSubmit={handleSubmit}>
-                                  <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
-                                    <input className="text_input"
-                                      type="text"
-                                      autoComplete="off"
-                                      maxLength="16"
-                                      style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
-                                        (
-                                          (chosenColor.hex !== "#30a32c") ? {
-                                            ...textStyle,
-                                            fontFamily: fontDown,
-                                            border: "2px solid rgb(40, 167, 69)"
-                                          } :
-                                            {
-                                              ...textStyle,
-                                              fontFamily: fontDown,
-                                              border: "2px solid rgb(32, 114, 30)"
-                                            }
-                                        )
-                                        : {
-                                          ...textStyle,
-                                          fontFamily: fontDown
-                                        }}
-                                      disabled={chosenTab !== "text" && true}
-                                      onMouseOver={showBorder}
-                                      onMouseLeave={hideBorder}
-                                      value={textDown}
-                                      onChange={(text) => handleChangeTextDown(index, text)}
-                                      onClick={() => handleChangeFontDown(index)}
-                                      onFocus={() => { handleFocusInput(index, "down") }}
-                                      onKeyDown={handleKeyPress}
-                                    />
-                                    <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
-                                      {textDown}
-                                    </span>
-                                    {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
-                                      <input type="image" src={Submitinput} alt="submitinput"
-                                        style={{
-                                          height: `${3.6 * sc}px`,
-                                          width: `${3.6 * sc}px`,
-                                          transform: "translateX(75%)",
-                                          gridArea: '1 / 1 / 2 / 2',
-                                        }}
-                                      />
-                                    }
-                                    {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
-                                      <input type="image" src={Submitinputdark} alt="submitinput"
-                                        style={{
-                                          height: `${3.6 * sc}px`,
-                                          width: `${3.6 * sc}px`,
-                                          transform: "translateX(75%)",
-                                          gridArea: '1 / 1 / 2 / 2',
-                                        }}
-                                      />
-                                    }
-                                    {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
-                                      <img src={Clearinput} alt="clearinput"
-                                        style={{
-                                          height: `${3.6 * sc}px`,
-                                          width: `${3.6 * sc}px`,
-                                          transform: "translate(200%, 0%)",
-                                          gridArea: '1 / 1 / 2 / 2',
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() => { handleClearInput(index, "down") }}
-                                      />
-                                    }
-                                  </div>
-                                </form>
+                                </div>
                               </div>
-                            </div>
 
-                            <IconHolder
-                              index={index}
-                              lastDroppedDot={lastDroppedDot}
-                              lastDroppedIcon={lastDroppedIcon}
-                              lastDroppedSlashUp={lastDroppedSlashUp}
-                              lastDroppedSlashDown={lastDroppedSlashDown}
-                              chosenColor={chosenColor}
-                              rotationDot={rotationDot}
-                              rotationIcon={rotationIcon}
-                              rotationDown={rotationDown}
-                              rotationUp={rotationUp}
-                              panelRotation={chosenModel.panelRotation}
-                              selectedDot={selectedDot}
-                              selected={selected}
-                              selectedDown={selectedDown}
-                              selectedUp={selectedUp}
-                              singleFrame={singleFrame}
-                              singleFrameTemp={singleFrameTemp}
-                              visual={visual}
-                            // overCurrFrameTemp={overCurrFrameTemp}
-                            />
-                          </>}
-                      </div>
-                    )}
-
-
-                    {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
-                    {(lcdShow && visual && lcdNew) &&
-                      <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
-                        <div className="lcd_icon_box">
-                          < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
-                          < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
+                              <IconHolder
+                                index={index}
+                                lastDroppedDot={lastDroppedDot}
+                                lastDroppedIcon={lastDroppedIcon}
+                                lastDroppedSlashUp={lastDroppedSlashUp}
+                                lastDroppedSlashDown={lastDroppedSlashDown}
+                                chosenColor={chosenColor}
+                                rotationDot={rotationDot}
+                                rotationIcon={rotationIcon}
+                                rotationDown={rotationDown}
+                                rotationUp={rotationUp}
+                                panelRotation={chosenModel.panelRotation}
+                                selectedDot={selectedDot}
+                                selected={selected}
+                                selectedDown={selectedDown}
+                                selectedUp={selectedUp}
+                                singleFrame={singleFrame}
+                                singleFrameTemp={singleFrameTemp}
+                                visual={visual}
+                              />
+                            </>}
                         </div>
+                      )}
 
-                        <div>
+
+                      {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
+                      {(lcdShow && visual && lcdNew) &&
+                        <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
+                          <div className="lcd_icon_box">
+                            < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
+                            < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
+                          </div>
+
+                          <div>
+                            <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
+                            <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
+                          </div>
+
+                          <div className="lcd_icon_box">
+                            < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
+                            < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
+                          </div>
+                        </div>
+                      }
+                      {(lcdShow && visual && !lcdNew) &&
+                        <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px`, justifyContent: "center" }}>
                           <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
                           <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
                         </div>
+                      }
+                      {(lcdShow && visual && lcdNew) &&
+                        <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
+                          <div className="lcd_icon_box">
+                            < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
+                            < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
+                          </div>
 
-                        <div className="lcd_icon_box">
-                          < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
-                          < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
+                          <div>
+                            <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
+                            <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
+                          </div>
+
+                          <div className="lcd_icon_box">
+                            < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
+                            < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {(lcdShow && visual && !lcdNew) &&
-                      <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px`, justifyContent: "center" }}>
-                        <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
-                        <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-                      </div>
-                    }
-                    {(lcdShow && visual && lcdNew) &&
-                      <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
-                        <div className="lcd_icon_box">
-                          < img src={LCDPause} alt="pause" className="lcd_icon" style={lcdIconStyle} />
-                          < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
+                      }
+                      {lcdNew &&
+                        <div className="universal_icons" style={universalIconBoxStyle}>
+                          < img src={Minusuni} alt="minusuni" className="universal_icon"
+                            style={{ ...universalIconStyle, top: `${6.65 * sc}px`, left: `${7.45 * sc}px` }} />
+                          < img src={Minusuni} alt="minusuni" className="universal_icon"
+                            style={{ ...universalIconStyle, top: `${6.65 * sc}px`, left: `${55.45 * sc}px` }} />
+                          < img src={Leftuni} alt="leftuni" className="universal_icon"
+                            style={{ ...universalIconStyle, top: `${26.65 * sc}px`, left: `${7.45 * sc}px` }} />
+                          < img src={Rightuni} alt="rightuni" className="universal_icon"
+                            style={{ ...universalIconStyle, top: `${26.65 * sc}px`, left: `${55.45 * sc}px` }} />
+                          < img src={Minusuni} alt="minusuni" className="universal_icon"
+                            style={{ ...universalIconStyle, top: `${46.65 * sc}px`, left: `${7.45 * sc}px` }} />
+                          < img src={Minusuni} alt="minusuni" className="universal_icon"
+                            style={{ ...universalIconStyle, top: `${46.65 * sc}px`, left: `${55.45 * sc}px` }} />
                         </div>
-
-                        <div>
-                          <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
-                          <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-                        </div>
-
-                        <div className="lcd_icon_box">
-                          < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
-                          < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />
-                        </div>
-                      </div>
-                    }
-                    {lcdNew &&
-                      <div className="universal_icons" style={universalIconBoxStyle}>
-                        < img src={Minusuni} alt="minusuni" className="universal_icon"
-                          style={{ ...universalIconStyle, top: `${6.65 * sc}px`, left: `${7.45 * sc}px` }} />
-                        < img src={Minusuni} alt="minusuni" className="universal_icon"
-                          style={{ ...universalIconStyle, top: `${6.65 * sc}px`, left: `${55.45 * sc}px` }} />
-                        < img src={Leftuni} alt="leftuni" className="universal_icon"
-                          style={{ ...universalIconStyle, top: `${26.65 * sc}px`, left: `${7.45 * sc}px` }} />
-                        < img src={Rightuni} alt="rightuni" className="universal_icon"
-                          style={{ ...universalIconStyle, top: `${26.65 * sc}px`, left: `${55.45 * sc}px` }} />
-                        < img src={Minusuni} alt="minusuni" className="universal_icon"
-                          style={{ ...universalIconStyle, top: `${46.65 * sc}px`, left: `${7.45 * sc}px` }} />
-                        < img src={Minusuni} alt="minusuni" className="universal_icon"
-                          style={{ ...universalIconStyle, top: `${46.65 * sc}px`, left: `${55.45 * sc}px` }} />
-                      </div>
-                    }
-                  </>
-                }
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <div className="preview_bottom">
-          <div className="bottom_info_model">
-            <span>{t(chosenModel.type)}</span>
-          </div>
-          <div className="scale_container">
-            <div className="scale_box">
-              <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut}
-                style={sc === 4 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
-                data-tip data-for='zoomout'
-              />
-              <div style={sc === 4 ? { opacity: "1" } : { opacity: "0" }}>
-                <ReactTooltip className='tooltip_custom' id='zoomout' place="top" type="error" effect="float" >
-                  <span>{t("MIN_SCALING")}</span>
-                </ReactTooltip>
-              </div>
-            </div>
-            <div className="scale_box">
-              <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} />
-            </div>
-            {/* <div className="scale_box">
-              <img src={Resize} alt="resize" className="scale_icon" onClick={() => { setFullScreen(prev => !prev) }} />
-            </div> */}
-            <div className="scale_box">
-              <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn}
-                style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
-                data-tip data-for='zoomin'
-              />
-              <div style={sc === 8 ? { opacity: "1" } : { opacity: "0" }}>
-                <ReactTooltip className='tooltip_custom' id='zoomin' place="top" type="error" effect="float" >
-                  <span>{t("MAX_SCALING")}</span>
-                </ReactTooltip>
-              </div>
-            </div>
-          </div>
-          <div className="bottom_info_ral">
-            <span>{t(chosenColor.RAL)}</span>
-          </div>
-        </div>
-      </div>
-
-
-      <div className="preview_side_container">
-        <div className="preview_side_scroll">
-          <div className="preview_side">
-
-            <Overlay target={target.current} show={noPanelName} placement="top">
-              {({ placement, arrowProps, show: _show, popper, ...props }) => (
-                <div
-                  {...props}
-                  style={{
-                    backgroundColor: 'rgba(220, 53, 69, 0.85)',
-                    fontSize: "14px",
-                    fontFamily: "'Montserrat', sans-serif",
-                    padding: '10px 15px',
-                    color: 'white',
-                    borderRadius: 3,
-                    ...props.style,
-                  }}
-                >
-                  {t("ENTER_PANEL_NAME")}
-                </div>
-              )}
-            </Overlay>
-
-
-            <Overlay target={target.current} show={occupiedPanelName} placement="top">
-              {({ placement, arrowProps, show: _show, popper, ...props }) => (
-                <div
-                  {...props}
-                  style={{
-                    backgroundColor: 'rgba(220, 53, 69, 0.85)',
-                    fontSize: "14px",
-                    fontFamily: "'Montserrat', sans-serif",
-                    padding: '10px 15px',
-                    color: 'white',
-                    borderRadius: 3,
-                    ...props.style,
-                  }}
-                >
-                  {t("BUSY_PANEL_NAME")}
-                </div>
-              )}
-            </Overlay>
-
-
-
-            <div className="side_box">
-
-              {!downloading &&
-                <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handlePrintPdf} />
-              }
-              {downloading &&
-                <>
-                  <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
-                  <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
-                    style={{ animationName: "downloadnigPrewiev" }}
-                  />
-                </>
-              }
-              {downloading ?
-                <span>{t("SAVING")} <br />{t("TO_PDF")}<br />  </span>
-                :
-                <span>{t("SAVE_TO_PDF")}</span>
-              }
-            </div>
-
-            <div className="side_box">
-              <img src={Saveandback} alt="saveandback" className="side_icon" onClick={handleSave} />
-              <span>{t("SAVE_AND_GO_BACK")}</span>
-            </div>
-
-            <div className="side_box">
-              <img src={Back} alt="back" className="side_icon" onClick={() => showAlert(2)} />
-              <span>{t("NO_SAVE_AND_GO_BACK")}</span>
-            </div>
-
-
-
-
-
-
-
-
-            <div className="side_box">
-              <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
-              {!visual ? <span>{t("VISUALIZATION_MODE")}</span> : <span>{t("EDIT_MODE")}</span>}
-            </div>
-
-            <div className="side_box">
-              <img src={Clearall} alt="clearall" className="side_icon"
-                onClick={() => showAlert(3)}
-                onMouseOver={() => setRemoveAll(true)}
-                onMouseLeave={() => setRemoveAll(false)}
-              />
-              <span>{t("RESET_ALL")}</span>
-            </div>
-
-
-            {chosenTab === "icons" &&
-              <>
-                <div className="side_box" data-for="animation_tooltip" data-tip={t("ANIMATION_TOOLTIP")}>
-                  {animations ?
-                    <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
-                    : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
-                  }
-                  {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
-                </div>
-                <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
-                {areThereAnyIcons ?
-                  <div className="side_box">
-                    <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
-                      onMouseOver={() => showRemoveIcons(true)}
-                      onMouseLeave={handleHideRemoveIcons}
-                    />
-                    <span>{t("DALETE_ALL_ICONS")}</span>
-                  </div>
-                  :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
-                    <img src={Clearallicons} alt="clearallicons" className="side_icon" />
-                    <span>{t("DALETE_ALL_ICONS")}</span>
-                  </div>
-                }
-
-                {isAnySelected ?
-                  <>
-                    <div className="side_box">
-                      <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-                        onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
-                      <span>{t("DALETE_SELECTED_ICON")}</span>
-                    </div>
-
-                    <div className="side_box">
-                      <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-                      <span>{t("ROTATE_RIGHT")}</span>
-                    </div>
-                    <div className="side_box">
-                      <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-                      <span>{t("ROTATE_LEFT")}</span>
-                    </div>
-
-
-                  </>
-                  :
-                  <>
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                      <img src={Clear} alt="clear" className="side_icon" />
-                      <span>{t("DALETE_SELECTED_ICON")}</span>
-                    </div>
-
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                      <img src={Rotateright} alt="rotateright" className="side_icon" />
-                      <span>{t("ROTATE_RIGHT")}</span>
-                    </div>
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                      <img src={Rotateleft} alt="rotateleft" className="side_icon" />
-                      <span>{t("ROTATE_LEFT")}</span>
-                    </div>
-                  </>
-                }
-                <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-                <div className="side_box" >
-
-                  {!downloading &&
-                    <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} />
-                  }
-                  {downloading &&
-                    <>
-                      <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
-                      <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
-                        style={{ animationName: "downloadnigPrewiev" }}
-                      />
+                      }
                     </>
                   }
-                  {downloading ?
-                    <span >{t("DOWNLOADING")}<br />  </span>
-                    :
-                    <span
-                      style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
-                  }
                 </div>
+              </div>
 
-              </>
-            }
-            {chosenTab === "text" &&
-              <>
-                <div className="side_box">
-                  <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowTextBorder(prev => !prev) }} />
-                  <span>{showTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
+            </div>
+          </div>
+          <div className="preview_bottom">
+            <div className="bottom_info_model">
+              <span>{t(chosenModel.type)}</span>
+            </div>
+            <div className="scale_container">
+              <div className="scale_box">
+                <img src={Zoomout} alt="zoomout" className="scale_icon" onClick={handleZoomOut}
+                  style={sc === 4 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
+                  data-tip data-for='zoomout'
+                />
+                <div style={sc === 4 ? { opacity: "1" } : { opacity: "0" }}>
+                  <ReactTooltip className='tooltip_custom' id='zoomout' place="top" type="error" effect="float" >
+                    <span>{t("MIN_SCALING")}</span>
+                  </ReactTooltip>
                 </div>
-
-                <div className="side_box">
-                  {textUpOff ?
-                    <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff}
-                      onMouseOver={() => { setOverUpDescriptions(true) }}
-                      onMouseLeave={() => { setOverUpDescriptions(false) }}
-                    />
-                    :
-                    <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff}
-                      onMouseOver={() => { setOverUpDescriptions(true) }}
-                      onMouseLeave={() => { setOverUpDescriptions(false) }}
-                    />}
-                  {textUpOff ? <span>{t("TRUN_OFF_UP_DESCRIPTION")}</span> : <span>{t("TRUN_ON_UP_DESCRIPTION")}</span>}
+              </div>
+              <div className="scale_box">
+                <img src={Resize} alt="resize" className="scale_icon" onClick={handleResize} data-tip data-for='resize' />
+                <ReactTooltip className='tooltip_custom' id='resize' place="top" type="error" effect="float" delayShow={300}>
+                  <span>{t("DEFAULT_SCALE_TOOLTIP")}</span>
+                </ReactTooltip>
+              </div>
+              <div className="scale_box">
+                <img src={Fullscreen} alt="fullscreen" className="scale_icon" onClick={() => { setFullScreen(true) }} data-tip data-for='fullscreen' />
+                <ReactTooltip className='tooltip_custom' id='fullscreen' place="top" type="error" effect="float" delayShow={300}>
+                  <span>{t("FULLSCREEN_ON_TOOLTIP")}</span>
+                </ReactTooltip>
+              </div>
+              <div className="scale_box">
+                <img src={Zoomin} alt="zoomin" className="scale_icon" onClick={handleZoomIn}
+                  style={sc === 8 ? { filter: "invert(53%) sepia(6%) saturate(18%) hue-rotate(343deg) brightness(94%) contrast(84%)", cursor: "not-allowed" } : {}}
+                  data-tip data-for='zoomin'
+                />
+                <div style={sc === 8 ? { opacity: "1" } : { opacity: "0" }}>
+                  <ReactTooltip className='tooltip_custom' id='zoomin' place="top" type="error" effect="float" >
+                    <span>{t("MAX_SCALING")}</span>
+                  </ReactTooltip>
                 </div>
+              </div>
+            </div>
+            <div className="bottom_info_ral">
+              {chosenColor.RAL === "SMOKED_GLASS" ?
+                <span>{t(chosenColor.RAL)}</span>
+                : <span>{chosenColor.RAL}</span>
+              }
 
-                {panelTextBackEnd.length !== 0 ?
-                  <div className="side_box" >
-                    <img src={Clearalltext} alt="clearalltext" className="side_icon"
-                      onClick={() => showAlert(6)}
-                      onMouseOver={() => { setOverDescriptions(true) }}
-                      onMouseLeave={() => { setOverDescriptions(false) }}
-                    />
-                    <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
-                  </div>
-                  :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_DESCRIPTION_TOOLTIP")}>
-                    <img src={Clearalltext} alt="clearalltext" className="side_icon" />
-                    <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
-                  </div>
-                }
-
-                <div className="side_box">
-                  <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
-                  <span>{t("CHOSEN_FONT_FOR_ALL_DESCRIPTIONS")}</span>
-                </div>
-
-                <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-
-              </>
-            }
-            {chosenTab === "frame" &&
-              <>
-
-                <div className="side_box">
-                  <img src={Frameblacklight} alt="frameblacklight" className="side_icon" onClick={() => { setShowFramBlackLight(prev => !prev) }} />
-                  {showFramBlackLight ? <span>{t("HIDE_BACKLIGHT")}</span> : <span>{t("SHOW_BACKLIGHT")}</span>}
-                </div>
-
-                <div className="side_box">
-                  {allFramesSharpRound ?
-                    <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
-                    :
-                    <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramesToRound} />}
-                  {allFramesSharpRound ? <span>{t("ALL_CORNERS_STRAIGHT")}</span> : <span>{t("ALL_CORNERS_ROUNDED")}</span>}
-                </div>
-
-                {frameHolders.length !== 0 ?
-
-                  <div className="side_box" >
-                    <img src={Removeallframes} alt="ramoveallframes" className="side_icon"
-                      onClick={() => showAlert(5)}
-                      onMouseOver={() => { overFrameAll(true); setOverCurrFrame(true) }}
-                      onMouseLeave={() => { overFrameAll(false); setOverCurrFrame(false) }}
-                    />
-                    <span>{t("DELETE_ALL_FRAMES")}</span>
-                  </div>
-                  :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CONFIRM_FRAME_TOOLTIP")}>
-                    <img src={Removeallframes} alt="ramoveallframes" className="side_icon" />
-                    <span>{t("DELETE_ALL_FRAMES")}</span>
-                  </div>
-                }
-
-                {frameHoldersTemp ?
-
-                  <div className="side_box" >
-                    <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
-                    <span>{t("DELETE_CURRENT_FRAME")}</span>
-                  </div>
-                  :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CREATE_FRAME_TOOLTIP")}>
-                    <img src={Removecurrframe} alt="removecurrframe" className="side_icon" />
-                    <span>{t("DELETE_CURRENT_FRAME")}</span>
-                  </div>
-                }
-
-                {frameTitleFlag ?
-
-                  <div className="side_box">
-                    <img src={Textborder} alt="textborder" className="side_icon"
-                      onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
-                    <span>{showFrameTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
-                  </div>
-                  :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_TITLE_TOOLTIP")} >
-                    <img src={Textborder} alt="textborder" className="side_icon" />
-                    <span>{showFrameTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
-                  </div>
-                }
-
-
-                {frameTitles ?
-                  <div className="side_box" >
-                    <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
-                    <span>{t("CHOSEN_FONT_FOR_ALL_TITLES")}</span>
-                  </div>
-                  :
-                  <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CONFIRM_TITLE_FRAME_TOOLTIP")}>
-                    <img src={Setonefont} alt="setonefont" className="side_icon" />
-                    <span>{t("CHOSEN_FONT_FOR_ALL_TITLES")}</span>
-                  </div>}
-
-                <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-              </>
-
-            }
-
-
+            </div>
           </div>
         </div>
 
-        {warnings.length !== 0 &&
-          <div className="side_alert_container">
 
-            <div className="side_box_alert" style={{ marginTop: "auto" }}>
-              <img src={Alert} alt="Alert" className="side_icon" onClick={handleShowWarnings} />
-              <span >{t("SHOW_WARNINGS")}</span>
+        <div className="preview_side_container">
+          <div className="preview_side_scroll">
+            <div className="preview_side">
+
+              <Overlay target={target.current} show={noPanelName} placement="top">
+                {({ placement, arrowProps, show: _show, popper, ...props }) => (
+                  <div
+                    {...props}
+                    style={{
+                      backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                      fontSize: "14px",
+                      fontFamily: "'Montserrat', sans-serif",
+                      padding: '10px 15px',
+                      color: 'white',
+                      borderRadius: 3,
+                      ...props.style,
+                    }}
+                  >
+                    {t("ENTER_PANEL_NAME")}
+                  </div>
+                )}
+              </Overlay>
+
+
+              <Overlay target={target.current} show={occupiedPanelName} placement="top">
+                {({ placement, arrowProps, show: _show, popper, ...props }) => (
+                  <div
+                    {...props}
+                    style={{
+                      backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                      fontSize: "14px",
+                      fontFamily: "'Montserrat', sans-serif",
+                      padding: '10px 15px',
+                      color: 'white',
+                      borderRadius: 3,
+                      ...props.style,
+                    }}
+                  >
+                    {t("BUSY_PANEL_NAME")}
+                  </div>
+                )}
+              </Overlay>
+
+
+
+              <div className="side_box">
+
+                {!downloading &&
+                  <img src={Savetopdf} alt="savetopdf" className="side_icon" onClick={handlePrintPdf} />
+                }
+                {downloading &&
+                  <>
+                    <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
+                    <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
+                      style={{ animationName: "downloadnigPrewiev" }}
+                    />
+                  </>
+                }
+                {downloading ?
+                  <span>{t("SAVING")} <br />{t("TO_PDF")}<br />  </span>
+                  :
+                  <span>{t("SAVE_TO_PDF")}</span>
+                }
+              </div>
+
+              <div className="side_box">
+                <img src={Saveandback} alt="saveandback" className="side_icon" onClick={handleSave} />
+                <span>{t("SAVE_AND_GO_BACK")}</span>
+              </div>
+
+              <div className="side_box">
+                <img src={Back} alt="back" className="side_icon" onClick={() => showAlert(2)} />
+                <span>{t("NO_SAVE_AND_GO_BACK")}</span>
+              </div>
+
+
+              <div className="side_box">
+                <img src={Visual} alt="visualization" className="side_icon" onClick={handleVisual} />
+                {!visual ? <span>{t("VISUALIZATION_MODE")}</span> : <span>{t("EDIT_MODE")}</span>}
+              </div>
+
+              <div className="side_box">
+                <img src={Clearall} alt="clearall" className="side_icon"
+                  onClick={() => showAlert(3)}
+                  onMouseOver={() => setRemoveAll(true)}
+                  onMouseLeave={() => setRemoveAll(false)}
+                />
+                <span>{t("RESET_ALL")}</span>
+              </div>
+
+
+              {chosenTab === "icons" &&
+                <>
+                  <div className="side_box" data-for="animation_tooltip" data-tip={t("ANIMATION_TOOLTIP")}>
+                    {animations ?
+                      <img src={Animoff} alt="animationoff" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
+                      : <img src={Anim} alt="animation" className="side_icon" onClick={() => { toggleAnimations(!animations) }} />
+                    }
+                    {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
+                  </div>
+                  <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
+                  {areThereAnyIcons ?
+                    <div className="side_box">
+                      <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
+                        onMouseOver={() => showRemoveIcons(true)}
+                        onMouseLeave={handleHideRemoveIcons}
+                      />
+                      <span>{t("DALETE_ALL_ICONS")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
+                      <img src={Clearallicons} alt="clearallicons" className="side_icon" />
+                      <span>{t("DALETE_ALL_ICONS")}</span>
+                    </div>
+                  }
+
+                  {isAnySelected ?
+                    <>
+                      <div className="side_box">
+                        <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
+                          onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
+                        <span>{t("DALETE_SELECTED_ICON")}</span>
+                      </div>
+
+                      <div className="side_box">
+                        <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                        <span>{t("ROTATE_RIGHT")}</span>
+                      </div>
+                      <div className="side_box">
+                        <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                        <span>{t("ROTATE_LEFT")}</span>
+                      </div>
+
+
+                    </>
+                    :
+                    <>
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                        <img src={Clear} alt="clear" className="side_icon" />
+                        <span>{t("DALETE_SELECTED_ICON")}</span>
+                      </div>
+
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                        <img src={Rotateright} alt="rotateright" className="side_icon" />
+                        <span>{t("ROTATE_RIGHT")}</span>
+                      </div>
+                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                        <img src={Rotateleft} alt="rotateleft" className="side_icon" />
+                        <span>{t("ROTATE_LEFT")}</span>
+                      </div>
+                    </>
+                  }
+                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+                  <div className="side_box" >
+
+                    {!downloading &&
+                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} />
+                    }
+                    {downloading &&
+                      <>
+                        <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
+                        <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
+                          style={{ animationName: "downloadnigPrewiev" }}
+                        />
+                      </>
+                    }
+                    {downloading ?
+                      <span >{t("DOWNLOADING")}<br />  </span>
+                      :
+                      <span
+                        style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
+                    }
+                  </div>
+
+                </>
+              }
+              {chosenTab === "text" &&
+                <>
+                  <div className="side_box">
+                    <img src={Textborder} alt="textborder" className="side_icon" onClick={() => { setShowTextBorder(prev => !prev) }} />
+                    <span>{showTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
+                  </div>
+
+                  <div className="side_box">
+                    {textUpOff ?
+                      <img src={Textupoff} alt="textupoff" className="side_icon" onClick={handleTextUpOff}
+                        onMouseOver={() => { setOverUpDescriptions(true) }}
+                        onMouseLeave={() => { setOverUpDescriptions(false) }}
+                      />
+                      :
+                      <img src={Textupon} alt="textupon" className="side_icon" onClick={handleTextUpOff}
+                        onMouseOver={() => { setOverUpDescriptions(true) }}
+                        onMouseLeave={() => { setOverUpDescriptions(false) }}
+                      />}
+                    {textUpOff ? <span>{t("TRUN_OFF_UP_DESCRIPTION")}</span> : <span>{t("TRUN_ON_UP_DESCRIPTION")}</span>}
+                  </div>
+
+                  {panelTextBackEnd.length !== 0 ?
+                    <div className="side_box" >
+                      <img src={Clearalltext} alt="clearalltext" className="side_icon"
+                        onClick={() => showAlert(6)}
+                        onMouseOver={() => { setOverDescriptions(true) }}
+                        onMouseLeave={() => { setOverDescriptions(false) }}
+                      />
+                      <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_DESCRIPTION_TOOLTIP")}>
+                      <img src={Clearalltext} alt="clearalltext" className="side_icon" />
+                      <span>{t("DELTEL_ALL_DESCRIPTIONS")}</span>
+                    </div>
+                  }
+
+                  <div className="side_box">
+                    <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFont} />
+                    <span>{t("CHOSEN_FONT_FOR_ALL_DESCRIPTIONS")}</span>
+                  </div>
+
+                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+
+                </>
+              }
+              {chosenTab === "frame" &&
+                <>
+
+                  <div className="side_box">
+                    <img src={Frameblacklight} alt="frameblacklight" className="side_icon" onClick={() => { setShowFramBlackLight(prev => !prev) }} />
+                    {showFramBlackLight ? <span>{t("HIDE_BACKLIGHT")}</span> : <span>{t("SHOW_BACKLIGHT")}</span>}
+                  </div>
+
+                  <div className="side_box">
+                    {allFramesSharpRound ?
+                      <img src={Framesharp} alt="framesharp" className="side_icon" onClick={handleChangeFramesToSharp} />
+                      :
+                      <img src={Frameround} alt="frameround" className="side_icon" onClick={handleChangeFramesToRound} />}
+                    {allFramesSharpRound ? <span>{t("ALL_CORNERS_STRAIGHT")}</span> : <span>{t("ALL_CORNERS_ROUNDED")}</span>}
+                  </div>
+
+                  {frameHolders.length !== 0 ?
+
+                    <div className="side_box" >
+                      <img src={Removeallframes} alt="ramoveallframes" className="side_icon"
+                        onClick={() => showAlert(5)}
+                        onMouseOver={() => { overFrameAll(true); setOverCurrFrame(true) }}
+                        onMouseLeave={() => { overFrameAll(false); setOverCurrFrame(false) }}
+                      />
+                      <span>{t("DELETE_ALL_FRAMES")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CONFIRM_FRAME_TOOLTIP")}>
+                      <img src={Removeallframes} alt="ramoveallframes" className="side_icon" />
+                      <span>{t("DELETE_ALL_FRAMES")}</span>
+                    </div>
+                  }
+
+                  {frameHoldersTemp ?
+
+                    <div className="side_box" >
+                      <img src={Removecurrframe} alt="removecurrframe" className="side_icon" onClick={handleResetCurrFrame} />
+                      <span>{t("DELETE_CURRENT_FRAME")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CREATE_FRAME_TOOLTIP")}>
+                      <img src={Removecurrframe} alt="removecurrframe" className="side_icon" />
+                      <span>{t("DELETE_CURRENT_FRAME")}</span>
+                    </div>
+                  }
+
+                  {frameTitleFlag ?
+
+                    <div className="side_box">
+                      <img src={Textborder} alt="textborder" className="side_icon"
+                        onClick={!frameTitleFlag ? null : () => { setShowFrameTextBorder(prev => !prev) }} />
+                      <span>{showFrameTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_TITLE_TOOLTIP")} >
+                      <img src={Textborder} alt="textborder" className="side_icon" />
+                      <span>{showFrameTextBorder ? t("HIDE_BORDERS") : t("SHOW_BORDERS")}</span>
+                    </div>
+                  }
+
+
+                  {frameTitles ?
+                    <div className="side_box" >
+                      <img src={Setonefont} alt="setonefont" className="side_icon" onClick={handleSetOneFrameFont} />
+                      <span>{t("CHOSEN_FONT_FOR_ALL_TITLES")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("CONFIRM_TITLE_FRAME_TOOLTIP")}>
+                      <img src={Setonefont} alt="setonefont" className="side_icon" />
+                      <span>{t("CHOSEN_FONT_FOR_ALL_TITLES")}</span>
+                    </div>}
+
+                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+                </>
+
+              }
+
+
             </div>
           </div>
-        }
+
+          {warnings.length !== 0 &&
+            <div className="side_alert_container">
+
+              <div className="side_box_alert" style={{ marginTop: "auto" }}>
+                <img src={Alert} alt="Alert" className="side_icon" onClick={handleShowWarnings} />
+                <span >{t("SHOW_WARNINGS")}</span>
+              </div>
+            </div>
+          }
+        </div>
       </div>
-    </div >
+    </>
   );
 }
 
@@ -5110,6 +5108,7 @@ const mapStateToProps = state => ({
   warningsReRender: state.frontEndData.visual.warningsReRender,
   animations: state.frontEndData.visual.animations,
   sc: state.frontEndData.visual.scale,
+  fullScreen: state.frontEndData.visual.fullScreen,
   panelName: state.frontEndData.visual.panelName,
   chosenTextFont: state.frontEndData.text.chosenTextFont,
   textRender: state.frontEndData.text.textRender,
@@ -5165,6 +5164,7 @@ const mapDispatchToProps = dispatch => ({
   showRemoveIcon: (income) => dispatch(actionsVisual.showRemoveIcon(income)),
   showRemoveIcons: (income) => dispatch(actionsVisual.showRemoveIcons(income)),
   setTimeOfCreation: (income) => dispatch(actionsVisual.setTimeOfCreation(income)),
+  setFullScreen: (income) => dispatch(actionsVisual.setFullScreen(income)),
 
   toggleTextUp: (income) => dispatch(actionsText.toggleTextUp(income)),
 

@@ -11,7 +11,7 @@ import {
 import { persistor, store } from './store';
 import Dashboard from "../../components/Dashboard/Dashboard"
 import MobileComponent from "../../components/MobileComponent/MobileComponent"
-// import { RootComponent, LoadingView } from './components'; /// DODAJ WIDOK ŁADOWANIA
+import LoadingView from '../LoadingView/LoadingView';
 
 
 
@@ -20,8 +20,7 @@ const App = () => {
     <>
       <BrowserView>
         <Provider store={store}>
-          {/* <PersistGate loading={<LoadingView />} persistor={persistor}> */}
-          <PersistGate loading={null} persistor={persistor}>
+          <PersistGate loading={<LoadingView />} persistor={persistor}>
             <div className="App">
               <Dashboard />
             </div>

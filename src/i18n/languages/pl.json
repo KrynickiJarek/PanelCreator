@@ -207,5 +207,9 @@
   "FRAME_TITLE_TOOLTIP_2": "o szerokości co najmniej 2 kolumn",
   "FRAME_TITLE_TOOLTIP_3": "lub wysokości co najmniej 2 rzędów",
   "SMOKED_GLASS_TOOLTIP_1": "Szkło dymione daje efekt przyciemnionego ekranu LCD.",
-  "SMOKED_GLASS_TOOLTIP_2": "Dostępne tylko w panelach MDOT-M18 oraz MDOT-M18 Uniwersalny."
+  "SMOKED_GLASS_TOOLTIP_2": "Dostępne tylko w panelach MDOT-M18 oraz MDOT-M18 Uniwersalny.",
+  "DEFAULT_SCALE_TOOLTIP": "Domyślne skalowanie",
+  "FULLSCREEN_ON_TOOLTIP": "Włącz podgląd pełnoekranowy",
+  "FULLSCREEN_OFF_TOOLTIP": "Wyłącz podgląd pełnoekranowy",
+  "FULLSCREEN_OFF": "Wyłącz podgląd pełno-\nekranowy"
 }

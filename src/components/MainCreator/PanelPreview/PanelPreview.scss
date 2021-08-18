@@ -236,6 +236,7 @@
     .panel_container {
       display: flex;
       justify-content: center;
+      margin: 0 auto;
       align-items: center;
       height: 100%;
       width: 100%;
@@ -272,7 +273,6 @@
           box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
           margin-top: auto;
           margin-bottom: auto;
-
 
           .visualization_frame{
             position: absolute;
@@ -442,7 +442,6 @@
   font-size: 14px !important;
   border-radius: 3px!important;
   padding: 10px 15px!important; 
-  // z-index: 99999999999; //???
 }
 
 

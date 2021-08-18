@@ -64,6 +64,10 @@ const changeLanguage = item => ({
   type: types.CHANGE_LANGUAGE, item
 })
 
+const setFullScreen = item => ({
+  type: types.SET_FULL_SCREEN, item
+})
+
 const actions = {
   toggleVisual,
   changeScale,
@@ -80,7 +84,8 @@ const actions = {
   showAlert,
   removeAlert,
   setAlertAnswer,
-  changeLanguage
+  changeLanguage,
+  setFullScreen
 }
 
 export default actions

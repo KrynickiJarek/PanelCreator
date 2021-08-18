@@ -6,6 +6,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import EN from "./languages/en.json";
 import PL from "./languages/pl.json";
 
+
 const resources = {
   en: {
     translation: EN,
@@ -15,7 +16,6 @@ const resources = {
   },
 };
 
-
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -23,18 +23,34 @@ i18n
   .init({
     resources,
     fallbackLng: "en",
-    // load: "languageOnly",
-
-    keySeparator: false,
+    // debug: true,
     debug: false,
+    // detection: {
+    //   order: ["queryString", "cookie", "navigator"],
+    //   cache: ["cookie"]
+    // },
     interpolation: {
       escapeValue: false,
     },
+    load: "languageOnly",
   });
 
-
-console.log(i18n.language)
 
 export const t = i18n.t.bind(i18n);
 
 export default i18n;
+
+// i18n
+//   .use(Backend)
+//   .use(LanguageDetector)
+//   .use(initReactI18next)
+//   .init({
+//     resources,
+//     fallbackLng: "en",
+
+//     keySeparator: false,
+//     debug: false,
+//     interpolation: {
+//       escapeValue: false,
+//     },
+//   });

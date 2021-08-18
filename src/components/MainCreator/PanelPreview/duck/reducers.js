@@ -8,12 +8,13 @@ const INITIAL_STATE = {
   removeIcons: false,
   panelName: "",
   timeOfCreation: null,
-  version: "0.99a",
+  version: "0.99b",
   warnings: [],
   warningsReRender: false,
   alert: null,
   alertAnswer: null,
-  languageRender: false
+  languageRender: false,
+  fullScreen: false
 }
 
 const visualReducer = (state = INITIAL_STATE, action) => {
@@ -77,6 +78,10 @@ const visualReducer = (state = INITIAL_STATE, action) => {
     case types.CHANGE_LANGUAGE:
       return {
         ...state, languageRender: !state.languageRender,
+      }
+    case types.SET_FULL_SCREEN:
+      return {
+        ...state, fullScreen: action.item,
       }
     case types.SET_FRONT_END_REDUCER_VISUAL:
       return action.item
