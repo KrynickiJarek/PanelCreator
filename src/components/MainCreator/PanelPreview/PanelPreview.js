@@ -98,6 +98,7 @@ const PanelPreview = ({
   chosenFrameShape,
   addNewFrameState,
   addNewFrame,
+  removeFrameState,
   removeFrame,
   lastRemovedFrameIndex,
   frameHolders,
@@ -486,9 +487,7 @@ const PanelPreview = ({
       filterWarnings(5)
     }
     // eslint-disable-next-line
-  }, [textFrameRender, addNewFrameState, removeFrame]);
-
-
+  }, [textFrameRender, addNewFrameState, removeFrameState]);
 
 
 
@@ -537,7 +536,7 @@ const PanelPreview = ({
       filterWarnings(6)
     }
     // eslint-disable-next-line
-  }, [iconHolders, iconHoldersRender, textFrameRender, addNewFrameState, removeFrame]);
+  }, [iconHolders, iconHoldersRender, textFrameRender, addNewFrameState]); //było jeszcze removeFrameState
 
 
 
@@ -736,58 +735,61 @@ const PanelPreview = ({
 
 
   useEffect(() => {
-    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    const copyFramesBackEnd = framesBackEnd.filter(function (element, index) { return index !== lastRemovedFrameIndex })
-    changeFramesBackEnd(copyFramesBackEnd)
-    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+    if (lastRemovedFrameIndex !== null) {
+      // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+      const copyFramesBackEnd = framesBackEnd.filter(function (element, index) { return index !== lastRemovedFrameIndex })
+      changeFramesBackEnd(copyFramesBackEnd)
+      // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
 
-    const copyFrameHolders = frameHolders
-    const checkSingleFramesArr = []
-    copyFrameHolders.forEach(element => {
-      if (element.type === "single") {
-        element.framePrint.forEach((el, index) => {
-          if (el !== 0) {
-            checkSingleFramesArr.push(index)
-          }
-        })
-      }
-    })
-    const copyArr = iconHolders;
-    copyArr.forEach((element, index) => {
-      if (!checkSingleFramesArr.includes(index)) {
-        element.singleFrame = false;
-      }
-    })
-    changeIconHolders(copyArr)
+      const copyFrameHolders = frameHolders
+      const checkSingleFramesArr = []
+      copyFrameHolders.forEach(element => {
+        if (element.type === "single") {
+          element.framePrint.forEach((el, index) => {
+            if (el !== 0) {
+              checkSingleFramesArr.push(index)
+            }
+          })
+        }
+      })
+      const copyArr = iconHolders;
+      copyArr.forEach((element, index) => {
+        if (!checkSingleFramesArr.includes(index)) {
+          element.singleFrame = false;
+        }
+      })
+      changeIconHolders(copyArr)
 
-    const checkFrameFontArr = []
-    const checkFrameTitlesArr = []
+      const checkFrameFontArr = []
+      const checkFrameTitlesArr = []
 
-    copyFrameHolders.forEach((el) => {
-      if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
-        checkFrameFontArr.push(el.framePrint.frameFont)
-      }
-      if (el.framePrint.text !== "") {
-        checkFrameTitlesArr.push(el.framePrint.text)
-      }
-    })
-    if (checkFrameFontArr.length > 1) {
-      filterWarnings(4)
-      pushWarnings(4)
+      copyFrameHolders.forEach((el) => {
+        if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
+          checkFrameFontArr.push(el.framePrint.frameFont)
+        }
+        if (el.framePrint.text !== "") {
+          checkFrameTitlesArr.push(el.framePrint.text)
+        }
+      })
+      if (checkFrameFontArr.length > 1) {
+        filterWarnings(4)
+        pushWarnings(4)
 
-    } else {
-      filterWarnings(4)
+      } else {
+        filterWarnings(4)
+      }
+
+      if (checkFrameTitlesArr.length > 0) {
+        setFrameTitles(true)
+      } else {
+        setFrameTitles(false)
+      }
+
+      overFrameReRender()
+      removeFrame(null)
     }
-
-    if (checkFrameTitlesArr.length > 0) {
-      setFrameTitles(true)
-    } else {
-      setFrameTitles(false)
-    }
-
-    overFrameReRender()
     // eslint-disable-next-line 
-  }, [removeFrame]);
+  }, [removeFrameState]);
 
 
 
@@ -1053,7 +1055,7 @@ const PanelPreview = ({
   autoResizeInputStyle.fontSize = `${2.5 * sc}px`
   autoResizeInputStyle.lineHeight = `${2.5 * sc}px`
   autoResizeInputStyle.height = `${3.6 * sc}px`;
-  autoResizeInputStyle.width = `${5 * sc}px`;//nataleczka
+  autoResizeInputStyle.width = `${5 * sc}px`;
   autoResizeInputStyle.transition = "400ms ease";
   autoResizeInputStyle.position = "absolute";
   autoResizeInputStyle.display = "inline-grid";
@@ -1879,6 +1881,15 @@ const PanelPreview = ({
     const copyWarnings = warnings
     copyWarnings.forEach(warning => {
       warning.show = true
+      warning.hide = false
+    })
+    updateWarnings(copyWarnings)
+  }
+
+  const handleHideWarnings = () => {
+    const copyWarnings = warnings
+    copyWarnings.forEach(warning => {
+      warning.show = false
       warning.hide = false
     })
     updateWarnings(copyWarnings)
@@ -4220,7 +4231,7 @@ const PanelPreview = ({
                                     visibility: 'hidden',
                                     // padding: "0 5px", 
                                     whiteSpace: "pre",
-                                    margin: `0 ${1.5 * sc}px` //nataleczka
+                                    margin: `0 ${1.5 * sc}px`
                                   }}>
                                     {frame.framePrint.text}
                                   </span>
@@ -4253,7 +4264,7 @@ const PanelPreview = ({
                                     gridArea: '1 / 1 / 2 / 2', visibility: 'hidden',
                                     // padding: "0 5px", 
                                     whiteSpace: "pre",
-                                    margin: `0 ${1.5 * sc}px` //nataleczka
+                                    margin: `0 ${1.5 * sc}px`
                                   }}>
                                     {frame.framePrint.text}
                                   </span>
@@ -4394,7 +4405,7 @@ const PanelPreview = ({
                                   fontFamily: chosenFrameFont,
                                   padding: "0 8px",
                                   whiteSpace: "pre",
-                                  margin: `0 ${1.5 * sc}px` //nataleczka
+                                  margin: `0 ${1.5 * sc}px`
                                 }}>
                                   {frameText}
                                 </span>
@@ -5096,11 +5107,20 @@ const PanelPreview = ({
 
           {warnings.length !== 0 &&
             <div className="side_alert_container">
+              {warnings.filter(function (element) { return !element.show }).length !== 0 ?
+                <div className="side_box_alert" style={{ marginTop: "auto" }}>
+                  <img src={Alert} alt="Alert" className="side_icon" onClick={handleShowWarnings} />
+                  <span >{t("SHOW_WARNINGS")}</span>
+                </div>
+                :
+                <div className="side_box_alert" style={{ marginTop: "auto" }}>
+                  <img src={Alert} alt="Alert" className="side_icon" onClick={handleHideWarnings} />
+                  <span >{t("HIDE_WARNINGS")}</span>
+                </div>
+              }
 
-              <div className="side_box_alert" style={{ marginTop: "auto" }}>
-                <img src={Alert} alt="Alert" className="side_icon" onClick={handleShowWarnings} />
-                <span >{t("SHOW_WARNINGS")}</span>
-              </div>
+
+
             </div>
           }
         </div>
@@ -5121,7 +5141,7 @@ const mapStateToProps = state => ({
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
   addNewFrameState: state.frontEndData.frame.addNewFrame,
-  removeFrame: state.frontEndData.frame.removeFrame,
+  removeFrameState: state.frontEndData.frame.removeFrame,
   lastRemovedFrameIndex: state.frontEndData.frame.lastRemovedFrameIndex,
   overFrameRender: state.frontEndData.frame.overFrameRender,
   textFrameRender: state.frontEndData.frame.textFrameRender,
@@ -5178,6 +5198,7 @@ const mapDispatchToProps = dispatch => ({
   frameTitle: (income) => dispatch(actionsFrame.frameTitle(income)),
   changeFrameFont: (income) => dispatch(actionsFrame.changeFrameFont(income)),
   allowFrameTitle: (income) => dispatch(actionsFrame.allowFrameTitle(income)),
+  removeFrame: (income) => dispatch(actionsFrame.removeFrame(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   changePanelName: (income) => dispatch(actionsVisual.changePanelName(income)),
   toggleAnimations: (income) => dispatch(actionsVisual.toggleAnimations(income)),

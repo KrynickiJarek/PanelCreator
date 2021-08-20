@@ -73,6 +73,7 @@
   "DELETE_CURRENT_FRAME": "Usuń tworzoną ramkę",
   "CHOSEN_FONT_FOR_ALL_TITLES": "Wybrany font dla wszystkich tytułów",
   "SHOW_WARNINGS": "Pokaż ostrzeżenia",
+  "HIDE_WARNINGS": "Ukryj ostrzeżenia",
   "WARNING_0_WHITE_VISUALIZATION": "Ewentualny brak widoczności elementów panelu wynika z ustawień monitora. Elementy będą widoczne na gotowym panelu.",
   "WARNING_1_STATUS_ICON": "Zastosowano ikonę statusową zamiast punktu podświetlenia. Może wystąpić problem z jej podświetleniem.",
   "WARNING_2_LONG_DESCRIPTIONS": "Zastosowano długie opisy ikon. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF.",

@@ -73,6 +73,7 @@
   "DELETE_CURRENT_FRAME": "Delete the current frame",
   "CHOSEN_FONT_FOR_ALL_TITLES": "Selected font for all titles",
   "SHOW_WARNINGS": "Show warnings",
+  "HIDE_WARNINGS": "Hide warnings",
   "WARNING_0_WHITE_VISUALIZATION": "Some panel elements might not be visible due to your computer screen settings. The elements will be visible on the actual panel.",
   "WARNING_1_STATUS_ICON": "A status icon has been used instead of the status light. There might be issues with its illumination.",
   "WARNING_2_LONG_DESCRIPTIONS": "Icon captions are long. Make sure that they do not overlap with other panel elements - also in the generated PDF file.",
