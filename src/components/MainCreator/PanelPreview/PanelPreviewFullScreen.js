@@ -289,7 +289,7 @@ const PanelPreview = ({
   autoResizeInputStyle.fontSize = `${2.5 * sc}px`
   autoResizeInputStyle.lineHeight = `${2.5 * sc}px`
   autoResizeInputStyle.height = `${3.6 * sc}px`;
-  autoResizeInputStyle.width = `${8 * sc}px`;
+  autoResizeInputStyle.width = `${5 * sc}px`;
   autoResizeInputStyle.transition = "400ms ease";
   autoResizeInputStyle.position = "absolute";
   autoResizeInputStyle.display = "inline-grid";
@@ -456,7 +456,15 @@ const PanelPreview = ({
                               disabled={true}
                               value={frame.framePrint.text}
                             />
-                            <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                            <span style={{
+                              fontFamily: frame.framePrint.frameFont,
+                              gridArea: '1 / 1 / 2 / 2',
+                              visibility: 'hidden',
+                              // padding: "0 5px", 
+                              whiteSpace: "pre",
+                              margin: `0 ${1.5 * sc}px` //nataleczka
+
+                            }}>
                               {frame.framePrint.text}
                             </span>
                           </div>

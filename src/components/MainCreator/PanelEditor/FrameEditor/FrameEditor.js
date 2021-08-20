@@ -36,14 +36,20 @@ const FrameEditor = ({
 
 
   const [unlock, setUnlock] = useState(false)
+  const [confirmWait, setConfirmWait] = useState(true)
 
 
   const handleAddNewFrame = () => {
+    setConfirmWait(false)
     if (frameHoldersTemp) {
       frameTitle(false)
       allowFrameTitle(false)
       addNewFrame(true)
     }
+    const confirmTimeout = setTimeout(() => {
+      setConfirmWait(true)
+    }, 1000);
+    return () => clearTimeout(confirmTimeout);
 
   }
 
@@ -119,10 +125,10 @@ const FrameEditor = ({
                   < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri</p>
                 </div>
 
-                <div className="frame_link" style={chosenFrameFont === "Helvetica-bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica-bold" }
-                  : { fontFamily: "Helvetica-bold" }}
-                  onClick={() => { changeFrameFont("Helvetica-bold") }} >
-                  {chosenFrameFont === "Helvetica-bold" && <div className="frame_chosen" />}
+                <div className="frame_link" style={chosenFrameFont === "Helvetica_bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica_bold" }
+                  : { fontFamily: "Helvetica_bold" }}
+                  onClick={() => { changeFrameFont("Helvetica_bold") }} >
+                  {chosenFrameFont === "Helvetica_bold" && <div className="frame_chosen" />}
                   < p className="font_name" style={{ fontSize: "18px" }}>Helvetica bold</p>
                   < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Helvetica Bold</p>
                 </div>
@@ -160,7 +166,7 @@ const FrameEditor = ({
                 </div>
               }
               {!allowFrameTitleFlag &&
-                <ReactTooltip className='tooltip_custom' id='addtitle' place="top" type="error" effect="float" >
+                <ReactTooltip className='tooltip_custom' id='addtitle' place="top" type="error" effect="float" delayShow={200}>
                   <span>{t("FRAME_TITLE_TOOLTIP_1")}<br />{t("FRAME_TITLE_TOOLTIP_2")}<br />{t("FRAME_TITLE_TOOLTIP_3")}</span>
                 </ReactTooltip>
               }
@@ -171,10 +177,45 @@ const FrameEditor = ({
             <p className="instruction_normal">{t("NO_TITLE_IN_CHOSEN_MODEL")}</p>
           }
 
-          <div className="add_frame_button"
-            onClick={handleAddNewFrame} >
+
+          {/* <div className="add_frame_button"
+            style={frameHoldersTemp && confirmWait ? { cursor: "pointer" } : { cursor: "not-allowed" }}
+            onClick={handleAddNewFrame}
+            data-tip data-for='confirm_button'
+          >
             {t("CONFIRM_UPPERCASE")}
             <div className="button_arrows" />
+          </div> */}
+
+
+
+
+
+          {frameHoldersTemp ?
+            <div className="add_frame_button"
+              style={{ cursor: "pointer" }}
+              onClick={handleAddNewFrame}
+            >
+              {t("CONFIRM_UPPERCASE")}
+              <div className="button_arrows" />
+            </div>
+            :
+            <div className="add_frame_button"
+              style={!confirmWait ? { cursor: "pointer" } : { cursor: "not-allowed" }}
+              data-tip data-for='confirm_button'
+            >
+              {t("CONFIRM_UPPERCASE")}
+              <div className="button_arrows" />
+            </div>
+          }
+
+
+
+
+          <div style={(!frameHoldersTemp && confirmWait) ? { opacity: "1" } : { opacity: "0" }}>
+            <ReactTooltip className='tooltip_custom' id='confirm_button' place="top" type="error" effect="float" delayShow={200}>
+              <span>{t("FRAME_CONFIRM_TOOLTIP")}</span>
+            </ReactTooltip>
           </div>
 
           {frameHolders.length > 0 &&

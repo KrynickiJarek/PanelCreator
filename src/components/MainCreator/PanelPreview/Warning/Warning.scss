@@ -1,9 +1,11 @@
 .warning_container{
-  height: 100%;
-  width: 100%;
+  // height: 100%;
+  height: calc(100% - 100px);
+  // min-width: fit-content;
+  width: 490px;
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 50px;
+  right: 85px;
   display: flex;
   flex-direction: column-reverse;
   flex-wrap: wrap-reverse;
@@ -13,7 +15,7 @@
   overflow: hidden;
 
   .warning_box{
-    width: 240px;
+    width: 230px;
     height: fit-content;
     min-height: 80px;
     border: 1px solid #ffc107;
@@ -25,8 +27,8 @@
     justify-content: flex-start;    
     align-items: flex-start;   
     transition: .8s ease;
-    margin-bottom: 10px;
-    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-right: 13px;
     
     
     .warning_header{
@@ -48,11 +50,11 @@
     }
     .warning_text{
         color: #b38704;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 400;
         font-family:  'Montserrat', sans-serif;
         text-align: left;
-        margin-top: 5px;
+        margin-top: 3px;
         margin-bottom: 10px;
         cursor: default;
 

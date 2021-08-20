@@ -111,7 +111,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("0.99b")
+    updateVersion("0.99c")
     // eslint-disable-next-line 
   }, [])
 
@@ -598,7 +598,7 @@ export const Dashboard = memo(function Dashboard({
                                                     fontSize: `${2.5 * sc}px`,
                                                     lineHeight: `${2.5 * sc}px`,
                                                     height: `${3.6 * sc}px`,
-                                                    width: `${8 * sc}px`,
+                                                    width: `${5 * sc}px`,
                                                     position: "absolute",
                                                     display: "inline-grid",
                                                     alignItems: "center",
@@ -627,7 +627,14 @@ export const Dashboard = memo(function Dashboard({
                                                       disabled={true}
                                                       value={frame.framePrint.text}
                                                     />
-                                                    <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                                    <span style={{
+                                                      fontFamily: frame.framePrint.frameFont,
+                                                      gridArea: '1 / 1 / 2 / 2',
+                                                      visibility: 'hidden',
+                                                      // padding: "0 5px", 
+                                                      whiteSpace: "pre",
+                                                      margin: `0 ${1.5 * sc}px` //nataleczka
+                                                    }}>
                                                       {frame.framePrint.text}
                                                     </span>
                                                   </div>

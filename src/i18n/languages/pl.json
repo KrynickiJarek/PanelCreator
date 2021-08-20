@@ -206,6 +206,7 @@
   "FRAME_TITLE_TOOLTIP_1": "Aby dodać tytuł, utwórz ramkę",
   "FRAME_TITLE_TOOLTIP_2": "o szerokości co najmniej 2 kolumn",
   "FRAME_TITLE_TOOLTIP_3": "lub wysokości co najmniej 2 rzędów",
+  "FRAME_CONFIRM_TOOLTIP": "Utwórz ramkę, aby ją zatwierdzić",
   "SMOKED_GLASS_TOOLTIP_1": "Szkło dymione daje efekt przyciemnionego ekranu LCD.",
   "SMOKED_GLASS_TOOLTIP_2": "Dostępne tylko w panelach MDOT-M18 oraz MDOT-M18 Uniwersalny.",
   "DEFAULT_SCALE_TOOLTIP": "Domyślne skalowanie",

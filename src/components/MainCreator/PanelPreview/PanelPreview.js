@@ -106,6 +106,7 @@ const PanelPreview = ({
   changeFrameHoldersTemp,
   changeFrameText,
   frameText,
+  changeFrameFont,
   changeFrameShape,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
@@ -143,6 +144,7 @@ const PanelPreview = ({
 
   toggleTextUp,
   textUpOff,
+  changeTextFont,
 
   backEndData,
   frontEndData,
@@ -275,6 +277,13 @@ const PanelPreview = ({
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
       setHideAll(false)
       setFrameTitles(false)
+      if (textUpOff) {
+        toggleTextUp()
+      }
+      changeTextFont("Calibri-bold")
+      changeFrameFont("Calibri-bold")
+      changeFrameShape("sharp")
+
 
       const modeltimeout = setTimeout(() => {
         setHideAll(true)
@@ -1044,7 +1053,7 @@ const PanelPreview = ({
   autoResizeInputStyle.fontSize = `${2.5 * sc}px`
   autoResizeInputStyle.lineHeight = `${2.5 * sc}px`
   autoResizeInputStyle.height = `${3.6 * sc}px`;
-  autoResizeInputStyle.width = `${8 * sc}px`;
+  autoResizeInputStyle.width = `${5 * sc}px`;//nataleczka
   autoResizeInputStyle.transition = "400ms ease";
   autoResizeInputStyle.position = "absolute";
   autoResizeInputStyle.display = "inline-grid";
@@ -1056,8 +1065,6 @@ const PanelPreview = ({
   textStyle.color = chosenColor.iconColor;
   textStyle.border = "2px solid transparent"
   textStyle.borderRadius = `${0.9 * sc}px`;
-  // textStyle.fontSize = `${2.55 * sc}px`
-  // textStyle.lineHeight = `${2.55 * sc}px`
   textStyle.fontSize = `${2.5 * sc}px`
   textStyle.lineHeight = `${2.5 * sc}px`
 
@@ -1536,7 +1543,6 @@ const PanelPreview = ({
 
   const handleTextUpOff = () => {
     toggleTextUp()
-    // setTextUpOff(prev => !prev)
     const copyArr = iconHolders;
     copyArr.forEach((el) => {
       el.textUp = "";
@@ -1783,8 +1789,8 @@ const PanelPreview = ({
       el.framePrint.frameFont = chosenFrameFont
     })
     changeFrameHolders(copyFrameHolders)
-    overFrameReRender()
     filterWarnings(4)
+    overFrameReRender()
   }
 
 
@@ -2495,7 +2501,7 @@ const PanelPreview = ({
       }
 
 
-      if (chosenModel.type === "MDOT-2") {
+      if (chosenModel.type === "MDOT_2") {
         if (copyArr[3] === "s") {
           if (index === 4 || index === 5) {
             copyArrChange[4] = "r"
@@ -2510,7 +2516,7 @@ const PanelPreview = ({
           }
         }
       }
-      if (chosenModel.type === "MDOT-4") {
+      if (chosenModel.type === "MDOT_4") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
             if (index === i + 1 || index === i + 2) {
@@ -2999,7 +3005,7 @@ const PanelPreview = ({
     } else if (copyArr[index] === "s") {
       copyArr[index] = 1;
 
-      if (chosenModel.type !== "MDOT-4") {
+      if (chosenModel.type !== "MDOT_4") {
 
         //automatyczne usuwanie dolnego rzędu - naciśnięcie na dół, cała góra zaznaczona
         for (let i = 0; i < index; i++) {
@@ -3228,7 +3234,7 @@ const PanelPreview = ({
           }
         }
 
-        if (chosenModel.type === "MDOT-2") {
+        if (chosenModel.type === "MDOT_2") {
           if (copyArr[3] === "s") {
             if (index === 4 || index === 5) {
               copyArr[4] = 0
@@ -3243,7 +3249,7 @@ const PanelPreview = ({
             }
           }
         }
-      } else if (chosenModel.type === "MDOT-4") {
+      } else if (chosenModel.type === "MDOT_4") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
             if (index === i + 1 || index === i + 2) {
@@ -3764,6 +3770,7 @@ const PanelPreview = ({
     changeIconHolders(copyArr)
     overFrameReRender()
     setFrameTitles(false)
+    filterWarnings(4)
   }
 
 
@@ -3939,6 +3946,7 @@ const PanelPreview = ({
       }
       <div className="panelpreview_container" style={panelPreviewStyle}>
         <div className="preview_container" >
+          <Warning />
           <div className="preview_top">
             <h2>{t("PANEL_PREVIEW")}:</h2>
             <form onSubmit={handleSubmit} className="panel_name_form" >
@@ -3969,7 +3977,6 @@ const PanelPreview = ({
 
           </div>
           <div className="panel_container" >
-            <Warning />
             <div className="resize_container" style={resizeStyle}>
               <div className="panel_box" style={chosenModelStyle}>
                 <div className="visualization_glass_white" style={(visual && chosenColor.RAL === "RAL 9003") ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
@@ -4207,7 +4214,14 @@ const PanelPreview = ({
                                     disabled={true}
                                     value={frame.framePrint.text}
                                   />
-                                  <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                  <span className="xxxxx" style={{
+                                    fontFamily: frame.framePrint.frameFont,
+                                    gridArea: '1 / 1 / 2 / 2',
+                                    visibility: 'hidden',
+                                    // padding: "0 5px", 
+                                    whiteSpace: "pre",
+                                    margin: `0 ${1.5 * sc}px` //nataleczka
+                                  }}>
                                     {frame.framePrint.text}
                                   </span>
                                 </div>
@@ -4234,7 +4248,13 @@ const PanelPreview = ({
                                     disabled={true}
                                     value={frame.framePrint.text}
                                   />
-                                  <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                  <span className="xxxxx" style={{
+                                    fontFamily: frame.framePrint.frameFont,
+                                    gridArea: '1 / 1 / 2 / 2', visibility: 'hidden',
+                                    // padding: "0 5px", 
+                                    whiteSpace: "pre",
+                                    margin: `0 ${1.5 * sc}px` //nataleczka
+                                  }}>
                                     {frame.framePrint.text}
                                   </span>
                                 </div>
@@ -4345,20 +4365,19 @@ const PanelPreview = ({
                                         ...textStyleFrame,
                                         fontFamily: chosenFrameFont,
                                         border: "2px dashed rgb(40, 167, 69)",
-                                        backgroundColor: chosenColor.hex
+                                        backgroundColor: chosenColor.hex,
                                       } :
                                         {
                                           ...textStyleFrame,
                                           fontFamily: chosenFrameFont,
                                           border: "2px dashed rgb(32, 114, 30)",
-                                          backgroundColor: chosenColor.hex
+                                          backgroundColor: chosenColor.hex,
                                         }
                                     )
                                     : {
                                       ...textStyleFrame,
                                       fontFamily: chosenFrameFont,
-                                      backgroundColor: chosenColor.hex
-
+                                      backgroundColor: chosenColor.hex,
                                     }}
                                   disabled={chosenTab !== "frame" && true}
                                   onMouseOver={showFrameBorder}
@@ -4369,7 +4388,14 @@ const PanelPreview = ({
                                   onKeyDown={handleKeyPress}
 
                                 />
-                                <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                <span className="xxxxx" style={{
+                                  gridArea: '1 / 1 / 2 / 2',
+                                  visibility: 'hidden',
+                                  fontFamily: chosenFrameFont,
+                                  padding: "0 8px",
+                                  whiteSpace: "pre",
+                                  margin: `0 ${1.5 * sc}px` //nataleczka
+                                }}>
                                   {frameText}
                                 </span>
 
@@ -4511,7 +4537,7 @@ const PanelPreview = ({
                                           onFocus={() => { handleFocusInput(index, "up") }}
                                           onKeyDown={handleKeyPress}
                                         />
-                                        <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                        <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
                                           {textUp}
                                         </span>
 
@@ -4583,7 +4609,7 @@ const PanelPreview = ({
                                         onFocus={() => { handleFocusInput(index, "down") }}
                                         onKeyDown={handleKeyPress}
                                       />
-                                      <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 5px", whiteSpace: "pre" }}>
+                                      <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
                                         {textDown}
                                       </span>
                                       {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
@@ -5150,6 +5176,7 @@ const mapDispatchToProps = dispatch => ({
   overFrameAll: (income) => dispatch(actionsFrame.overFrameAll(income)),
   overFrameReRender: (income) => dispatch(actionsFrame.overFrameReRender(income)),
   frameTitle: (income) => dispatch(actionsFrame.frameTitle(income)),
+  changeFrameFont: (income) => dispatch(actionsFrame.changeFrameFont(income)),
   allowFrameTitle: (income) => dispatch(actionsFrame.allowFrameTitle(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   changePanelName: (income) => dispatch(actionsVisual.changePanelName(income)),
@@ -5167,6 +5194,7 @@ const mapDispatchToProps = dispatch => ({
   setFullScreen: (income) => dispatch(actionsVisual.setFullScreen(income)),
 
   toggleTextUp: (income) => dispatch(actionsText.toggleTextUp(income)),
+  changeTextFont: (income) => dispatch(actionsText.changeTextFont(income)),
 
 
   resetColor: (income) => dispatch(actionsColor.resetColor(income)),

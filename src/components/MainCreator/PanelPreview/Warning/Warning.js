@@ -28,8 +28,9 @@ const Warning = ({ warnings, updateWarnings }) => {
     return () => clearTimeout(warningTimeout);
   }
 
+
   return (
-    <div className="warning_container">
+    <div className="warning_container" >
       {warnings.map((warning, index) =>
         <div key={index} style={{ zIndex: "999999" }} >
           {

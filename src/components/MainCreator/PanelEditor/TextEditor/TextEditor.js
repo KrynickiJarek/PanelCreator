@@ -59,10 +59,10 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) =>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Calibri</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Helvetica-bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica-bold" }
-            : { fontFamily: "Helvetica-bold" }}
-            onClick={() => { changeTextFont("Helvetica-bold") }} >
-            {chosenTextFont === "Helvetica-bold" && <div className="font_chosen" />}
+          <div className="font_link" style={chosenTextFont === "Helvetica_bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica_bold" }
+            : { fontFamily: "Helvetica_bold" }}
+            onClick={() => { changeTextFont("Helvetica_bold") }} >
+            {chosenTextFont === "Helvetica_bold" && <div className="font_chosen" />}
             < p className="font_name" style={{ fontSize: "24px" }}>Helvetica bold</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Helvetica Bold</p>
           </div>
