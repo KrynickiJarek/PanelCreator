@@ -110,8 +110,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("UWAGA - test przechwytywania błędów - zatwierdzenie ramki wysypie kreatora")
-    // updateVersion("0.99d")
+    updateVersion("0.99e")
     // eslint-disable-next-line 
   }, [])
 
