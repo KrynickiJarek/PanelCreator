@@ -167,7 +167,7 @@
   "NO_OTHER_FAVOURITE_ICONS": "(No other favourite icons in the project)",
   "CUSTOM_ICONS_INSTRUCTION_BOLD_1": "In order to add custom icons, you have to upload them from your hard drive.",
   "CUSTOM_ICONS_INSTRUCTION_BOLD_2": "Custom icons from other projects:",
-  "CUSTOM_ICONS_INSTRUCTION_NORMAL_1": "It is possible to add SVG files up to 100kB in size. In order for the icon to be displayed properly, it should have the ratio of 1 : 1, transparent background and one colour.",
+  "CUSTOM_ICONS_INSTRUCTION_NORMAL_1": "It is possible to add SVG files up to 100kB in size. In order for the icon to be displayed properly, it should have the ratio of 1 : 1, transparent background and black colour.",
   "CUSTOM_ICONS_INSTRUCTION_NORMAL_2": "Click on the icon to copy it to the current project.",
   "NO_CUSTOM_ICONS": "(No custom icons in the project)",
   "FAVOURITE": "Favourite",

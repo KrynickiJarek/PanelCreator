@@ -167,7 +167,7 @@
   "NO_OTHER_FAVOURITE_ICONS": "(Brak innych ulubionych ikon w projekcie)",
   "CUSTOM_ICONS_INSTRUCTION_BOLD_1": "Aby dodać własną ikonę należy wczytać ją z dysku.",
   "CUSTOM_ICONS_INSTRUCTION_BOLD_2": "Własne ikony z pozostałych projektów:",
-  "CUSTOM_ICONS_INSTRUCTION_NORMAL_1": "Możliwe jest dodawanie plików z rozszerzeniem SVG o rozmiarze do 100kB. Aby ikona wyświetlała się poprawnie powinna mieć proporcje 1 : 1, przezroczyste tło i jeden kolor.",
+  "CUSTOM_ICONS_INSTRUCTION_NORMAL_1": "Możliwe jest dodawanie plików z rozszerzeniem SVG o rozmiarze do 100kB. Aby ikona wyświetlała się poprawnie powinna mieć proporcje 1 : 1, przezroczyste tło i czarny kolor.",
   "CUSTOM_ICONS_INSTRUCTION_NORMAL_2": "Kliknij na ikonę aby przekopiować ją do bieżącego projektu.",
   "NO_CUSTOM_ICONS": "(Brak własnych ikon w projekcie)",
   "FAVOURITE": "Ulubione",

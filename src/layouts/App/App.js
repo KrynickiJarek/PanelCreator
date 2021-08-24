@@ -51,14 +51,41 @@ const App = ({
 }) => {
 
 
+  // const nodemailer = require('nodemailer');
 
+  // let transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: 'kretor.paneli.debuger@gmail.com',
+  //     pass: 'Ampio2021'
+  //   }
+  // });
 
+  // let mailContent = {
+  //   from: 'kretor.paneli.debuger@gmail.com',
+  //   to: 'kretor.paneli.debuger@gmail.com',
+  //   subject: 'Creator Panel Error Raport',
+  //   text: 'wiadomość testowa',
+  // };
+
+  // transporter.sendMail(mailContent, function (err, inf) {
+  //   if (err) {
+  //     console.log('Unable to send mail');
+  //   } else {
+  //     console.log("Sent" + inf.responde);
+  //   }
+  // });
 
   class ErrorBoundary extends React.Component {
     constructor(props) {
       super(props);
       this.state = { hasError: false };
     }
+
+    // componentDidCatch(error, info) {
+    // console.log(error);
+    // console.log(info);
+    // }
 
     static getDerivedStateFromError(error) {
       return { hasError: true };
@@ -96,6 +123,7 @@ const App = ({
 
 
         showAlert(99)
+
 
 
         return (
