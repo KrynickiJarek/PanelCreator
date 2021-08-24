@@ -47,7 +47,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                 </>
                 :
                 <>
-                  {alert !== 20 &&
+                  {alert < 20 &&
                     <div className="alert_button_back"
                       onClick={() => removeAlert()}
                     >
@@ -64,6 +64,14 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                         {t("BACK_TO_AMPIO")}
                       </div>
                     </a>
+                  }
+                  {alert === 99 &&
+                    <div className="alert_button_back"
+                      onClick={() => { window.location.reload(); removeAlert() }}
+                    >
+                      <div className="button_arrows_back" />
+                      {t("REFRESH")}
+                    </div>
                   }
                 </>
               }

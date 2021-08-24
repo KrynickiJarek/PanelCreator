@@ -3937,6 +3937,7 @@ const PanelPreview = ({
   }
 
   const handlePrintPdfDebug = () => {
+
     if (panelName === "") {
       setNoPanelName(true)
     } else {
@@ -3951,7 +3952,6 @@ const PanelPreview = ({
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
       debugFetchWithTimeout(frontEndDataB64)
-
 
 
       // let headers = new Headers();
@@ -3973,6 +3973,9 @@ const PanelPreview = ({
       //     setDownloading(false)
       //     console.log(error)
       //   });
+
+
+
     }
   }
 

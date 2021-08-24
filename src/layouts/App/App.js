@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.scss';
 import { connect } from "react-redux";
-import { t } from "../../i18n";
 
 import {
   BrowserView,
@@ -24,6 +23,7 @@ import actionsModel from "../../components/MainCreator/PanelEditor/ModelChooser/
 import actionsText from "../../components/MainCreator/PanelEditor/TextEditor/duck/actions";
 
 import emergencyInitialState from './emergencyInitialState';
+import AlertBox from '../../components/AlertBox/AlertBox';
 
 
 
@@ -79,36 +79,27 @@ const App = ({
 
 
       if (this.state.hasError) {
-
-        const handleEmergencyReset = () => {
-
-          console.log("dziala error")
-          updatePanels([])
-          showDashboard(true)
-          dashboardSmoothEnter(true)
-          hideCreator(true)
-          changeIndexOfLastPanel(-1)
-          setBackEndReducers(backEndData)
-          resetAllAfterModelChange(true)
-          setFrontEndReducerColor(emergencyInitialState.color)
-          setFrontEndReducerTab(emergencyInitialState.tab)
-          setFrontEndReducerModel(emergencyInitialState.model.chosenModel)
-          setFrontEndReducerFrame(emergencyInitialState.frame)
-          setFrontEndReducerIcon(emergencyInitialState.icon)
-          setFrontEndReducerText(emergencyInitialState.text)
-          setFrontEndReducerVisual(emergencyInitialState.visual)
-          // showAlert(16)
-          // return this.props.children;
-          window.location.reload()
-        }
+        updatePanels([])
+        showDashboard(true)
+        dashboardSmoothEnter(true)
+        hideCreator(true)
+        changeIndexOfLastPanel(-1)
+        setBackEndReducers(backEndData)
+        resetAllAfterModelChange(true)
+        setFrontEndReducerColor(emergencyInitialState.color)
+        setFrontEndReducerTab(emergencyInitialState.tab)
+        setFrontEndReducerModel(emergencyInitialState.model.chosenModel)
+        setFrontEndReducerFrame(emergencyInitialState.frame)
+        setFrontEndReducerIcon(emergencyInitialState.icon)
+        setFrontEndReducerText(emergencyInitialState.text)
+        setFrontEndReducerVisual(emergencyInitialState.visual)
 
 
-        // Możesz wyrenderować dowolny interfejs zastępczy.
+        showAlert(99)
+
+
         return (
-          <>
-            <h1>{t("CRITICAL_ERROR_ALERT")}</h1>
-            <button onClick={handleEmergencyReset}>{t("REFRESH")}</button>
-          </>
+          <AlertBox />
         )
       } else {
         return this.props.children;
@@ -131,14 +122,6 @@ const App = ({
   );
 };
 
-
-// const mapStateToProps = state => ({
-//   panels: state.panels.panels,
-//   dashboard: state.panels.dashboard,
-//   dashboardEnter: state.panels.dashboardEnter,
-//   alert: state.frontEndData.visual.alert,
-//   alertAnswer: state.frontEndData.visual.alertAnswer,
-// })
 
 const mapDispatchToProps = dispatch => ({
 
