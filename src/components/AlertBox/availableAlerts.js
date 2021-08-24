@@ -48,6 +48,18 @@ const availableAlerts = [
     code: 13,
     text: "SERVER_ERROR_ALERT",
   },
+  {
+    code: 14,
+    text: "SERVER_TIMEOUT_ALERT",
+  },
+  {
+    code: 15,
+    text: "WRONG_PROJECT_EXTENSION_ALERT",
+  },
+  {
+    code: 16,
+    text: "CRITICAL_ERROR_ALERT",
+  },
 
   {
     code: 20,

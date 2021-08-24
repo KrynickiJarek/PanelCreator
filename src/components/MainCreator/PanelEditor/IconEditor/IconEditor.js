@@ -62,7 +62,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
     } else if (e.target.files[0].size > 100000) {
       showAlert(12);
     } else {
-      console.log(e.target.files[0])
+      // console.log(e.target.files[0])
       getBase64(e.target.files[0]).then(
         data => {
           var xhr = new XMLHttpRequest();

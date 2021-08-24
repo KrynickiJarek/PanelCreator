@@ -1214,7 +1214,11 @@ const PanelPreview = ({
       changeFrameText("")
       changeFrameHolders([])
       changeFramesBackEnd([])
-      updateWarnings([])
+
+
+
+      const copyWarnings = warnings.filter(warning => warning.code === 7)
+      updateWarnings(copyWarnings)
       if (chosenColor.RAL === "RAL 9003" && visual) {
         pushWarnings(0)
       }
@@ -3785,6 +3789,43 @@ const PanelPreview = ({
   }
 
 
+  const fetchWithTimeout = (frontEndDataB64) => {
+    let ctrl = new AbortController()
+    let signal = ctrl.signal
+
+    let headers = new Headers();
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append('Access-Control-Allow-Credentials', 'true');
+
+    let serverTimeout = setTimeout(() => {
+      ctrl.abort()
+      setDownloading(false)
+      showAlert(14);
+      clearTimeout(serverTimeout)
+    }, 8000)
+
+    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      signal,
+      method: "POST",
+      body: JSON.stringify({ backEndData, frontEndDataB64 }),
+      headers: headers
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        let fileName = panelName + "_" + chosenModel.name + ".pdf"
+        saveAs(blob, fileName);
+        setDownloading(false)
+        clearTimeout(serverTimeout)
+      })
+      .catch(error => {
+        if (error.toString() !== "AbortError: The user aborted a request.") {
+          setDownloading(false)
+          showAlert(13);
+          clearTimeout(serverTimeout)
+        }
+      })
+  }
+
   const handlePrintPdf = () => {
     if (panelName === "") {
       setNoPanelName(true)
@@ -3799,29 +3840,100 @@ const PanelPreview = ({
       let frontEndDataStr = JSON.stringify(dataToSend);
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
+      fetchWithTimeout(frontEndDataB64)
+      // let headers = new Headers();
+      // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+      // headers.append('Access-Control-Allow-Credentials', 'true');
 
-      let headers = new Headers();
-      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-      headers.append('Access-Control-Allow-Credentials', 'true');
-
-      fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-        // fetch("https://kreator.ampio.pl/generatepdf", {
-        method: "POST",
-        body: JSON.stringify({ backEndData, frontEndDataB64 }),
-        headers: headers
-      })
-        .then(res => res.blob())
-        .then(blob => {
-          let fileName = panelName + "_" + chosenModel.name + ".pdf"
-          saveAs(blob, fileName);
-          setDownloading(false)
-        })
-        .catch(error => {
-          setDownloading(false)
-          // alert("Przepraszamy, wystąpił błąd połączenia z serwerem. Prosimy sróbować później.") 
-          showAlert(13);
-        });
+      // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      //   method: "POST",
+      //   body: JSON.stringify({ backEndData, frontEndDataB64 }),
+      //   headers: headers
+      // })
+      //   .then(res => res.blob())
+      //   .then(blob => {
+      //     let fileName = panelName + "_" + chosenModel.name + ".pdf"
+      //     saveAs(blob, fileName);
+      //     setDownloading(false)
+      //   })
+      //   .catch(error => {
+      //     setDownloading(false)
+      //     showAlert(13);
+      //   });
     }
+  }
+
+
+
+
+  // const debugFetchWithTimeout = (frontEndDataB64) => {
+  //   let ctrl = new AbortController()
+  //   let signal = ctrl.signal
+
+  //   let headers = new Headers();
+  //   headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  //   headers.append('Access-Control-Allow-Credentials', 'true');
+
+  //   let serverTimeout = setTimeout(() => {
+  //     ctrl.abort()
+  //     clearTimeout(serverTimeout)
+  //   }, 3000)
+
+  //   fetch("https://kreator.ampio.pl/generatepdf", {
+  //     signal,
+  //     method: "POST",
+  //     body: JSON.stringify({ backEndData, frontEndDataB64 }),
+  //     headers: headers
+  //   })
+  //     .then(res => res.blob())
+  //     .then(blob => {
+  //       let fileName = panelName + "_" + chosenModel.name + ".pdf"
+  //       saveAs(blob, fileName);
+  //       setDownloading(false)
+  //       clearTimeout(serverTimeout)
+  //     })
+  //     .catch(error => {
+  //       if (error.toString() !== "AbortError: The user aborted a request.") {
+  //         setDownloading(false)
+  //         clearTimeout(serverTimeout)
+  //         console.log(error)
+  //       }
+  //     })
+  // }
+
+  const debugFetchWithTimeout = (frontEndDataB64) => {
+    let ctrl = new AbortController()
+    let signal = ctrl.signal
+
+
+    let headers = new Headers();
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append('Access-Control-Allow-Credentials', 'true');
+
+    let serverTimeout = setTimeout(() => {
+      ctrl.abort()
+      setDownloading(false)
+      clearTimeout(serverTimeout)
+    }, 8000)
+
+    fetch("https://kreator.ampio.pl/generatepdf", {
+      signal,
+      method: "POST",
+      body: JSON.stringify({ backEndData, frontEndDataB64 }),
+      headers: headers
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        let fileName = panelName + "_" + chosenModel.name + ".pdf"
+        saveAs(blob, fileName);
+        setDownloading(false)
+        clearTimeout(serverTimeout)
+      })
+      .catch(error => {
+        setDownloading(false)
+        console.log(error)
+        clearTimeout(serverTimeout)
+      })
   }
 
   const handlePrintPdfDebug = () => {
@@ -3838,32 +3950,31 @@ const PanelPreview = ({
       let frontEndDataStr = JSON.stringify(dataToSend);
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
+      debugFetchWithTimeout(frontEndDataB64)
 
-      let headers = new Headers();
-      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-      headers.append('Access-Control-Allow-Credentials', 'true');
 
-      fetch("https://kreator.ampio.pl/generatepdf", {
-        method: "POST",
-        body: JSON.stringify({ backEndData, frontEndDataB64 }),
-        headers: headers
-      })
-        .then(res => res.blob())
-        .then(blob => {
-          let fileName = panelName + "_" + chosenModel.name + ".pdf"
-          saveAs(blob, fileName);
-          setDownloading(false)
-        })
-        .catch(error => {
-          setDownloading(false)
-          console.log(error)
-        });
+
+      // let headers = new Headers();
+      // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+      // headers.append('Access-Control-Allow-Credentials', 'true');
+
+      // fetch("https://kreator.ampio.pl/generatepdf", {
+      //   method: "POST",
+      //   body: JSON.stringify({ backEndData, frontEndDataB64 }),
+      //   headers: headers
+      // })
+      //   .then(res => res.blob())
+      //   .then(blob => {
+      //     let fileName = panelName + "_" + chosenModel.name + ".pdf"
+      //     saveAs(blob, fileName);
+      //     setDownloading(false)
+      //   })
+      //   .catch(error => {
+      //     setDownloading(false)
+      //     console.log(error)
+      //   });
     }
   }
-
-
-
-
 
 
 
@@ -4199,7 +4310,8 @@ const PanelPreview = ({
                                 }
                               </div>
                             )}
-                            {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
+                            {(frame.framePrint.xxx.text !== "" && !frame.framePrint.over) &&
+                              // {(frame.framePrint.NATALECZKA.text !== "" && !frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                   { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
@@ -4229,7 +4341,6 @@ const PanelPreview = ({
                                     fontFamily: frame.framePrint.frameFont,
                                     gridArea: '1 / 1 / 2 / 2',
                                     visibility: 'hidden',
-                                    // padding: "0 5px", 
                                     whiteSpace: "pre",
                                     margin: `0 ${1.5 * sc}px`
                                   }}>

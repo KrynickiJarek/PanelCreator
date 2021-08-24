@@ -74,7 +74,6 @@ export const Dashboard = memo(function Dashboard({
 
   resetAllAfterModelChange,
   updateVersion,
-  alert,
   showAlert,
   alertAnswer,
   setAlertAnswer
@@ -111,7 +110,8 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("0.99d")
+    updateVersion("UWAGA - test przechwytywania błędów - zatwierdzenie ramki wysypie kreatora")
+    // updateVersion("0.99d")
     // eslint-disable-next-line 
   }, [])
 
@@ -339,6 +339,46 @@ export const Dashboard = memo(function Dashboard({
     return () => clearTimeout(dahsboardTimeout);
   }
 
+
+
+  const fetchWithTimeout = (id, frontEndDataB64) => {
+    let ctrl = new AbortController()
+    let signal = ctrl.signal
+
+    let headers = new Headers();
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append('Access-Control-Allow-Credentials', 'true');
+
+    let serverTimeout = setTimeout(() => {
+      ctrl.abort()
+      setDownloading(false)
+      showAlert(14);
+      clearTimeout(serverTimeout)
+    }, 8000)
+
+    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+      signal,
+      method: "POST",
+      body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
+      headers: headers
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
+        saveAs(blob, fileName);
+        setDownloading(false)
+        clearTimeout(serverTimeout)
+      })
+      .catch(error => {
+        if (error.toString() !== "AbortError: The user aborted a request.") {
+          setDownloading(false)
+          showAlert(13);
+          clearTimeout(serverTimeout)
+        }
+      })
+  }
+
+
   const handlePrintPdf = (id) => {
     setDownloading(true)
     let dataToSend = {
@@ -350,141 +390,238 @@ export const Dashboard = memo(function Dashboard({
     let frontEndDataStr = JSON.stringify(dataToSend);
     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
+    // let headers = new Headers();
+    // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // headers.append('Access-Control-Allow-Credentials', 'true');
+
+
+
+    fetchWithTimeout(id, frontEndDataB64)
+    // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
+    //   // fetch("https://kreator.ampio.pl/generatepdf", {
+    //   method: "POST",
+    //   body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
+    //   headers: headers
+    // })
+    //   .then(res => res.blob())
+    //   .then(blob => {
+    //     let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
+    //     saveAs(blob, fileName);
+    //     setDownloading(false)
+    //   })
+    //   .catch(error => {
+    //     setDownloading(false)
+    //     showAlert(13);
+    //   });
+  }
+
+
+  const uploadFetchWithTimeout = (file) => {
+    let ctrl = new AbortController()
+    let signal = ctrl.signal
+
     let headers = new Headers();
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
 
-    fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-      // fetch("https://kreator.ampio.pl/generatepdf", {
-      method: "POST",
-      body: JSON.stringify({ backEndData: panels[id].backEndData, frontEndDataB64 }),
-      headers: headers
+    let uploadServerTimeout = setTimeout(() => {
+      ctrl.abort()
+      setZoomId(null)
+      setUploading(false)
+      showAlert(14);
+      document.getElementById("inputUploadProject").value = null
+      clearTimeout(uploadServerTimeout)
+    }, 8000)
+
+    fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
+      // fetch("https://kreator.ampio.pl/loadpdf", {
+      signal,
+      method: 'POST',
+      body: file,
     })
-      .then(res => res.blob())
-      .then(blob => {
-        let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
-        saveAs(blob, fileName);
-        setDownloading(false)
-      })
-      .catch(error => {
-        setDownloading(false)
-        showAlert(13);
-      });
-  }
+      .then(response => response.text())
+      .then(data => {
+        function b64_to_utf8(str) {
+          return decodeURIComponent(escape(window.atob(str)));
+        }
+        let dataUtf8 = b64_to_utf8(data)
+        let endocedData = JSON.parse(dataUtf8)
+        const copyPanels = panels
+        endocedData.hide = true
 
-
-
-  const upload = (file) => {
-    if (file.type !== "application/pdf") {
-      alert("Niepoprawny plik. Wybierz plik z rozszerzeniem .pdf!")
-    } else {
-      setUploading(true)
-      fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
-        // fetch("https://kreator.ampio.pl/loadpdf", {
-        method: 'POST',
-        body: file,
-      })
-        .then(response => response.text())
-        .then(data => {
-          function b64_to_utf8(str) {
-            return decodeURIComponent(escape(window.atob(str)));
-          }
-          let dataUtf8 = b64_to_utf8(data)
-          let endocedData = JSON.parse(dataUtf8)
-          const copyPanels = panels
-          endocedData.hide = true
-
-          //---------------------------------------------------------------------------------
-
-
-          if (endocedData.frontEndData.visual.panelName.includes(t("COPY"))) {
-            let pureName = endocedData.frontEndData.visual.panelName.slice(0, endocedData.frontEndData.visual.panelName.indexOf(t("COPY")))
-            let copyNumber = 0
-            copyPanels.forEach(panel => {
-              if (panel.frontEndData.visual.panelName.includes(pureName + t("COPY"))) {
-                if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
-                  let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
-                  if (numberTemp > copyNumber) {
-                    copyNumber = numberTemp
-                  }
-                } else {
-                  copyNumber = 2
+        if (endocedData.frontEndData.visual.panelName.includes(t("COPY"))) {
+          let pureName = endocedData.frontEndData.visual.panelName.slice(0, endocedData.frontEndData.visual.panelName.indexOf(t("COPY")))
+          let copyNumber = 0
+          copyPanels.forEach(panel => {
+            if (panel.frontEndData.visual.panelName.includes(pureName + t("COPY"))) {
+              if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+                let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+                if (numberTemp > copyNumber) {
+                  copyNumber = numberTemp
                 }
+              } else {
+                copyNumber = 2
               }
-            })
-            if (copyNumber > 0) {
-              endocedData.frontEndData.visual.panelName = pureName + t("COPY") + ` (${copyNumber})`
-              endocedData.backEndData.panelName = pureName + t("COPY") + ` (${copyNumber})`
-            } else {
-              endocedData.frontEndData.visual.panelName = pureName + t("COPY")
-              endocedData.backEndData.panelName = pureName + t("COPY")
             }
+          })
+          if (copyNumber > 0) {
+            endocedData.frontEndData.visual.panelName = pureName + t("COPY") + ` (${copyNumber})`
+            endocedData.backEndData.panelName = pureName + t("COPY") + ` (${copyNumber})`
           } else {
-            let copyNumber = 0
-            copyPanels.forEach(panel => {
-              if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
-                if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
-                  let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
-                  if (numberTemp > copyNumber) {
-                    copyNumber = numberTemp
-                  }
-                } else {
-                  copyNumber = 2
-                }
-              }
-            })
-
-            if (copyNumber > 0) {
-              let name = endocedData.frontEndData.visual.panelName
-              endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
-              endocedData.backEndData.panelName = name + t("COPY") + ` (${copyNumber})`
-            } else {
-              let name = endocedData.frontEndData.visual.panelName
-              endocedData.frontEndData.visual.panelName = name + t("COPY")
-              endocedData.backEndData.panelName = name + t("COPY")
-            }
+            endocedData.frontEndData.visual.panelName = pureName + t("COPY")
+            endocedData.backEndData.panelName = pureName + t("COPY")
           }
+        } else {
+          let copyNumber = 0
+          copyPanels.forEach(panel => {
+            if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
+              if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+                let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+                if (numberTemp > copyNumber) {
+                  copyNumber = numberTemp
+                }
+              } else {
+                copyNumber = 2
+              }
+            }
+          })
 
+          if (copyNumber > 0) {
+            let name = endocedData.frontEndData.visual.panelName
+            endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
+            endocedData.backEndData.panelName = name + t("COPY") + ` (${copyNumber})`
+          } else {
+            let name = endocedData.frontEndData.visual.panelName
+            endocedData.frontEndData.visual.panelName = name + t("COPY")
+            endocedData.backEndData.panelName = name + t("COPY")
+          }
+        }
 
-
-
-
-          // endocedData.frontEndData.visual.panelName = endocedData.frontEndData.visual.panelName + " nowa nazwa"
-          // endocedData.backEndData.panelName = endocedData.backEndData.panelName + " nowa nazwa"
-          // ---------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-          copyPanels.push(endocedData)
+        copyPanels.push(endocedData)
+        updatePanels(copyPanels)
+        resetAllAfterModelChange(false)
+        document.getElementById("inputUploadProject").value = null
+        setZoomId(null)
+        setUploading(false)
+        clearTimeout(uploadServerTimeout)
+        const dahsboardTimeout = setTimeout(() => {
+          copyPanels[copyPanels.length - 1].hide = false
           updatePanels(copyPanels)
-          resetAllAfterModelChange(false)
-          document.getElementById("inputUploadProject").value = null
-          setZoomId(null)
-          setUploading(false)
-          const dahsboardTimeout = setTimeout(() => {
-            copyPanels[copyPanels.length - 1].hide = false
+        }, 200);
+        return () => clearTimeout(dahsboardTimeout);
 
-            updatePanels(copyPanels)
-          }, 200);
-          return () => clearTimeout(dahsboardTimeout);
+      })
+      .catch(
+        error => {
+          if (error.toString() !== "AbortError: The user aborted a request.") {
+            console.log(error)
 
-        })
-        .catch(
-          error => {
             setZoomId(null)
             setUploading(false)
             showAlert(10);
             document.getElementById("inputUploadProject").value = null
+            clearTimeout(uploadServerTimeout)
           }
-        );
+        }
+
+      );
+  }
+
+
+  const upload = (file) => {
+    if (file.type !== "application/pdf") {
+      showAlert(15);
+    } else {
+      setUploading(true)
+
+      uploadFetchWithTimeout(file)
+
+
+      // fetch("https://bitcoin.ampio.pl:4567/loadpdf", {
+      //   // fetch("https://kreator.ampio.pl/loadpdf", {
+      //   method: 'POST',
+      //   body: file,
+      // })
+      //   .then(response => response.text())
+      //   .then(data => {
+      //     function b64_to_utf8(str) {
+      //       return decodeURIComponent(escape(window.atob(str)));
+      //     }
+      //     let dataUtf8 = b64_to_utf8(data)
+      //     let endocedData = JSON.parse(dataUtf8)
+      //     const copyPanels = panels
+      //     endocedData.hide = true
+
+      //     if (endocedData.frontEndData.visual.panelName.includes(t("COPY"))) {
+      //       let pureName = endocedData.frontEndData.visual.panelName.slice(0, endocedData.frontEndData.visual.panelName.indexOf(t("COPY")))
+      //       let copyNumber = 0
+      //       copyPanels.forEach(panel => {
+      //         if (panel.frontEndData.visual.panelName.includes(pureName + t("COPY"))) {
+      //           if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+      //             let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+      //             if (numberTemp > copyNumber) {
+      //               copyNumber = numberTemp
+      //             }
+      //           } else {
+      //             copyNumber = 2
+      //           }
+      //         }
+      //       })
+      //       if (copyNumber > 0) {
+      //         endocedData.frontEndData.visual.panelName = pureName + t("COPY") + ` (${copyNumber})`
+      //         endocedData.backEndData.panelName = pureName + t("COPY") + ` (${copyNumber})`
+      //       } else {
+      //         endocedData.frontEndData.visual.panelName = pureName + t("COPY")
+      //         endocedData.backEndData.panelName = pureName + t("COPY")
+      //       }
+      //     } else {
+      //       let copyNumber = 0
+      //       copyPanels.forEach(panel => {
+      //         if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
+      //           if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
+      //             let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
+      //             if (numberTemp > copyNumber) {
+      //               copyNumber = numberTemp
+      //             }
+      //           } else {
+      //             copyNumber = 2
+      //           }
+      //         }
+      //       })
+
+      //       if (copyNumber > 0) {
+      //         let name = endocedData.frontEndData.visual.panelName
+      //         endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
+      //         endocedData.backEndData.panelName = name + t("COPY") + ` (${copyNumber})`
+      //       } else {
+      //         let name = endocedData.frontEndData.visual.panelName
+      //         endocedData.frontEndData.visual.panelName = name + t("COPY")
+      //         endocedData.backEndData.panelName = name + t("COPY")
+      //       }
+      //     }
+
+      //     copyPanels.push(endocedData)
+      //     updatePanels(copyPanels)
+      //     resetAllAfterModelChange(false)
+      //     document.getElementById("inputUploadProject").value = null
+      //     setZoomId(null)
+      //     setUploading(false)
+      //     const dahsboardTimeout = setTimeout(() => {
+      //       copyPanels[copyPanels.length - 1].hide = false
+
+      //       updatePanels(copyPanels)
+      //     }, 200);
+      //     return () => clearTimeout(dahsboardTimeout);
+
+      //   })
+      //   .catch(
+      //     error => {
+      //       setZoomId(null)
+      //       setUploading(false)
+      //       showAlert(10);
+      //       document.getElementById("inputUploadProject").value = null
+      //     }
+      //   );
     }
   }
 
@@ -501,9 +638,6 @@ export const Dashboard = memo(function Dashboard({
           <div className="dashboard_container" style={dashboard && dashboardEnter ? { opacity: "1" } : { opacity: "0" }}>
             <div className="dashboard_scroll">
               <CreatorHeader />
-              {/* <Suspense fallback={<div>Loading...</div>}>
-                <CreatorHeader />
-              </Suspense> */}
               <div className="dashboard_content">
                 <p className="dashboard_header">{t("MAIN_MENU")}</p>
                 <p className="dashboard_header_info">{t("DASHBOARD_INSTRUCTION")}</p>
@@ -631,9 +765,8 @@ export const Dashboard = memo(function Dashboard({
                                                       fontFamily: frame.framePrint.frameFont,
                                                       gridArea: '1 / 1 / 2 / 2',
                                                       visibility: 'hidden',
-                                                      // padding: "0 5px", 
                                                       whiteSpace: "pre",
-                                                      margin: `0 ${1.5 * sc}px` //nataleczka
+                                                      margin: `0 ${1.5 * sc}px`
                                                     }}>
                                                       {frame.framePrint.text}
                                                     </span>
