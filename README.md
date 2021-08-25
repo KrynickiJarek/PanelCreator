@@ -61,10 +61,13 @@ Because of possible issues with illumination there is a warning window when stat
 ![Icons tab status icon](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/10_icons_tab_status_icon.png)
 
 Durring icons tab is chosen sidebar contain functionality for all icons and only for selected one. Second category funcionality is disabled until icon is selected.
-![Icons tab sidebar]()
+![Icons tab sidebar](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/11_icons_tab_sidebar.png)
 
 For easier work with the editor avalible icons may be added to Favourites by cliking on them. Favourite icons are marked with a star sign and collected in tab at the top of the categories list.
-![Icons tab favourites]()
+![Icons tab favourites](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/12_icons_tab_favourites.png)
 
-The Favourites tab also provides an overview of favourite icons from other projects open on a computer.
-![Icons tab favourites2]()
+The Favourites tab at icon categories list also provides an overview of favourite icons from other projects open on a computer.
+![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/13_icons_tab_favourites2.png)
+
+The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive.
+![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/14_icons_tab_custom.png)
