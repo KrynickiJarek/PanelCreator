@@ -20,26 +20,43 @@ Panel Creatora allows the management of multiple projects. There are option to c
 
 Each project can be edited, deleted, duplicated or saved to PDF file from the Main Menu.
 The use of functionalities that cause irreversible changes is protected by alerts.
-![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/02_alert.png)
+![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/03_panel_editor.png)
 
 ## Panel Editor
 
 Panel Editor contains of an editor section and preview section. Editor section has a tab menu with the main panel configuration options which appear on 
 panel in preview section. There are also top bar with panel name form, bottom bar witch shows chosen model, chosen color and has scale control panel including 
 full screen view and side bar with additional with additional options for project management. Some of the sidebar options depend on the tab selected.
-![Panel Editor](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+![Panel Editor](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/03_panel_editor.png)
 
 ## Models tab
 
 There are all AMPIO customisable panel models in the models tab. Each model has a short description and a link to the AMPIO page with additional information.
-![Models tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+![Models tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/04_models_tab.png)
 
 ## Colours tab
 
-Different panel colours are available in the colours tab. There is also option of different glass type for certain models - an option with additional information in the tooltip.
-![Colours tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+Different panel colours are available in the colours tab. It is also possible to choose a different type of glass for some models - an option with additional information in the tooltip.
+![Colours tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/05_colours_tab.png)
 
 ## Icons tab
 
 The icons tab contains icons provided by AMPIO sorted into categories.
-![Colours tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+![Icons tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/06_icons_tab.png)
+
+Chosen icons can be putted in panel by draging them and dropping in one of the in specific field, which are highlighted when dragging.  
+Each field consists of a place for an full-size icon and a illumination point above.
+![Icons tab dnd](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/07_icons_tab_dnd.png)
+
+Fields also have a flash animation which can be turned off in the sidebar.
+![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/08_icons_tab_animations.png)
+
+Icon can be dropped at one of four places in each field: 
+* full-size icon place, 
+* status icon - small icon instead of illumination point above
+* two places for split icons - left top and right bottom
+When mouse cursor with icon is over correct place to drop highlight turns green. Highlight of split icons places shows when mouse cursor is nearby field. 
+![Icons tab locations](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/09_icons_tab_locations.png)
+
+Because of possible issues with illumination there is a warning window when status icon is used. Warning windows can be hide, but when warnings occur an show/hide warning button is displayed at the bottom of the sidebar.
+![Icons tab status icon](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/10_icons_tab_status_icon.png)
