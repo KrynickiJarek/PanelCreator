@@ -20,7 +20,7 @@ Panel Creatora allows the management of multiple projects. There are option to c
 
 Each project can be edited, deleted, duplicated or saved to PDF file from the Main Menu.
 The use of functionalities that cause irreversible changes is protected by alerts.
-![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/03_panel_editor.png)
+![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/b6de404c5bca02ebb2e7343213465980144fa8d8/src/assets/readme/02_alert.png
 
 ## Panel Editor
 
@@ -41,15 +41,14 @@ Different panel colours are available in the colours tab. It is also possible to
 
 ## Icons tab
 
-The icons tab contains icons provided by AMPIO sorted into categories.
+The icons tab contains sorted into categories icons provided by AMPIO.
 ![Icons tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/06_icons_tab.png)
 
-Chosen icons can be putted in panel by draging them and dropping in one of the in specific field, which are highlighted when dragging.  
-Each field consists of a place for an full-size icon and a illumination point above.
+Icons can be placed in panel by draging them and dropping in one of the specific field, which are highlighted when dragging. Each field consists of a place for an full-size icon and a illumination point above.
 ![Icons tab dnd](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/07_icons_tab_dnd.png)
 
 Fields also have a flash animation which can be turned off in the sidebar.
-![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/08_icons_tab_animations.png)
+![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/d238f52f57ebf8dd2c9c401cbbc7a35c469b7e20/src/assets/readme/08_icons_tab_animations.gif)
 
 Icon can be dropped at one of four places in each field: 
 * full-size icon place, 
