@@ -32,7 +32,7 @@ full screen view and side bar with additional with additional options for projec
 ## Models tab
 
 There are all AMPIO customisable panel models in the models tab. Each model has a short description and a link to the AMPIO page with additional information.
-![Models tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/04_models_tab.png)
+![Models tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/c3e33958a766e0dd2d3444f096d371a410d7b478/src/assets/readme/04_models_tab.gif)
 
 ## Colours tab
 
@@ -70,5 +70,5 @@ For easier work with the editor avalible icons may be added to Favourites by cli
 The Favourites tab at icon categories list also provides an overview of favourite icons from other projects open on a computer.
 ![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/13_icons_tab_favourites2.png)
 
-The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive. There is also an option to copy custom icons from other project open on a computer, similar to Favourite icons.
+The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive. There is also an option to copy custom icons from other project open on a computer, similarly to Favourite icons.
 ![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/14_icons_tab_custom.png)
