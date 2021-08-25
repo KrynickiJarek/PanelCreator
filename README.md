@@ -20,7 +20,7 @@ Panel Creatora allows the management of multiple projects. There are option to c
 
 Each project can be edited, deleted, duplicated or saved to PDF file from the Main Menu.
 The use of functionalities that cause irreversible changes is protected by alerts.
-![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/b6de404c5bca02ebb2e7343213465980144fa8d8/src/assets/readme/02_alert.png
+![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/b6de404c5bca02ebb2e7343213465980144fa8d8/src/assets/readme/02_alert.png)
 
 ## Panel Editor
 
