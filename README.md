@@ -48,14 +48,14 @@ Icons can be placed in panel by draging them and dropping in one of the specific
 ![Icons tab dnd](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/07_icons_tab_dnd.png)
 
 Fields also have a flash animation which can be turned off in the sidebar.
-![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/d09c5eccee0e0e179fea17a20b2ba380ec8476e7/src/assets/readme/08_icons_tab_animations.gif)
+![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/a39630b6c3b96778b6b37122ef3b9268995a9de9/src/assets/readme/08_icons_tab_animations.gif)
 
 Icon can be dropped at one of four places in each field: 
 * full-size icon place, 
 * status icon - small icon instead of illumination point above
 * two places for split icons - left top and right bottom
 When mouse cursor with icon is over correct place to drop highlight turns green. Highlight of split icons places shows when mouse cursor is nearby field. 
-![Icons tab locations](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/09_icons_tab_locations.png)
+![Icons tab locations](https://github.com/KrynickiJarek/kreatorpaneli/blob/a39630b6c3b96778b6b37122ef3b9268995a9de9/src/assets/readme/09_icons_tab_locations.gif)
 
 Because of possible issues with illumination there is a warning window when status icon is used. Warning windows can be hide, but when warnings occur an show/hide warning button is displayed at the bottom of the sidebar.
 ![Icons tab status icon](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/10_icons_tab_status_icon.png)
