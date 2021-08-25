@@ -55,6 +55,7 @@ Icon can be dropped at one of four places in each field:
 * status icon - small icon instead of illumination point above
 * two places for split icons - left top and right bottom
 When mouse cursor with icon is over correct place to drop highlight turns green. Highlight of split icons places shows when mouse cursor is nearby field. 
+
 ![Icons tab locations](https://github.com/KrynickiJarek/kreatorpaneli/blob/a39630b6c3b96778b6b37122ef3b9268995a9de9/src/assets/readme/09_icons_tab_locations.gif)
 
 Because of possible issues with illumination there is a warning window when status icon is used. Warning windows can be hide, but when warnings occur an show/hide warning button is displayed at the bottom of the sidebar.
@@ -69,5 +70,5 @@ For easier work with the editor avalible icons may be added to Favourites by cli
 The Favourites tab at icon categories list also provides an overview of favourite icons from other projects open on a computer.
 ![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/13_icons_tab_favourites2.png)
 
-The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive. Similar like with Favourite icons there is also an option to copy custom icons from other project  open on a computer.
+The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive. There is also an option to copy custom icons from other project open on a computer, similar to Favourite icons.
 ![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/14_icons_tab_custom.png)
