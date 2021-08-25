@@ -81,7 +81,7 @@ Because of possible issues with illumination there is a warning window when stat
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/d6cc6c4159c453f8852587e7a09f4c1c14cd89a2/src/assets/readme/10_icons_tab_status_icon.gif" alt="Icons tab status icon"/>
 </p>
 
-Durring icons tab is chosen sidebar contain functionality for all icons and only for selected one. Second category funcionality is disabled until icon is selected.
+While the titles tab is selected sidebar contain functionality for all icons and only for selected one. Second category funcionality is disabled until icon is selected.
 <p align="center">
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/11_icons_tab_sidebar.png" alt="Icons tab sidebar"/>
 </p>
@@ -100,3 +100,28 @@ The Custom tab at icon categories list provides the possibility to extend the pr
 <p align="center">
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/9e2b21a5cb31f98cd3efcea7c89b57e112feb448/src/assets/readme/14_icons_tab_custom.png" alt="Icons tab custom"/>
 </p>
+
+## Titles tab
+
+There is an option to add two captions for each panel's filed - under and above the icon. Five different fonts are available. Captions can have a maximum length of 16 characters, but if they are longer than 9 characters a warning is displayed. There is also a warning about using different fonts in the particular project. 
+
+While the titles tab is selected sidebar contain functionality of hiding borders, turning on/off captions above icons (disabled by default), deleting all icons and choosing selected font for all captions. 
+<p align="center">
+  <img src="" alt="Titles tab"/>
+</p>
+
+## Frames tab
+
+There is an option to add two captions for each panel's filed - under and above the icon. Five different fonts are available. Captions can have a maximum length of 16 characters, but if they are longer than 9 characters a warning is displayed. There is also a warning about using different fonts in the particular project. 
+
+While the titles tab is selected sidebar contain functionality of hiding borders, turning on/off captions above icons (disabled by default), deleting all icons and choosing selected font for all captions. 
+<p align="center">
+  <img src="" alt="Frames tab"/>
+</p>
+
+<!-- Funkcjonalność dodawania ramek umożliwia dzielenie ikon dodanych do panelu w grupy. Dostępne są ramki o prostych i zaokrąglonych narożnikach. Podczas gdy włączona jest zakładka ramki dostępne do kliknięcia pola są podświetlane, a po najechaniu na nie kursorem wyświetla się znak plusa w celu dodania pola do tworzonej ramki. Znaki plusa  pojawiają się również na każdym polu, które zostanie dodane do tworzonej ramki w wyniku kliknięcia (ramka zawsze musi być prostokątna i nie może przechodzić przez wyświetlacz). Analogicznie w przypadku usuwania pól z tworzonej ramki - znaki minusa pokazują, które pola zostaną wyłączone. 
+
+Tworzona ramka ma kolor zielony. Jeżeli utworzono pojedynczą ramkę obejmuje ona tylko ikone pomiejszając ją, natomiast jeżeli ramka jest większa zawiera całe pole oraz istnieje możliwość dodania jej tytułu za pomocą przycisku dodaj tytuł. Dostępne jest pięć fontów, maksymalna długość tytułu wynosi 16 znaków. 
+
+Gotową ramkę należy zatwierdzić przyciskiem zatwierdź - pojawi się ona na panelu w kolorze ikon oraz na liście wraz ze wszystkimi swoimi parametrami i przyciskiem do usunięcia. -->
+
