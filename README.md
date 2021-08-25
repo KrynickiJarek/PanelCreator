@@ -48,7 +48,7 @@ Icons can be placed in panel by draging them and dropping in one of the specific
 ![Icons tab dnd](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/07_icons_tab_dnd.png)
 
 Fields also have a flash animation which can be turned off in the sidebar.
-![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/a39630b6c3b96778b6b37122ef3b9268995a9de9/src/assets/readme/08_icons_tab_animations.gif)
+![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/b74781b8ad7c832645aa580e2eb994e1645063a6/src/assets/readme/08_icons_tab_animations.gif)
 
 Icon can be dropped at one of four places in each field: 
 * full-size icon place, 
@@ -58,7 +58,7 @@ When mouse cursor with icon is over correct place to drop highlight turns green.
 ![Icons tab locations](https://github.com/KrynickiJarek/kreatorpaneli/blob/a39630b6c3b96778b6b37122ef3b9268995a9de9/src/assets/readme/09_icons_tab_locations.gif)
 
 Because of possible issues with illumination there is a warning window when status icon is used. Warning windows can be hide, but when warnings occur an show/hide warning button is displayed at the bottom of the sidebar.
-![Icons tab status icon](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/10_icons_tab_status_icon.png)
+![Icons tab status icon](https://github.com/KrynickiJarek/kreatorpaneli/blob/d6cc6c4159c453f8852587e7a09f4c1c14cd89a2/src/assets/readme/10_icons_tab_status_icon.gif)
 
 Durring icons tab is chosen sidebar contain functionality for all icons and only for selected one. Second category funcionality is disabled until icon is selected.
 ![Icons tab sidebar](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/11_icons_tab_sidebar.png)
