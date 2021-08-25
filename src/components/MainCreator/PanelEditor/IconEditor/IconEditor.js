@@ -232,7 +232,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                         <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_OTHER_PROJECTS")}</p>
                         :
                         <>
-                          <p className="instruction" >{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_1")}</p>
+                          <p className="instruction" >{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_2")}</p>
                           {panels.map((panel, index) =>
                             <div key={index}>
                               {indexOfLastPanel !== index &&

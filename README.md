@@ -69,5 +69,5 @@ For easier work with the editor avalible icons may be added to Favourites by cli
 The Favourites tab at icon categories list also provides an overview of favourite icons from other projects open on a computer.
 ![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/13_icons_tab_favourites2.png)
 
-The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive.
+The Custom tab at icon categories list provides the possibility to extend the project with personalized icons by uploading them from computer hard drive. Similar like with Favourite icons there is also an option to copy custom icons from other project  open on a computer.
 ![Icons tab favourites2](https://github.com/KrynickiJarek/kreatorpaneli/blob/b1aff8a6156f0a7ca0a71b8de697914a2a8d21fc/src/assets/readme/14_icons_tab_custom.png)
