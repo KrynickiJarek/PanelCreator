@@ -48,7 +48,7 @@ Icons can be placed in panel by draging them and dropping in one of the specific
 ![Icons tab dnd](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/07_icons_tab_dnd.png)
 
 Fields also have a flash animation which can be turned off in the sidebar.
-![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/d238f52f57ebf8dd2c9c401cbbc7a35c469b7e20/src/assets/readme/08_icons_tab_animations.gif)
+![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/d09c5eccee0e0e179fea17a20b2ba380ec8476e7/src/assets/readme/08_icons_tab_animations.gif)
 
 Icon can be dropped at one of four places in each field: 
 * full-size icon place, 
