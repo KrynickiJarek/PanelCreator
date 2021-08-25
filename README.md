@@ -34,6 +34,8 @@ full screen view and side bar with additional with additional options for projec
 There are all AMPIO customisable panel models in the models tab. Each model has a short description and a link to the AMPIO page with additional information.
 ![Models tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/c3e33958a766e0dd2d3444f096d371a410d7b478/src/assets/readme/04_models_tab.gif)
 
+
+
 ## Colours tab
 
 Different panel colours are available in the colours tab. It is also possible to choose a different type of glass for some models - an option with additional information in the tooltip.
@@ -49,6 +51,11 @@ Icons can be placed in panel by draging them and dropping in one of the specific
 
 Fields also have a flash animation which can be turned off in the sidebar.
 ![Icons tab animations](https://github.com/KrynickiJarek/kreatorpaneli/blob/b74781b8ad7c832645aa580e2eb994e1645063a6/src/assets/readme/08_icons_tab_animations.gif)
+
+
+<p align="center">
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/b74781b8ad7c832645aa580e2eb994e1645063a6/src/assets/readme/08_icons_tab_animations.gif" alt="Icons tab animations"/>
+</p>
 
 Icon can be dropped at one of four places in each field: 
 * full-size icon place, 
