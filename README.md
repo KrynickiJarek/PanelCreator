@@ -19,5 +19,27 @@ Panel Creatora allows the management of multiple projects. There are option to c
 ![Main Menu](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
 
 Each project can be edited, deleted, duplicated or saved to PDF file from the Main Menu.
-The use of functionalities which result in significant or irreversible changes is protected by alerts.
+The use of functionalities that cause irreversible changes is protected by alerts.
 ![Alert](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/02_alert.png)
+
+## Panel Editor
+
+Panel Editor contains of an editor section and preview section. Editor section has a tab menu with the main panel configuration options which appear on 
+panel in preview section. There are also top bar with panel name form, bottom bar witch shows chosen model, chosen color and has scale control panel including 
+full screen view and side bar with additional with additional options for project management. Some of the sidebar options depend on the tab selected.
+![Panel Editor](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+
+## Models tab
+
+There are all AMPIO customisable panel models in the models tab. Each model has a short description and a link to the AMPIO page with additional information.
+![Models tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+
+## Colours tab
+
+Different panel colours are available in the colours tab. There is also option of different glass type for certain models - an option with additional information in the tooltip.
+![Colours tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
+
+## Icons tab
+
+The icons tab contains icons provided by AMPIO sorted into categories.
+![Colours tab](https://github.com/KrynickiJarek/kreatorpaneli/blob/43f585d3e7a327e6d104b3beb355e63e80a140e9/src/assets/readme/01_main_menu.png)
