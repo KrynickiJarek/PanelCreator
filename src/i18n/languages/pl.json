@@ -85,7 +85,7 @@
   "WARNING_4_DIFFERENT_FRAMES_TITLES_FONT": "Zastosowano różne fonty tytułów ramek. W zakładce \"Ramki\" wybierz w bocznym menu \"Wybrany font dla wszystkich tytułów\"",
   "WARNING_5_LONG_FRAME_TITLE": "Zastosowano długie tytuły ramek. Upewnij się, że opisy nie wchodzą na inne elementy panelu - również na wygenerowanym pliku PDF.",
   "WARNING_6_FRAME_ON_DESCRIPTION": "Zastosowano górny opis ikony w miejscu, w którym utworzono ramkę. Elementy będą na siebie nachodzić - usuń jeden z nich.",
-  "WARNING_7_OWN_ICON": "Przy stosowaniu własnej ikony należy każdorazowo sprawdzić, czy wyświetla się ona poprawnie na wygenerowanym pliku PDF. W przypadku problemów z wymiarem ikony należy przekonwertować ją do rozmiaru 28px x 28px za pomocą strony ",
+  "WARNING_7_OWN_ICON": "Przy stosowaniu własnej ikony należy każdorazowo sprawdzić, czy wyświetla się ona poprawnie na wygenerowanym pliku PDF.",
   "ADD_ICONS_TOOLTIP": "Dodaj ikony, aby skorzystać z funkcji",
   "SELECT_ICON_TOOLTIP": "Zaznacz ikonę, aby skorzystać z funkcji",
   "CONFIRM_FRAME_TOOLTIP": "Zatwierdź ramkę, aby skorzystać z funkcji",

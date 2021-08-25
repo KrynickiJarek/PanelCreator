@@ -85,7 +85,7 @@
   "WARNING_4_DIFFERENT_FRAMES_TITLES_FONT": "Different fonts were used for frame titles. Please select \"Selected font for all titles\" in the side menu tab \"Frames\"",
   "WARNING_5_LONG_FRAME_TITLE": "Frame titles are long. Make sure that they do not overlap with other panel elements - also in the generated PDF file.",
   "WARNING_6_FRAME_ON_DESCRIPTION": "There is a caption above the icon in the same place where the frame has been added. The two elements will overlap - please remove one of them.",
-  "WARNING_7_OWN_ICON": "When using own icons, please make sure that each of them is displayed properly in the generated PDF file. If sizing issues occur, the icon should be converted to size 28px x 28px on this page ",
+  "WARNING_7_OWN_ICON": "When using own icons, please make sure that each of them is displayed properly in the generated PDF file.",
   "ADD_ICONS_TOOLTIP": "Add icons to use this function",
   "SELECT_ICON_TOOLTIP": "Select an icon to use the function",
   "CONFIRM_FRAME_TOOLTIP": "Confirm the frame choice to use this function",

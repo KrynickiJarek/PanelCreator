@@ -59,3 +59,12 @@ When mouse cursor with icon is over correct place to drop highlight turns green.
 
 Because of possible issues with illumination there is a warning window when status icon is used. Warning windows can be hide, but when warnings occur an show/hide warning button is displayed at the bottom of the sidebar.
 ![Icons tab status icon](https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/10_icons_tab_status_icon.png)
+
+Durring icons tab is chosen sidebar contain functionality for all icons and only for selected one. Second category funcionality is disabled until icon is selected.
+![Icons tab sidebar]()
+
+For easier work with the editor avalible icons may be added to Favourites by cliking on them. Favourite icons are marked with a star sign and collected in tab at the top of the categories list.
+![Icons tab favourites]()
+
+The Favourites tab also provides an overview of favourite icons from other projects open on a computer.
+![Icons tab favourites2]()

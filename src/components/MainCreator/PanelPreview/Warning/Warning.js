@@ -45,9 +45,9 @@ const Warning = ({ warnings, updateWarnings }) => {
                 />
               </div>
               <p className="warning_text">{t(availableWarnings.find(element => element.code === warning.code).text)}
-                {warning.code === 7 &&
+                {/* {warning.code === 7 &&
                   <a className="warning_link" target="blank" href="https://www.iloveimg.com/resize-image">iloveimg.com</a>
-                }
+                } */}
               </p>
             </div>
           }
