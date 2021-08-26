@@ -127,3 +127,9 @@ There are available warnings about long frame's titles lenght, dfferent frame's 
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/bd5d5ea06a145c8a12fb2f8e62ddd9e7902eab1f/src/assets/readme/18_frames_tab_sidebar.png" alt="Frame tab sidebar"/>
 </p>
 
+## Visualisation mode
+
+While working with the editor, the option to activate the visualisation mode is available in the sidebar at any time. Editing of icons, titles and frames editing is only possible in edit mode.
+<p align="center">
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/15c21b017ccb312d1b5fb510237dc0170850ed55/src/assets/readme/16_frames_tab.gif" alt="Visualisation mode"/>
+</p>
