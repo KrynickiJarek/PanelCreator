@@ -30,7 +30,7 @@ The use of functionalities that cause irreversible changes is protected by alert
 
 Panel Editor contains of an editor section and preview section. Editor section has a tab menu with the main panel configuration options which appear on 
 panel in preview section. There are also top bar with panel name form, bottom bar witch shows chosen model, chosen color and has scale control panel including 
-full screen view and side bar with additional with additional options for project management. Some of the sidebar options depend on the tab selected.
+full screen view and side bar with additional options for project management. Some of the sidebar options depend on the tab selected.
 <p align="center">
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/1f33545dcc00e6110318fc368f5265ecec3e1ed0/src/assets/readme/03_panel_editor.png" alt="Panel Editor"/>
 </p>
@@ -69,7 +69,8 @@ Fields also have a flash animation which can be turned off in the sidebar.
 Icon can be dropped at one of four places in each field: 
 * full-size icon place, 
 * status icon - small icon instead of illumination point above
-* two places for split icons - left top and right bottom
+* two places for split icons - left top and right bottom.
+
 When mouse cursor with icon is over correct place to drop highlight turns green. Highlight of split icons places shows when mouse cursor is nearby field. 
 
 <p align="center">
@@ -129,7 +130,7 @@ There are available warnings about long frame's titles lenght, dfferent frame's 
 
 ## Visualisation mode
 
-While working with the editor, the option to activate the visualisation mode is available in the sidebar at any time. Editing of icons, titles and frames editing is only possible in edit mode.
+While working with the editor, the option to activate the visualisation mode is available in the sidebar at any time. Editing of icons, titles and frames is only possible in edit mode.
 <p align="center">
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/276801c2f0aa884bb8ad4dcbcfd55a5042071e20/src/assets/readme/19_visualisation_mode.png" alt="Visualisation mode"/>
 </p>
