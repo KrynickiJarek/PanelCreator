@@ -112,16 +112,13 @@ While the titles tab is selected sidebar contain functionality of hiding borders
 
 ## Frames tab
 
-There is an option to add two captions for each panel's filed - under and above the icon. Five different fonts are available. Captions can have a maximum length of 16 characters, but if they are longer than 9 characters a warning is displayed. There is also a warning about using different fonts in the particular project. 
-
-While the titles tab is selected sidebar contain functionality of hiding borders, turning on/off captions above icons (disabled by default), deleting all icons and choosing selected font for all captions. 
+Creating frames is an option that can be used to group icons added to a panel. Frames with straight and rounded corners are available. While the frames tab is selected, clickable fields are highlighted and plus signs is displayed when mouse cursor is over the field to add it to the created frame. Plus signs also appear on each field that will be added to the frame being created as a result of a click (the frame must always be rectangular and must not go through the display). Similarly for deleting fields from the created frame - minus signs show which fields will be excluded.
 <p align="center">
-  <img src="" alt="Frames tab"/>
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/555f0f836d716678a8ac06b6ceb0fdec521b8410/src/assets/readme/15_titles_tab.png" alt="Frames tab"/>
 </p>
 
-<!-- Funkcjonalność dodawania ramek umożliwia dzielenie ikon dodanych do panelu w grupy. Dostępne są ramki o prostych i zaokrąglonych narożnikach. Podczas gdy włączona jest zakładka ramki dostępne do kliknięcia pola są podświetlane, a po najechaniu na nie kursorem wyświetla się znak plusa w celu dodania pola do tworzonej ramki. Znaki plusa  pojawiają się również na każdym polu, które zostanie dodane do tworzonej ramki w wyniku kliknięcia (ramka zawsze musi być prostokątna i nie może przechodzić przez wyświetlacz). Analogicznie w przypadku usuwania pól z tworzonej ramki - znaki minusa pokazują, które pola zostaną wyłączone. 
+Created frame is green. If a single frame is created, it only covers the icon, making it smaller.  If the frame is larger, it covers the whole field, and it is possible to add a title by using the "Add a title" button. Five fonts are available, the maximum length of the title is 16 characters. The finished frame must be confirmed with "CONFIRM" button - it will appear on the panel in the icon colour. Each of confirmed frames appears also on the list at the bottom of frames editor section. List's elements contains frames parameters and button to delete.
 
-Tworzona ramka ma kolor zielony. Jeżeli utworzono pojedynczą ramkę obejmuje ona tylko ikone pomiejszając ją, natomiast jeżeli ramka jest większa zawiera całe pole oraz istnieje możliwość dodania jej tytułu za pomocą przycisku dodaj tytuł. Dostępne jest pięć fontów, maksymalna długość tytułu wynosi 16 znaków. 
 
-Gotową ramkę należy zatwierdzić przyciskiem zatwierdź - pojawi się ona na panelu w kolorze ikon oraz na liście wraz ze wszystkimi swoimi parametrami i przyciskiem do usunięcia. -->
+
 
