@@ -112,15 +112,18 @@ While the titles tab is selected sidebar contain functionality of hiding borders
 
 ## Frames tab
 
-Creating frames is an option that can be used to group icons added to a panel. Frames with straight and rounded corners are available. While the frames tab is selected, clickable fields are highlighted and plus signs is displayed when mouse cursor is over the field to add it to the created frame. Plus signs also appear on each field that will be added to the frame being created as a result of a click (the frame must always be rectangular and must not go through the display). Similarly for deleting fields from the created frame - minus signs show which fields will be excluded.
+Creating frames is an option that can be used to group icons added to a panel. Frames with straight and rounded corners are available. While the frames tab is selected, clickable fields are backlighted and plus signs is displayed when mouse cursor is over the field to add it to the created frame. Plus signs also appear on each field that will be added to the frame being created as a result of a click (the frame must always be rectangular and must not cross the display). Similarly for deleting fields from the created frame - minus signs show which fields will be excluded.
 <p align="center">
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/15c21b017ccb312d1b5fb510237dc0170850ed55/src/assets/readme/16_frames_tab.gif" alt="Frames tab"/>
 </p>
 
-Created frame is green. If a single frame is created, it only covers the icon, making it smaller.  If the frame is larger, it covers the whole field, and it is possible to add a title by using the "Add a title" button. Five fonts are available, the maximum length of the title is 16 characters. The finished frame must be confirmed with "CONFIRM" button - it will appear on the panel in the icon colour. Each of confirmed frames appears also on the list at the bottom of frames editor section. List's elements contains frames parameters and button to delete.
+Created frame is green. If a single frame is created, it only covers the icon, making it smaller.  If the frame is larger (width of at least 2 columns or height of 2 rows), it covers the whole field, and it is possible to add a title by using the "Add a title" button. Five fonts are available, the maximum length of the title is 16 characters. The finished frame must be confirmed with "CONFIRM" button - it will appear on the panel in the icon colour. Each of confirmed frames parameters appears on the list at the bottom of frames editor section. If a list item is hovered over, the frame will be highlighted in red. There is also an option to remove the frame by clicking on the X button.
 <p align="center">
   <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/15c21b017ccb312d1b5fb510237dc0170850ed55/src/assets/readme/17_frames_tab_confirming.png" alt="Frames tab confirming"/>
 </p>
 
-
+There are available warnings about long frame's titles lenght, dfferent frame's fonts and situation, when frame is intersecting caption above the icon. While the frame tab is selected sidebar contain additional functionalities such as unification of frames corner's type, unification of frames title's font, showing/hiding field backlight, showing/hiding titles border, deleteing created frames and deleteing all confirmed frames. There are also tooltips explaining why certain functions are not available. 
+<p align="center">
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/bd5d5ea06a145c8a12fb2f8e62ddd9e7902eab1f/src/assets/readme/18_frames_tab_sidebar.png" alt="Frame tab sidebar"/>
+</p>
 
