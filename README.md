@@ -107,18 +107,20 @@ There is an option to add two captions for each panel's filed - under and above 
 
 While the titles tab is selected sidebar contain functionality of hiding borders, turning on/off captions above icons (disabled by default), deleting all icons and choosing selected font for all captions. 
 <p align="center">
-  <img src="" alt="Titles tab"/>
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/15c21b017ccb312d1b5fb510237dc0170850ed55/src/assets/readme/15_titles_tab.png" alt="Titles tab"/>
 </p>
 
 ## Frames tab
 
 Creating frames is an option that can be used to group icons added to a panel. Frames with straight and rounded corners are available. While the frames tab is selected, clickable fields are highlighted and plus signs is displayed when mouse cursor is over the field to add it to the created frame. Plus signs also appear on each field that will be added to the frame being created as a result of a click (the frame must always be rectangular and must not go through the display). Similarly for deleting fields from the created frame - minus signs show which fields will be excluded.
 <p align="center">
-  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/555f0f836d716678a8ac06b6ceb0fdec521b8410/src/assets/readme/15_titles_tab.png" alt="Frames tab"/>
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/15c21b017ccb312d1b5fb510237dc0170850ed55/src/assets/readme/16_frames_tab.gif" alt="Frames tab"/>
 </p>
 
 Created frame is green. If a single frame is created, it only covers the icon, making it smaller.  If the frame is larger, it covers the whole field, and it is possible to add a title by using the "Add a title" button. Five fonts are available, the maximum length of the title is 16 characters. The finished frame must be confirmed with "CONFIRM" button - it will appear on the panel in the icon colour. Each of confirmed frames appears also on the list at the bottom of frames editor section. List's elements contains frames parameters and button to delete.
-
+<p align="center">
+  <img src="https://github.com/KrynickiJarek/kreatorpaneli/blob/15c21b017ccb312d1b5fb510237dc0170850ed55/src/assets/readme/17_frames_tab_confirming.png" alt="Frames tab confirming"/>
+</p>
 
 
 
