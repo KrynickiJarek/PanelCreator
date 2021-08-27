@@ -41,7 +41,7 @@
   "WRONG_ICON_FILE_ALERT": "Invalid file. Select an .svg file.",
   "WRONG_ICON_SIZE_FILE_ALERT": "Maximum file size is 100kB.",
   "WRONG_BROWSER_ALERT": "Desktop versions of Chrome, Opera or Edge browsers are required for the Panel Creator to work properly.",
-  "CRITICAL_ERROR_ALERT": "Sorry, something went wrong... The app will be reset.",
+  "CRITICAL_ERROR_ALERT": "Sorry, something went wrong. Information on the error has been sent to the appropriate department. The app will be reset.",
   "WHAT_NEXT_ALERT": "What is next?",
   "WHAT_NEXT_ALERT_INFO_1": "If you are an Ampio Smart Home client, please send your touch panels’ designs to your Ampio installer.",
   "WHAT_NEXT_ALERT_INFO_2": "If you are an Ampio Smart Home distributor or installer and you have created designs on behalf of your client, please:",

@@ -4314,8 +4314,8 @@ const PanelPreview = ({
                                 }
                               </div>
                             )}
-                            {/* {(frame.framePrint.SYMULACJAWYWALANIABLEDU.text !== "" && !frame.framePrint.over) && */}
-                            {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
+                            {(frame.framePrint.SYMULACJAWYWALANIABLEDU.text !== "" && !frame.framePrint.over) &&
+                              // {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                   { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
@@ -4958,8 +4958,6 @@ const PanelPreview = ({
                   </div>
                 )}
               </Overlay>
-
-
 
               <div className="side_box">
 
