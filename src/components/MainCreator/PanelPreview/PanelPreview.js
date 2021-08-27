@@ -3815,6 +3815,7 @@ const PanelPreview = ({
         let fileName = panelName + "_" + chosenModel.name + ".pdf"
         saveAs(blob, fileName);
         setDownloading(false)
+        showAlert(100);
         clearTimeout(serverTimeout)
       })
       .catch(error => {
@@ -5071,22 +5072,18 @@ const PanelPreview = ({
                   <div className="side_box" >
 
                     {!downloading &&
-                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} />
+                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} style={{ cursor: "default" }} />
                     }
                     {downloading &&
-                      <>
-                        <img src={Savetopdfload} alt="savetopdf" className="side_icon" />
-                        <img src={Downloadpdfarrow} alt="savetopdf" className="side_icon_arrow"
-                          style={{ animationName: "downloadnigPrewiev" }}
-                        />
-                      </>
+                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" style={{ filter: "invert(29%) sepia(6%) saturate(152%) hue-rotate(131deg) brightness(92%) contrast(90%)" }} />
                     }
-                    {downloading ?
-                      <span >{t("DOWNLOADING")}<br />  </span>
+                    {/* {downloading ?
+                      <span>DEBUGGING</span>
                       :
                       <span
-                        style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
-                    }
+                        // style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
+                        style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
+                    } */}
                   </div>
 
                 </>

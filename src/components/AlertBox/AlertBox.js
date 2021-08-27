@@ -24,11 +24,23 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
     <>
       {alert &&
         <div className="alert_container">
-          <div className="alert_box">
+          <div className="alert_box" style={alert === 100 ? { width: "650px" } : { width: "450px" }}>
             <div className="alert_header_box">
               <p className="alert_header">{t("CAUTION")}</p>
             </div>
             <p className="alert_text">{t(availableAlerts.find(element => element.code === alert).text)}</p>
+            {alert === 100 &&
+              <>
+                <ol className="alert_order_list">
+                  <li>{t(availableAlerts.find(element => element.code === alert).info1)}</li>
+                  <li>{t(availableAlerts.find(element => element.code === alert).info2)}</li>
+                  <ul className="alert_unorder_list">
+                    <li>{t(availableAlerts.find(element => element.code === alert).info21)}</li>
+                    <li>{t(availableAlerts.find(element => element.code === alert).info221)}<a href="mailto: panele@ampio.pl">panele@ampio.pl</a>{t(availableAlerts.find(element => element.code === alert).info222)}</li>
+                  </ul>
+                </ol>
+              </>
+            }
             <div className="alert_button_container">
               {alert < 10 ?
                 <>
@@ -71,6 +83,14 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                     >
                       <div className="button_arrows_back" />
                       {t("REFRESH")}
+                    </div>
+                  }
+                  {alert === 100 &&
+                    <div className="alert_button"
+                      onClick={() => removeAlert()}
+                    >
+                      <div className="button_arrows" />
+                      OK
                     </div>
                   }
                 </>
