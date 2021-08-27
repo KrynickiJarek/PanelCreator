@@ -73,7 +73,7 @@ const iconCategories = [
     name: "NUMBERS",
     directory: "numery",
     listOfIcons: importAll(require.context("../../../../assets/icons/numery", true, /\.(svg)$/))
-  },
+  }
 ];
 
 export default iconCategories
