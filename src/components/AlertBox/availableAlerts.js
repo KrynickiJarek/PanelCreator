@@ -53,6 +53,14 @@ const availableAlerts = [
     text: "WRONG_PROJECT_EXTENSION_ALERT",
   },
   {
+    code: 16,
+    text: "ICON_UPLOAD_ERROR_ALERT",
+  },
+  {
+    code: 17,
+    text: "SINGLE_SLASH_ICON_ALERT",
+  },
+  {
     code: 20,
     text: "WRONG_BROWSER_ALERT",
   },

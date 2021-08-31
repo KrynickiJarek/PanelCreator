@@ -22,6 +22,7 @@ import Nav from 'react-bootstrap/Nav'
 export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, showAlert }) => {
 
   const [unlock, setUnlock] = useState(false)
+  const [loadingIcon, setLoadingIcon] = useState(false)
 
   let orangeStyle = {
     height: "20px",
@@ -46,55 +47,124 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
   }
 
 
-  function getBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-
 
   const onSelectFile = (e) => {
+    const fileToUpload = e.target.files[0]
+    const fileName = e.target.files[0].name
     if (e.target.files[0].type !== "image/svg+xml") {
       showAlert(11);
     } else if (e.target.files[0].size > 100000) {
       showAlert(12);
     } else {
-      // console.log(e.target.files[0])
-      getBase64(e.target.files[0]).then(
-        data => {
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', data);
-          xhr.addEventListener('load', function (ev) {
-            var xml = ev.target.response;
-            var dom = new DOMParser();
-            var svg = dom.parseFromString(xml, 'image/svg+xml');
-            let svgDisplay = svg.rootElement
+      setLoadingIcon(true)
+      const data = { public_key: "project_public_13a58c660ab0dec8d9d1244523fba194_JKpK5260dfc02c0b59b34f4fd247d31dcddcf" }
 
-            svgDisplay.setAttribute("height", "28pt");
-            svgDisplay.setAttribute("width", "28pt");
-
-            let vbw = svgDisplay.viewBox.animVal.width
-            let vhh = svgDisplay.viewBox.animVal.height
-            svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
-
-
-            var svgSerializer = new XMLSerializer().serializeToString(svgDisplay)
-            // var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgSerializer);
-            var svgB64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgSerializer)));
-            const image = {
-              default: svgB64
-            }
-            let copyOwnIcons = ownIcons
-            copyOwnIcons.push(image)
-            updateOwnIcons(copyOwnIcons)
-            document.getElementById("inputUploadIcon").value = null
-          });
-          xhr.send(null);
+      fetch("https://api.ilovepdf.com/v1/auth", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "*/*",
         }
-      )
+      })
+        .then(response => response.json())
+        .then(json => {
+          const token = json.token
+          fetch("https://api.iloveimg.com/v1/start/resizeimage", {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          })
+            .then(response => response.json())
+            .then(json => {
+              const uploadServer = `https://${json.server}/v1/upload`
+              const processServer = `https://${json.server}/v1/process`
+              const downloadServer = `https://${json.server}/v1/download/${json.task}`
+              const task = json.task
+              const formData = new FormData();
+              formData.append('task', task);
+              formData.append('file', fileToUpload);
+
+              fetch(uploadServer, {
+                method: "POST",
+                body: formData,
+                headers: {
+                  "Authorization": `Bearer ${token}`
+                }
+              })
+                .then(response => response.json())
+                .then(json => {
+                  const serverFileName = json.server_filename
+                  const dataToProcess = {
+                    "task": task,
+                    "tool": "resizeimage",
+                    "pixels_width": 28,
+                    "pixels_height": 28,
+                    "files": [
+                      {
+                        "server_filename": serverFileName,
+                        "filename": fileName
+                      }
+                    ]
+                  }
+                  fetch(processServer, {
+                    method: "POST",
+                    body: JSON.stringify(dataToProcess),
+                    headers: {
+                      "Authorization": `Bearer ${token}`,
+                      "Content-Type": "application/json"
+                    }
+                  })
+                    .then(response => {
+                      fetch(downloadServer, {
+                        method: "GET",
+                        headers: {
+                          "Authorization": `Bearer ${token}`,
+                        }
+                      })
+                        .then(response => response.text())
+                        .then(function (svgDisplay) {
+                          console.log(svgDisplay)
+                          var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgDisplay);
+                          const image = {
+                            default: svgB64
+                          }
+                          let copyOwnIcons = ownIcons
+                          copyOwnIcons.push(image)
+                          updateOwnIcons(copyOwnIcons)
+                          setLoadingIcon(false)
+                        })
+                        .catch(error => {
+                          setLoadingIcon(false)
+                          console.log(error)
+                          showAlert(16);
+                        })
+                    })
+                    .catch(error => {
+                      setLoadingIcon(false)
+                      console.log(error)
+                      showAlert(16);
+                    })
+                })
+                .catch(error => {
+                  setLoadingIcon(false)
+                  console.log(error)
+                  showAlert(16);
+                })
+            })
+            .catch(error => {
+              setLoadingIcon(false)
+              console.log(error)
+              showAlert(16);
+            })
+        })
+        .catch(error => {
+          setLoadingIcon(false)
+          console.log(error)
+          showAlert(16);
+        })
+      document.getElementById("inputUploadIcon").value = null
     }
   };
 
@@ -217,13 +287,19 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                           <div className="button_arrows" />
                         </div>
                       </label>
-                      {/* <svg id="mySvg" /> */}
                       <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
                     </div>
 
                     {ownIcons.map((image, index) =>
                       <IconToDrag key={index} image={image} isInOwn={true} ownIconIndex={index} />)}
 
+                    {loadingIcon &&
+                      <div className="icon_box">
+                        <div className="icon_drag">
+                          <div class="lds-dual-ring" />
+                        </div>
+                      </div>
+                    }
 
                     <div className="instruction_box">
                       <p className="instruction_bold" style={{ marginTop: "20px" }}>{t("CUSTOM_ICONS_INSTRUCTION_BOLD_2")}</p>
@@ -301,77 +377,3 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)
 
-// function getBase64(file) {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => resolve(reader.result);
-//     reader.onerror = error => reject(error);
-//   });
-// }
-
-
-// const onSelectFile = (e) => {
-
-//   if (e.target.files[0].type !== "image/svg+xml") {
-//     showAlert(7);
-
-//   } else {
-
-//     getBase64(e.target.files[0]).then(
-//       data => {
-//         var xhr = new XMLHttpRequest();
-//         xhr.open('GET', data);
-//         xhr.addEventListener('load', function (ev) {
-//           var xml = ev.target.response;
-//           var dom = new DOMParser();
-//           var svg = dom.parseFromString(xml, 'image/svg+xml');
-//           let svgDisplay = svg.rootElement
-
-
-
-//           svgDisplay.setAttribute("height", "28pt"); //wartość nie ma znaczenia
-//           svgDisplay.setAttribute("width", "28pt"); //wartośc nie ma znaczenia
-//           // console.log(svgDisplay.width.animVal.value)
-//           // console.log(svgDisplay.viewBox)
-//           // console.log(svgDisplay.height.animVal.value)
-
-//           let vbw = svgDisplay.viewBox.animVal.width
-//           let vhh = svgDisplay.viewBox.animVal.height
-//           svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
-
-//           // ----------------------------------------------------------------gotowe?-----------
-//           // type = 1 - number 
-//           // let vbw = svgDisplay.width.animVal.value
-//           // let vhh = svgDisplay.height.animVal.value
-//           // svgDisplay.setAttribute("viewbox", `0 0 ${vbw} ${vhh}`);
-//           // ----------------------------------------------------------------/gotowe----------
-
-//           // svgDisplay.setAttribute("fill", "black")
-//           // document.getElementById("mySvg").appendChild(svgDisplay);
-//           // console.log(svgDisplay)
-
-
-//           var svgSerializer = new XMLSerializer().serializeToString(svgDisplay)
-//           // var svgB64 = window.btoa(svgSerializer);
-//           var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgSerializer);
-//           const image = {
-//             default: svgB64
-//           }
-//           let copyOwnIcons = ownIcons
-//           copyOwnIcons.push(image)
-//           updateOwnIcons(copyOwnIcons)
-//           document.getElementById("inputUploadIcon").value = null
-//         });
-//         xhr.send(null);
-
-//         //     let copyOwnIcons = ownIcons
-//         //     copyOwnIcons.push(image)
-//         //     updateOwnIcons(copyOwnIcons)
-//         //     document.getElementById("inputUploadIcon").value = null
-//         //   }
-//         // )
-//       }
-//     )
-//   }
-// };

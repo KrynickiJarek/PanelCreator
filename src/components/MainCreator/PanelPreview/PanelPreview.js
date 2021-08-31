@@ -3830,6 +3830,8 @@ const PanelPreview = ({
   const handlePrintPdf = () => {
     if (panelName === "") {
       setNoPanelName(true)
+    } else if (panelName === "01234567890123456789") {
+      showAlert(17);
     } else {
       setDownloading(true)
       let dataToSend = {
@@ -3842,65 +3844,10 @@ const PanelPreview = ({
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
       fetchWithTimeout(frontEndDataB64)
-      // let headers = new Headers();
-      // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-      // headers.append('Access-Control-Allow-Credentials', 'true');
-
-      // fetch("https://bitcoin.ampio.pl:4567/generatepdf", {
-      //   method: "POST",
-      //   body: JSON.stringify({ backEndData, frontEndDataB64 }),
-      //   headers: headers
-      // })
-      //   .then(res => res.blob())
-      //   .then(blob => {
-      //     let fileName = panelName + "_" + chosenModel.name + ".pdf"
-      //     saveAs(blob, fileName);
-      //     setDownloading(false)
-      //   })
-      //   .catch(error => {
-      //     setDownloading(false)
-      //     showAlert(13);
-      //   });
     }
   }
 
 
-
-
-  // const debugFetchWithTimeout = (frontEndDataB64) => {
-  //   let ctrl = new AbortController()
-  //   let signal = ctrl.signal
-
-  //   let headers = new Headers();
-  //   headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-  //   headers.append('Access-Control-Allow-Credentials', 'true');
-
-  //   let serverTimeout = setTimeout(() => {
-  //     ctrl.abort()
-  //     clearTimeout(serverTimeout)
-  //   }, 3000)
-
-  //   fetch("https://kreator.ampio.pl/generatepdf", {
-  //     signal,
-  //     method: "POST",
-  //     body: JSON.stringify({ backEndData, frontEndDataB64 }),
-  //     headers: headers
-  //   })
-  //     .then(res => res.blob())
-  //     .then(blob => {
-  //       let fileName = panelName + "_" + chosenModel.name + ".pdf"
-  //       saveAs(blob, fileName);
-  //       setDownloading(false)
-  //       clearTimeout(serverTimeout)
-  //     })
-  //     .catch(error => {
-  //       if (error.toString() !== "AbortError: The user aborted a request.") {
-  //         setDownloading(false)
-  //         clearTimeout(serverTimeout)
-  //         console.log(error)
-  //       }
-  //     })
-  // }
 
   const debugFetchWithTimeout = (frontEndDataB64) => {
     let ctrl = new AbortController()
@@ -3953,30 +3900,6 @@ const PanelPreview = ({
       let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
       debugFetchWithTimeout(frontEndDataB64)
-
-
-      // let headers = new Headers();
-      // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-      // headers.append('Access-Control-Allow-Credentials', 'true');
-
-      // fetch("https://kreator.ampio.pl/generatepdf", {
-      //   method: "POST",
-      //   body: JSON.stringify({ backEndData, frontEndDataB64 }),
-      //   headers: headers
-      // })
-      //   .then(res => res.blob())
-      //   .then(blob => {
-      //     let fileName = panelName + "_" + chosenModel.name + ".pdf"
-      //     saveAs(blob, fileName);
-      //     setDownloading(false)
-      //   })
-      //   .catch(error => {
-      //     setDownloading(false)
-      //     console.log(error)
-      //   });
-
-
-
     }
   }
 
