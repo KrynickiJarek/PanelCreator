@@ -29,6 +29,10 @@ const availableAlerts = [
     text: "CHANGE_MODEL_ALERT",
   },
   {
+    code: 8,
+    text: "NOT_ALL_ICON_ALERT",
+  },
+  {
     code: 10,
     text: "WRONG_PROJECT_FILE_ALERT",
   },
@@ -56,10 +60,7 @@ const availableAlerts = [
     code: 16,
     text: "ICON_UPLOAD_ERROR_ALERT",
   },
-  {
-    code: 17,
-    text: "NOT_ALL_ICON_ALERT",
-  },
+
   {
     code: 20,
     text: "WRONG_BROWSER_ALERT",

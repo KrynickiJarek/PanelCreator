@@ -462,7 +462,7 @@ const PanelPreview = ({
                               visibility: 'hidden',
                               // padding: "0 5px", 
                               whiteSpace: "pre",
-                              margin: `0 ${1.5 * sc}px` //nataleczka
+                              margin: `0 ${1.5 * sc}px`
 
                             }}>
                               {frame.framePrint.text}

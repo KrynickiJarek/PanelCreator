@@ -8,13 +8,14 @@ const INITIAL_STATE = {
   removeIcons: false,
   panelName: "",
   timeOfCreation: null,
-  version: "0.99g",
+  version: "0.99h",
   warnings: [],
   warningsReRender: false,
   alert: null,
   alertAnswer: null,
   languageRender: false,
-  fullScreen: false
+  fullScreen: false,
+  allIcons: false,
 }
 
 const visualReducer = (state = INITIAL_STATE, action) => {
@@ -82,6 +83,10 @@ const visualReducer = (state = INITIAL_STATE, action) => {
     case types.SET_FULL_SCREEN:
       return {
         ...state, fullScreen: action.item,
+      }
+    case types.SET_ALL_ICONS:
+      return {
+        ...state, allIcons: action.item,
       }
     case types.SET_FRONT_END_REDUCER_VISUAL:
       return action.item

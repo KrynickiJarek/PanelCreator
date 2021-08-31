@@ -68,6 +68,10 @@ const setFullScreen = item => ({
   type: types.SET_FULL_SCREEN, item
 })
 
+const setAllIcons = item => ({
+  type: types.SET_ALL_ICONS, item
+})
+
 const actions = {
   toggleVisual,
   changeScale,
@@ -85,7 +89,8 @@ const actions = {
   removeAlert,
   setAlertAnswer,
   changeLanguage,
-  setFullScreen
+  setFullScreen,
+  setAllIcons
 }
 
 export default actions

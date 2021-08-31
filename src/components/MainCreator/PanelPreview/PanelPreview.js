@@ -76,6 +76,7 @@ import LCDMinus from "../../../assets/lcd/minus.svg"
 import Minusuni from "../../../assets/lcd/minusuni.svg"
 import Leftuni from "../../../assets/lcd/leftuni.svg"
 import Rightuni from "../../../assets/lcd/rightuni.svg"
+import noDotUni from "../../../assets/lcd/noDotUni.svg"
 
 
 import IconHolder from './IconHolder/IconHolder';
@@ -174,7 +175,9 @@ const PanelPreview = ({
   alertAnswer,
   setAlertAnswer,
   fullScreen,
-  setFullScreen
+  setFullScreen,
+  setAllIcons,
+  allIcons
 }) => {
 
 
@@ -227,9 +230,6 @@ const PanelPreview = ({
 
   const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
   const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
-
-
-  // const [fullScreen, setFullScreen] = useState(false)
 
 
   useEffect(() => {
@@ -337,27 +337,63 @@ const PanelPreview = ({
           const universalIconArr = [
             {
               icon: Minusuni,
-              number: 1
+              number: 1,
+              type: 0
             },
             {
               icon: Minusuni,
-              number: 3
+              number: 3,
+              type: 0
             },
             {
               icon: Leftuni,
-              number: 4
+              number: 4,
+              type: 0
             },
             {
               icon: Rightuni,
-              number: 6
+              number: 6,
+              type: 0
             },
             {
               icon: Minusuni,
-              number: 7
+              number: 7,
+              type: 0
             },
             {
               icon: Minusuni,
-              number: 9
+              number: 9,
+              type: 0
+            },
+            {
+              icon: noDotUni,
+              number: 1,
+              type: 3
+            },
+            {
+              icon: noDotUni,
+              number: 3,
+              type: 3
+            },
+            {
+              icon: noDotUni,
+              number: 4,
+              type: 3
+            },
+            {
+              icon: noDotUni,
+              number: 6,
+              type: 3
+            },
+            {
+              icon: noDotUni,
+              number: 7,
+              type: 3
+            },
+            {
+              icon: noDotUni,
+              number: 9,
+              type: 3
             },
           ]
 
@@ -375,7 +411,7 @@ const PanelPreview = ({
               .then(svgBackEnd => {
                 let recordIcon = {
                   number: element.number,
-                  type: 0,
+                  type: element.type,
                   rotation: 0,
                   svg: svgBackEnd
                 }
@@ -472,8 +508,26 @@ const PanelPreview = ({
       setAreThereAnyIcons(false)
     }
 
+    let checkAllIcons = 0
+    const copyBackEndData = iconsBackEnd
+    copyBackEndData.forEach(element => {
+      if (element.type === 0) {
+        checkAllIcons += 1
+      } else if (element.type === 1 || element.type === 2) {
+        checkAllIcons += 0.5
+      }
+      if (checkAllIcons === chosenModel.numberOfDots) {
+        setAllIcons(true)
+      } else {
+        setAllIcons(false)
+      }
+    })
+
     // eslint-disable-next-line
   }, [iconHolders, iconHoldersRender, iconsBackEnd]);
+
+
+
 
   useEffect(() => {
     const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
@@ -536,7 +590,7 @@ const PanelPreview = ({
       filterWarnings(6)
     }
     // eslint-disable-next-line
-  }, [iconHolders, iconHoldersRender, textFrameRender, addNewFrameState]); //było jeszcze removeFrameState
+  }, [iconHolders, iconHoldersRender, textFrameRender, addNewFrameState]);
 
 
 
@@ -820,6 +874,9 @@ const PanelPreview = ({
     }
     if (alertAnswer === 6) {
       handleClearAllText()
+    }
+    if (alertAnswer === 8) {
+      printPdf()
     }
     // eslint-disable-next-line 
   }, [alertAnswer])
@@ -1229,27 +1286,63 @@ const PanelPreview = ({
         const universalIconArr = [
           {
             icon: Minusuni,
-            number: 1
+            number: 1,
+            type: 0
           },
           {
             icon: Minusuni,
-            number: 3
+            number: 3,
+            type: 0
           },
           {
             icon: Leftuni,
-            number: 4
+            number: 4,
+            type: 0
           },
           {
             icon: Rightuni,
-            number: 6
+            number: 6,
+            type: 0
           },
           {
             icon: Minusuni,
-            number: 7
+            number: 7,
+            type: 0
           },
           {
             icon: Minusuni,
-            number: 9
+            number: 9,
+            type: 0
+          },
+          {
+            icon: noDotUni,
+            number: 1,
+            type: 3
+          },
+          {
+            icon: noDotUni,
+            number: 3,
+            type: 3
+          },
+          {
+            icon: noDotUni,
+            number: 4,
+            type: 3
+          },
+          {
+            icon: noDotUni,
+            number: 6,
+            type: 3
+          },
+          {
+            icon: noDotUni,
+            number: 7,
+            type: 3
+          },
+          {
+            icon: noDotUni,
+            number: 9,
+            type: 3
           },
         ]
 
@@ -1267,7 +1360,7 @@ const PanelPreview = ({
             .then(svgBackEnd => {
               let recordIcon = {
                 number: element.number,
-                type: 0,
+                type: element.type,
                 rotation: 0,
                 svg: svgBackEnd
               }
@@ -1315,27 +1408,63 @@ const PanelPreview = ({
       const universalIconArr = [
         {
           icon: Minusuni,
-          number: 1
+          number: 1,
+          type: 0
         },
         {
           icon: Minusuni,
-          number: 3
+          number: 3,
+          type: 0
         },
         {
           icon: Leftuni,
-          number: 4
+          number: 4,
+          type: 0
         },
         {
           icon: Rightuni,
-          number: 6
+          number: 6,
+          type: 0
         },
         {
           icon: Minusuni,
-          number: 7
+          number: 7,
+          type: 0
         },
         {
           icon: Minusuni,
-          number: 9
+          number: 9,
+          type: 0
+        },
+        {
+          icon: noDotUni,
+          number: 1,
+          type: 3
+        },
+        {
+          icon: noDotUni,
+          number: 3,
+          type: 3
+        },
+        {
+          icon: noDotUni,
+          number: 4,
+          type: 3
+        },
+        {
+          icon: noDotUni,
+          number: 6,
+          type: 3
+        },
+        {
+          icon: noDotUni,
+          number: 7,
+          type: 3
+        },
+        {
+          icon: noDotUni,
+          number: 9,
+          type: 3
         },
       ]
 
@@ -1353,7 +1482,7 @@ const PanelPreview = ({
           .then(svgBackEnd => {
             let recordIcon = {
               number: element.number,
-              type: 0,
+              type: element.type,
               rotation: 0,
               svg: svgBackEnd
             }
@@ -2223,6 +2352,7 @@ const PanelPreview = ({
             if (index % 3 === 0) {
               for (let k = 0; k <= index + 2; k++) {
                 copyArrChange[k] = "a"
+
               }
             } else if (index % 3 === 1) {
               for (let k = 0; k <= index + 1; k++) {
@@ -2236,7 +2366,7 @@ const PanelPreview = ({
           }
         }
         if (copyArr.length > 9) {
-          for (let i = copyArr.length; i >= copyArr.length - 9; i--) {
+          for (let i = copyArr.length; i >= 9; i--) {
             if (copyArr[i] === "s") {
               for (let j = 0; j < 9; j++) {
                 if (index === j) {
@@ -2991,7 +3121,7 @@ const PanelPreview = ({
           }
         }
         if (copyArr.length > 9) {
-          for (let i = copyArr.length; i >= copyArr.length - 9; i--) {
+          for (let i = copyArr.length; i >= 9; i--) {
             if (copyArr[i] === "s") {
               for (let j = 0; j < 9; j++) {
                 if (index === j) {
@@ -3827,25 +3957,42 @@ const PanelPreview = ({
       })
   }
 
+  const printPdf = () => {
+    setAlertAnswer(null)
+    setDownloading(true)
+    let dataToSend = {
+      frontEndData,
+      backEndData,
+      show: true,
+      hide: false
+    }
+    let frontEndDataStr = JSON.stringify(dataToSend);
+    let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+    fetchWithTimeout(frontEndDataB64)
+  }
+
+
   const handlePrintPdf = () => {
     if (panelName === "") {
       setNoPanelName(true)
-    } else if (panelName === "01234567890123456789") {
-      showAlert(17);
+    } else if (!allIcons) {
+      showAlert(8);
     } else {
-      setDownloading(true)
-      let dataToSend = {
-        frontEndData,
-        backEndData,
-        show: true,
-        hide: false
-      }
-      let frontEndDataStr = JSON.stringify(dataToSend);
-      let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
-
-      fetchWithTimeout(frontEndDataB64)
+      printPdf()
+      // setDownloading(true)
+      // let dataToSend = {
+      //   frontEndData,
+      //   backEndData,
+      //   show: true,
+      //   hide: false
+      // }
+      // let frontEndDataStr = JSON.stringify(dataToSend);
+      // let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+      // fetchWithTimeout(frontEndDataB64)
     }
   }
+
+
 
 
 
@@ -4237,7 +4384,6 @@ const PanelPreview = ({
                                 }
                               </div>
                             )}
-                            {/* {(frame.framePrint.SYMULACJAWYWALANIABLEDU.text !== "" && !frame.framePrint.over) && */}
                             {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
@@ -5185,6 +5331,7 @@ const mapStateToProps = state => ({
   warningsReRender: state.frontEndData.visual.warningsReRender,
   animations: state.frontEndData.visual.animations,
   sc: state.frontEndData.visual.scale,
+  allIcons: state.frontEndData.visual.allIcons,
   fullScreen: state.frontEndData.visual.fullScreen,
   panelName: state.frontEndData.visual.panelName,
   chosenTextFont: state.frontEndData.text.chosenTextFont,
@@ -5244,6 +5391,7 @@ const mapDispatchToProps = dispatch => ({
   showRemoveIcons: (income) => dispatch(actionsVisual.showRemoveIcons(income)),
   setTimeOfCreation: (income) => dispatch(actionsVisual.setTimeOfCreation(income)),
   setFullScreen: (income) => dispatch(actionsVisual.setFullScreen(income)),
+  setAllIcons: (income) => dispatch(actionsVisual.setAllIcons(income)),
 
   toggleTextUp: (income) => dispatch(actionsText.toggleTextUp(income)),
   changeTextFont: (income) => dispatch(actionsText.changeTextFont(income)),
