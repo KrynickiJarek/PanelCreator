@@ -50,7 +50,7 @@
   "WHAT_NEXT_ALERT_INFO_221": "przesłanie wygenerowanych projektów na maila: ",
   "WHAT_NEXT_ALERT_INFO_222": ". W tytule maila prosimy o podanie numeru zamówienia.",
   "REFRESH": "Odśwież",
-  "SINGLE_SLASH_ICON_ALERT": "Aby zapisać panel do pliku PDF każde pole z ikonami dzielonymi musi zawierać dwie ikony.",
+  "NOT_ALL_ICON_ALERT": "Nie zostały wypełnione wszystkie pola ikon. Czy na pewno chcesz kontynuować?",
   "PANEL_PREVIEW": "PODGLĄD PANELU",
   "MIN_SCALING": "Uzyskano minimalne skalowanie",
   "MAX_SCALING": "Uzyskano maksymalne skalowanie",

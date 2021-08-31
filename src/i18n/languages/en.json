@@ -49,7 +49,7 @@
   "WHAT_NEXT_ALERT_INFO_21": "place an order in the Ampio shop,",
   "WHAT_NEXT_ALERT_INFO_221": "e-mail the created designs to: ",
   "WHAT_NEXT_ALERT_INFO_222": ". Please reference the order number in the e-mail’s subject.",
-  "SINGLE_SLASH_ICON_ALERT": "To save the panel to PDF, each field with split icons must contain two icons.",
+  "NOT_ALL_ICON_ALERT": "Not all icon fields have been filled in. Are you sure you want to continue?",
   "REFRESH": "Refresh",
   "PANEL_PREVIEW": "PANEL PREVIEW",
   "MIN_SCALING": "Minimal scaling achieved",

@@ -1848,13 +1848,13 @@ const PanelPreview = ({
     if (side === "up") {
       copyArr[index].textUp = "";
       copyArr[index].fontUp = null;
-      if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+      if (copyPanelTextBackEnd[recordTextIndex] && copyPanelTextBackEnd[recordTextIndex].type === 1) {
         copyPanelTextBackEnd.splice(recordTextIndex, 1)
       }
     } else if (side === "down") {
       copyArr[index].textDown = "";
       copyArr[index].fontDown = null;
-      if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+      if (copyPanelTextBackEnd[recordTextIndex] && copyPanelTextBackEnd[recordTextIndex].type === 0) {
         copyPanelTextBackEnd.splice(recordTextIndex, 1)
       }
     }
@@ -4237,8 +4237,8 @@ const PanelPreview = ({
                                 }
                               </div>
                             )}
-                            {(frame.framePrint.SYMULACJAWYWALANIABLEDU.text !== "" && !frame.framePrint.over) &&
-                              // {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
+                            {/* {(frame.framePrint.SYMULACJAWYWALANIABLEDU.text !== "" && !frame.framePrint.over) && */}
+                            {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                   { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
@@ -4264,7 +4264,7 @@ const PanelPreview = ({
                                     disabled={true}
                                     value={frame.framePrint.text}
                                   />
-                                  <span className="xxxxx" style={{
+                                  <span style={{
                                     fontFamily: frame.framePrint.frameFont,
                                     gridArea: '1 / 1 / 2 / 2',
                                     visibility: 'hidden',
@@ -4297,7 +4297,7 @@ const PanelPreview = ({
                                     disabled={true}
                                     value={frame.framePrint.text}
                                   />
-                                  <span className="xxxxx" style={{
+                                  <span style={{
                                     fontFamily: frame.framePrint.frameFont,
                                     gridArea: '1 / 1 / 2 / 2', visibility: 'hidden',
                                     whiteSpace: "pre",
@@ -4436,7 +4436,7 @@ const PanelPreview = ({
                                   onKeyDown={handleKeyPress}
 
                                 />
-                                <span className="xxxxx" style={{
+                                <span style={{
                                   gridArea: '1 / 1 / 2 / 2',
                                   visibility: 'hidden',
                                   fontFamily: chosenFrameFont,

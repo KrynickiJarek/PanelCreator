@@ -58,7 +58,7 @@ const availableAlerts = [
   },
   {
     code: 17,
-    text: "SINGLE_SLASH_ICON_ALERT",
+    text: "NOT_ALL_ICON_ALERT",
   },
   {
     code: 20,
