@@ -9,14 +9,14 @@ import { t } from "../../../../i18n";
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
-const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) => {
+const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chosenModel }) => {
 
   const [unlock, setUnlock] = useState(false)
 
 
   return (
     <div className="scroll_container">
-      <div className="visual_background" style={visual ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+      <div className="visual_background" style={(visual && chosenModel.type !== "MDOT_M6+_UNIVERSAL") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
         <div className="visual_container">
           <div className="visual_info_box">
             {unlock ?
@@ -33,6 +33,14 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual }) =>
           >
             {t("EDIT_MODE")}
             <div className="button_arrows" />
+          </div>
+        </div>
+      </div>
+      <div className="visual_background" style={chosenModel.type === "MDOT_M6+_UNIVERSAL" ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+        <div className="visual_container">
+          <div className="visual_info_box">
+            <img src={Locked} alt="locked" className="visual_image" />
+            <h2 className="visual_info">{t("NOT_AVALIBLE_IN_SELECTED_MODEL")}</h2>
           </div>
         </div>
       </div>
@@ -92,6 +100,7 @@ const mapStateToProps = state => ({
   visual: state.frontEndData.visual.visual,
   chosenTextFont: state.frontEndData.text.chosenTextFont,
   languageRender: state.frontEndData.visual.languageRender,
+  chosenModel: state.frontEndData.model.chosenModel,
 })
 
 const mapDispatchToProps = dispatch => ({

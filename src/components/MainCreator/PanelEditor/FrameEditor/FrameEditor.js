@@ -60,7 +60,7 @@ const FrameEditor = ({
 
   return (
     <div className="scroll_container">
-      <div className="visual_background" style={visual ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+      <div className="visual_background" style={(visual && chosenModel.type !== "MDOT_M6+_UNIVERSAL") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
         <div className="visual_container">
           <div className="visual_info_box">
             {unlock ?
@@ -77,6 +77,14 @@ const FrameEditor = ({
           >
             {t("EDIT_MODE")}
             <div className="button_arrows" />
+          </div>
+        </div>
+      </div>
+      <div className="visual_background" style={chosenModel.type === "MDOT_M6+_UNIVERSAL" ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+        <div className="visual_container">
+          <div className="visual_info_box">
+            <img src={Locked} alt="locked" className="visual_image" />
+            <h2 className="visual_info">{t("NOT_AVALIBLE_IN_SELECTED_MODEL")}</h2>
           </div>
         </div>
       </div>
@@ -176,20 +184,6 @@ const FrameEditor = ({
           {chosenModel.panelRotation === 90 &&
             <p className="instruction_normal">{t("NO_TITLE_IN_CHOSEN_MODEL")}</p>
           }
-
-
-          {/* <div className="add_frame_button"
-            style={frameHoldersTemp && confirmWait ? { cursor: "pointer" } : { cursor: "not-allowed" }}
-            onClick={handleAddNewFrame}
-            data-tip data-for='confirm_button'
-          >
-            {t("CONFIRM_UPPERCASE")}
-            <div className="button_arrows" />
-          </div> */}
-
-
-
-
 
           {frameHoldersTemp ?
             <div className="add_frame_button"

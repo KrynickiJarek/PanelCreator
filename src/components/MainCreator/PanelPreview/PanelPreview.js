@@ -4876,11 +4876,6 @@ const PanelPreview = ({
                             < img src={LCDPlay} alt="play" className="lcd_icon" style={lcdIconStyle} />
                           </div>
 
-                          <div>
-                            <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
-                            <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-                          </div>
-
                           <div className="lcd_icon_box">
                             < img src={LCDMinus} alt="minus" className="lcd_icon" style={lcdIconStyle} />
                             < img src={LCDPlus} alt="plus" className="lcd_icon" style={lcdIconStyle} />

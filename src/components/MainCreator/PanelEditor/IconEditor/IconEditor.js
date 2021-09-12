@@ -19,7 +19,7 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, showAlert }) => {
+export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, chosenModel, showAlert }) => {
 
   const [unlock, setUnlock] = useState(false)
   const [loadingIcon, setLoadingIcon] = useState(false)
@@ -125,7 +125,6 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                       })
                         .then(response => response.text())
                         .then(function (svgDisplay) {
-                          console.log(svgDisplay)
                           var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgDisplay);
                           const image = {
                             default: svgB64
@@ -175,7 +174,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
   return (
     <div className="scroll_container">
-      <div className="visual_background" style={visual ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+      <div className="visual_background" style={(visual && chosenModel.type !== "MDOT_M6+_UNIVERSAL") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
         <div className="visual_container">
           <div className="visual_info_box">
             {unlock ?
@@ -192,6 +191,14 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
           >
             {t("EDIT_MODE")}
             <div className="button_arrows" />
+          </div>
+        </div>
+      </div>
+      <div className="visual_background" style={chosenModel.type === "MDOT_M6+_UNIVERSAL" ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+        <div className="visual_container">
+          <div className="visual_info_box">
+            <img src={Locked} alt="locked" className="visual_image" />
+            <h2 className="visual_info">{t("NOT_AVALIBLE_IN_SELECTED_MODEL")}</h2>
           </div>
         </div>
       </div>
@@ -356,6 +363,7 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
 const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color,
+  chosenModel: state.frontEndData.model.chosenModel,
   visual: state.frontEndData.visual.visual,
   favoriteIcons: state.frontEndData.icon.favoriteIcons,
   ownIcons: state.frontEndData.icon.ownIcons,

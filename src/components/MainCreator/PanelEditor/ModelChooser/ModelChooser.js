@@ -151,6 +151,9 @@ const ModelChooser = ({
                     <img src={panel.picture} alt="panelpicture" className="model_img" />
                   </div>
                   <p className="model_name" style={panelModel.type === panel.type ? { fontWeight: "700", margin: "0 5px" } : {}}>{t(panel.type)}</p>
+                  {panel.type === "MDOT_M6+" &&
+                    <p className="model_name" style={panelModel.type === panel.type ? { fontSize: "12px", fontWeight: "700", margin: "0 5px" } : { fontSize: "12px", }}>{t("MDOT_M6+_FORMER")}</p>
+                  }
                 </div>
 
                 <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5" }}>
