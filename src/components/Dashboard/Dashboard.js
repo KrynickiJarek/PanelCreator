@@ -1,4 +1,3 @@
-// import React, { memo, useState, useEffect, Suspense } from 'react';
 import { memo, useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -79,7 +78,6 @@ export const Dashboard = memo(function Dashboard({
   setAlertAnswer
 }) {
 
-  // const CreatorHeader = React.lazy(() => import("../MainCreator/CreatorHeader/CreatorHeader"));
 
   const [zoomId, setZoomId] = useState(null)
   const [resize, setResize] = useState(0)
@@ -110,8 +108,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("0.99i")
-    // updateVersion("1.00")
+    updateVersion("1.00")
     // eslint-disable-next-line 
   }, [])
 
@@ -630,7 +627,6 @@ export const Dashboard = memo(function Dashboard({
   };
 
   return (
-    // <DndProvider debugMode={true} backend={HTML5Backend}>
     <DndProvider backend={HTML5Backend}>
       {dashboardSmooth &&
         <div className="main_dashboard_container">

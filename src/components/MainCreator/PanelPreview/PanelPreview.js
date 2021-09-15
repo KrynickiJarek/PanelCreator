@@ -5336,26 +5336,19 @@ const mapStateToProps = state => ({
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
   isAnySelected: state.frontEndData.icon.isAnySelected,
   areThereAnyIcons: state.frontEndData.icon.areThereAnyIcons,
-
   panelTextBackEnd: state.backEndData.panelText,
   iconsBackEnd: state.backEndData.icons,
   framesBackEnd: state.backEndData.frames,
-
   backEndData: state.backEndData,
   frontEndData: state.frontEndData,
   panels: state.panels.panels,
   indexOfLastPanel: state.panels.indexOfLastPanel,
   dashboard: state.panels.dashboard,
-
   alert: state.frontEndData.visual.alert,
   alertAnswer: state.frontEndData.visual.alertAnswer,
-
-
   ownIcons: state.frontEndData.icon.ownIcons,
   ownIconsRender: state.frontEndData.icon.ownIconsRender,
   languageRender: state.frontEndData.visual.languageRender,
-
-
 })
 
 const mapDispatchToProps = dispatch => ({

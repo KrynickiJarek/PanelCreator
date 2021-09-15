@@ -23,12 +23,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en",
-    // debug: true,
     debug: false,
-    // detection: {
-    //   order: ["queryString", "cookie", "navigator"],
-    //   cache: ["cookie"]
-    // },
     interpolation: {
       escapeValue: true,
     },
@@ -40,17 +35,3 @@ export const t = i18n.t.bind(i18n);
 
 export default i18n;
 
-// i18n
-//   .use(Backend)
-//   .use(LanguageDetector)
-//   .use(initReactI18next)
-//   .init({
-//     resources,
-//     fallbackLng: "en",
-
-//     keySeparator: false,
-//     debug: false,
-//     interpolation: {
-//       escapeValue: false,
-//     },
-//   });
