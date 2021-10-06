@@ -17,8 +17,33 @@
         align-self: flex-start;
         position: relative;
         margin-left: 10px;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
         cursor: default;
+    }
+
+    .instruction_bold {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      color: #333333;
+      align-self: flex-start;
+      text-align: left;
+      cursor: default;
+      margin-bottom: 5px;
+      margin-left: 10px;
+    }
+
+    .instruction_normal {
+      font-size: 16px;
+      font-weight: 400;
+      font-family: 'Montserrat', sans-serif;
+      color: #333333;
+      align-self: flex-start;
+      text-align: left;
+      cursor: default;
+      margin-bottom: 10px;
+      margin-left: 10px;
+      transition: 0.4s ease;
     }
 
     .color_header::before{
@@ -37,9 +62,8 @@
 		justify-content: flex-start;
     // justify-content: space-around;
     flex-wrap: wrap;
-    margin-bottom: 40px;
-
-
+    margin-bottom: 20px;
+        
         .color_link{
             width: 130px;
             height: 170px;
@@ -64,7 +88,7 @@
 
             .color_name{
                 font-family: 'Montserrat', sans-serif;
-                font-size: 16px;
+                font-size: 15px;
                 line-height: 18px;
                 font-weight: 400;
                 margin: 0 10px;

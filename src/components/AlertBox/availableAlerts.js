@@ -75,8 +75,6 @@ const availableAlerts = [
     info1: "WHAT_NEXT_ALERT_INFO_1",
     info2: "WHAT_NEXT_ALERT_INFO_2",
     info21: "WHAT_NEXT_ALERT_INFO_21",
-    info221: "WHAT_NEXT_ALERT_INFO_221",
-    info222: "WHAT_NEXT_ALERT_INFO_222",
   },
 ]
 

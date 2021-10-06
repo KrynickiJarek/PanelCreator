@@ -87,6 +87,7 @@ const PanelPreview = ({
   frameTitle,
   allowFrameTitle,
   chosenColor,
+  chosenRounding,
   resetColor,
   chosenTab,
   resetTab,
@@ -993,10 +994,12 @@ const PanelPreview = ({
   chosenModelStyle.backgroundColor = chosenColor.hex;
   chosenModelStyle.height = `${chosenModel.height * sc}px`;
   chosenModelStyle.width = `${chosenModel.width * sc}px`;
-  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out";
+  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out, border-radius 400ms ease"; //--NATALECZKA dodane dla border radius
   if (chosenModel.panelRotation) {
     chosenModelStyle.transform = "rotate(-90deg)"
   }
+  chosenModelStyle.borderRadius = `${chosenRounding * sc}px`; //--NATALECZKA
+
 
 
   let contentStyle = {};
@@ -1004,6 +1007,9 @@ const PanelPreview = ({
   contentStyle.width = `${chosenModel.width * sc - (chosenModel.marginSide * 2 * sc)}px`;
   contentStyle.margin = `${chosenModel.marginTop * sc}px ${chosenModel.marginSide * sc}px ${chosenModel.marginBottom * sc}px`
   contentStyle.transition = "400ms ease";
+
+
+  contentStyle.borderRadius = `${chosenRounding * sc}px`; //--NATALECZKA
 
   let contentFrameStyle = {};
   contentFrameStyle.height = `${chosenModel.height * sc - ((chosenModel.marginFrameTop * sc) + (chosenModel.marginFrameBottom * sc))}px`;
@@ -1041,6 +1047,8 @@ const PanelPreview = ({
     visualStyle.transform = "rotate(90deg)";
     visualStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
   }
+  visualStyle.borderRadius = `${chosenRounding * sc}px`; //--NATALECZKA
+
 
   if (visual) {
     universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))";
@@ -5306,7 +5314,8 @@ const PanelPreview = ({
 
 
 const mapStateToProps = state => ({
-  chosenColor: state.frontEndData.color,
+  chosenColor: state.frontEndData.color.color,
+  chosenRounding: state.frontEndData.color.rounding,
   chosenTab: state.frontEndData.tab,
   chosenModel: state.frontEndData.model.chosenModel,
   resetAllAfterModelChangeFlag: state.frontEndData.model.resetAllAfterModelChangeFlag,

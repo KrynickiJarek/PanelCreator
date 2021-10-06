@@ -1,7 +1,11 @@
 import types from './types'
 
-const change = item => ({
+const changeColor = item => ({
   type: types.CHANGE_COLOR, item
+})
+
+const changeRounding = item => ({
+  type: types.CHANGE_ROUNDING, item
 })
 
 const setFrontEndReducerColor = item => ({
@@ -13,7 +17,8 @@ const resetColor = item => ({
 })
 
 const actions = {
-  change,
+  changeColor,
+  changeRounding,
   setFrontEndReducerColor,
   resetColor
 }

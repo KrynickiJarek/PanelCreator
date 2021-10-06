@@ -36,7 +36,6 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                   <li>{t(availableAlerts.find(element => element.code === alert).info2)}</li>
                   <ul className="alert_unorder_list">
                     <li>{t(availableAlerts.find(element => element.code === alert).info21)}</li>
-                    <li>{t(availableAlerts.find(element => element.code === alert).info221)}<a href="mailto: panele@ampio.pl">panele@ampio.pl</a>{t(availableAlerts.find(element => element.code === alert).info222)}</li>
                   </ul>
                 </ol>
               </>
