@@ -4,8 +4,8 @@ const changeColor = item => ({
   type: types.CHANGE_COLOR, item
 })
 
-const changeRounding = item => ({
-  type: types.CHANGE_ROUNDING, item
+const changeCut = item => ({
+  type: types.CHANGE_CUT, item
 })
 
 const setFrontEndReducerColor = item => ({
@@ -16,11 +16,16 @@ const resetColor = item => ({
   type: types.RESET_COLOR, item
 })
 
+const resetCut = item => ({
+  type: types.RESET_CUT, item
+})
+
 const actions = {
   changeColor,
-  changeRounding,
+  changeCut,
   setFrontEndReducerColor,
-  resetColor
+  resetColor,
+  resetCut
 }
 
 export default actions

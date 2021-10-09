@@ -99,6 +99,7 @@ const App = ({
         panelType: 0,
         panelColorRal: 'RAL 9005',
         panelColorHex: '#060707',
+        panelCut: 5,
         icons: [],
         panelText: [],
         frames: []

@@ -1,10 +1,13 @@
 // eslint-disable-next-line 
 const emergencyInitialState = {
   color: {
-    RAL: 'RAL 9005',
-    name: 'BLACK',
-    hex: '#060707',
-    iconColor: 'white'
+    color: {
+      RAL: 'RAL 9005',
+      name: 'BLACK',
+      hex: '#060707',
+      iconColor: 'white'
+    },
+    cut: 0,
   },
   tab: 'model',
   model: {

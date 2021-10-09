@@ -87,8 +87,9 @@ const PanelPreview = ({
   frameTitle,
   allowFrameTitle,
   chosenColor,
-  chosenRounding,
+  chosenCut,
   resetColor,
+  resetCut,
   chosenTab,
   resetTab,
   chosenModel,
@@ -327,6 +328,11 @@ const PanelPreview = ({
         changeFrameHolders([])
         changeFramesBackEnd([])
         updateWarnings([])
+
+        if (chosenColor.RAL === "SMOKED_GLASS" && chosenModel.type !== "MDOT_M18" && chosenModel.type !== "MDOT_M18_UNIVERSAL") { //Nataleczka x 
+          resetColor()
+        }
+
         if (chosenColor.RAL === "RAL 9003" && visual) {
           pushWarnings(0)
         }
@@ -994,12 +1000,16 @@ const PanelPreview = ({
   chosenModelStyle.backgroundColor = chosenColor.hex;
   chosenModelStyle.height = `${chosenModel.height * sc}px`;
   chosenModelStyle.width = `${chosenModel.width * sc}px`;
-  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out, border-radius 400ms ease"; //--NATALECZKA dodane dla border radius
+  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out, border 400ms ease"; //--NATALECZKA xx
+  chosenModelStyle.boxSizing = "content-box"
+  chosenModelStyle.border = `0 solid ${chosenColor.hex}`;
   if (chosenModel.panelRotation) {
     chosenModelStyle.transform = "rotate(-90deg)"
   }
-  chosenModelStyle.borderRadius = `${chosenRounding * sc}px`; //--NATALECZKA
 
+  if (chosenCut === 5) { //--Nataleczka xx
+    chosenModelStyle.border = `${2.5 * sc}px solid ${chosenColor.hex}`;
+  }
 
 
   let contentStyle = {};
@@ -1009,7 +1019,6 @@ const PanelPreview = ({
   contentStyle.transition = "400ms ease";
 
 
-  contentStyle.borderRadius = `${chosenRounding * sc}px`; //--NATALECZKA
 
   let contentFrameStyle = {};
   contentFrameStyle.height = `${chosenModel.height * sc - ((chosenModel.marginFrameTop * sc) + (chosenModel.marginFrameBottom * sc))}px`;
@@ -1036,19 +1045,41 @@ const PanelPreview = ({
   universalIconStyle.transition = "400ms ease";
 
 
-
-
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
   visualStyle.height = `${chosenModel.height * sc}px`;
-  if (chosenModel.panelRotation) {
+  visualStyle.top = "0";
+  visualStyle.left = "0";
+
+
+  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka x
+    visualStyle.width = `${(chosenModel.width + 5) * sc}px`;
+    visualStyle.height = `${(chosenModel.height + 5) * sc}px`;
+    visualStyle.top = `${-2.5 * sc}px`;
+    visualStyle.left = `${-2.5 * sc}px`;
+  } else if (chosenCut !== 5 && chosenModel.panelRotation) {
     visualStyle.width = `${chosenModel.height * sc}px`;
     visualStyle.height = `${chosenModel.width * sc}px`;
     visualStyle.transform = "rotate(90deg)";
     visualStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
+  } else if (chosenCut === 5 && chosenModel.panelRotation) {
+    visualStyle.width = `${(chosenModel.height + 5) * sc}px`;
+    visualStyle.height = `${(chosenModel.width + 5) * sc}px`;
+    visualStyle.top = `${-2.5 * sc}px`;
+    visualStyle.left = `${2.5 * sc}px`;
+    visualStyle.transform = "rotate(90deg)";
+    visualStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
   }
-  visualStyle.borderRadius = `${chosenRounding * sc}px`; //--NATALECZKA
 
+
+  let cutBorderStyle = {}//--NATALECZKA x
+  if (chosenCut) {
+    cutBorderStyle.border = `${chosenCut * sc}px outset ${chosenColor.hex}`
+    cutBorderStyle.opacity = "0.4"
+  } else {
+    cutBorderStyle.border = `2px outset ${chosenColor.hex}`
+    cutBorderStyle.opacity = "0.4"
+  }
 
   if (visual) {
     universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))";
@@ -1091,15 +1122,27 @@ const PanelPreview = ({
   logoStyle.height = `${3.9 * sc}px`;
   logoStyle.width = `${15.9 * sc}px`;
   logoStyle.filter = "invert(79%) sepia(5%) saturate(8%) hue-rotate(322deg) brightness(84%) contrast(83%)";
-  logoStyle.bottom = `${5 * sc}px`;
-  logoStyle.right = `${5 * sc}px`;
 
-  if (chosenModel.panelRotation) {
+
+  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka xx
+    logoStyle.bottom = `${6.5 * sc}px`;
+    logoStyle.right = `${6.5 * sc}px`;
+  } else if (chosenCut === 5 && chosenModel.panelRotation) {
+    logoStyle.bottom = `${6.5 * sc}px`;
+    logoStyle.left = `${6.5 * sc}px`;
+    logoStyle.transform = "translate(-100%,0) rotate(90deg)  ";
+    logoStyle.transformOrigin = "bottom right";
+  } else if (chosenCut !== 5 && chosenModel.panelRotation) {
     logoStyle.bottom = `${5 * sc}px`;
     logoStyle.left = `${5 * sc}px`;
     logoStyle.transform = "translate(-100%,0) rotate(90deg)  ";
     logoStyle.transformOrigin = "bottom right";
+  } else {
+    logoStyle.bottom = `${5 * sc}px`;
+    logoStyle.right = `${5 * sc}px`;
   }
+
+
 
   const lcdStyle = {};
   lcdStyle.transition = "400ms ease";
@@ -4088,6 +4131,7 @@ const PanelPreview = ({
         changePanelName("")
         changePanelNameBackEnd("")
         resetColor()
+        resetCut()
         resetPanelColorBackEnd()
         resetTab("model")
         resetModel()
@@ -4131,6 +4175,7 @@ const PanelPreview = ({
       changePanelName("")
       changePanelNameBackEnd("")
       resetColor()
+      resetCut()
       resetPanelColorBackEnd()
       resetTab("model")
       resetModel()
@@ -4646,13 +4691,14 @@ const PanelPreview = ({
 
                 {!visualSmooth &&
                   <>
-                    <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } : { ...visualStyle, opacity: "0" }} />
+                    <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove ${chosenColor.hex}`, opacity: "1", boxShadow: "rgba(0, 0, 0, 0.55) 10px 5px 20px" } :
+                      { ...visualStyle, opacity: "0" }} />
                     <div className="visualization_frame" style={visual ? { ...visualStyle, border: `4px groove white`, opacity: "0.2" } : { ...visualStyle, opacity: "0" }} />
                     {(lcdShow && visual && chosenColor.RAL !== "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "#141414" }} />}
                     {(lcdShow && visual && chosenColor.RAL === "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "black" }} />}
                     <div className="visualization_glass" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
                     <div className="visualization_glass_bis" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
-                    <div className="visualization_frame" style={visual ? { ...visualStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
+                    <div className="visualization_frame" style={visual ? { ...visualStyle, ...cutBorderStyle, zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
                     <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                   </>}
 
@@ -5315,7 +5361,7 @@ const PanelPreview = ({
 
 const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color.color,
-  chosenRounding: state.frontEndData.color.rounding,
+  chosenCut: state.frontEndData.color.cut,
   chosenTab: state.frontEndData.tab,
   chosenModel: state.frontEndData.model.chosenModel,
   resetAllAfterModelChangeFlag: state.frontEndData.model.resetAllAfterModelChangeFlag,
@@ -5395,11 +5441,13 @@ const mapDispatchToProps = dispatch => ({
 
 
   resetColor: (income) => dispatch(actionsColor.resetColor(income)),
+  resetCut: (income) => dispatch(actionsColor.resetCut(income)),
   resetTab: (income) => dispatch(actionsTab.change(income)),
 
   changePanelNameBackEnd: (income) => dispatch(actionsBackEnd.changePanelName(income)),
   changePanelTextBackEnd: (income) => dispatch(actionsBackEnd.changePanelText(income)),
   resetPanelColorBackEnd: (income) => dispatch(actionsBackEnd.resetPanelColor(income)),
+  resetPanelCutBackEnd: (income) => dispatch(actionsBackEnd.resetPanelCut(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
   changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
   changePanelTypeBackEnd: (income) => dispatch(actionsBackEnd.changePanelType(income)),

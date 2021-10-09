@@ -16,6 +16,14 @@ const resetPanelColor = (ral, hex) => ({
   type: types.RESET_PANEL_COLOR, ral, hex
 })
 
+const resetPanelCut = item => ({
+  type: types.RESET_PANEL_CUT, item
+})
+
+const changePanelCut = item => ({
+  type: types.CHANGE_PANEL_CUT, item
+})
+
 const changePanelText = item => ({
   type: types.CHANGE_PANEL_TEXT, item
 })
@@ -37,7 +45,9 @@ const actions = {
   changePanelName,
   changePanelType,
   changePanelColor,
+  changePanelCut,
   resetPanelColor,
+  resetPanelCut,
   changePanelText,
   changeIcons,
   changeFrames,

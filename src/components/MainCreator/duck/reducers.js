@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   panelType: availableModels[0].backEndPanelType,
   panelColorRal: availableColors[0].RAL,
   panelColorHex: availableColors[0].hex,
+  panelCut: 0,
   icons: [],
   panelText: [],
   frames: [],
@@ -28,9 +29,17 @@ const backEndDataReducers = (state = INITIAL_STATE, action) => {
       return {
         ...state, panelColorRal: action.ral, panelColorHex: action.hex
       }
+    case types.CHANGE_PANEL_CUT:
+      return {
+        ...state, panelCut: action.item,
+      }
     case types.RESET_PANEL_COLOR:
       return {
         ...state, panelColorRal: availableColors[0].RAL, panelColorHex: availableColors[0].hex
+      }
+    case types.RESET_PANEL_CUT:
+      return {
+        ...state, panelCut: 0,
       }
     case types.CHANGE_PANEL_TEXT:
       return {

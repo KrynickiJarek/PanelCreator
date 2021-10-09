@@ -29,6 +29,7 @@ import IconHolder from './IconHolder/IconHolder';
 
 const PanelPreview = ({
   chosenColor,
+  chosenCut,
   chosenTab,
   chosenModel,
   frameHolders,
@@ -175,9 +176,14 @@ const PanelPreview = ({
   chosenModelStyle.backgroundColor = chosenColor.hex;
   chosenModelStyle.height = `${chosenModel.height * sc}px`;
   chosenModelStyle.width = `${chosenModel.width * sc}px`;
-  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out";
+  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out, border 400ms ease";
+  chosenModelStyle.boxSizing = "content-box"
+  chosenModelStyle.border = `0 solid ${chosenColor.hex}`;
   if (chosenModel.panelRotation) {
     chosenModelStyle.transform = "rotate(-90deg)"
+  }
+  if (chosenCut === 5) { //--Nataleczka
+    chosenModelStyle.border = `${2.5 * sc}px solid ${chosenColor.hex}`;
   }
 
 
@@ -217,21 +223,36 @@ const PanelPreview = ({
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
   visualStyle.height = `${chosenModel.height * sc}px`;
-  if (chosenModel.panelRotation) {
+  visualStyle.top = "0";
+  visualStyle.left = "0";
+
+  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka
+    visualStyle.width = `${(chosenModel.width + 5) * sc}px`;
+    visualStyle.height = `${(chosenModel.height + 5) * sc}px`;
+    visualStyle.top = `${-2.5 * sc}px`;
+    visualStyle.left = `${-2.5 * sc}px`;
+  } else if (chosenCut !== 5 && chosenModel.panelRotation) {
     visualStyle.width = `${chosenModel.height * sc}px`;
     visualStyle.height = `${chosenModel.width * sc}px`;
     visualStyle.transform = "rotate(90deg)";
     visualStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
+  } else if (chosenCut === 5 && chosenModel.panelRotation) {
+    visualStyle.width = `${(chosenModel.height + 5) * sc}px`;
+    visualStyle.height = `${(chosenModel.width + 5) * sc}px`;
+    visualStyle.top = `${-2.5 * sc}px`;
+    visualStyle.left = `${2.5 * sc}px`;
+    visualStyle.transform = "rotate(90deg)";
+    visualStyle.transformOrigin = `${chosenModel.width * 0.5 * sc}px ${chosenModel.width * 0.5 * sc}px`;
   }
 
-  if (visual) {
-    universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))";
-    frameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
-    singleFrameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
-  } else if (chosenColor.iconColor === "white") {
-    universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10)";
+
+  let cutBorderStyle = {}//--NATALECZKA
+  if (chosenCut) {
+    cutBorderStyle.border = `${chosenCut * sc}px outset ${chosenColor.hex}`
+    cutBorderStyle.opacity = "0.4"
   } else {
-    universalIconStyle.filter = "grayscale(100%) brightness(0)";
+    cutBorderStyle.border = `2px outset ${chosenColor.hex}`
+    cutBorderStyle.opacity = "0.4"
   }
 
 
@@ -260,14 +281,24 @@ const PanelPreview = ({
   logoStyle.height = `${3.9 * sc}px`;
   logoStyle.width = `${15.9 * sc}px`;
   logoStyle.filter = "invert(79%) sepia(5%) saturate(8%) hue-rotate(322deg) brightness(84%) contrast(83%)";
-  logoStyle.bottom = `${5 * sc}px`;
-  logoStyle.right = `${5 * sc}px`;
 
-  if (chosenModel.panelRotation) {
+
+  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka xx
+    logoStyle.bottom = `${6.5 * sc}px`;
+    logoStyle.right = `${6.5 * sc}px`;
+  } else if (chosenCut === 5 && chosenModel.panelRotation) {
+    logoStyle.bottom = `${6.5 * sc}px`;
+    logoStyle.left = `${6.5 * sc}px`;
+    logoStyle.transform = "translate(-100%,0) rotate(90deg)  ";
+    logoStyle.transformOrigin = "bottom right";
+  } else if (chosenCut !== 5 && chosenModel.panelRotation) {
     logoStyle.bottom = `${5 * sc}px`;
     logoStyle.left = `${5 * sc}px`;
     logoStyle.transform = "translate(-100%,0) rotate(90deg)  ";
     logoStyle.transformOrigin = "bottom right";
+  } else {
+    logoStyle.bottom = `${5 * sc}px`;
+    logoStyle.right = `${5 * sc}px`;
   }
 
   const lcdStyle = {};
@@ -518,7 +549,7 @@ const PanelPreview = ({
                   {(lcdShow && visual && chosenColor.RAL === "SMOKED_GLASS") && <div style={{ ...lcdStyle, position: "absolute", backgroundColor: "black" }} />}
                   <div className="visualization_glass" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
                   <div className="visualization_glass_bis" style={visual ? { ...visualStyle, opacity: "1" } : { ...visualStyle, opacity: "0" }} />
-                  <div className="visualization_frame" style={visual ? { ...visualStyle, border: "2px outset #d4d4d4", opacity: "0.8", zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
+                  <div className="visualization_frame" style={visual ? { ...visualStyle, ...cutBorderStyle, zIndex: "9999" } : { ...visualStyle, opacity: "0" }} />
                   <img src={LogoPure} alt="logo" className="logo_pure" style={visual ? { ...logoStyle, opacity: "1" } : { ...logoStyle, opacity: "0" }} />
                 </>}
 
@@ -773,7 +804,8 @@ const PanelPreview = ({
 
 
 const mapStateToProps = state => ({
-  chosenColor: state.frontEndData.color,
+  chosenColor: state.frontEndData.color.color,
+  chosenCut: state.frontEndData.color.cut,
   chosenTab: state.frontEndData.tab,
   chosenModel: state.frontEndData.model.chosenModel,
   frameHolders: state.frontEndData.frame.frameHolders,

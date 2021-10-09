@@ -671,8 +671,16 @@ export const Dashboard = memo(function Dashboard({
 
                                   <div style={panel.frontEndData.model.chosenModel.height === 90 && panel.frontEndData.model.chosenModel.width === 90 ? { transform: "scale(0.55)", position: "absolute" } : { transform: "scale(0.4)", position: "absolute" }}>
                                     <div className="panel_box" style={panel.frontEndData.model.chosenModel.panelRotation ?
-                                      { backgroundColor: panel.frontEndData.color.hex, height: `${panel.frontEndData.model.chosenModel.height * sc}px`, width: `${panel.frontEndData.model.chosenModel.width * sc}px`, transform: "rotate(-90deg)" }
-                                      : { backgroundColor: panel.frontEndData.color.hex, height: `${panel.frontEndData.model.chosenModel.height * sc}px`, width: `${panel.frontEndData.model.chosenModel.width * sc}px` }}>
+                                      {
+                                        backgroundColor: panel.frontEndData.color.color.hex, height: `${panel.frontEndData.model.chosenModel.height * sc}px`,
+                                        width: `${panel.frontEndData.model.chosenModel.width * sc}px`, transform: "rotate(-90deg)", boxSizing: "content-box",
+                                        border: `${panel.frontEndData.color.cut === 5 && 2.5 * sc}px solid ${panel.frontEndData.color.color.hex}`
+                                      }
+                                      : {
+                                        backgroundColor: panel.frontEndData.color.color.hex, height: `${panel.frontEndData.model.chosenModel.height * sc}px`,
+                                        width: `${panel.frontEndData.model.chosenModel.width * sc}px`, boxSizing: "content-box",
+                                        border: `${panel.frontEndData.color.cut === 5 && 2.5 * sc}px solid ${panel.frontEndData.color.color.hex}`
+                                      }}>
 
 
                                       {panel.frontEndData.frame.frameHolders.map((frame, i) =>
@@ -698,7 +706,7 @@ export const Dashboard = memo(function Dashboard({
                                                   {el !== 0 &&
                                                     <div style={frame.framePrint.shape === "sharp" ? {
                                                       position: "absolute",
-                                                      borderColor: panel.frontEndData.color.iconColor, borderRadius: "0",
+                                                      borderColor: panel.frontEndData.color.color.iconColor, borderRadius: "0",
                                                       height: `${el.fh * sc}px`,
                                                       width: `${el.fw * sc}px`,
                                                       marginBottom: `${el.mb * sc}px`,
@@ -708,7 +716,7 @@ export const Dashboard = memo(function Dashboard({
                                                     }
                                                       : {
                                                         position: "absolute",
-                                                        borderColor: panel.frontEndData.color.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
+                                                        borderColor: panel.frontEndData.color.color.iconColor, borderRadius: `${el.rtl * sc}px ${el.rtr * sc}px ${el.rbr * sc}px ${el.rbl * sc}px`,
                                                         height: `${el.fh * sc}px`,
                                                         width: `${el.fw * sc}px`,
                                                         marginBottom: `${el.mb * sc}px`,
@@ -742,7 +750,7 @@ export const Dashboard = memo(function Dashboard({
                                                       maxLength="16"
                                                       style={
                                                         {
-                                                          color: panel.frontEndData.color.iconColor,
+                                                          color: panel.frontEndData.color.color.iconColor,
                                                           borderRadius: `${0.9 * sc}px`,
                                                           fontSize: `${2.5 * sc}px`,
                                                           lineHeight: `${2.5 * sc}px`,
@@ -750,7 +758,7 @@ export const Dashboard = memo(function Dashboard({
                                                           gridArea: "1 / 1 / 2 / 2",
                                                           width: "100%",
                                                           fontFamily: frame.framePrint.frameFont,
-                                                          backgroundColor: panel.frontEndData.color.hex,
+                                                          backgroundColor: panel.frontEndData.color.color.hex,
                                                           border: "none",
                                                         }
                                                       }
@@ -809,7 +817,7 @@ export const Dashboard = memo(function Dashboard({
                                                         marginLeft: `${-3.75 * sc}px`,
                                                         border: "2px solid transparent",
                                                         position: "absolute",
-                                                        borderColor: panel.frontEndData.color.iconColor,
+                                                        borderColor: panel.frontEndData.color.color.iconColor,
                                                         borderRadius: "0",
                                                       }
                                                       : {
@@ -820,7 +828,7 @@ export const Dashboard = memo(function Dashboard({
                                                         marginLeft: `${-3.75 * sc}px`,
                                                         border: "2px solid transparent",
                                                         position: "absolute",
-                                                        borderColor: panel.frontEndData.color.iconColor,
+                                                        borderColor: panel.frontEndData.color.color.iconColor,
                                                         borderRadius: `${sc}px`
                                                       }}
                                                     />
@@ -911,7 +919,7 @@ export const Dashboard = memo(function Dashboard({
                                                           maxLength="16"
                                                           style={{
                                                             backgroundColor: "transparent",
-                                                            color: panel.frontEndData.color.iconColor,
+                                                            color: panel.frontEndData.color.color.iconColor,
                                                             border: "2px solid transparent",
                                                             borderRadius: `${0.9 * sc}px`,
                                                             fontSize: `${2.5 * sc}px`,
@@ -949,7 +957,7 @@ export const Dashboard = memo(function Dashboard({
                                                           maxLength="16"
                                                           style={{
                                                             backgroundColor: "transparent",
-                                                            color: panel.frontEndData.color.iconColor,
+                                                            color: panel.frontEndData.color.color.iconColor,
                                                             border: "2px solid transparent",
                                                             borderRadius: `${0.9 * sc}px`,
                                                             fontSize: `${2.5 * sc}px`,
@@ -977,7 +985,7 @@ export const Dashboard = memo(function Dashboard({
                                                   lastDroppedIcon={lastDroppedIcon}
                                                   lastDroppedSlashUp={lastDroppedSlashUp}
                                                   lastDroppedSlashDown={lastDroppedSlashDown}
-                                                  chosenColor={panel.frontEndData.color}
+                                                  chosenColor={panel.frontEndData.color.color}
                                                   rotationDot={rotationDot}
                                                   rotationIcon={rotationIcon}
                                                   rotationDown={rotationDown}
@@ -1002,24 +1010,42 @@ export const Dashboard = memo(function Dashboard({
                                             width: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth * sc}px`,
                                             top: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdTop * sc}px`,
                                             left: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdLeft * sc}px`,
-                                            borderColor: panel.frontEndData.color.iconColor
+                                            borderColor: panel.frontEndData.color.color.iconColor
                                           } :
-                                          { borderColor: panel.frontEndData.color.iconColor }} />}
+                                          { borderColor: panel.frontEndData.color.color.iconColor }} />}
 
                                         {panel.frontEndData.model.chosenModel.lcdScreen.lcdType === "slide" &&
                                           <div className="universal_icons" style={{ height: `${60 * sc}px`, width: `${70.4 * sc}px` }}>
                                             < img src={Minusuni} alt="minusuni" className="universal_icon"
-                                              style={{ height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${6.65 * sc}px`, left: `${7.45 * sc}px` }} />
+                                              style={panel.frontEndData.color.color.iconColor === "white" ?
+                                                { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${6.65 * sc}px`, left: `${7.45 * sc}px`, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                                : { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${6.65 * sc}px`, left: `${7.45 * sc}px` }
+                                              } />
                                             < img src={Minusuni} alt="minusuni" className="universal_icon"
-                                              style={{ height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${6.65 * sc}px`, left: `${55.45 * sc}px` }} />
+                                              style={panel.frontEndData.color.color.iconColor === "white" ?
+                                                { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${6.65 * sc}px`, left: `${55.45 * sc}px`, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                                : { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${6.65 * sc}px`, left: `${55.45 * sc}px` }
+                                              } />
                                             < img src={Leftuni} alt="leftuni" className="universal_icon"
-                                              style={{ height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${26.65 * sc}px`, left: `${7.45 * sc}px` }} />
+                                              style={panel.frontEndData.color.color.iconColor === "white" ?
+                                                { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${26.65 * sc}px`, left: `${7.45 * sc}px`, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                                : { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${26.65 * sc}px`, left: `${7.45 * sc}px` }
+                                              } />
                                             < img src={Rightuni} alt="rightuni" className="universal_icon"
-                                              style={{ height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${26.65 * sc}px`, left: `${55.45 * sc}px` }} />
+                                              style={panel.frontEndData.color.color.iconColor === "white" ?
+                                                { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${26.65 * sc}px`, left: `${55.45 * sc}px`, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                                : { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${26.65 * sc}px`, left: `${55.45 * sc}px` }
+                                              } />
                                             < img src={Minusuni} alt="minusuni" className="universal_icon"
-                                              style={{ height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${46.65 * sc}px`, left: `${7.45 * sc}px` }} />
+                                              style={panel.frontEndData.color.color.iconColor === "white" ?
+                                                { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${46.65 * sc}px`, left: `${7.45 * sc}px`, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                                : { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${46.65 * sc}px`, left: `${7.45 * sc}px` }
+                                              } />
                                             < img src={Minusuni} alt="minusuni" className="universal_icon"
-                                              style={{ height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${46.65 * sc}px`, left: `${55.45 * sc}px` }} />
+                                              style={panel.frontEndData.color.color.iconColor === "white" ?
+                                                { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${46.65 * sc}px`, left: `${55.45 * sc}px`, filter: "grayscale(100%) invert(1) brightness(10)" }
+                                                : { height: `${7.5 * sc}px`, width: `${7.5 * sc}px`, top: `${46.65 * sc}px`, left: `${55.45 * sc}px` }
+                                              } />
                                           </div>
                                         }
                                       </div>
@@ -1034,7 +1060,7 @@ export const Dashboard = memo(function Dashboard({
                               <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1", width: "250px", cursor: "default" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "250px", cursor: "default" }}>
                                 <ol className="dashboard_info_list" >
                                   <li>{t("MODEL")}: <span>{t(panel.frontEndData.model.chosenModel.type)}</span></li>
-                                  <li>{t("COLOR")}: <span>{t(panel.frontEndData.color.name)}</span></li>
+                                  <li>{t("COLOR")}: <span>{t(panel.frontEndData.color.color.name)}</span></li>
                                   <li>{t("CREATION_DATE")} : <span>{panel.frontEndData.visual.timeOfCreation}</span></li>
                                 </ol>
 

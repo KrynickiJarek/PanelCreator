@@ -3,7 +3,7 @@ import availableColors from "../availableColors"
 
 const INITIAL_STATE = {
   color: availableColors[0],
-  rounding: 0,
+  cut: 0,
 }
 
 const colorReducer = (state = INITIAL_STATE, action) => {
@@ -13,14 +13,19 @@ const colorReducer = (state = INITIAL_STATE, action) => {
         ...state, color: action.item
       }
 
-    case types.CHANGE_ROUNDING:
+    case types.CHANGE_CUT:
       return {
-        ...state, rounding: action.item
+        ...state, cut: action.item
       }
 
     case types.RESET_COLOR:
       return {
-        ...state, color: availableColors[0], rounding: 0
+        ...state, color: availableColors[0],
+      }
+
+    case types.RESET_CUT:
+      return {
+        ...state, cut: 0,
       }
 
     case types.SET_FRONT_END_REDUCER_COLOR:
