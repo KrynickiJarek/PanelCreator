@@ -20,18 +20,19 @@
         flex-wrap: nowrap;
         justify-content: space-between;
         align-items: center;
-        margin: 30px 50px;
+        margin: 25px 50px;
 
         .nav-link {
             outline: none !important;
             padding: 0;
-            margin: 0 20px;
-
+            // margin: 0 20px;
+            margin: 0 5px;
          }
 
         .editor_button{
-            height: 90px; 
-            width: 70px; 
+            // height: 90px; 
+            min-height: 110px; 
+            width: 105px; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -54,8 +55,14 @@
                 top:0;
                 z-index: 2;
             }
+            .button_text_box{
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: fit-content;
 
-            .button_text{
+              .button_text{
+                height: 32px;
                 font-size: 16px;
                 line-height: 16px;
                 font-weight: 500;
@@ -65,9 +72,12 @@
                 bottom: 0;
                 margin-bottom: 0;
                 z-index: 2;
-                white-space: nowrap;
-                
+                // white-space: nowrap;
             }
+
+            }
+
+
         }
     }
 

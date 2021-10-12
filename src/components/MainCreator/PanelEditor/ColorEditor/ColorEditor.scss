@@ -66,7 +66,7 @@
         
         .color_link{
             width: 130px;
-            height: 170px;
+            min-height: 170px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -76,6 +76,7 @@
             transition: 300ms ease;
             cursor: pointer;
             border-radius: 15px;
+            padding-bottom: 5px;
 
             .color_box{
                 width: 75px;

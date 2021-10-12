@@ -1074,8 +1074,13 @@ const PanelPreview = ({
 
   let cutBorderStyle = {}//--NATALECZKA x
   if (chosenCut) {
-    cutBorderStyle.border = `${chosenCut * sc}px outset ${chosenColor.hex}`
-    cutBorderStyle.opacity = "0.4"
+    if (chosenColor.hex === "#060707") {
+      cutBorderStyle.border = `${chosenCut * sc}px outset rgb(44,44,44)`
+      cutBorderStyle.opacity = "0.6"
+    } else {
+      cutBorderStyle.border = `${chosenCut * sc}px outset ${chosenColor.hex}`
+      cutBorderStyle.opacity = "0.5"
+    }
   } else {
     cutBorderStyle.border = `2px outset ${chosenColor.hex}`
     cutBorderStyle.opacity = "0.4"

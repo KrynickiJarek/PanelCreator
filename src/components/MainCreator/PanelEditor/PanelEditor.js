@@ -103,7 +103,9 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
             <div className="editor_button" onMouseOver={() => { setModelHover(true) }} onMouseLeave={() => { setModelHover(false) }} onClick={handleClickModel}>
               <img src={Model} alt="model" className="button_icon" />
               {(modelHover || tab === "model") && <img src={ModelFill} alt="model" className="button_icon_hover" />}
-              <p className="button_text" style={tab === "model" ? { fontWeight: "700" } : {}}>{t("MODELS")}</p>
+              <div className="button_text_box">
+                <p className="button_text" style={tab === "model" ? { fontWeight: "700" } : {}}>{t("MODELS")}</p>
+              </div>
             </div>
           </Nav.Link>
 
@@ -111,7 +113,9 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
             <div className="editor_button" onMouseOver={() => { setColorHover(true) }} onMouseLeave={() => { setColorHover(false) }} onClick={handleClickColor}>
               <img src={Color} alt="color" className="button_icon" />
               {(colorHover || tab === "color") && <img src={ColorFill} alt="color" className="button_icon_hover" />}
-              <p className="button_text" style={tab === "color" ? { fontWeight: "700" } : {}}>{t("COLORS")}</p>
+              <div className="button_text_box">
+                <p className="button_text" style={tab === "color" ? { fontWeight: "700" } : {}}>{t("COLORS")}</p>
+              </div>
             </div>
           </Nav.Link>
 
@@ -119,7 +123,9 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
             <div className="editor_button" onMouseOver={() => { setIconsHover(true) }} onMouseLeave={() => { setIconsHover(false) }} onClick={handleClickIcons}>
               <img src={Icons} alt="icons" className="button_icon" />
               {(iconsHover || tab === "icons") && <img src={IconsFill} alt="icons" className="button_icon_hover" />}
-              <p className="button_text" style={tab === "icons" ? { fontWeight: "700" } : {}}>{t("ICONS")}</p>
+              <div className="button_text_box">
+                <p className="button_text" style={tab === "icons" ? { fontWeight: "700" } : {}}>{t("ICONS")}</p>
+              </div>
             </div>
           </Nav.Link>
 
@@ -127,7 +133,9 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
             <div className="editor_button" onMouseOver={() => { setTextHover(true) }} onMouseLeave={() => { setTextHover(false) }} onClick={handleClickText}>
               <img src={Text} alt="text" className="button_icon" />
               {(textHover || tab === "text") && <img src={TextFill} alt="text" className="button_icon_hover" />}
-              <p className="button_text" style={tab === "text" ? { fontWeight: "700" } : {}}>{t("TITLES")}</p>
+              <div className="button_text_box">
+                <p className="button_text" style={tab === "text" ? { fontWeight: "700" } : {}}>{t("TITLES")}</p>
+              </div>
             </div>
           </Nav.Link>
 
@@ -135,7 +143,9 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
             <div className="editor_button" onMouseOver={() => { setFrameHover(true) }} onMouseLeave={() => { setFrameHover(false) }} onClick={handleClickFrame}>
               <img src={Frame} alt="frame" className="button_icon" />
               {(frameHover || tab === "frame") && <img src={FrameFill} alt="frame" className="button_icon_hover" />}
-              <p className="button_text" style={tab === "frame" ? { fontWeight: "700" } : {}}>{t("FRAMES")}</p>
+              <div className="button_text_box">
+                <p className="button_text" style={tab === "frame" ? { fontWeight: "700" } : {}}>{t("FRAMES")}</p>
+              </div>
             </div>
           </Nav.Link>
         </div>
