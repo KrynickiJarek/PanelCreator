@@ -67,7 +67,63 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chos
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Calibri</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Helvetica_bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica_bold" }
+          <div className="font_link" style={chosenTextFont === "Montserrat-bold" ? { border: "3px solid #EC695C", fontFamily: "Montserrat-bold" }
+            : { fontFamily: "Montserrat-bold" }}
+            onClick={() => { changeTextFont("Montserrat-bold") }} >
+            {chosenTextFont === "Montserrat-bold" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Montserrat bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Montserrat-bold</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Montserrat" ? { border: "3px solid #EC695C", fontFamily: "Montserrat" }
+            : { fontFamily: "Montserrat" }}
+            onClick={() => { changeTextFont("Montserrat") }} >
+            {chosenTextFont === "Montserrat" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Montserrat</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Montserrat</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Poppins-bold" ? { border: "3px solid #EC695C", fontFamily: "Poppins-bold" }
+            : { fontFamily: "Poppins-bold" }}
+            onClick={() => { changeTextFont("Poppins-bold") }} >
+            {chosenTextFont === "Poppins-bold" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Poppins bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Poppins-bold</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Poppins" ? { border: "3px solid #EC695C", fontFamily: "Poppins" }
+            : { fontFamily: "Poppins" }}
+            onClick={() => { changeTextFont("Poppins") }} >
+            {chosenTextFont === "Poppins" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Poppins</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Poppins</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Roboto-bold" ? { border: "3px solid #EC695C", fontFamily: "Roboto-bold" }
+            : { fontFamily: "Roboto-bold" }}
+            onClick={() => { changeTextFont("Roboto-bold") }} >
+            {chosenTextFont === "Roboto-bold" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Roboto bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Roboto-bold</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Roboto" ? { border: "3px solid #EC695C", fontFamily: "Roboto" }
+            : { fontFamily: "Roboto" }}
+            onClick={() => { changeTextFont("Roboto") }} >
+            {chosenTextFont === "Roboto" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Roboto</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Roboto</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Rubik" ? { border: "3px solid #EC695C", fontFamily: "Rubik" }
+            : { fontFamily: "Rubik" }}
+            onClick={() => { changeTextFont("Rubik") }} >
+            {chosenTextFont === "Rubik" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "24px" }}>Rubik</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Rubik</p>
+          </div>
+
+          {/* <div className="font_link" style={chosenTextFont === "Helvetica_bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica_bold" }
             : { fontFamily: "Helvetica_bold" }}
             onClick={() => { changeTextFont("Helvetica_bold") }} >
             {chosenTextFont === "Helvetica_bold" && <div className="font_chosen" />}
@@ -81,7 +137,7 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chos
             {chosenTextFont === "Helvetica" && <div className="font_chosen" />}
             < p className="font_name" style={{ fontSize: "24px" }}>Helvetica</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Helvetica</p>
-          </div>
+          </div> */}
 
           <div className="font_link" style={chosenTextFont === "Arial" ? { border: "3px solid #EC695C", fontFamily: "Arial" }
             : { fontFamily: "Arial" }}
@@ -89,6 +145,7 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chos
             {chosenTextFont === "Arial" && <div className="font_chosen" />}
             < p className="font_name" style={{ fontSize: "24px" }}>Arial</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Arial</p>
+
           </div>
         </div>
       </div>

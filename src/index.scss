@@ -16,18 +16,67 @@
  } 
 
  @font-face { 
-  font-family: "Helvetica"; 
-  src: local("Helvetica"),
-  url("fonts/Helvetica.woff2") format("woff2"),
-  url("fonts/Helvetica.woff") format("woff");
+  font-family: "Montserrat"; 
+  src: local("Montserrat"),
+  url("fonts/Montserrat.woff2") format("woff2"),
+  url("fonts/Montserrat.woff") format("woff");
  } 
 
  @font-face { 
-  font-family: "Helvetica_bold" ; 
-  src: local("Helvetica_bold"),
-  url("fonts/Helvetica-bold.woff2") format("woff2"),
-  url("fonts/Helvetica-bold.woff") format("woff");
+  font-family: "Montserrat-bold"; 
+  src: local("Montserrat-bold"),
+  url("fonts/Montserrat-bold.woff2") format("woff2"),
+  url("fonts/Montserrat-bold.woff") format("woff");
  } 
+
+ @font-face { 
+  font-family: "Poppins"; 
+  src: local("Poppins"),
+  url("fonts/Poppins.woff2") format("woff2"),
+  url("fonts/Poppins.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Poppins-bold"; 
+  src: local("Poppins-bold"),
+  url("fonts/Poppins-bold.woff2") format("woff2"),
+  url("fonts/Poppins-bold.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Roboto"; 
+  src: local("Roboto"),
+  url("fonts/Roboto.woff2") format("woff2"),
+  url("fonts/Roboto.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Roboto-bold"; 
+  src: local("Roboto-bold"),
+  url("fonts/Roboto-bold.woff2") format("woff2"),
+  url("fonts/Roboto-bold.woff") format("woff");
+ } 
+
+ @font-face { 
+  font-family: "Rubik"; 
+  src: local("Rubik"),
+  url("fonts/Rubik.woff2") format("woff2"),
+  url("fonts/Rubik.woff") format("woff");
+ } 
+
+//  @font-face { 
+//   font-family: "Helvetica"; 
+//   src: local("Helvetica"),
+//   url("fonts/Helvetica.woff2") format("woff2"),
+//   url("fonts/Helvetica.woff") format("woff");
+//  } 
+
+//  @font-face { 
+//   font-family: "Helvetica_bold" ; 
+//   src: local("Helvetica_bold"),
+//   url("fonts/Helvetica-bold.woff2") format("woff2"),
+//   url("fonts/Helvetica-bold.woff") format("woff");
+//  } 
 
 
  @font-face { 
