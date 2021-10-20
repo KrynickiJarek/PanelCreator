@@ -111,6 +111,7 @@ const PanelPreview = ({
   changeFrameText,
   frameText,
   changeFrameFont,
+  // changeFrameWeight,
   changeFrameShape,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
@@ -118,6 +119,7 @@ const PanelPreview = ({
   textFrameRender,
   overFrameAll,
   chosenTextFont,
+  chosenTextWeight,
   toggleVisual,
   visual,
   changeScale,
@@ -149,6 +151,7 @@ const PanelPreview = ({
   toggleTextUp,
   textUpOff,
   changeTextFont,
+  changeTextWeight,
 
   backEndData,
   frontEndData,
@@ -284,7 +287,9 @@ const PanelPreview = ({
         toggleTextUp()
       }
       changeTextFont("Calibri-bold")
+      changeTextWeight("700")
       changeFrameFont("Calibri-bold")
+      // changeFrameWeight("700")
       changeFrameShape("sharp")
 
 
@@ -294,7 +299,7 @@ const PanelPreview = ({
           arrIconHolders.push({
             flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
-            textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrameTemp: false, singleFrame: false
+            textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false
           })
         });
         chosenModel.dotLocation.forEach(element => {
@@ -329,7 +334,7 @@ const PanelPreview = ({
         changeFramesBackEnd([])
         updateWarnings([])
 
-        if (chosenColor.RAL === "SMOKED_GLASS" && chosenModel.type !== "MDOT_M18" && chosenModel.type !== "MDOT_M18_UNIVERSAL") { //Nataleczka x 
+        if (chosenColor.RAL === "SMOKED_GLASS" && chosenModel.type !== "MDOT_M18" && chosenModel.type !== "MDOT_M18_UNIVERSAL") {
           resetColor()
         }
 
@@ -601,22 +606,54 @@ const PanelPreview = ({
 
 
 
-  useEffect(() => {
+  useEffect(() => { //nataleczka
     const copyArr = iconHolders;
     if (isFocusedInputSide === "up") {
       copyArr[isFocusedInputIndex].fontUp = chosenTextFont
+      copyArr[isFocusedInputIndex].fontUpWeight = chosenTextWeight
     } else if (isFocusedInputSide === "down") {
       copyArr[isFocusedInputIndex].fontDown = chosenTextFont
+      copyArr[isFocusedInputIndex].fontDownWeight = chosenTextWeight
     }
     changeIconHolders(copyArr)
-    const checkArr = []
-    copyArr.forEach((el) => {
-      if (el.fontDown && el.textDown && !checkArr.includes(el.fontDown)) {
-        checkArr.push(el.fontDown)
+    // const checkArr = []
+    // copyArr.forEach((el) => {
+    //   if (el.fontDown && el.textDown && !checkArr.includes(el.fontDown)) {
+    //     checkArr.push(el.fontDown)
 
+    //   }
+    //   if (el.fontUp && el.textUp && !checkArr.includes(el.fontUp)) {
+    //     checkArr.push(el.fontUp)
+    //   }
+    // })
+
+    // if (checkArr.length > 1) {
+    //   filterWarnings(3)
+    //   pushWarnings(3)
+    // } else {
+    //   filterWarnings(3)
+    // }
+
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const copyPanelTextBackEnd = panelTextBackEnd
+    copyPanelTextBackEnd.forEach(element => {
+      if (element.number === isFocusedInputIndex + 1) {
+        if (element.type === 0 && isFocusedInputSide === "down") {
+          // element.font = chosenTextFont
+          // element.fontWeight = chosenTextWeight
+          element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+        } else if (element.type === 1 && isFocusedInputSide === "up") {
+          // element.font = chosenTextFont
+          // element.fontWeight = chosenTextWeight
+          element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+        }
       }
-      if (el.fontUp && el.textUp && !checkArr.includes(el.fontUp)) {
-        checkArr.push(el.fontUp)
+    })
+    changePanelTextBackEnd(copyPanelTextBackEnd)
+    const checkArr = []
+    copyPanelTextBackEnd.forEach((el) => {
+      if (el.font && !checkArr.includes(el.font)) {
+        checkArr.push(el.font)
       }
     })
     if (checkArr.length > 1) {
@@ -625,23 +662,9 @@ const PanelPreview = ({
     } else {
       filterWarnings(3)
     }
-
-    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    const copyPanelTextBackEnd = panelTextBackEnd
-    copyPanelTextBackEnd.forEach(element => {
-      if (element.number === isFocusedInputIndex + 1) {
-        if (element.type === 0 && isFocusedInputSide === "down") {
-          element.font = chosenTextFont
-        } else if (element.type === 1 && isFocusedInputSide === "up") {
-          element.font = chosenTextFont
-        }
-      }
-    })
-    changePanelTextBackEnd(copyPanelTextBackEnd)
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
-  }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, rerenderTextWarning]);
-
+  }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, chosenTextWeight, rerenderTextWarning]);
 
   useEffect(() => {
     if (addNewFrameState) {
@@ -1000,14 +1023,14 @@ const PanelPreview = ({
   chosenModelStyle.backgroundColor = chosenColor.hex;
   chosenModelStyle.height = `${chosenModel.height * sc}px`;
   chosenModelStyle.width = `${chosenModel.width * sc}px`;
-  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out, border 400ms ease"; //--NATALECZKA xx
+  chosenModelStyle.transition = "background-color 400ms ease,height 400ms ease, width 400ms ease, transform 800ms ease-in-out, border 400ms ease";
   chosenModelStyle.boxSizing = "content-box"
   chosenModelStyle.border = `0 solid ${chosenColor.hex}`;
   if (chosenModel.panelRotation) {
     chosenModelStyle.transform = "rotate(-90deg)"
   }
 
-  if (chosenCut === 5) { //--Nataleczka xx
+  if (chosenCut === 5) {
     chosenModelStyle.border = `${2.5 * sc}px solid ${chosenColor.hex}`;
   }
 
@@ -1052,7 +1075,7 @@ const PanelPreview = ({
   visualStyle.left = "0";
 
 
-  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka x
+  if (chosenCut === 5 && !chosenModel.panelRotation) {
     visualStyle.width = `${(chosenModel.width + 5) * sc}px`;
     visualStyle.height = `${(chosenModel.height + 5) * sc}px`;
     visualStyle.top = `${-2.5 * sc}px`;
@@ -1072,7 +1095,7 @@ const PanelPreview = ({
   }
 
 
-  let cutBorderStyle = {}//--NATALECZKA x
+  let cutBorderStyle = {}
   if (chosenCut) {
     if (chosenColor.hex === "#060707") {
       cutBorderStyle.border = `${chosenCut * sc}px outset rgb(44,44,44)`
@@ -1129,7 +1152,7 @@ const PanelPreview = ({
   logoStyle.filter = "invert(79%) sepia(5%) saturate(8%) hue-rotate(322deg) brightness(84%) contrast(83%)";
 
 
-  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka xx
+  if (chosenCut === 5 && !chosenModel.panelRotation) {
     logoStyle.bottom = `${6.5 * sc}px`;
     logoStyle.right = `${6.5 * sc}px`;
   } else if (chosenCut === 5 && chosenModel.panelRotation) {
@@ -1291,7 +1314,7 @@ const PanelPreview = ({
         tempArr.push({
           flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
-          textUp: "", fontUp: null, textDown: "", fontDown: null, singleFrameTemp: false, singleFrame: false
+          textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false
         })
       });
       changeIconHolders(tempArr);
@@ -1738,6 +1761,7 @@ const PanelPreview = ({
     copyArr.forEach((el) => {
       el.textUp = "";
       el.fontUp = null;
+      el.fontUpWeight = null;
     })
     changeIconHolders(copyArr)
 
@@ -1754,8 +1778,10 @@ const PanelPreview = ({
     copyArr.forEach((el) => {
       el.textUp = "";
       el.fontUp = null;
+      el.fontUpWeight = null;
       el.textDown = "";
       el.fontDown = null;
+      el.fontDownWeight = null;
     })
     changeIconHolders(copyArr)
     changePanelTextBackEnd([])
@@ -1790,7 +1816,10 @@ const PanelPreview = ({
       number: numberBackEnd,
       type: 1,
       title: text.target.value.toUpperCase(),
-      font: chosenTextFont
+      // font: chosenTextFont,
+      // fontWeight: chosenTextWeight
+      font: chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+
     }
     if (recordTextIndex > -1) {
       if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
@@ -1871,7 +1900,8 @@ const PanelPreview = ({
       number: numberBackEnd,
       type: 0,
       title: text.target.value.toUpperCase(),
-      font: chosenTextFont
+      font: chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+      // fontWeight: chosenTextWeight
     }
     if (recordTextIndex > -1) {
       if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
@@ -1923,12 +1953,15 @@ const PanelPreview = ({
   const handleChangeFontDown = (index) => {
     const copyArr = iconHolders;
     copyArr[index].fontDown = chosenTextFont
+    copyArr[index].fontDownWeight = chosenTextWeight
     changeIconHolders(copyArr)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if ((element.number === index + 1) && element.type === 0) {
-        element.font = chosenTextFont
+        // element.font = chosenTextFont
+        // element.fontWeight = chosenTextWeight
+        element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
       }
     })
     changePanelTextBackEnd(copyPanelTextBackEnd)
@@ -1939,13 +1972,16 @@ const PanelPreview = ({
   const handleChangeFontUp = (index) => {
     const copyArr = iconHolders;
     copyArr[index].fontUp = chosenTextFont
+    copyArr[index].fontUpWeight = chosenTextWeight
     changeIconHolders(copyArr)
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if ((element.number === index + 1) && element.type === 1) {
-        element.font = chosenTextFont
+        // element.font = chosenTextFont
+        element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+        // element.fontWeight = chosenTextWeight
       }
     })
     changePanelTextBackEnd(copyPanelTextBackEnd)
@@ -1959,7 +1995,9 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     copyArr.forEach((el) => {
       el.fontUp = chosenTextFont;
+      el.fontUpWeight = chosenTextWeight;
       el.fontDown = chosenTextFont;
+      el.fontDownWeight = chosenTextWeight;
     })
     changeIconHolders(copyArr)
     filterWarnings(3)
@@ -1967,7 +2005,9 @@ const PanelPreview = ({
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
-      element.font = chosenTextFont
+      // element.font = chosenTextFont
+      // element.fontWeight = chosenTextWeight
+      element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
     })
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
@@ -2033,12 +2073,14 @@ const PanelPreview = ({
     if (side === "up") {
       copyArr[index].textUp = "";
       copyArr[index].fontUp = null;
+      copyArr[index].fontUpWeight = null;
       if (copyPanelTextBackEnd[recordTextIndex] && copyPanelTextBackEnd[recordTextIndex].type === 1) {
         copyPanelTextBackEnd.splice(recordTextIndex, 1)
       }
     } else if (side === "down") {
       copyArr[index].textDown = "";
       copyArr[index].fontDown = null;
+      copyArr[index].fontDownWeight = null;
       if (copyPanelTextBackEnd[recordTextIndex] && copyPanelTextBackEnd[recordTextIndex].type === 0) {
         copyPanelTextBackEnd.splice(recordTextIndex, 1)
       }
@@ -4715,8 +4757,10 @@ const PanelPreview = ({
                         flag,
                         textUp,
                         fontUp,
+                        fontUpWeight,
                         textDown,
                         fontDown,
+                        fontDownWeight,
                         lastDroppedDot,
                         lastDroppedIcon,
                         lastDroppedSlashUp,
@@ -4754,9 +4798,9 @@ const PanelPreview = ({
                                   {textUpOff &&
                                     <form onSubmit={handleSubmit}>
                                       <div style={!chosenModel.panelRotation ?
-                                        { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }
+                                        { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
                                         :
-                                        { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
+                                        { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
                                         <input className="text_input"
                                           type="text"
                                           autoComplete="off"
@@ -4767,12 +4811,14 @@ const PanelPreview = ({
                                                 ...textStyle,
                                                 ...textUpStyle,
                                                 fontFamily: fontUp,
+                                                fontWeight: fontUpWeight,
                                                 border: "2px solid rgb(40, 167, 69)"
                                               } :
                                                 {
                                                   ...textStyle,
                                                   ...textUpStyle,
                                                   fontFamily: fontUp,
+                                                  fontWeight: fontUpWeight,
                                                   border: "2px solid rgb(32, 114, 30)",
                                                 }
                                             )
@@ -4780,6 +4826,7 @@ const PanelPreview = ({
                                               ...textStyle,
                                               ...textUpStyle,
                                               fontFamily: fontUp,
+                                              fontWeight: fontUpWeight,
                                             }}
                                           disabled={chosenTab !== "text" && true}
                                           onMouseOver={showBorder}
@@ -4831,7 +4878,7 @@ const PanelPreview = ({
                                     </form>
                                   }
                                   <form onSubmit={handleSubmit}>
-                                    <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
+                                    <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown, fontWeight: fontDownWeight }}>
                                       <input className="text_input"
                                         type="text"
                                         autoComplete="off"
@@ -4841,17 +4888,20 @@ const PanelPreview = ({
                                             (chosenColor.hex !== "#30a32c") ? {
                                               ...textStyle,
                                               fontFamily: fontDown,
+                                              fontWeight: fontDownWeight,
                                               border: "2px solid rgb(40, 167, 69)"
                                             } :
                                               {
                                                 ...textStyle,
                                                 fontFamily: fontDown,
+                                                fontWeight: fontDownWeight,
                                                 border: "2px solid rgb(32, 114, 30)"
                                               }
                                           )
                                           : {
                                             ...textStyle,
-                                            fontFamily: fontDown
+                                            fontFamily: fontDown,
+                                            fontWeight: fontDownWeight
                                           }}
                                         disabled={chosenTab !== "text" && true}
                                         onMouseOver={showBorder}
@@ -5390,6 +5440,7 @@ const mapStateToProps = state => ({
   fullScreen: state.frontEndData.visual.fullScreen,
   panelName: state.frontEndData.visual.panelName,
   chosenTextFont: state.frontEndData.text.chosenTextFont,
+  chosenTextWeight: state.frontEndData.text.chosenTextWeight,
   textRender: state.frontEndData.text.textRender,
   textUpOff: state.frontEndData.text.textUpOff,
   iconHolders: state.frontEndData.icon.iconHolders,
@@ -5423,6 +5474,7 @@ const mapDispatchToProps = dispatch => ({
   overFrameReRender: (income) => dispatch(actionsFrame.overFrameReRender(income)),
   frameTitle: (income) => dispatch(actionsFrame.frameTitle(income)),
   changeFrameFont: (income) => dispatch(actionsFrame.changeFrameFont(income)),
+  // changeFrameWeight: (income) => dispatch(actionsFrame.changeFrameWeight(income)),
   allowFrameTitle: (income) => dispatch(actionsFrame.allowFrameTitle(income)),
   removeFrame: (income) => dispatch(actionsFrame.removeFrame(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
@@ -5443,6 +5495,7 @@ const mapDispatchToProps = dispatch => ({
 
   toggleTextUp: (income) => dispatch(actionsText.toggleTextUp(income)),
   changeTextFont: (income) => dispatch(actionsText.changeTextFont(income)),
+  changeTextWeight: (income) => dispatch(actionsText.changeTextWeight(income)),
 
 
   resetColor: (income) => dispatch(actionsColor.resetColor(income)),

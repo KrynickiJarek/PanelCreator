@@ -3,6 +3,7 @@ import types from "./types"
 
 const INITIAL_STATE = {
   chosenFrameFont: "Calibri-bold",
+  chosenFrameFontWeight: "700",
   chosenFrameShape: "sharp",
   addNewFrame: false,
   removeFrame: false,
@@ -21,6 +22,10 @@ const frameReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state, chosenFrameFont: action.item, overFrameRender: !state.overFrameRender
       }
+    case types.CHANGE_FRAME_FONT_WEIGHT:
+      return {
+        ...state, chosenFrameFontWeight: action.item, overFrameRender: !state.overFrameRender
+      }
     case types.CHANGE_FRAME_SHAPE:
       return {
         ...state, chosenFrameShape: action.item
@@ -36,6 +41,7 @@ const frameReducer = (state = INITIAL_STATE, action) => {
           newFrame.framePrint.text = state.frameText
           if (state.frameText !== "") {
             newFrame.framePrint.frameFont = state.chosenFrameFont
+            newFrame.framePrint.frameFontWeight = state.chosenFrameFontWeight
           } else {
             newFrame.framePrint.frameFont = null
           }

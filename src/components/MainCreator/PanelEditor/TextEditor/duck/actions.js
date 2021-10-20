@@ -4,6 +4,10 @@ const changeTextFont = item => ({
   type: types.CHANGE_TEXT_FONT, item
 })
 
+const changeTextWeight = item => ({
+  type: types.CHANGE_TEXT_WEIGHT, item
+})
+
 const textReRender = item => ({
   type: types.TEXT_RE_RENDER, item
 })
@@ -18,6 +22,7 @@ const setFrontEndReducerText = item => ({
 
 const actions = {
   changeTextFont,
+  changeTextWeight,
   textReRender,
   setFrontEndReducerText,
   toggleTextUp

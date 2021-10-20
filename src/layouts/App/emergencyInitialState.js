@@ -87,6 +87,7 @@ const emergencyInitialState = {
   },
   text: {
     chosenTextFont: 'Calibri-bold',
+    chosenTextWeight: "700",
     textRender: true,
     textUpOff: false
   },

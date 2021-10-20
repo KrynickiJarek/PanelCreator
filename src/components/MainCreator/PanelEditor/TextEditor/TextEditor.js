@@ -9,7 +9,7 @@ import { t } from "../../../../i18n";
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
-const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chosenModel }) => {
+const TextEditor = ({ chosenTextFont, changeTextWeight, changeTextFont, chosenTextWeight, visual, toggleVisual, chosenModel }) => {
 
   const [unlock, setUnlock] = useState(false)
 
@@ -51,102 +51,96 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chos
         <div className="text_content">
 
 
-          <div className="font_link" style={chosenTextFont === "Calibri-bold" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold" }
-            : { fontFamily: "Calibri-bold" }}
-            onClick={() => { changeTextFont("Calibri-bold") }} >
-            {chosenTextFont === "Calibri-bold" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Calibri bold</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Calibri-bold</p>
+          <div className="font_link" style={chosenTextFont === "Calibri-bold" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold", fontWeight: "700" }
+            : { fontFamily: "Calibri-bold", fontWeight: "700" }}
+            onClick={() => { changeTextFont("Calibri-bold"); changeTextWeight("700") }} >
+            {chosenTextFont === "Calibri-bold" && chosenTextWeight === "700" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Calibri bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Calibri bold</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Calibri" ? { border: "3px solid #EC695C", fontFamily: "Calibri" }
-            : { fontFamily: "Calibri" }}
-            onClick={() => { changeTextFont("Calibri") }} >
-            {chosenTextFont === "Calibri" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Calibri</p>
+          <div className="font_link" style={chosenTextFont === "Calibri" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Calibri", fontWeight: "400" }
+            : { fontFamily: "Calibri", fontWeight: "400" }}
+            onClick={() => { changeTextFont("Calibri"); changeTextWeight("400") }} >
+            {chosenTextFont === "Calibri" && chosenTextWeight === "400" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Calibri</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Calibri</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Montserrat-bold" ? { border: "3px solid #EC695C", fontFamily: "Montserrat-bold" }
-            : { fontFamily: "Montserrat-bold" }}
-            onClick={() => { changeTextFont("Montserrat-bold") }} >
-            {chosenTextFont === "Montserrat-bold" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Montserrat bold</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Montserrat-bold</p>
+          <div className="font_link" style={chosenTextFont === "Montserrat" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Montserrat", fontWeight: "700" }
+            : { fontFamily: "Montserrat", fontWeight: "700" }}
+            onClick={() => { changeTextFont("Montserrat"); changeTextWeight("700") }} >
+            {chosenTextFont === "Montserrat" && chosenTextWeight === "700" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Montserrat bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Montserrat bold</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Montserrat" ? { border: "3px solid #EC695C", fontFamily: "Montserrat" }
-            : { fontFamily: "Montserrat" }}
-            onClick={() => { changeTextFont("Montserrat") }} >
-            {chosenTextFont === "Montserrat" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Montserrat</p>
+          <div className="font_link" style={chosenTextFont === "Montserrat" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Montserrat", fontWeight: "400" }
+            : { fontFamily: "Montserrat", fontWeight: "400" }}
+            onClick={() => { changeTextFont("Montserrat"); changeTextWeight("400") }} >
+            {chosenTextFont === "Montserrat" && chosenTextWeight === "400" && <div className="font_chosen" />}
+
+            < p className="font_name" style={{ fontSize: "20px" }}>Montserrat</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Montserrat</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Poppins-bold" ? { border: "3px solid #EC695C", fontFamily: "Poppins-bold" }
-            : { fontFamily: "Poppins-bold" }}
-            onClick={() => { changeTextFont("Poppins-bold") }} >
-            {chosenTextFont === "Poppins-bold" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Poppins bold</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Poppins-bold</p>
+          <div className="font_link" style={chosenTextFont === "Poppins" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Poppins", fontWeight: "700" }
+            : { fontFamily: "Poppins", fontWeight: "700" }}
+            onClick={() => { changeTextFont("Poppins"); changeTextWeight("700") }} >
+            {chosenTextFont === "Poppins" && chosenTextWeight === "700" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Poppins bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Poppins bold</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Poppins" ? { border: "3px solid #EC695C", fontFamily: "Poppins" }
-            : { fontFamily: "Poppins" }}
-            onClick={() => { changeTextFont("Poppins") }} >
-            {chosenTextFont === "Poppins" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Poppins</p>
+          <div className="font_link" style={chosenTextFont === "Poppins" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Poppins", fontWeight: "400" }
+            : { fontFamily: "Poppins", fontWeight: "400" }}
+            onClick={() => { changeTextFont("Poppins"); changeTextWeight("400") }} >
+            {chosenTextFont === "Poppins" && chosenTextWeight === "400" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Poppins</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Poppins</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Roboto-bold" ? { border: "3px solid #EC695C", fontFamily: "Roboto-bold" }
-            : { fontFamily: "Roboto-bold" }}
-            onClick={() => { changeTextFont("Roboto-bold") }} >
-            {chosenTextFont === "Roboto-bold" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Roboto bold</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Roboto-bold</p>
+          <div className="font_link" style={chosenTextFont === "Roboto" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Roboto", fontWeight: "700" }
+            : { fontFamily: "Roboto", fontWeight: "700" }}
+            onClick={() => { changeTextFont("Roboto"); changeTextWeight("700") }} >
+            {chosenTextFont === "Roboto" && chosenTextWeight === "700" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Roboto bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Roboto bold</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Roboto" ? { border: "3px solid #EC695C", fontFamily: "Roboto" }
-            : { fontFamily: "Roboto" }}
-            onClick={() => { changeTextFont("Roboto") }} >
-            {chosenTextFont === "Roboto" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Roboto</p>
+          <div className="font_link" style={chosenTextFont === "Roboto" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Roboto", fontWeight: "400" }
+            : { fontFamily: "Roboto", fontWeight: "400" }}
+            onClick={() => { changeTextFont("Roboto"); changeTextWeight("400") }} >
+            {chosenTextFont === "Roboto" && chosenTextWeight === "400" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Roboto</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Roboto</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Rubik" ? { border: "3px solid #EC695C", fontFamily: "Rubik" }
-            : { fontFamily: "Rubik" }}
-            onClick={() => { changeTextFont("Rubik") }} >
-            {chosenTextFont === "Rubik" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Rubik</p>
+          <div className="font_link" style={chosenTextFont === "Rubik" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Rubik", fontWeight: "700" }
+            : { fontFamily: "Rubik", fontWeight: "700" }}
+            onClick={() => { changeTextFont("Rubik"); changeTextWeight("700") }} >
+            {chosenTextFont === "Rubik" && chosenTextWeight === "700" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Rubik bold</p>
+            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Rubik bold</p>
+          </div>
+
+          <div className="font_link" style={chosenTextFont === "Rubik" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Rubik", fontWeight: "400" }
+            : { fontFamily: "Rubik", fontWeight: "400" }}
+            onClick={() => { changeTextFont("Rubik"); changeTextWeight("400") }} >
+            {chosenTextFont === "Rubik" && chosenTextWeight === "400" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Rubik</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Rubik</p>
           </div>
 
-          {/* <div className="font_link" style={chosenTextFont === "Helvetica_bold" ? { border: "3px solid #EC695C", fontFamily: "Helvetica_bold" }
-            : { fontFamily: "Helvetica_bold" }}
-            onClick={() => { changeTextFont("Helvetica_bold") }} >
-            {chosenTextFont === "Helvetica_bold" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Helvetica bold</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Helvetica Bold</p>
-          </div>
-
-          <div className="font_link" style={chosenTextFont === "Helvetica" ? { border: "3px solid #EC695C", fontFamily: "Helvetica" }
-            : { fontFamily: "Helvetica" }}
-            onClick={() => { changeTextFont("Helvetica") }} >
-            {chosenTextFont === "Helvetica" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Helvetica</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Helvetica</p>
-          </div> */}
-
-          <div className="font_link" style={chosenTextFont === "Arial" ? { border: "3px solid #EC695C", fontFamily: "Arial" }
-            : { fontFamily: "Arial" }}
-            onClick={() => { changeTextFont("Arial") }} >
-            {chosenTextFont === "Arial" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "24px" }}>Arial</p>
+          <div className="font_link" style={chosenTextFont === "Arial" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Arial", fontWeight: "400" }
+            : { fontFamily: "Arial", fontWeight: "400" }}
+            onClick={() => { changeTextFont("Arial"); changeTextWeight("400") }} >
+            {chosenTextFont === "Arial" && chosenTextWeight === "400" && <div className="font_chosen" />}
+            < p className="font_name" style={{ fontSize: "20px" }}>Arial</p>
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Arial</p>
-
           </div>
+
+
         </div>
       </div>
     </div>
@@ -156,6 +150,7 @@ const TextEditor = ({ chosenTextFont, changeTextFont, visual, toggleVisual, chos
 const mapStateToProps = state => ({
   visual: state.frontEndData.visual.visual,
   chosenTextFont: state.frontEndData.text.chosenTextFont,
+  chosenTextWeight: state.frontEndData.text.chosenTextWeight,
   languageRender: state.frontEndData.visual.languageRender,
   chosenModel: state.frontEndData.model.chosenModel,
 })
@@ -163,6 +158,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   changeTextFont: font => dispatch(actions.changeTextFont(font)),
+  changeTextWeight: weight => dispatch(actions.changeTextWeight(weight)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextEditor)

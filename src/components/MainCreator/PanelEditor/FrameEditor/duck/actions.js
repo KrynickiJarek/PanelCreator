@@ -4,6 +4,10 @@ const changeFrameFont = item => ({
   type: types.CHANGE_FRAME_FONT, item
 })
 
+const changeFrameFontWeight = item => ({
+  type: types.CHANGE_FRAME_FONT_WEIGHT, item
+})
+
 const changeFrameShape = item => ({
   type: types.CHANGE_FRAME_SHAPE, item
 })
@@ -63,6 +67,7 @@ const setFrontEndReducerFrame = item => ({
 
 const actions = {
   changeFrameFont,
+  changeFrameFontWeight,
   changeFrameShape,
   addNewFrame,
   removeFrame,
