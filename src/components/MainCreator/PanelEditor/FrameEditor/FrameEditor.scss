@@ -292,3 +292,13 @@
   background: rgb(217,217,217);
 	border-radius: 10px;
 }
+
+.overflow_frame_choosing_box{
+  overflow: hidden;
+  transition: 0.4s ease;
+
+  .hide_frame_choosing_box{
+    transition: 0.4s ease;
+  }
+}
+

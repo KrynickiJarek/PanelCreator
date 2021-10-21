@@ -98,6 +98,8 @@ const PanelPreview = ({
   resetAllAfterModelChangeFlag,
   changePanelTypeBackEnd,
   chosenFrameFont,
+  chosenFrameFontWeight,
+  chosenFrameFontInfo,
   chosenFrameShape,
   addNewFrameState,
   addNewFrame,
@@ -111,7 +113,7 @@ const PanelPreview = ({
   changeFrameText,
   frameText,
   changeFrameFont,
-  // changeFrameWeight,
+  changeFrameFontWeight,
   changeFrameShape,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
@@ -289,7 +291,7 @@ const PanelPreview = ({
       changeTextFont("Calibri-bold")
       changeTextWeight("700")
       changeFrameFont("Calibri-bold")
-      // changeFrameWeight("700")
+      changeFrameFontWeight("700")
       changeFrameShape("sharp")
 
 
@@ -709,8 +711,8 @@ const PanelPreview = ({
 
 
       copyFrameHolders.forEach((el) => {
-        if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
-          checkFrameFontArr.push(el.framePrint.frameFont)
+        if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) { //nataleczka diffe
+          checkFrameFontArr.push(el.framePrint.framframeFontInfoFont)
         }
         if (el.framePrint.text !== "") {
           checkFrameTitlesArr.push(el.framePrint.text)
@@ -783,7 +785,10 @@ const PanelPreview = ({
       let fontBackEnd = null
       if (frameText !== "") {
         titleBackEnd = frameText
-        fontBackEnd = chosenFrameFont
+        // fontBackEnd = chosenFrameFont///NATALECZKA
+        // fontBackEnd = chosenFrameFontWeight === "700" && !chosenFrameFont.includes("-bold") ? `${chosenFrameFont}-bold` : chosenFrameFont
+        fontBackEnd = chosenFrameFontInfo
+
       } else if (frameText === "") {
         titleBackEnd = null
         fontBackEnd = null
@@ -848,8 +853,8 @@ const PanelPreview = ({
       const checkFrameTitlesArr = []
 
       copyFrameHolders.forEach((el) => {
-        if (el.framePrint.frameFont && !checkFrameFontArr.includes(el.framePrint.frameFont)) {
-          checkFrameFontArr.push(el.framePrint.frameFont)
+        if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) { //nataleczka diffe
+          checkFrameFontArr.push(el.framePrint.frameFontInfo)
         }
         if (el.framePrint.text !== "") {
           checkFrameTitlesArr.push(el.framePrint.text)
@@ -2018,6 +2023,8 @@ const PanelPreview = ({
     const copyFrameHolders = frameHolders
     copyFrameHolders.forEach((el) => {
       el.framePrint.frameFont = chosenFrameFont
+      el.framePrint.frameFontWeight = chosenFrameFontWeight
+      el.framePrint.frameFontInfo = chosenFrameFontInfo
     })
     changeFrameHolders(copyFrameHolders)
     filterWarnings(4)
@@ -4496,6 +4503,7 @@ const PanelPreview = ({
                                       {
                                         ...textStyleFrame,
                                         fontFamily: frame.framePrint.frameFont,
+                                        fontWeight: frame.framePrint.frameFontWeight,
                                         backgroundColor: "rgb(233,233,233)",
                                         border: "none",
                                       }
@@ -4503,6 +4511,7 @@ const PanelPreview = ({
                                       {
                                         ...textStyleFrame,
                                         fontFamily: frame.framePrint.frameFont,
+                                        fontWeight: frame.framePrint.frameFontWeight,
                                         backgroundColor: chosenColor.hex,
                                         border: "none",
                                       }
@@ -4512,6 +4521,7 @@ const PanelPreview = ({
                                   />
                                   <span style={{
                                     fontFamily: frame.framePrint.frameFont,
+                                    fontWeight: frame.framePrint.frameFontWeight,
                                     gridArea: '1 / 1 / 2 / 2',
                                     visibility: 'hidden',
                                     whiteSpace: "pre",
@@ -4534,6 +4544,7 @@ const PanelPreview = ({
                                       {
                                         ...textStyleFrame,
                                         fontFamily: frame.framePrint.frameFont,
+                                        fontWeight: frame.framePrint.frameFontWeight,
                                         backgroundColor: chosenColor.hex,
                                         border: "none",
                                         zIndex: "99999",
@@ -4545,6 +4556,7 @@ const PanelPreview = ({
                                   />
                                   <span style={{
                                     fontFamily: frame.framePrint.frameFont,
+                                    fontWeight: frame.framePrint.frameFontWeight,
                                     gridArea: '1 / 1 / 2 / 2', visibility: 'hidden',
                                     whiteSpace: "pre",
                                     margin: `0 ${1.5 * sc}px`
@@ -4658,12 +4670,14 @@ const PanelPreview = ({
                                       (chosenColor.hex !== "#30a32c") ? {
                                         ...textStyleFrame,
                                         fontFamily: chosenFrameFont,
+                                        fontWeight: chosenFrameFontWeight,
                                         border: "2px dashed rgb(40, 167, 69)",
                                         backgroundColor: chosenColor.hex,
                                       } :
                                         {
                                           ...textStyleFrame,
                                           fontFamily: chosenFrameFont,
+                                          fontWeight: chosenFrameFontWeight,
                                           border: "2px dashed rgb(32, 114, 30)",
                                           backgroundColor: chosenColor.hex,
                                         }
@@ -4671,6 +4685,7 @@ const PanelPreview = ({
                                     : {
                                       ...textStyleFrame,
                                       fontFamily: chosenFrameFont,
+                                      fontWeight: chosenFrameFontWeight,
                                       backgroundColor: chosenColor.hex,
                                     }}
                                   disabled={chosenTab !== "frame" && true}
@@ -4686,6 +4701,7 @@ const PanelPreview = ({
                                   gridArea: '1 / 1 / 2 / 2',
                                   visibility: 'hidden',
                                   fontFamily: chosenFrameFont,
+                                  fontWeight: chosenFrameFontWeight,
                                   padding: "0 8px",
                                   whiteSpace: "pre",
                                   margin: `0 ${1.5 * sc}px`
@@ -5421,6 +5437,8 @@ const mapStateToProps = state => ({
   chosenModel: state.frontEndData.model.chosenModel,
   resetAllAfterModelChangeFlag: state.frontEndData.model.resetAllAfterModelChangeFlag,
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
+  chosenFrameFontWeight: state.frontEndData.frame.chosenFrameFontWeight,
+  chosenFrameFontInfo: state.frontEndData.frame.chosenFrameFontInfo,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
   addNewFrameState: state.frontEndData.frame.addNewFrame,
   removeFrameState: state.frontEndData.frame.removeFrame,
@@ -5474,7 +5492,7 @@ const mapDispatchToProps = dispatch => ({
   overFrameReRender: (income) => dispatch(actionsFrame.overFrameReRender(income)),
   frameTitle: (income) => dispatch(actionsFrame.frameTitle(income)),
   changeFrameFont: (income) => dispatch(actionsFrame.changeFrameFont(income)),
-  // changeFrameWeight: (income) => dispatch(actionsFrame.changeFrameWeight(income)),
+  changeFrameFontWeight: (income) => dispatch(actionsFrame.changeFrameFontWeight(income)),
   allowFrameTitle: (income) => dispatch(actionsFrame.allowFrameTitle(income)),
   removeFrame: (income) => dispatch(actionsFrame.removeFrame(income)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),

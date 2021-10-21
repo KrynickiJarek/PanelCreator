@@ -132,15 +132,6 @@ const TextEditor = ({ chosenTextFont, changeTextWeight, changeTextFont, chosenTe
             < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Rubik</p>
           </div>
 
-          <div className="font_link" style={chosenTextFont === "Arial" && chosenTextWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Arial", fontWeight: "400" }
-            : { fontFamily: "Arial", fontWeight: "400" }}
-            onClick={() => { changeTextFont("Arial"); changeTextWeight("400") }} >
-            {chosenTextFont === "Arial" && chosenTextWeight === "400" && <div className="font_chosen" />}
-            < p className="font_name" style={{ fontSize: "20px" }}>Arial</p>
-            < p className="font_example" style={{ fontSize: "14px" }}>{t("SAMPLE_TEXT")}Arial</p>
-          </div>
-
-
         </div>
       </div>
     </div>

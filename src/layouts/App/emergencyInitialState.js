@@ -58,6 +58,8 @@ const emergencyInitialState = {
   },
   frame: {
     chosenFrameFont: 'Calibri-bold',
+    chosenFrameFontWeight: '700',
+    chosenFrameInfo: "Calibri-bold",
     chosenFrameShape: 'sharp',
     addNewFrame: false,
     removeFrame: false,

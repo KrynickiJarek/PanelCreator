@@ -27,7 +27,7 @@ import Rightuni from "../../../assets/lcd/rightuni.svg"
 
 import IconHolder from './IconHolder/IconHolder';
 
-const PanelPreview = ({
+const PanelPreviewFullScreen = ({
   chosenColor,
   chosenCut,
   chosenTab,
@@ -473,6 +473,7 @@ const PanelPreview = ({
                                 {
                                   ...textStyleFrame,
                                   fontFamily: frame.framePrint.frameFont,
+                                  fontWeight: frame.framePrint.frameFontWeight,
                                   backgroundColor: "rgb(233,233,233)",
                                   border: "none",
                                 }
@@ -480,6 +481,7 @@ const PanelPreview = ({
                                 {
                                   ...textStyleFrame,
                                   fontFamily: frame.framePrint.frameFont,
+                                  fontWeight: frame.framePrint.frameFontWeight,
                                   backgroundColor: chosenColor.hex,
                                   border: "none",
                                 }
@@ -489,6 +491,7 @@ const PanelPreview = ({
                             />
                             <span style={{
                               fontFamily: frame.framePrint.frameFont,
+                              fontWeight: frame.framePrint.frameFontWeight,
                               gridArea: '1 / 1 / 2 / 2',
                               visibility: 'hidden',
                               whiteSpace: "pre",
@@ -559,8 +562,10 @@ const PanelPreview = ({
                   flag,
                   textUp,
                   fontUp,
+                  fontUpWeight,
                   textDown,
                   fontDown,
+                  fontDownWeight,
                   lastDroppedDot,
                   lastDroppedIcon,
                   lastDroppedSlashUp,
@@ -598,9 +603,9 @@ const PanelPreview = ({
                             {textUpOff &&
                               <form>
                                 <div style={!chosenModel.panelRotation ?
-                                  { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp }
+                                  { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
                                   :
-                                  { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp }}>
+                                  { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
                                   <input className="text_input"
                                     type="text"
                                     autoComplete="off"
@@ -608,6 +613,7 @@ const PanelPreview = ({
                                     style={{
                                       ...textStyle,
                                       fontFamily: fontUp,
+                                      fontWeight: fontUpWeight
                                     }}
                                     disabled={true}
                                     value={textUp}
@@ -619,14 +625,15 @@ const PanelPreview = ({
                               </form>
                             }
                             <form >
-                              <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown }}>
+                              <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown, fontWeight: fontDownWeight }}>
                                 <input className="text_input"
                                   type="text"
                                   autoComplete="off"
                                   maxLength="16"
                                   style={{
                                     ...textStyle,
-                                    fontFamily: fontDown
+                                    fontFamily: fontDown,
+                                    fontWeight: fontDownWeight
                                   }}
                                   disabled={true}
                                   value={textDown}
@@ -822,4 +829,4 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PanelPreview)
+export default connect(mapStateToProps, mapDispatchToProps)(PanelPreviewFullScreen)

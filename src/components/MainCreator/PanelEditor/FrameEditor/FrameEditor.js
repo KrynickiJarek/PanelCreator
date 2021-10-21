@@ -22,6 +22,7 @@ const FrameEditor = ({
   chosenModel,
   changeFrameFont,
   changeFrameFontWeight,
+  changeFrameFontInfo,
   changeFrameShape,
   addNewFrame,
   removeFrame,
@@ -39,10 +40,19 @@ const FrameEditor = ({
 
   const [unlock, setUnlock] = useState(false)
   const [confirmWait, setConfirmWait] = useState(true)
+  const [showChoosingBox, setShowChoosingBox] = useState(false)
+  const [overflowSize, setOverflowSize] = useState(0)
+
+  // let overflow = document.getElementById("overflow_frame")
+  // if (overflow) {
+  //   setOverflowSize(overflow.clientHeight)
+  // }
+  console.log(overflowSize)
 
 
   const handleAddNewFrame = () => {
     setConfirmWait(false)
+    setShowChoosingBox(false)
     if (frameHoldersTemp) {
       frameTitle(false)
       allowFrameTitle(false)
@@ -56,8 +66,10 @@ const FrameEditor = ({
   }
 
   const toggleTitle = () => {
+    setOverflowSize(document.getElementById("overflow_frame").clientHeight)
     frameTitle(!frameTitleFlag)
     changeFrameText("")
+    setShowChoosingBox(!frameTitleFlag)
   }
 
   return (
@@ -117,98 +129,95 @@ const FrameEditor = ({
           {!chosenModel.panelRotation &&
             <>
               <p className="instruction_normal">{t("FRAMES_INSTRUCTION_NORMAL_2")}</p>
-              <div className="frame_choosing_box">
+              <div className="overflow_frame_choosing_box" style={showChoosingBox ? { height: `${overflowSize + 20}px` } : { height: "0" }}>
+                <div className="hide_frame_choosing_box" id="overflow_frame" style={showChoosingBox ? { transform: "translateY(0%)" } : { transform: "translateY(-120%)" }}>
+                  <p className="instruction_normal">{t("FRAMES_INSTRUCTION_NORMAL_3")}</p>
+                  <div className="frame_choosing_box">
 
-                <div className="frame_link" style={chosenFrameFont === "Calibri-bold" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold", fontWeight: "700" }
-                  : { fontFamily: "Calibri-bold", fontWeight: "700" }}
-                  onClick={() => { changeFrameFont("Calibri-bold"); changeFrameFontWeight("700") }} >
-                  {chosenFrameFont === "Calibri-bold" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Calibri bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri bold</p>
+                    <div className="frame_link" style={chosenFrameFont === "Calibri-bold" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold", fontWeight: "700" }
+                      : { fontFamily: "Calibri-bold", fontWeight: "700" }}
+                      onClick={() => { changeFrameFont("Calibri-bold"); changeFrameFontWeight("700"); changeFrameFontInfo("Calibri-bold") }} >
+                      {chosenFrameFont === "Calibri-bold" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Calibri bold</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri bold</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Calibri" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Calibri", fontWeight: "400" }
+                      : { fontFamily: "Calibri", fontWeight: "400" }}
+                      onClick={() => { changeFrameFont("Calibri"); changeFrameFontWeight("400"); changeFrameFontInfo("Calibri") }} >
+                      {chosenFrameFont === "Calibri" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Calibri</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Montserrat", fontWeight: "700" }
+                      : { fontFamily: "Montserrat", fontWeight: "700" }}
+                      onClick={() => { changeFrameFont("Montserrat"); changeFrameFontWeight("700"); changeFrameFontInfo("Montserrat-bold") }} >
+                      {chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Montserrat bold</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Montserrat bold</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Montserrat", fontWeight: "400" }
+                      : { fontFamily: "Montserrat", fontWeight: "400" }}
+                      onClick={() => { changeFrameFont("Montserrat"); changeFrameFontWeight("400"); changeFrameFontInfo("Montserrat") }} >
+                      {chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
+
+                      < p className="font_name" style={{ fontSize: "15px" }}>Montserrat</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Montserrat</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Poppins" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Poppins", fontWeight: "700" }
+                      : { fontFamily: "Poppins", fontWeight: "700" }}
+                      onClick={() => { changeFrameFont("Poppins"); changeFrameFontWeight("700"); changeFrameFontInfo("Poppins-bold") }} >
+                      {chosenFrameFont === "Poppins" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Poppins bold</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Poppins bold</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Poppins" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Poppins", fontWeight: "400" }
+                      : { fontFamily: "Poppins", fontWeight: "400" }}
+                      onClick={() => { changeFrameFont("Poppins"); changeFrameFontWeight("400"); changeFrameFontInfo("Poppins") }} >
+                      {chosenFrameFont === "Poppins" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Poppins</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Poppins</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Roboto" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Roboto", fontWeight: "700" }
+                      : { fontFamily: "Roboto", fontWeight: "700" }}
+                      onClick={() => { changeFrameFont("Roboto"); changeFrameFontWeight("700"); changeFrameFontInfo("Roboto-bold") }} >
+                      {chosenFrameFont === "Roboto" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Roboto bold</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Roboto bold</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Roboto" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Roboto", fontWeight: "400" }
+                      : { fontFamily: "Roboto", fontWeight: "400" }}
+                      onClick={() => { changeFrameFont("Roboto"); changeFrameFontWeight("400"); changeFrameFontInfo("Roboto") }} >
+                      {chosenFrameFont === "Roboto" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Roboto</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Roboto</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Rubik" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Rubik", fontWeight: "700" }
+                      : { fontFamily: "Rubik", fontWeight: "700" }}
+                      onClick={() => { changeFrameFont("Rubik"); changeFrameFontWeight("700"); changeFrameFontInfo("Rubik-bold") }} >
+                      {chosenFrameFont === "Rubik" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Rubik bold</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Rubik bold</p>
+                    </div>
+
+                    <div className="frame_link" style={chosenFrameFont === "Rubik" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Rubik", fontWeight: "400" }
+                      : { fontFamily: "Rubik", fontWeight: "400" }}
+                      onClick={() => { changeFrameFont("Rubik"); changeFrameFontWeight("400"); changeFrameFontInfo("Rubik") }} >
+                      {chosenFrameFont === "Rubik" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
+                      < p className="font_name" style={{ fontSize: "15px" }}>Rubik</p>
+                      < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Rubik</p>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Calibri" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Calibri", fontWeight: "400" }
-                  : { fontFamily: "Calibri", fontWeight: "400" }}
-                  onClick={() => { changeFrameFont("Calibri"); changeFrameFontWeight("400") }} >
-                  {chosenFrameFont === "Calibri" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Calibri</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Calibri</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Montserrat", fontWeight: "700" }
-                  : { fontFamily: "Montserrat", fontWeight: "700" }}
-                  onClick={() => { changeFrameFont("Montserrat"); changeFrameFontWeight("700") }} >
-                  {chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Montserrat bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Montserrat bold</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Montserrat", fontWeight: "400" }
-                  : { fontFamily: "Montserrat", fontWeight: "400" }}
-                  onClick={() => { changeFrameFont("Montserrat"); changeFrameFontWeight("400") }} >
-                  {chosenFrameFont === "Montserrat" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
-
-                  < p className="font_name" style={{ fontSize: "15px" }}>Montserrat</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Montserrat</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Poppins" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Poppins", fontWeight: "700" }
-                  : { fontFamily: "Poppins", fontWeight: "700" }}
-                  onClick={() => { changeFrameFont("Poppins"); changeFrameFontWeight("700") }} >
-                  {chosenFrameFont === "Poppins" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Poppins bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Poppins bold</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Poppins" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Poppins", fontWeight: "400" }
-                  : { fontFamily: "Poppins", fontWeight: "400" }}
-                  onClick={() => { changeFrameFont("Poppins"); changeFrameFontWeight("400") }} >
-                  {chosenFrameFont === "Poppins" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Poppins</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Poppins</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Roboto" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Roboto", fontWeight: "700" }
-                  : { fontFamily: "Roboto", fontWeight: "700" }}
-                  onClick={() => { changeFrameFont("Roboto"); changeFrameFontWeight("700") }} >
-                  {chosenFrameFont === "Roboto" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Roboto bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Roboto bold</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Roboto" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Roboto", fontWeight: "400" }
-                  : { fontFamily: "Roboto", fontWeight: "400" }}
-                  onClick={() => { changeFrameFont("Roboto"); changeFrameFontWeight("400") }} >
-                  {chosenFrameFont === "Roboto" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Roboto</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Roboto</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Rubik" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Rubik", fontWeight: "700" }
-                  : { fontFamily: "Rubik", fontWeight: "700" }}
-                  onClick={() => { changeFrameFont("Rubik"); changeFrameFontWeight("700") }} >
-                  {chosenFrameFont === "Rubik" && chosenFrameFontWeight === "700" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Rubik bold</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Rubik bold</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Rubik" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Rubik", fontWeight: "400" }
-                  : { fontFamily: "Rubik", fontWeight: "400" }}
-                  onClick={() => { changeFrameFont("Rubik"); changeFrameFontWeight("400") }} >
-                  {chosenFrameFont === "Rubik" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Rubik</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Rubik</p>
-                </div>
-
-                <div className="frame_link" style={chosenFrameFont === "Arial" && chosenFrameFontWeight === "400" ? { border: "3px solid #EC695C", fontFamily: "Arial", fontWeight: "400" }
-                  : { fontFamily: "Arial", fontWeight: "400" }}
-                  onClick={() => { changeFrameFont("Arial"); changeFrameFontWeight("400") }} >
-                  {chosenFrameFont === "Arial" && chosenFrameFontWeight === "400" && <div className="frame_chosen" />}
-                  < p className="font_name" style={{ fontSize: "15px" }}>Arial</p>
-                  < p className="font_example" style={{ fontSize: "12px" }}>{t("SAMPLE_TEXT")}Arial</p>
-                </div>
-
               </div>
+
 
 
               {allowFrameTitleFlag ?
@@ -230,6 +239,13 @@ const FrameEditor = ({
                   <span>{t("FRAME_TITLE_TOOLTIP_1")}<br />{t("FRAME_TITLE_TOOLTIP_2")}<br />{t("FRAME_TITLE_TOOLTIP_3")}</span>
                 </ReactTooltip>
               }
+
+
+
+
+
+
+
 
             </>
           }
@@ -254,7 +270,6 @@ const FrameEditor = ({
               <div className="button_arrows" />
             </div>
           }
-
 
 
 
@@ -289,6 +304,11 @@ const FrameEditor = ({
               </ol>
             </>
           }
+
+
+
+
+
         </div>
       </div>
     </div>
@@ -300,6 +320,7 @@ const mapStateToProps = state => ({
   chosenModel: state.frontEndData.model.chosenModel,
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
   chosenFrameFontWeight: state.frontEndData.frame.chosenFrameFontWeight,
+  chosenFrameFontInfo: state.frontEndData.frame.chosenFrameFontInfo,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
   frameList: state.frontEndData.frame.frameList,
   overFrameRender: state.frontEndData.frame.overFrameRender,
@@ -314,6 +335,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   changeFrameFont: font => dispatch(actions.changeFrameFont(font)),
   changeFrameFontWeight: weight => dispatch(actions.changeFrameFontWeight(weight)),
+  changeFrameFontInfo: font => dispatch(actions.changeFrameFontInfo(font)),
   changeFrameShape: shape => dispatch(actions.changeFrameShape(shape)),
   addNewFrame: (income) => dispatch(actions.addNewFrame(income)),
   removeFrame: (frame) => dispatch(actions.removeFrame(frame)),

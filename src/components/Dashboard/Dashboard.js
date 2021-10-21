@@ -758,6 +758,7 @@ export const Dashboard = memo(function Dashboard({
                                                           gridArea: "1 / 1 / 2 / 2",
                                                           width: "100%",
                                                           fontFamily: frame.framePrint.frameFont,
+                                                          fontWeight: frame.framePrint.frameFontWeight,
                                                           backgroundColor: panel.frontEndData.color.color.hex,
                                                           border: "none",
                                                         }
@@ -767,6 +768,7 @@ export const Dashboard = memo(function Dashboard({
                                                     />
                                                     <span style={{
                                                       fontFamily: frame.framePrint.frameFont,
+                                                      fontWeight: frame.framePrint.frameFontWeight,
                                                       gridArea: '1 / 1 / 2 / 2',
                                                       visibility: 'hidden',
                                                       whiteSpace: "pre",
@@ -854,8 +856,10 @@ export const Dashboard = memo(function Dashboard({
                                           flag,
                                           textUp,
                                           fontUp,
+                                          fontUpWeight,
                                           textDown,
                                           fontDown,
+                                          fontDownWeight,
                                           lastDroppedDot,
                                           lastDroppedIcon,
                                           lastDroppedSlashUp,
@@ -898,7 +902,9 @@ export const Dashboard = memo(function Dashboard({
                                                           alignItems: "center",
                                                           justifyItems: "center",
                                                           top: `${-1.5 * sc}px`,
-                                                          fontFamily: fontUp
+                                                          fontFamily: fontUp,
+                                                          fontWeight: fontUpWeight
+
                                                         }
                                                         :
                                                         {
@@ -911,7 +917,9 @@ export const Dashboard = memo(function Dashboard({
                                                           alignItems: "center",
                                                           justifyItems: "center",
                                                           top: `${2.85 * sc}px`,
-                                                          fontFamily: fontUp
+                                                          fontFamily: fontUp,
+                                                          fontWeight: fontUpWeight
+
                                                         }}>
                                                         <input className="text_input"
                                                           type="text"
@@ -928,6 +936,8 @@ export const Dashboard = memo(function Dashboard({
                                                             gridArea: "1 / 1 / 2 / 2",
                                                             width: "100%",
                                                             fontFamily: fontUp,
+                                                            fontWeight: fontUpWeight
+
                                                           }}
                                                           disabled={true}
                                                           value={textUp}
@@ -949,7 +959,9 @@ export const Dashboard = memo(function Dashboard({
                                                         alignItems: "center",
                                                         justifyItems: "center",
                                                         top: `${14.35 * sc}px`,
-                                                        fontFamily: fontDown
+                                                        fontFamily: fontDown,
+                                                        fontWeight: fontDownWeight
+
                                                       }}>
                                                         <input className="text_input"
                                                           type="text"
@@ -965,7 +977,8 @@ export const Dashboard = memo(function Dashboard({
                                                             height: `${3.6 * sc}px`,
                                                             gridArea: "1 / 1 / 2 / 2",
                                                             width: "100%",
-                                                            fontFamily: fontDown
+                                                            fontFamily: fontDown,
+                                                            fontWeight: fontDownWeight
                                                           }}
                                                           disabled={true}
                                                           value={textDown}
