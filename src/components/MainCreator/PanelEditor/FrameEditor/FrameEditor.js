@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actions from "./duck/actions"
@@ -13,6 +15,7 @@ import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
 import ReactTooltip from "react-tooltip";
+
 
 const FrameEditor = ({
   frameTitle,
@@ -35,19 +38,12 @@ const FrameEditor = ({
   visual,
   toggleVisual,
   changeFrameText,
+  warnings
 }) => {
-
-
   const [unlock, setUnlock] = useState(false)
   const [confirmWait, setConfirmWait] = useState(true)
   const [showChoosingBox, setShowChoosingBox] = useState(false)
   const [overflowSize, setOverflowSize] = useState(0)
-
-  // let overflow = document.getElementById("overflow_frame")
-  // if (overflow) {
-  //   setOverflowSize(overflow.clientHeight)
-  // }
-  console.log(overflowSize)
 
 
   const handleAddNewFrame = () => {
@@ -62,15 +58,28 @@ const FrameEditor = ({
       setConfirmWait(true)
     }, 1000);
     return () => clearTimeout(confirmTimeout);
-
   }
-
   const toggleTitle = () => {
+
+    console.log(warnings.filter(element => element.code === 4))
+    console.log(warnings.filter(element => element.code === 4).length !== 0)
+
+
     setOverflowSize(document.getElementById("overflow_frame").clientHeight)
     frameTitle(!frameTitleFlag)
     changeFrameText("")
     setShowChoosingBox(!frameTitleFlag)
+    const scrollTimeout = setTimeout(() => {
+      if (!frameTitleFlag && document.querySelector(".frame_container").scrollTop < document.querySelector(".editor_box").clientHeight - document.querySelector(".add_title_button").offsetTop + 70) {
+        document.querySelector(".frame_container").scroll({
+          top: document.querySelector(".editor_box").clientHeight - document.querySelector(".add_title_button").offsetTop + 70,
+          behavior: 'smooth'
+        })
+      }
+    }, 300);
+    return () => clearTimeout(scrollTimeout);
   }
+
 
   return (
     <div className="scroll_container">
@@ -129,9 +138,12 @@ const FrameEditor = ({
           {!chosenModel.panelRotation &&
             <>
               <p className="instruction_normal">{t("FRAMES_INSTRUCTION_NORMAL_2")}</p>
-              <div className="overflow_frame_choosing_box" style={showChoosingBox ? { height: `${overflowSize + 20}px` } : { height: "0" }}>
-                <div className="hide_frame_choosing_box" id="overflow_frame" style={showChoosingBox ? { transform: "translateY(0%)" } : { transform: "translateY(-120%)" }}>
+              <div className="overflow_frame_choosing_box"
+                style={warnings.filter(element => element.code === 4).length !== 0 ? { height: "100%" } :
+                  (frameTitleFlag && showChoosingBox) || warnings.filter(element => element.code === 4).length !== 0 ? { height: `${overflowSize + 18}px` } : { height: "0" }}>
+                <div className="hide_frame_choosing_box" id="overflow_frame" style={(frameTitleFlag && showChoosingBox) || warnings.filter(element => element.code === 4).length !== 0 ? { transform: "translateY(0%)" } : { transform: "translateY(-120%)" }}>
                   <p className="instruction_normal">{t("FRAMES_INSTRUCTION_NORMAL_3")}</p>
+                  {warnings.filter(element => element.code === 4).length !== 0 && <p className="instruction_normal" style={{ color: "rgb(179, 135, 4)" }}>{t("FRAMES_INSTRUCTION_NORMAL_4")}</p>}
                   <div className="frame_choosing_box">
 
                     <div className="frame_link" style={chosenFrameFont === "Calibri-bold" && chosenFrameFontWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold", fontWeight: "700" }
@@ -295,7 +307,7 @@ const FrameEditor = ({
                     {frame.framePrint.text && t("FRAME_LIST_TITLE")}
                     {frame.framePrint.text && <span>{frame.framePrint.text}</span>}
                     {frame.framePrint.text && t("FRAME_LIST_FONT")}
-                    {frame.framePrint.text && <span>{frame.framePrint.frameFont}</span>}
+                    {frame.framePrint.text && <span>{frame.framePrint.frameFontInfo}</span>}
                     <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
                       <img className="frame_list_img" src={Remove} alt="removeframe" />
                     </div>
@@ -304,17 +316,14 @@ const FrameEditor = ({
               </ol>
             </>
           }
-
-
-
-
-
         </div>
       </div>
     </div>
 
   );
 };
+
+
 
 const mapStateToProps = state => ({
   chosenModel: state.frontEndData.model.chosenModel,
@@ -330,6 +339,7 @@ const mapStateToProps = state => ({
   allowFrameTitleFlag: state.frontEndData.frame.allowFrameTitleFlag,
   visual: state.frontEndData.visual.visual,
   languageRender: state.frontEndData.visual.languageRender,
+  warnings: state.frontEndData.visual.warnings,
 })
 
 const mapDispatchToProps = dispatch => ({

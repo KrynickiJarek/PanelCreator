@@ -212,6 +212,7 @@
   "FRAMES_INSTRUCTION_NORMAL_1": "Wybierz rodzaj narożników:",
   "FRAMES_INSTRUCTION_NORMAL_2": "Dodaj tytuł ramki. Aby dodać tytuł ramka musi mieć szerokość co najmniej 2 kolumn lub wysokość co najmniej 2 rzędów.",
   "FRAMES_INSTRUCTION_NORMAL_3": "Wybierz font tytułu ramki:",
+  "FRAMES_INSTRUCTION_NORMAL_4": "Zastosowano różne fonty tytułów ramek. W bocznym menu wybierz \"Wybrany font dla wszystkich tytułów\"",
   "STRAIGHT": "Proste",
   "ROUNDED": "Zaokrąglone",
   "STRAIGHT_LOWERCASE": "proste",

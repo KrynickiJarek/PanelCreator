@@ -293,6 +293,9 @@ const PanelPreview = ({
       changeFrameFont("Calibri-bold")
       changeFrameFontWeight("700")
       changeFrameShape("sharp")
+      changeFrameHoldersTemp(null)
+      allowFrameTitle(false)
+      frameTitle(false)
 
 
       const modeltimeout = setTimeout(() => {
@@ -608,7 +611,7 @@ const PanelPreview = ({
 
 
 
-  useEffect(() => { //nataleczka
+  useEffect(() => {
     const copyArr = iconHolders;
     if (isFocusedInputSide === "up") {
       copyArr[isFocusedInputIndex].fontUp = chosenTextFont
@@ -711,7 +714,7 @@ const PanelPreview = ({
 
 
       copyFrameHolders.forEach((el) => {
-        if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) { //nataleczka diffe
+        if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) {
           checkFrameFontArr.push(el.framePrint.framframeFontInfoFont)
         }
         if (el.framePrint.text !== "") {
@@ -785,8 +788,6 @@ const PanelPreview = ({
       let fontBackEnd = null
       if (frameText !== "") {
         titleBackEnd = frameText
-        // fontBackEnd = chosenFrameFont///NATALECZKA
-        // fontBackEnd = chosenFrameFontWeight === "700" && !chosenFrameFont.includes("-bold") ? `${chosenFrameFont}-bold` : chosenFrameFont
         fontBackEnd = chosenFrameFontInfo
 
       } else if (frameText === "") {
@@ -853,7 +854,7 @@ const PanelPreview = ({
       const checkFrameTitlesArr = []
 
       copyFrameHolders.forEach((el) => {
-        if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) { //nataleczka diffe
+        if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) {
           checkFrameFontArr.push(el.framePrint.frameFontInfo)
         }
         if (el.framePrint.text !== "") {

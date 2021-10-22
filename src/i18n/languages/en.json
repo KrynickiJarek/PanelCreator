@@ -211,6 +211,7 @@
   "FRAMES_INSTRUCTION_NORMAL_1": "Select corners type:",
   "FRAMES_INSTRUCTION_NORMAL_2": "Add a frame title. In order to add a title, the frame must have the width of at least 2 columns or height of 2 rows.",
   "FRAMES_INSTRUCTION_NORMAL_3": "Select the frame title's:",
+  "FRAMES_INSTRUCTION_NORMAL_4": "Different fonts were used for frame titles. Please select \"Selected font for all titles\" in the side menu",
   "STRAIGHT": "Straight",
   "ROUNDED": "Rounded",
   "STRAIGHT_LOWERCASE": "straight",
