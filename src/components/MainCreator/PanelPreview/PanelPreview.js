@@ -1484,6 +1484,10 @@ const PanelPreview = ({
       el.selected = false;
       el.selectedUp = false;
       el.selectedDown = false;
+      el.rotationIcon = false;
+      el.rotationUp = false;
+      el.rotationDown = false;
+      el.rotationDot = false;
     })
     changeIconHolders(copyArr)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------

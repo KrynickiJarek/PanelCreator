@@ -79,7 +79,7 @@ const emergencyInitialState = {
     removeIcons: false,
     panelName: '',
     timeOfCreation: null,
-    version: '1.00',
+    version: '1.01',
     warnings: [],
     warningsReRender: false,
     alert: null,
