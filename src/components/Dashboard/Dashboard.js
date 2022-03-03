@@ -108,7 +108,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("1.01")
+    updateVersion("1.02")
     // eslint-disable-next-line 
   }, [])
 
@@ -1018,13 +1018,21 @@ export const Dashboard = memo(function Dashboard({
 
 
                                         {(panel.frontEndData.model.chosenModel.lcdScreen) && <div className="lcd" style={panel.frontEndData.model.chosenModel.lcdScreen ?
-                                          {
-                                            height: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdHeight * sc}px`,
-                                            width: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth * sc}px`,
-                                            top: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdTop * sc}px`,
-                                            left: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdLeft * sc}px`,
-                                            borderColor: panel.frontEndData.color.color.iconColor
-                                          } :
+                                          panel.frontEndData.color.color.hex === "#f3f5f5" ?
+                                            {
+                                              height: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdHeight - 2.2) * sc}px`,
+                                              width: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth - 1.8) * sc}px`,
+                                              top: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdTop + 1.1) * sc}px`,
+                                              left: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdLeft + 0.9) * sc}px`,
+                                              borderColor: panel.frontEndData.color.color.iconColor
+                                            } :
+                                            {
+                                              height: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdHeight * sc}px`,
+                                              width: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth * sc}px`,
+                                              top: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdTop * sc}px`,
+                                              left: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdLeft * sc}px`,
+                                              borderColor: panel.frontEndData.color.color.iconColor
+                                            } :
                                           { borderColor: panel.frontEndData.color.color.iconColor }} />}
 
                                         {panel.frontEndData.model.chosenModel.lcdScreen.lcdType === "slide" &&

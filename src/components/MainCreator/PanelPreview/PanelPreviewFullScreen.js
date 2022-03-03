@@ -303,12 +303,21 @@ const PanelPreviewFullScreen = ({
 
   const lcdStyle = {};
   lcdStyle.transition = "400ms ease";
-  if (chosenModel.lcdScreen) {
+  if (chosenModel.lcdScreen && chosenColor.RAL !== "RAL 9003") {
     lcdStyle.height = `${chosenModel.lcdScreen.lcdHeight * sc}px`;
     lcdStyle.width = `${chosenModel.lcdScreen.lcdWidth * sc}px`;
     lcdStyle.top = `${chosenModel.lcdScreen.lcdTop * sc}px`;
     lcdStyle.left = `${chosenModel.lcdScreen.lcdLeft * sc}px`;
   }
+
+  if (chosenModel.lcdScreen && chosenColor.RAL === "RAL 9003") {
+    lcdStyle.height = `${(chosenModel.lcdScreen.lcdHeight - 2.2) * sc}px`;
+    lcdStyle.width = `${(chosenModel.lcdScreen.lcdWidth - 1.8) * sc}px`;
+    lcdStyle.top = `${(chosenModel.lcdScreen.lcdTop + 1.1) * sc}px`;
+    lcdStyle.left = `${(chosenModel.lcdScreen.lcdLeft + 0.9) * sc}px`;
+  }
+
+
 
   const lcdIconStyle = {};
   lcdIconStyle.height = `${7 * sc}px`;
