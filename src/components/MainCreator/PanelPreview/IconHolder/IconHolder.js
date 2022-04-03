@@ -55,6 +55,8 @@ const IconHolder = ({
   lastDroppedIcon,
   lastDroppedSlashUp,
   lastDroppedSlashDown,
+
+  splitIconProportions
 }) => {
 
   const handleDrop = (item) => {
@@ -156,6 +158,15 @@ const IconHolder = ({
   let styleScale = {};
   styleScale.height = `${7.5 * scale}px`;
   styleScale.width = `${7.5 * scale}px`;
+
+  let styleSlash = {};
+  if (splitIconProportions === 1) {
+    styleSlash.transform = `translate(${1.2 * scale}px, ${1.2 * scale}px) scale(0.66)`
+  } else if (splitIconProportions === 2) {
+    styleSlash.transform = `translate(-${1.2 * scale}px, -${1.2 * scale}px) scale(0.66)`
+  }
+
+
   let styleZIndex = {};
   let styleSignleFrame = {};
   let styleSignleFrameResize = {};
@@ -335,12 +346,24 @@ const IconHolder = ({
                   style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                     : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                 />)}
-              {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
+              {/* {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                 (<img src={Slash} alt="slash" className="slash"
                   style={visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
                     : chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                       : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
+                />)} */}
+
+              {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
+                (<img src={Slash} alt="slash" className="slash"
+                  style={visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
+                    : chosenColor.iconColor === "white" ? { ...styleScale, ...styleSlash, filter: "grayscale(100%) invert(1) brightness(10)" }
+                      : { ...styleScale, ...styleSlash, filter: "grayscale(100%) brightness(0)" }}
                 />)}
+
+
+
+
+
               {(lastDroppedIcon && (upActive || downActive || isActive || removeIcons || (removeIcon && selected))) &&
                 (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
 
@@ -362,6 +385,7 @@ const IconHolder = ({
           singleFrameTemp={singleFrameTemp}
           panelRotation={panelRotation}
           visual={visual}
+          splitIconProportions={splitIconProportions}
         />
 
         <IconHolderSlashDown
@@ -378,6 +402,7 @@ const IconHolder = ({
           singleFrameTemp={singleFrameTemp}
           panelRotation={panelRotation}
           visual={visual}
+          splitIconProportions={splitIconProportions}
         />
       </div>
     </>

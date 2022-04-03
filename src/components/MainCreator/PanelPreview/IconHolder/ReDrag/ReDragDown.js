@@ -6,28 +6,29 @@ import actionsBackEnd from "../../../duck/actions"
 
 import "./../IconHolderSlash.scss"
 
+export const ReDragDown = (props) => {
 
-
-
-export const ReDragDown = ({
-  image,
-  scale,
-  visual,
-  chosenColor,
-  chosenTab,
-  iconHolders,
-  index,
-  changeIconHolders,
-  isAnySelected,
-  rotationDown,
-  iconsBackEnd,
-  changeIconsBackEnd,
-  singleFrame,
-  singleFrameTemp,
-  selectedDown,
-  chosenModel,
-}) => {
-
+  const {
+    image,
+    scale,
+    visual,
+    chosenColor,
+    chosenTab,
+    iconHolders,
+    index,
+    changeIconHolders,
+    isAnySelected,
+    rotationDown,
+    iconsBackEnd,
+    changeIconsBackEnd,
+    singleFrame,
+    singleFrameTemp,
+    selectedDown,
+    chosenModel,
+    splitIconProportions,
+    canDrop
+  } = props
+  console.log("props", props)
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
 
@@ -89,7 +90,6 @@ export const ReDragDown = ({
       numberBackEnd = index + 1
     }
 
-    // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 2)) })
     const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 2)) })
     changeIconsBackEnd(copyIconsBackEnd)
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
@@ -98,10 +98,30 @@ export const ReDragDown = ({
   let styleScale = {};
   styleScale.height = `${7.5 * scale}px`;
   styleScale.width = `${7.5 * scale}px`;
+  styleScale.transform = `scale(0.466)`
+
+  let styleTurn = {}
+  // styleTurn.transform = `rotate(${rotationDown}deg) scale(0.466)`
 
 
-  let styleTurn = {};
-  styleTurn.transform = `rotate(${rotationDown}deg) scale(0.466)`
+  if (selectedDown) {
+    if (splitIconProportions === 0 || canDrop) {
+      styleTurn.transform = `rotate(${rotationDown}deg) scale(0.466)`
+    } else if (splitIconProportions === 1 && !canDrop) {
+      styleTurn.transform = `rotate(${rotationDown}deg) scale(0.332)`
+    } else if (splitIconProportions === 2 && !canDrop) {
+      styleTurn.transform = `rotate(${rotationDown}deg) scale(0.652)`
+    }
+  } else {
+    if (splitIconProportions === 0 || canDrop) {
+      styleTurn.transform = `rotate(${rotationDown}deg) scale(0.466)`
+    } else if (splitIconProportions === 1 && !canDrop) {
+      styleTurn.transform = `translate(${0.675 * scale}px, ${0.5 * scale}px) rotate(${rotationDown}deg) scale(0.332)`
+    } else if (splitIconProportions === 2 && !canDrop) {
+      styleTurn.transform = `translate(-${0.5 * scale}px, -${0.75 * scale}px) rotate(${rotationDown}deg) scale(0.652)`
+    }
+  }
+
 
   if ((singleFrame || (singleFrameTemp && chosenTab === "frame")) && !selectedDown) {
     styleTurn = {

@@ -36,7 +36,8 @@ export const IconHolderSlashUp = ({
   changeIconsBackEnd,
   lastDroppedSlashUp,
   panelRotation,
-  visual
+  visual,
+  splitIconProportions
 }) => {
 
   const handleDrop = (item) => {
@@ -73,7 +74,6 @@ export const IconHolderSlashUp = ({
     toDataURL(iconHolders[index].lastDroppedSlashUp.image.default)
       .then(svgBackEnd => {
         let numberBackEnd = null
-        // if (chosenModel.panelRotation) {
         if (panelRotation) {
           if (index % 3 === 0) {
             numberBackEnd = index + 3
@@ -93,7 +93,6 @@ export const IconHolderSlashUp = ({
           svg: svgBackEnd
         }
 
-        // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1)) })
         const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 1)) })
         copyIconsBackEnd.push(recordIcon)
         changeIconsBackEnd(copyIconsBackEnd)
@@ -180,13 +179,42 @@ export const IconHolderSlashUp = ({
       };
     };
   } else if (selectedUp && chosenTab === "icons") {
-    styleDroppingAni = {
-      transform: "translate(-116.666%, -53.333%) scale(2.2)",
-    };
-    styleDropping = {
-      backgroundColor: "rgb(236, 105, 92)",
-      transform: "translate(-116.666%, -53.333%) scale(1.8)",
-    };
+    // styleDroppingAni = {
+    //   transform: "translate(-116.666%, -53.333%) scale(2.2)",
+    // };
+    // styleDropping = {
+    //   backgroundColor: "rgb(236, 105, 92)",
+    //   transform: "translate(-116.666%, -53.333%) scale(1.8)",
+    // };
+    if (splitIconProportions === 0) {
+      styleDropping = {
+        backgroundColor: "rgb(236, 105, 92)",
+        transform: "translate(-116.666%, -53.333%) scale(1.6)",
+      };
+      styleDroppingAni = {
+        transform: "translate(-116.666%, -53.333%) scale(2)",
+      };
+    }
+    if (splitIconProportions === 1) {
+      styleDropping = {
+        backgroundColor: "rgb(236, 105, 92)",
+        transform: "translate(-116.666%, -53.333%) scale(2)",
+      };
+      styleDroppingAni = {
+        transform: "translate(-116.666%, -53.333%) scale(2.5)",
+      };
+    }
+    if (splitIconProportions === 2) {
+      styleDropping = {
+        backgroundColor: "rgb(236, 105, 92)",
+        transform: "translate(-116.666%, -53.333%) scale(1.2)",
+      };
+      styleDroppingAni = {
+        transform: "translate(-116.666%, -53.333%) scale(1.5)",
+      };
+    }
+
+
     styleArea = {
       transform: "translate(-55%,-55%) scale(1.8)",
     };
@@ -222,7 +250,6 @@ export const IconHolderSlashUp = ({
 
   return (
     <div style={styleZIndex}>
-      {/* // <div style={{ ...styleZIndex, transform: `rotate(${panelRotation}deg)` }}> */}
       <div className="slash_up_area_dropping_ani" style={{ ...styleDroppingAni, height: `${5.625 * scale}px`, width: `${5.625 * scale}px`, margin: `${6.65 * scale}px auto 0` }}>
         <div className="slash_area_dropping_pulse" style={styleDroppingPulse} />
       </div>
@@ -241,6 +268,8 @@ export const IconHolderSlashUp = ({
             selectedUp={selectedUp}
             panelRotation={panelRotation}
             visual={visual}
+            splitIconProportions={splitIconProportions}
+            canDrop={canDrop && showNow}
           />
         }
         {

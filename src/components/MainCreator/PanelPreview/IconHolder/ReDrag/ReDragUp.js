@@ -24,6 +24,8 @@ export const ReDragUp = ({
   singleFrameTemp,
   selectedUp,
   chosenModel,
+  splitIconProportions,
+  canDrop
 }) => {
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
@@ -86,7 +88,6 @@ export const ReDragUp = ({
     } else {
       numberBackEnd = index + 1
     }
-    //  const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 1)) })
     const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 1)) })
     changeIconsBackEnd(copyIconsBackEnd)
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
@@ -95,9 +96,29 @@ export const ReDragUp = ({
   let styleScale = {};
   styleScale.height = `${7.5 * scale}px`;
   styleScale.width = `${7.5 * scale}px`;
+  styleScale.transform = `scale(0.466)`
 
   let styleTurn = {};
-  styleTurn.transform = `rotate(${rotationUp}deg) scale(0.466)`
+  // styleTurn.transform = `rotate(${rotationUp}deg) scale(0.466)`
+
+  if (selectedUp) {
+    if (splitIconProportions === 0 || canDrop) {
+      styleTurn.transform = `rotate(${rotationUp}deg) scale(0.466)`
+    } else if (splitIconProportions === 1 && !canDrop) {
+      styleTurn.transform = `rotate(${rotationUp}deg) scale(0.652)`
+    } else if (splitIconProportions === 2 && !canDrop) {
+      styleTurn.transform = `rotate(${rotationUp}deg) scale(0.332)`
+    }
+  } else {
+    if (splitIconProportions === 0 || canDrop) {
+      styleTurn.transform = `rotate(${rotationUp}deg) scale(0.466)`
+    } else if (splitIconProportions === 1 && !canDrop) {
+      styleTurn.transform = `translate(${0.5 * scale}px, ${0.75 * scale}px) rotate(${rotationUp}deg) scale(0.652)`
+    } else if (splitIconProportions === 2 && !canDrop) {
+      styleTurn.transform = `translate(-${0.675 * scale}px, -${0.5 * scale}px) rotate(${rotationUp}deg) scale(0.332)`
+    }
+  }
+
 
   if ((singleFrame || (singleFrameTemp && chosenTab === "frame")) && !selectedUp) {
     styleTurn = {

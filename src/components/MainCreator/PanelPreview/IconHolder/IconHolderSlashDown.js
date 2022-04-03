@@ -33,7 +33,8 @@ export const IconHolderSlashDown = ({
   changeIconsBackEnd,
   lastDroppedSlashDown,
   panelRotation,
-  visual
+  visual,
+  splitIconProportions
 }) => {
 
 
@@ -70,7 +71,6 @@ export const IconHolderSlashDown = ({
     toDataURL(iconHolders[index].lastDroppedSlashDown.image.default)
       .then(svgBackEnd => {
         let numberBackEnd = null
-        // if (chosenModel.panelRotation) {
         if (panelRotation) {
           if (index % 3 === 0) {
             numberBackEnd = index + 3
@@ -159,11 +159,11 @@ export const IconHolderSlashDown = ({
   }
   else if ((canDrop && show) || (canDrop && showNow)) {
     styleDroppingAni = {
-      transform: "translate(52%, 125%) scale(1.25)",
+      transform: "translate(51%, 124%) scale(1.25)",
     };
     styleDropping = {
       backgroundColor: "rgb(236, 105, 92)",
-      transform: "translate(52%, 125%)",
+      transform: "translate(51%, 124%)",
     };
     styleArea = {
       transform: "translate(108%,108%)",
@@ -177,13 +177,42 @@ export const IconHolderSlashDown = ({
       };
     };
   } else if (selectedDown && chosenTab === "icons") {
-    styleDroppingAni = {
-      transform: "translate(13%, 87%) scale(2.2)",
-    };
-    styleDropping = {
-      backgroundColor: "rgb(236, 105, 92)",
-      transform: "translate(13%, 87%) scale(1.8)",
-    };
+
+    // styleDroppingAni = {
+    //   transform: "translate(12%, 83%) scale(2.2)",
+    // };
+    // styleDropping = {
+    // backgroundColor: "rgb(236, 105, 92)",
+    // transform: "translate(12%, 83%) scale(1.8)",
+    // };
+    if (splitIconProportions === 0) {
+      styleDropping = {
+        backgroundColor: "rgb(236, 105, 92)",
+        transform: "translate(12%, 83%) scale(1.6)",
+      };
+      styleDroppingAni = {
+        transform: "translate(12%, 83%) scale(2)",
+      };
+    }
+    if (splitIconProportions === 1) {
+      styleDropping = {
+        backgroundColor: "rgb(236, 105, 92)",
+        transform: "translate(12%, 83%) scale(1.2)",
+      };
+      styleDroppingAni = {
+        transform: "translate(12%, 83%) scale(1.5)",
+      };
+    }
+    if (splitIconProportions === 2) {
+      styleDropping = {
+        backgroundColor: "rgb(236, 105, 92)",
+        transform: "translate(12%, 83%) scale(2)",
+      };
+      styleDroppingAni = {
+        transform: "translate(12%, 83%) scale(2.5)",
+      };
+    }
+
     styleArea = {
       transform: "translate(48%,48%) scale(1.8)",
     };
@@ -239,6 +268,8 @@ export const IconHolderSlashDown = ({
             selectedDown={selectedDown}
             panelRotation={panelRotation}
             visual={visual}
+            splitIconProportions={splitIconProportions}
+            canDrop={canDrop && showNow}
           />
         }
         {!lastDroppedSlashDown &&

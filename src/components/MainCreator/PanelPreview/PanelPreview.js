@@ -57,6 +57,14 @@ import Frameround from "../../../assets/side/frameround.svg"
 import Removeallframes from "../../../assets/side/removeallframes.svg"
 import Removecurrframe from "../../../assets/side/removecurrframe.svg"
 
+import PropoportionsAllTo7030 from "../../../assets/side/proportions_all_to_70_30.svg"
+import PropoportionsAllTo3070 from "../../../assets/side/proportions_all_to_30_70.svg"
+import PropoportionsAllTo5050 from "../../../assets/side/proportions_all_to_50_50.svg"
+import PropoportionsAllReset from "../../../assets/side/proportions_all_reset.svg"
+
+import PropoportionsTo7030 from "../../../assets/side/proportions_to_70_30.svg"
+import PropoportionsTo3070 from "../../../assets/side/proportions_to_30_70.svg"
+import PropoportionsTo5050 from "../../../assets/side/proportions_to_50_50.svg"
 
 import Submitinput from "../../../assets/preview/submitinput.svg"
 import Clearinput from "../../../assets/preview/clearinput.svg"
@@ -238,6 +246,10 @@ const PanelPreview = ({
   const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
   const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
 
+  const [globalProportions, setGlobalProportions] = useState(0)
+  const [areThereAnySplit, setAreThereAnySplit] = useState(false)
+  const [isAnySplitSelected, setIsAnySplitSelected] = useState(3)
+
 
   useEffect(() => {
     setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
@@ -304,7 +316,8 @@ const PanelPreview = ({
           arrIconHolders.push({
             flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
-            textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false
+            textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
+            splitIconProportions: 0
           })
         });
         chosenModel.dotLocation.forEach(element => {
@@ -519,10 +532,24 @@ const PanelPreview = ({
       changeIsAnySelected(false)
     }
 
+    const copyIconHoldersSplitSelected = iconHolders.filter(element => element.selectedUp || element.selectedDown)
+    const copyIconHoldersSplitSelectedProportions = iconHolders.filter(element => element.selectedUp || element.selectedDown)
+    if (copyIconHoldersSplitSelected.length > 0) {
+      setIsAnySplitSelected(copyIconHoldersSplitSelectedProportions[0].splitIconProportions)
+    } else {
+      setIsAnySplitSelected(3)
+    }
+
     if (iconsBackEnd.length > 0) {
       setAreThereAnyIcons(true)
     } else {
       setAreThereAnyIcons(false)
+    }
+
+    if (iconsBackEnd.filter(element => element.type === 1 || element.type === 2).length > 0) {
+      setAreThereAnySplit(true)
+    } else {
+      setAreThereAnySplit(false)
     }
 
     let checkAllIcons = 0
@@ -930,6 +957,19 @@ const PanelPreview = ({
     // eslint-disable-next-line 
   }, [ownIconsRender])
 
+  useEffect(() => {
+    const checkProportions = []
+    iconHolders.forEach((element) => {
+      checkProportions.push(element.splitIconProportions)
+    })
+    const uniqueArray = [...new Set(checkProportions)]
+    if (uniqueArray.length > 1) {
+      setGlobalProportions(3)
+    } else {
+      setGlobalProportions(uniqueArray[0])
+    }
+    // eslint-disable-next-line
+  }, [iconHolders, iconHoldersRender, isAnySplitSelected]);
 
   let frameCellStyle = {}
   frameCellStyle.height = `${16 * sc}px`;
@@ -1193,7 +1233,6 @@ const PanelPreview = ({
     lcdStyle.top = `${(chosenModel.lcdScreen.lcdTop + 1.1) * sc}px`;
     lcdStyle.left = `${(chosenModel.lcdScreen.lcdLeft + 0.9) * sc}px`;
   }
-  // nataleczka
 
 
   const lcdIconStyle = {};
@@ -1315,6 +1354,7 @@ const PanelPreview = ({
     })
     changeIconHolders(copyArr)
     changeIsAnySelected(false)
+    setIsAnySplitSelected(false)
   }
 
   const handleClearAll = () => {
@@ -1329,7 +1369,8 @@ const PanelPreview = ({
         tempArr.push({
           flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
-          textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false
+          textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
+          splitIconProportions: 0
         })
       });
       changeIconHolders(tempArr);
@@ -1494,9 +1535,10 @@ const PanelPreview = ({
       el.selectedUp = false;
       el.selectedDown = false;
       el.rotationIcon = false;
-      el.rotationUp = false;
-      el.rotationDown = false;
+      el.rotationUp = 0;
+      el.rotationDown = 0; //nataleczka
       el.rotationDot = false;
+      el.splitIconProportions = 0;
     })
     changeIconHolders(copyArr)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
@@ -1771,6 +1813,86 @@ const PanelPreview = ({
     })
     changeIconHolders(copyArr)
     changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
+  }
+
+
+
+  const handleSwitchSplitIconProportionsGlobal = () => {
+    const copyArr = iconHolders;
+    // const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    copyArr.forEach((el) => {
+      // if ( globalProportions === 3) {
+      if (globalProportions === 0) {
+        el.splitIconProportions = 1
+      } else if (globalProportions === 1) {
+        el.splitIconProportions = 2
+      } else if (globalProportions === 2 || globalProportions === 3) {
+        el.splitIconProportions = 0
+      }
+
+      // if (chosenModel.panelRotation) {
+      //   let numberBackEnd = null
+      //   if (chosenModel.panelRotation) {
+      //     if (index % 3 === 0) {
+      //       numberBackEnd = index + 3
+      //     } else if (index % 3 === 2) {
+      //       numberBackEnd = index - 1
+      //     } else {
+      //       numberBackEnd = index + 1
+      //     }
+      //   } else {
+      //     numberBackEnd = index + 1
+      //   }
+
+      //   if (el.selectedDot) {
+      //     el.rotationDot = el.rotationDot + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 3)].rotation = Modulo((el.rotationDot), 360)//---BACKEND
+      //   } else if (el.selected) {
+      //     el.rotationIcon = el.rotationIcon + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 0)].rotation = Modulo((el.rotationIcon), 360)//---BACKEND
+      //   } else if (el.selectedDown) {
+      //     el.rotationDown = el.rotationDown + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 2)].rotation = Modulo((el.rotationDown), 360)//---BACKEND
+      //   } else if (el.selectedUp) {
+      //     el.rotationUp = el.rotationUp + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 1)].rotation = Modulo((el.rotationUp), 360)//---BACKEND
+      //   }
+      // } else {
+      //   if (el.selectedDot) {
+      //     el.rotationDot = el.rotationDot + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot), 360)//---BACKEND
+      //   } else if (el.selected) {
+      //     el.rotationIcon = el.rotationIcon + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon), 360)//---BACKEND
+      //   } else if (el.selectedDown) {
+      //     el.rotationDown = el.rotationDown + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown), 360)//---BACKEND
+      //   } else if (el.selectedUp) {
+      //     el.rotationUp = el.rotationUp + 90;
+      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp), 360)//---BACKEND
+      //   }
+      // }
+    })
+    changeIconHolders(copyArr)
+    // changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
+  }
+
+  const handleSwitchSplitIconProportions = () => {
+    const copyArr = iconHolders;
+    // const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    copyArr.forEach((el) => {
+      if (el.selectedUp || el.selectedDown) {
+        if (el.splitIconProportions === 0) {
+          el.splitIconProportions = 1
+        } else if (el.splitIconProportions === 1) {
+          el.splitIconProportions = 2
+        } else if (el.splitIconProportions === 2) {
+          el.splitIconProportions = 0
+        }
+      }
+    })
+    changeIconHolders(copyArr)
+    // changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
   }
 
 
@@ -4804,7 +4926,8 @@ const PanelPreview = ({
                         selectedDown,
                         selectedUp,
                         singleFrame,
-                        singleFrameTemp
+                        singleFrameTemp,
+                        splitIconProportions
                       }, index) =>
                         <div key={index}
                           style={
@@ -5001,6 +5124,7 @@ const PanelPreview = ({
                                 singleFrame={singleFrame}
                                 singleFrameTemp={singleFrameTemp}
                                 visual={visual}
+                                splitIconProportions={splitIconProportions}
                               />
                             </>}
                         </div>
@@ -5218,6 +5342,36 @@ const PanelPreview = ({
                     {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
                   </div>
                   <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
+
+
+
+
+                  <div className="side_box" data-for="proportions_tooltip" data-tip={t("PROPORTIONS_TOOLTIP")}>
+                    <img src={globalProportions === 0 ? PropoportionsAllTo7030 : globalProportions === 1 ? PropoportionsAllTo3070 : globalProportions === 2 ? PropoportionsAllTo5050 : PropoportionsAllReset}
+                      alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportionsGlobal} />
+                    {globalProportions === 3 ? <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL_RESET")}</span> : <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL")}</span>}
+                  </div>
+                  {!areThereAnySplit &&
+                    <ReactTooltip id="proportions_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
+                  }
+
+                  {isAnySplitSelected !== 3 ?
+                    <div className="side_box" >
+                      <img
+                        src={isAnySplitSelected === 0 ? PropoportionsTo7030 : isAnySplitSelected === 1 ? PropoportionsTo3070 : PropoportionsTo5050}
+                        alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportions} />
+                      <span>{t("SIDE_ICON_PROPORTIONS")}</span>
+                    </div>
+                    :
+                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("PROPORTIONS_SINGLE_TOOLTIP")}>
+                      <img
+                        src={PropoportionsTo7030}
+                        alt="proportions" className="side_icon" />
+                      <span>{t("SIDE_ICON_PROPORTIONS")}</span>
+                    </div>
+                  }
+
+
                   {areThereAnyIcons ?
                     <div className="side_box">
                       <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
@@ -5249,8 +5403,6 @@ const PanelPreview = ({
                         <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
                         <span>{t("ROTATE_LEFT")}</span>
                       </div>
-
-
                     </>
                     :
                     <>
