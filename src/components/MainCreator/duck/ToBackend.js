@@ -20,6 +20,8 @@ const toBackend =
         number: 1, // numer ikony liczony od 1 do 21, przy uniwersal wypełnij i wyślij ikonki pod polami 1,3,4,6,7,9, przy poziomym liczenie tak samo
         type: 0, // 0 - normalne, 1 - dzielona górna, 2- dzielona dolna, 3 - statusowa 
         rotation: 0, // 0, 90, 180, 270 - obrót zgodnie z ruchem wskazówek zegara w deg, przy poziomym wyjściowe rotatnion: 90
+        proportion: 0, // 0 - domyślnie 50:50, dla każdej ikony ustawione,  1 i 2 mogą mieć tylko ikony dzielone (type 1 i 2)
+        // 1 - lewa górna 70, prawa dolna 30;  2 - lewa górna 30, prawa dolna 70
         svg: "XML" // przekopiowany xml, xml to base64
       }
     ],

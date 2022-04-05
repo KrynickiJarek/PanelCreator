@@ -36,6 +36,10 @@ const changeFrames = item => ({
   type: types.CHANGE_FRAMES, item
 })
 
+const editFrameText = (text, index) => ({
+  type: types.EDIT_FRAME_TEXT, text, index
+})
+
 const setBackEndReducers = item => ({
   type: types.SET_BACK_END_REDUCER, item
 })
@@ -51,6 +55,7 @@ const actions = {
   changePanelText,
   changeIcons,
   changeFrames,
+  editFrameText,
   setBackEndReducers
 }
 

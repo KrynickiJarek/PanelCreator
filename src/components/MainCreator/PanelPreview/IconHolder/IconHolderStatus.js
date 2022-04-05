@@ -88,7 +88,8 @@ const IconHolderStatus = ({
           number: numberBackEnd,
           type: 3,
           rotation: Modulo((iconHolders[index].rotationDot), 360),
-          svg: svgBackEnd
+          svg: svgBackEnd,
+          proportion: 0
         }
 
         const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 3)) })

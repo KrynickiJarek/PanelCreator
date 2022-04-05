@@ -53,6 +53,12 @@ const backEndDataReducers = (state = INITIAL_STATE, action) => {
       return {
         ...state, frames: action.item
       }
+    case types.EDIT_FRAME_TEXT:
+      const editedFramed = state.frames
+      editedFramed.find((el, i) => i === action.index).title = action.text
+      return {
+        ...state, frames: [...editedFramed]
+      }
     case types.SET_BACK_END_REDUCER:
       return action.item
     default:

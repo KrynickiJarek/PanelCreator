@@ -43,6 +43,8 @@ const PanelPreviewFullScreen = ({
   setFullScreen
 }) => {
 
+  console.log(iconHolders)
+
 
   const [time, setTime] = useState(moment().format('HH:mm'));
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
@@ -182,7 +184,7 @@ const PanelPreviewFullScreen = ({
   if (chosenModel.panelRotation) {
     chosenModelStyle.transform = "rotate(-90deg)"
   }
-  if (chosenCut === 5) { //--Nataleczka
+  if (chosenCut === 5) {
     chosenModelStyle.border = `${2.5 * sc}px solid ${chosenColor.hex}`;
   }
 
@@ -588,7 +590,8 @@ const PanelPreviewFullScreen = ({
                   selectedDown,
                   selectedUp,
                   singleFrame,
-                  singleFrameTemp
+                  singleFrameTemp,
+                  splitIconProportions
                 }, index) =>
                   <div key={index}
                     style={
@@ -674,6 +677,7 @@ const PanelPreviewFullScreen = ({
                           singleFrame={singleFrame}
                           singleFrameTemp={singleFrameTemp}
                           visual={visual}
+                          splitIconProportions={splitIconProportions}
                         />
                       </>}
                   </div>
@@ -710,8 +714,6 @@ const PanelPreviewFullScreen = ({
                     <div>
                       <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>{date}</p>
                       <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>{time}</p>
-                      {/* <p className="lcd_clock" style={{ fontSize: `${3 * sc}px`, lineHeight: `${3.3 * sc}px` }}>2021-07-20</p> */}
-                      {/* <p className="lcd_clock" style={{ fontSize: `${5 * sc}px`, lineHeight: `${5.5 * sc}px` }}>15:30</p> */}
                     </div>
 
                     <div className="lcd_icon_box">

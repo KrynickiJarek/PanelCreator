@@ -65,12 +65,21 @@ const frameReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state, frameHolders: [...newFrameHolders], frameHoldersTemp: null, addNewFrame: action.item
       }
+
     case types.REMOVE_FRAME:
       return {
         ...state, frameHolders: [...state.frameHolders.filter(function (element, index) { return index !== action.item })],
         removeFrame: !state.removeFrame,
         lastRemovedFrameIndex: action.item
       }
+
+    case types.EDIT_FRAME_TEXT:
+      const editedFrameHolders = state.frameHolders
+      editedFrameHolders.find((el, i) => i === action.index).framePrint.text = action.text
+      return {
+        ...state, frameHolders: [...editedFrameHolders]
+      }
+
     case types.OVER_FRAME:
       const copyFrameHolders = state.frameHolders;
       copyFrameHolders.forEach((element, index) => {

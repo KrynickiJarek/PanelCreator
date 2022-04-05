@@ -44,6 +44,10 @@ const changeFrameText = item => ({
   type: types.CHANGE_FRAME_TEXT, item
 })
 
+const editFrameText = (text, index) => ({
+  type: types.EDIT_FRAME_TEXT, text, index
+})
+
 const changeFramesShapeToSharp = item => ({
   type: types.CHANGE_FRAMES_SHAPE_TO_SHARP, item
 })
@@ -81,6 +85,7 @@ const actions = {
   frameHolders,
   frameHoldersTemp,
   changeFrameText,
+  editFrameText,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
   overFrameReRender,

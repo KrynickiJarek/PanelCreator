@@ -270,6 +270,10 @@
         span{
           font-weight: 700;
         }
+        .coma{
+          font-size: 14px;
+          font-weight: 400;
+        }
 
       }
       .frame_list_button {
@@ -301,5 +305,27 @@
   .hide_frame_choosing_box{
     transition: 0.4s ease;
   }
+}
+
+
+.frame_title{
+line-height: 27px;
+}
+
+.input_box,
+.no_break_div{
+  display: inline-flex;
+  align-items: center;
+}
+
+.text_input{
+  width: 150px;
+}
+
+.panel_name_image{
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  margin-left: 2px;
 }
 

@@ -108,7 +108,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("1.02")
+    updateVersion("1.03")
     // eslint-disable-next-line 
   }, [])
 
@@ -874,6 +874,7 @@ export const Dashboard = memo(function Dashboard({
                                           selectedUp,
                                           singleFrame,
                                           singleFrameTemp,
+                                          splitIconProportions
                                         }, index) =>
                                           <div key={index}
                                             style={
@@ -1011,6 +1012,7 @@ export const Dashboard = memo(function Dashboard({
                                                   singleFrame={singleFrame}
                                                   singleFrameTemp={singleFrameTemp}
                                                   visual={false}
+                                                  splitIconProportions={splitIconProportions}
                                                 />
                                               </>}
                                           </div>

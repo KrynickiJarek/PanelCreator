@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actions from "./duck/actions"
 import actionsVisual from "../../PanelPreview/duck/actions"
+import actionsBackEnd from "../../duck/actions"
 
 import "./FrameEditor.scss"
 import { t } from "../../../../i18n";
@@ -11,8 +12,11 @@ import { t } from "../../../../i18n";
 import Roundframe from "../../../../assets/frame/roundframe.svg"
 import Sharpframe from "../../../../assets/frame/sharpframe.svg"
 import Remove from "../../../../assets/preview/remove.svg"
+import Edit from "../../../../assets/preview/edit.svg"
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
+import Submitinput from "../../../../assets/preview/submitinput.svg"
+import Clearinput from "../../../../assets/preview/clearinput.svg"
 
 import ReactTooltip from "react-tooltip";
 
@@ -38,12 +42,42 @@ const FrameEditor = ({
   visual,
   toggleVisual,
   changeFrameText,
-  warnings
+  warnings,
+  editFrameText,
+  editFrameTextBackEnd
 }) => {
   const [unlock, setUnlock] = useState(false)
   const [confirmWait, setConfirmWait] = useState(true)
   const [showChoosingBox, setShowChoosingBox] = useState(false)
   const [overflowSize, setOverflowSize] = useState(0)
+
+  const [frameText, setFrameText] = useState("")
+  const [indexFrameToEdit, setIndexFrameToEdit] = useState(null)
+
+
+
+  const handleEditFrameText = (text, index) => {
+    setFrameText(text)
+    setIndexFrameToEdit(index)
+  }
+
+  const handleChangeTextFrame = (text) => {
+    setFrameText(text.target.value.toUpperCase())
+  }
+
+  const handleSubmit = (e, index) => {
+    e.preventDefault();
+    editFrameText(frameText, index)
+    editFrameTextBackEnd(frameText, index)
+    setFrameText("")
+    setIndexFrameToEdit(null)
+  }
+
+  const handleAbort = () => {
+    setFrameText("")
+    setIndexFrameToEdit(null)
+  }
+
 
 
   const handleAddNewFrame = () => {
@@ -60,11 +94,6 @@ const FrameEditor = ({
     return () => clearTimeout(confirmTimeout);
   }
   const toggleTitle = () => {
-
-    console.log(warnings.filter(element => element.code === 4))
-    console.log(warnings.filter(element => element.code === 4).length !== 0)
-
-
     setOverflowSize(document.getElementById("overflow_frame").clientHeight)
     frameTitle(!frameTitleFlag)
     changeFrameText("")
@@ -305,12 +334,55 @@ const FrameEditor = ({
                     {t("FRAME_LIST_HEIGHT")}<span>{frame.frameInfo.rows}</span> ;
                     {t("FRAME_LIST_CORNERS")}<span>{frame.frameInfo.shape === "sharp" ? t("STRAIGHT_LOWERCASE") : t("ROUNDED_LOWERCASE")}</span>
                     {frame.framePrint.text && t("FRAME_LIST_TITLE")}
-                    {frame.framePrint.text && <span>{frame.framePrint.text}</span>}
-                    {frame.framePrint.text && t("FRAME_LIST_FONT")}
-                    {frame.framePrint.text && <span>{frame.framePrint.frameFontInfo}</span>}
-                    <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
-                      <img className="frame_list_img" src={Remove} alt="removeframe" />
-                    </div>
+                    {frame.framePrint.text &&
+                      <>
+                        {indexFrameToEdit === index ?
+                          <form
+                            onSubmit={(e) => { handleSubmit(e, index) }}
+                            className="input_box" >
+                            < input
+                              className="text_input"
+                              type="text"
+                              autoComplete="off"
+                              maxLength="16"
+                              value={frameText}
+                              onChange={(text) => handleChangeTextFrame(text)}
+                            />
+
+                            <input type="image" src={Submitinput} alt="submitinput" className="panel_name_image" />
+                            <img src={Clearinput} alt="clearinput" className="panel_name_image"
+                              onClick={handleAbort}
+                            />
+                          </form>
+                          :
+                          <>
+                            <span className="frame_title">{frame.framePrint.text}</span>
+                            <div className="frame_list_button" onClick={() => { handleEditFrameText(frame.framePrint.text, index) }}>
+                              <img className="frame_list_img" src={Edit} alt="editframe" />
+                            </div>
+                          </>
+                        }
+                      </>
+                    }
+                    {frame.framePrint.text &&
+                      <div className="no_break_div">
+                        <span className="coma">&nbsp;,&nbsp;</span>
+                        {t("FRAME_LIST_FONT")}<span>&nbsp;{frame.framePrint.frameFontInfo}</span>
+                        <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
+                          <img className="frame_list_img" src={Remove} alt="removeframe" />
+                        </div>
+                      </div>
+                    }
+                    {!frame.framePrint.text &&
+                      <div className="frame_list_button" onClick={() => { removeFrame(index) }}>
+                        <img className="frame_list_img" src={Remove} alt="removeframe" />
+                      </div>
+                    }
+
+                    {/* {frame.framePrint.text && t("FRAME_LIST_FONT")}
+                    {frame.framePrint.text && <span>{frame.framePrint.frameFontInfo}</span>} */}
+
+
                   </li>
                 )}
               </ol>
@@ -318,7 +390,7 @@ const FrameEditor = ({
           }
         </div>
       </div>
-    </div>
+    </div >
 
   );
 };
@@ -352,9 +424,10 @@ const mapDispatchToProps = dispatch => ({
   overFrame: (frame) => dispatch(actions.overFrame(frame)),
   frameTitle: (frame) => dispatch(actions.frameTitle(frame)),
   changeFrameText: (frame) => dispatch(actions.changeFrameText(frame)),
+  editFrameText: (text, index) => dispatch(actions.editFrameText(text, index)),
+  editFrameTextBackEnd: (text, index) => dispatch(actionsBackEnd.editFrameText(text, index)),
   allowFrameTitle: (frame) => dispatch(actions.allowFrameTitle(frame)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
-
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FrameEditor)

@@ -343,6 +343,12 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
                 {iconCategories.map((el, i) => (
                   <Tab.Pane eventKey={el.name} key={i}>
                     <div className="icons">
+                      {el.name === "SIGNS" &&
+                        <div className="instruction_box">
+                          <p className="instruction">{t("SIGN_ICONS_INSTRUCTION")}</p>
+                        </div>
+                      }
+
                       {
                         el.listOfIcons.map(
                           (image, index) => <IconToDrag key={index} image={image} isInFavorite={false} />

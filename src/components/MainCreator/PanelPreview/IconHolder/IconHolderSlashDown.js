@@ -58,7 +58,7 @@ export const IconHolderSlashDown = ({
         return num % denom + denom;
       }
     }
-
+    // console.log("iconHolders[index]", iconHolders[index])
     const toDataURL = svg => fetch(svg)
       .then(response => response.blob())
       .then(blob => new Promise((resolve, reject) => {
@@ -87,7 +87,8 @@ export const IconHolderSlashDown = ({
           number: numberBackEnd,
           type: 2,
           rotation: Modulo((iconHolders[index].rotationDown), 360),
-          svg: svgBackEnd
+          svg: svgBackEnd,
+          proportion: iconHolders[index].splitIconProportions ? iconHolders[index].splitIconProportions : 0
         }
         // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 2)) })
         const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 2)) })

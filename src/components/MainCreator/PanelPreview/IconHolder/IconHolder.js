@@ -109,7 +109,8 @@ const IconHolder = ({
           number: numberBackEnd,
           type: 0,
           rotation: Modulo((iconHolders[index].rotationIcon), 360),
-          svg: svgBackEnd
+          svg: svgBackEnd,
+          proportion: 0
         }
         // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
         const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 1 || element.type === 2)) })

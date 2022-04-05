@@ -192,7 +192,7 @@ const PanelPreview = ({
   fullScreen,
   setFullScreen,
   setAllIcons,
-  allIcons
+  allIcons,
 }) => {
 
 
@@ -443,6 +443,7 @@ const PanelPreview = ({
                   number: element.number,
                   type: element.type,
                   rotation: 0,
+                  proportion: 0,
                   svg: svgBackEnd
                 }
                 copyIconsBackEnd.push(recordIcon)
@@ -460,8 +461,6 @@ const PanelPreview = ({
     }
     // eslint-disable-next-line
   }, [resetAllAfterModelChangeFlag]);
-
-
 
 
   useEffect(() => {
@@ -742,7 +741,7 @@ const PanelPreview = ({
 
       copyFrameHolders.forEach((el) => {
         if (el.framePrint.frameFontInfo && !checkFrameFontArr.includes(el.framePrint.frameFontInfo)) {
-          checkFrameFontArr.push(el.framePrint.framframeFontInfoFont)
+          checkFrameFontArr.push(el.framePrint.frameFontInfo)
         }
         if (el.framePrint.text !== "") {
           checkFrameTitlesArr.push(el.framePrint.text)
@@ -1497,6 +1496,7 @@ const PanelPreview = ({
                 number: element.number,
                 type: element.type,
                 rotation: 0,
+                proportion: 0,
                 svg: svgBackEnd
               }
               copyIconsBackEnd.push(recordIcon)
@@ -1536,7 +1536,7 @@ const PanelPreview = ({
       el.selectedDown = false;
       el.rotationIcon = false;
       el.rotationUp = 0;
-      el.rotationDown = 0; //nataleczka
+      el.rotationDown = 0;
       el.rotationDot = false;
       el.splitIconProportions = 0;
     })
@@ -1624,6 +1624,7 @@ const PanelPreview = ({
               number: element.number,
               type: element.type,
               rotation: 0,
+              proportion: 0,
               svg: svgBackEnd
             }
             copyIconsBackEnd.push(recordIcon)
@@ -1819,9 +1820,8 @@ const PanelPreview = ({
 
   const handleSwitchSplitIconProportionsGlobal = () => {
     const copyArr = iconHolders;
-    // const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    const copyIconsBackEnd = iconsBackEnd //---BACKEND
     copyArr.forEach((el) => {
-      // if ( globalProportions === 3) {
       if (globalProportions === 0) {
         el.splitIconProportions = 1
       } else if (globalProportions === 1) {
@@ -1830,69 +1830,62 @@ const PanelPreview = ({
         el.splitIconProportions = 0
       }
 
-      // if (chosenModel.panelRotation) {
-      //   let numberBackEnd = null
-      //   if (chosenModel.panelRotation) {
-      //     if (index % 3 === 0) {
-      //       numberBackEnd = index + 3
-      //     } else if (index % 3 === 2) {
-      //       numberBackEnd = index - 1
-      //     } else {
-      //       numberBackEnd = index + 1
-      //     }
-      //   } else {
-      //     numberBackEnd = index + 1
-      //   }
+      copyIconsBackEnd.forEach((el) => {
+        if (globalProportions === 0) {
+          el.proportion = 1
+        } else if (globalProportions === 1) {
+          el.proportion = 2
+        } else if (globalProportions === 2 || globalProportions === 3) {
+          el.proportion = 0
+        }
+      })
 
-      //   if (el.selectedDot) {
-      //     el.rotationDot = el.rotationDot + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 3)].rotation = Modulo((el.rotationDot), 360)//---BACKEND
-      //   } else if (el.selected) {
-      //     el.rotationIcon = el.rotationIcon + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 0)].rotation = Modulo((el.rotationIcon), 360)//---BACKEND
-      //   } else if (el.selectedDown) {
-      //     el.rotationDown = el.rotationDown + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 2)].rotation = Modulo((el.rotationDown), 360)//---BACKEND
-      //   } else if (el.selectedUp) {
-      //     el.rotationUp = el.rotationUp + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === numberBackEnd && icon.type === 1)].rotation = Modulo((el.rotationUp), 360)//---BACKEND
-      //   }
-      // } else {
-      //   if (el.selectedDot) {
-      //     el.rotationDot = el.rotationDot + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 3)].rotation = Modulo((el.rotationDot), 360)//---BACKEND
-      //   } else if (el.selected) {
-      //     el.rotationIcon = el.rotationIcon + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 0)].rotation = Modulo((el.rotationIcon), 360)//---BACKEND
-      //   } else if (el.selectedDown) {
-      //     el.rotationDown = el.rotationDown + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].rotation = Modulo((el.rotationDown), 360)//---BACKEND
-      //   } else if (el.selectedUp) {
-      //     el.rotationUp = el.rotationUp + 90;
-      //     copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].rotation = Modulo((el.rotationUp), 360)//---BACKEND
-      //   }
-      // }
+
     })
     changeIconHolders(copyArr)
-    // changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
+    changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
   }
 
   const handleSwitchSplitIconProportions = () => {
     const copyArr = iconHolders;
-    // const copyIconsBackEnd = iconsBackEnd //---BACKEND
-    copyArr.forEach((el) => {
+    const copyIconsBackEnd = iconsBackEnd //---BACKEND
+
+    copyArr.forEach((el, index) => {
+      console.log("test", copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1))
       if (el.selectedUp || el.selectedDown) {
         if (el.splitIconProportions === 0) {
           el.splitIconProportions = 1
+          if (copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1) > -1) {
+            copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].proportion = 1
+          }
+          if (copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2) > -1) {
+            copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].proportion = 1
+          }
         } else if (el.splitIconProportions === 1) {
           el.splitIconProportions = 2
+          if (copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1) > -1) {
+            copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].proportion = 2
+          }
+          if (copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2) > -1) {
+            copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].proportion = 2
+          }
         } else if (el.splitIconProportions === 2) {
           el.splitIconProportions = 0
+          if (copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1) > -1) {
+            copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1)].proportion = 0
+          }
+          if (copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2) > -1) {
+            copyIconsBackEnd[copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 2)].proportion = 0
+          }
         }
       }
     })
+
+
+
+
     changeIconHolders(copyArr)
-    // changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
+    changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
   }
 
 
@@ -4831,7 +4824,6 @@ const PanelPreview = ({
                                   onChange={(text) => handleChangeTextFrame(text)}
                                   onFocus={() => setIsFocusedInputFrame(true)}
                                   onKeyDown={handleKeyPress}
-
                                 />
                                 <span style={{
                                   gridArea: '1 / 1 / 2 / 2',
