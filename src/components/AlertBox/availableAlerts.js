@@ -76,6 +76,10 @@ const availableAlerts = [
     info2: "WHAT_NEXT_ALERT_INFO_2",
     info21: "WHAT_NEXT_ALERT_INFO_21",
   },
+  {
+    code: 105,
+    text: "RESET_ALL_FRAMES_ALERT_SMOKED_GLASS",
+  },
 ]
 
 export default availableAlerts

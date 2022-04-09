@@ -161,9 +161,9 @@ const IconHolder = ({
   styleScale.width = `${7.5 * scale}px`;
 
   let styleSlash = {};
-  if (splitIconProportions === 1) {
+  if (splitIconProportions === 1 && !singleFrame && !(singleFrameTemp && chosenTab === "frame")) {
     styleSlash.transform = `translate(${1.2 * scale}px, ${1.2 * scale}px) scale(0.66)`
-  } else if (splitIconProportions === 2) {
+  } else if (splitIconProportions === 2 && !singleFrame && !(singleFrameTemp && chosenTab === "frame")) {
     styleSlash.transform = `translate(-${1.2 * scale}px, -${1.2 * scale}px) scale(0.66)`
   }
 

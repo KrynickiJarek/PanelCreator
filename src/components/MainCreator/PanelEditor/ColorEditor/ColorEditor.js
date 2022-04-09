@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from "react-redux"
 import actions from "./duck/actions"
 import actionsBackEnd from "../../duck/actions"
+import actionsVisual from "../../PanelPreview/duck/actions"
+import actionsFrame from "../../PanelEditor/FrameEditor/duck/actions"
 import { t } from "../../../../i18n";
 
 import "./ColorEditor.scss"
@@ -13,24 +15,44 @@ import Cut2 from "../../../../assets/cuts/cut2.svg"
 import Cut5 from "../../../../assets/cuts/cut5.svg"
 
 
-const ColorEditor = ({ color, changeColor, cut, changeCut, chosenModel, changePanelColorBackEnd, changePanelCutBackEnd }) => {
-
-  const handleChangeColor = (el) => {
-    changeColor(el)
-    changePanelColorBackEnd(el.RAL, el.hex)
-  }
-
-  const handleChangeCut = (el) => {
-    changeCut(el)
-    changePanelCutBackEnd(el)
-  }
-
+const ColorEditor = ({
+  color,
+  changeColor,
+  cut,
+  changeCut,
+  chosenModel,
+  changePanelColorBackEnd,
+  changePanelCutBackEnd,
+  frameHolders,
+  showAlert,
+  overFrameAll,
+  alertAnswer
+}) => {
   const smokedGlass = {
     RAL: "SMOKED_GLASS",
     name: "BLACK",
     hex: "#060707",
     iconColor: "white"
   }
+
+  const handleChangeColor = (el) => {
+    changeColor(el)
+    changePanelColorBackEnd(el.RAL, el.hex)
+  }
+  useEffect(() => {
+    if (alertAnswer === 105) {
+      handleChangeColor(smokedGlass)
+    }
+    // eslint-disable-next-line 
+  }, [alertAnswer])
+
+
+  const handleChangeCut = (el) => {
+    changeCut(el)
+    changePanelCutBackEnd(el)
+  }
+
+
 
 
   return (
@@ -80,15 +102,28 @@ const ColorEditor = ({ color, changeColor, cut, changeCut, chosenModel, changePa
 
         {(chosenModel.type === "MDOT_M18" || chosenModel.type === "MDOT_M18_UNIVERSAL") &&
           <>
-            <div className="color_link" style={color.RAL === smokedGlass.RAL ? { border: "3px solid #EC695C" } : {}}
-              data-tip data-for='smokedGlass'
-              onClick={() => { handleChangeColor(smokedGlass) }} >
-              <div style={{ backgroundColor: smokedGlass.hex }} className="color_box" />
-              < p className="color_name" style={color.RAL === smokedGlass.RAL ? { fontWeight: "700" } : {}}>{t(smokedGlass.name)}</p>
-              <p className="color_ral">{t(smokedGlass.RAL)}</p>
-            </div>
+            {frameHolders.length !== 0 ?
+              <div className="color_link" style={color.RAL === smokedGlass.RAL ? { border: "3px solid #EC695C" } : {}}
+                data-tip data-for='smokedGlass'
+                onClick={() => showAlert(105)}
+                onMouseOver={() => { overFrameAll(true) }}
+                onMouseLeave={() => { overFrameAll(false) }}
+              >
+                <div style={{ backgroundColor: smokedGlass.hex }} className="color_box" />
+                < p className="color_name" style={color.RAL === smokedGlass.RAL ? { fontWeight: "700" } : {}}>{t(smokedGlass.name)}</p>
+                <p className="color_ral">{t(smokedGlass.RAL)}</p>
+              </div>
+              :
+              <div className="color_link" style={color.RAL === smokedGlass.RAL ? { border: "3px solid #EC695C" } : {}}
+                data-tip data-for='smokedGlass'
+                onClick={() => { handleChangeColor(smokedGlass) }} >
+                <div style={{ backgroundColor: smokedGlass.hex }} className="color_box" />
+                < p className="color_name" style={color.RAL === smokedGlass.RAL ? { fontWeight: "700" } : {}}>{t(smokedGlass.name)}</p>
+                <p className="color_ral">{t(smokedGlass.RAL)}</p>
+              </div>
+            }
             <ReactTooltip className='tooltip_custom' id='smokedGlass' place="top" type="error" effect="float" >
-              <span>{t("SMOKED_GLASS_TOOLTIP_1")}<br />{t("SMOKED_GLASS_TOOLTIP_2")}</span>
+              <span>{t("SMOKED_GLASS_TOOLTIP_1")}<br />{t("SMOKED_GLASS_TOOLTIP_2")}<br />{t("SMOKED_GLASS_TOOLTIP_3")}</span>
             </ReactTooltip>
           </>
         }
@@ -132,13 +167,18 @@ const mapStateToProps = state => ({
   cut: state.frontEndData.color.cut,
   chosenModel: state.frontEndData.model.chosenModel,
   languageRender: state.frontEndData.visual.languageRender,
+  frameHolders: state.frontEndData.frame.frameHolders,
+  alertAnswer: state.frontEndData.visual.alertAnswer,
 })
 
 const mapDispatchToProps = dispatch => ({
   changeColor: color => dispatch(actions.changeColor(color)),
   changeCut: cut => dispatch(actions.changeCut(cut)),
   changePanelColorBackEnd: (ral, hex) => dispatch(actionsBackEnd.changePanelColor(ral, hex)),
-  changePanelCutBackEnd: cut => dispatch(actionsBackEnd.changePanelCut(cut))
+  changePanelCutBackEnd: cut => dispatch(actionsBackEnd.changePanelCut(cut)),
+  showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
+  overFrameAll: (income) => dispatch(actionsFrame.overFrameAll(income)),
+  overFrameReRender: (income) => dispatch(actionsFrame.overFrameReRender(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ColorEditor)

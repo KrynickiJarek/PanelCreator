@@ -44,7 +44,8 @@ const FrameEditor = ({
   changeFrameText,
   warnings,
   editFrameText,
-  editFrameTextBackEnd
+  editFrameTextBackEnd,
+  chosenColor
 }) => {
   const [unlock, setUnlock] = useState(false)
   const [confirmWait, setConfirmWait] = useState(true)
@@ -53,7 +54,6 @@ const FrameEditor = ({
 
   const [frameText, setFrameText] = useState("")
   const [indexFrameToEdit, setIndexFrameToEdit] = useState(null)
-
 
 
   const handleEditFrameText = (text, index) => {
@@ -112,7 +112,8 @@ const FrameEditor = ({
 
   return (
     <div className="scroll_container">
-      <div className="visual_background" style={(visual && chosenModel.type !== "MDOT_M6+_UNIVERSAL") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+      {/* <div className="visual_background" style={(visual && chosenModel.type !== "MDOT_M6+_UNIVERSAL") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}> */}
+      <div className="visual_background" style={(visual && chosenColor.RAL !== "SMOKED_GLASS") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
         <div className="visual_container">
           <div className="visual_info_box">
             {unlock ?
@@ -132,11 +133,19 @@ const FrameEditor = ({
           </div>
         </div>
       </div>
-      <div className="visual_background" style={chosenModel.type === "MDOT_M6+_UNIVERSAL" ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+      {/* <div className="visual_background" style={chosenModel.type === "MDOT_M6+_UNIVERSAL" ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
         <div className="visual_container">
           <div className="visual_info_box">
             <img src={Locked} alt="locked" className="visual_image" />
             <h2 className="visual_info">{t("NOT_AVALIBLE_IN_SELECTED_MODEL")}</h2>
+          </div>
+        </div>
+      </div> */}
+      <div className="visual_background" style={chosenColor.RAL === "SMOKED_GLASS" ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
+        <div className="visual_container">
+          <div className="visual_info_box">
+            <img src={Locked} alt="locked" className="visual_image" />
+            <h2 className="visual_info">{t("NOT_AVALIBLE_IN_SELECTED_COLOR")}</h2>
           </div>
         </div>
       </div>
@@ -412,6 +421,7 @@ const mapStateToProps = state => ({
   visual: state.frontEndData.visual.visual,
   languageRender: state.frontEndData.visual.languageRender,
   warnings: state.frontEndData.visual.warnings,
+  chosenColor: state.frontEndData.color.color,
 })
 
 const mapDispatchToProps = dispatch => ({

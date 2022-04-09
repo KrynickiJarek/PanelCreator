@@ -108,7 +108,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("1.03")
+    updateVersion("1.04")
     // eslint-disable-next-line 
   }, [])
 
@@ -361,7 +361,7 @@ export const Dashboard = memo(function Dashboard({
     })
       .then(res => res.blob())
       .then(blob => {
-        let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
+        let fileName = panels[id].frontEndData.model.chosenModel.name + "_" + panels[id].backEndData.panelName + ".pdf"
         saveAs(blob, fileName);
         setDownloading(false)
         clearTimeout(serverTimeout)
@@ -402,7 +402,7 @@ export const Dashboard = memo(function Dashboard({
     // })
     //   .then(res => res.blob())
     //   .then(blob => {
-    //     let fileName = panels[id].backEndData.panelName + "_" + panels[id].frontEndData.model.chosenModel.name + ".pdf"
+    //     let fileName = panels[id].frontEndData.model.chosenModel.name  + "_" + panels[id].backEndData.panelName + ".pdf"
     //     saveAs(blob, fileName);
     //     setDownloading(false)
     //   })

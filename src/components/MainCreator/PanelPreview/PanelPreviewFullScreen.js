@@ -43,7 +43,6 @@ const PanelPreviewFullScreen = ({
   setFullScreen
 }) => {
 
-  console.log(iconHolders)
 
 
   const [time, setTime] = useState(moment().format('HH:mm'));

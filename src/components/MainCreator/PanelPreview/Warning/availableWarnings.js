@@ -32,6 +32,10 @@ const availableWarnings = [
     code: 7,
     text: "WARNING_7_OWN_ICON",
   },
+  {
+    code: 8,
+    text: "WARNING_8_SPLIT_ICONS_SINGLE_FRAME",
+  },
 ]
 
 export default availableWarnings

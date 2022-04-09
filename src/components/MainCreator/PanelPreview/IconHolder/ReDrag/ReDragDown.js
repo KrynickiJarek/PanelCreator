@@ -28,7 +28,6 @@ export const ReDragDown = (props) => {
     splitIconProportions,
     canDrop
   } = props
-  console.log("props", props)
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
 

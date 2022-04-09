@@ -637,6 +637,34 @@ const PanelPreview = ({
 
 
 
+  useEffect(() => { //NATALECZKA
+
+    const checkProportions = []
+    iconHolders.forEach((element, index) => {
+      if (element.splitIconProportions && (element.lastDroppedSlashUp || element.lastDroppedSlashDown)) {
+        checkProportions.push(index)
+      }
+    })
+    const checkSingleFrames = []
+    frameHolders.forEach((element) => {
+      if (element.type === "single") {
+        checkSingleFrames.push(element.frameInfo.startCell - 1)
+      }
+    })
+    const filteredArray = checkSingleFrames.filter(el => checkProportions.includes(el));
+    if (filteredArray.length > 0) {
+      const checkWarningsText = warnings.filter(element => element.code === 8)
+      if (checkWarningsText.length === 0) {
+        pushWarnings(8)
+      }
+    } else {
+      filterWarnings(8)
+    }
+    //eslint-disable-next-line
+  }, [iconHolders, iconHoldersRender, addNewFrameState]);
+
+
+
   useEffect(() => {
     const copyArr = iconHolders;
     if (isFocusedInputSide === "up") {
@@ -930,7 +958,7 @@ const PanelPreview = ({
     if (alertAnswer === 4) {
       handleClearAllIcons()
     }
-    if (alertAnswer === 5) {
+    if (alertAnswer === 5 || alertAnswer === 105) {
       handleResetAllFrames()
       handleResetCurrFrame()
     }
@@ -979,7 +1007,7 @@ const PanelPreview = ({
   frameCellStyle.opacity = "0";
   frameCellStyle.margin = `${2 * sc}px auto`;
 
-  if ((chosenTab === "frame")) {
+  if ((chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS")) {
     frameCellStyle.opacity = "1";
   }
 
@@ -999,7 +1027,7 @@ const PanelPreview = ({
   frameClickStyle.height = "100%";
   frameClickStyle.width = "100%";
   frameClickStyle.position = "absolute";
-  if ((chosenTab === "frame")) {
+  if ((chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS")) {
     frameClickStyle.cursor = "pointer";
     frameClickStyle.zIndex = "999";
   }
@@ -1016,7 +1044,7 @@ const PanelPreview = ({
   if (overCurrFrame) {
     frameTempStyle.borderColor = "#dc3545";
   }
-  if ((chosenTab === "frame")) {
+  if ((chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS")) {
     frameTempStyle.opacity = "1";
   }
 
@@ -1300,7 +1328,7 @@ const PanelPreview = ({
   textStyleFrame.width = "100%";
   textStyleFrame.transition = "400ms ease";
 
-  if (chosenTab === "frame" && showFrameTextBorder) {
+  if (chosenTab === "frame" && showFrameTextBorder && chosenColor.RAL !== "SMOKED_GLASS") {
     textStyleFrame.border = "2px dashed rgb(236, 105, 92)"
   }
 
@@ -1326,14 +1354,14 @@ const PanelPreview = ({
   }
 
   function showFrameBorder(e) {
-    if ((chosenTab === "frame") && !showFrameTextBorder && !isFocusedInputFrame) {
+    if ((chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS") && !showFrameTextBorder && !isFocusedInputFrame) {
       e.target.style.border = "2px dashed rgb(236, 105, 92)"
     }
   }
 
 
   function hideFrameBorder(e) {
-    if ((chosenTab === "frame") && !showFrameTextBorder && !isFocusedInputFrame) {
+    if ((chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS") && !showFrameTextBorder && !isFocusedInputFrame) {
       e.target.style.border = "2px dashed transparent"
     }
   }
@@ -4176,7 +4204,7 @@ const PanelPreview = ({
     })
       .then(res => res.blob())
       .then(blob => {
-        let fileName = panelName + "_" + chosenModel.name + ".pdf"
+        let fileName = chosenModel.name + "_" + panelName + ".pdf"
         saveAs(blob, fileName);
         setDownloading(false)
         showAlert(100);
@@ -4253,7 +4281,7 @@ const PanelPreview = ({
     })
       .then(res => res.blob())
       .then(blob => {
-        let fileName = panelName + "_" + chosenModel.name + ".pdf"
+        let fileName = chosenModel.name + "_" + panelName + ".pdf"
         saveAs(blob, fileName);
         setDownloading(false)
         clearTimeout(serverTimeout)
@@ -4783,7 +4811,7 @@ const PanelPreview = ({
                         </div>
                       )}
 
-                      {textFrame && chosenTab === "frame" && frameTitleFlag &&
+                      {textFrame && chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS" && frameTitleFlag &&
                         <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
                           <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
                             <form onSubmit={handleSubmit}>
@@ -5479,7 +5507,7 @@ const PanelPreview = ({
 
                 </>
               }
-              {chosenTab === "frame" &&
+              {chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS" &&
                 <>
 
                   <div className="side_box">
