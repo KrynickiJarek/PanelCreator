@@ -78,7 +78,6 @@ export const Dashboard = memo(function Dashboard({
   setAlertAnswer
 }) {
 
-
   const [zoomId, setZoomId] = useState(null)
   const [resize, setResize] = useState(0)
   const [onTop, setOnTop] = useState(null)
@@ -108,7 +107,7 @@ export const Dashboard = memo(function Dashboard({
   }
 
   useEffect(() => {
-    updateVersion("1.04")
+    updateVersion("1.04a")
     // eslint-disable-next-line 
   }, [])
 
@@ -468,10 +467,13 @@ export const Dashboard = memo(function Dashboard({
             endocedData.frontEndData.visual.panelName = pureName + t("COPY")
             endocedData.backEndData.panelName = pureName + t("COPY")
           }
-        } else {
+        }
+        else {
           let copyNumber = 0
           copyPanels.forEach(panel => {
             if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
+              console.log("copyNumber warunek", panel.frontEndData.visual.panelName)
+
               if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
                 let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
                 if (numberTemp > copyNumber) {
@@ -482,7 +484,7 @@ export const Dashboard = memo(function Dashboard({
               }
             }
           })
-
+          console.log("copyNumber", copyNumber)
           if (copyNumber > 0) {
             let name = endocedData.frontEndData.visual.panelName
             endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
@@ -493,6 +495,18 @@ export const Dashboard = memo(function Dashboard({
             endocedData.backEndData.panelName = name + t("COPY")
           }
         }
+
+
+
+        if (typeof endocedData?.frontEndData?.icon?.iconHolders[0]?.splitIconProportions === "undefined") {
+          endocedData?.frontEndData?.icon?.iconHolders?.forEach(icon => {
+            icon.splitIconProportions = 0
+          })
+          endocedData?.backEndData?.icons?.forEach(icon => {
+            icon.proportion = 0
+          })
+        }
+
 
         copyPanels.push(endocedData)
         updatePanels(copyPanels)
@@ -1208,7 +1222,6 @@ export const Dashboard = memo(function Dashboard({
                           <p className="dashboard_name">{t("LOADING")}</p>
                           : <p className="dashboard_name">{t("LOAD_PANEL")}</p>
                         }
-
                       </div>
 
                       <div className={`resize-${"upload"}`} style={zoomId === "upload" ? { transition: "0.5s ease", opacity: "1", width: "300px", cursor: "default" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5", width: "300px", cursor: "default" }}>

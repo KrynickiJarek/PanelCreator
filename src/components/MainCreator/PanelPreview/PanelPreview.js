@@ -250,6 +250,12 @@ const PanelPreview = ({
   const [areThereAnySplit, setAreThereAnySplit] = useState(false)
   const [isAnySplitSelected, setIsAnySplitSelected] = useState(3)
 
+  useEffect(() => {
+    handleSwitchSplitIconProportionsGlobalInitial()
+    // eslint-disable-next-line
+  }, []);
+
+
 
   useEffect(() => {
     setPanelContainerHeight(document.querySelector(".panel_container").clientHeight)
@@ -987,7 +993,9 @@ const PanelPreview = ({
   useEffect(() => {
     const checkProportions = []
     iconHolders.forEach((element) => {
-      checkProportions.push(element.splitIconProportions)
+      if (typeof element.splitIconProportions !== "undefined") {
+        checkProportions.push(element.splitIconProportions)
+      }
     })
     const uniqueArray = [...new Set(checkProportions)]
     if (uniqueArray.length > 1) {
@@ -1846,9 +1854,31 @@ const PanelPreview = ({
 
 
 
+  const handleSwitchSplitIconProportionsGlobalInitial = () => {
+
+    if (typeof iconHolders[0]?.splitIconProportions === "undefined") {
+      const copyArr = iconHolders;
+      const copyIconsBackEnd = iconsBackEnd //---BACKEND
+
+      copyArr.forEach((el) => {
+        el.splitIconProportions = 0
+      })
+
+      copyIconsBackEnd.forEach((el) => {
+        el.proportion = 0
+      })
+
+      changeIconHolders(copyArr)
+      changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
+    }
+
+  }
+
   const handleSwitchSplitIconProportionsGlobal = () => {
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
+    console.log("iconHolders", iconHolders)
+    console.log("iconsBackEnd", iconsBackEnd)
     copyArr.forEach((el) => {
       if (globalProportions === 0) {
         el.splitIconProportions = 1
@@ -1857,18 +1887,16 @@ const PanelPreview = ({
       } else if (globalProportions === 2 || globalProportions === 3) {
         el.splitIconProportions = 0
       }
+    })
 
-      copyIconsBackEnd.forEach((el) => {
-        if (globalProportions === 0) {
-          el.proportion = 1
-        } else if (globalProportions === 1) {
-          el.proportion = 2
-        } else if (globalProportions === 2 || globalProportions === 3) {
-          el.proportion = 0
-        }
-      })
-
-
+    copyIconsBackEnd.forEach((el) => {
+      if (globalProportions === 0) {
+        el.proportion = 1
+      } else if (globalProportions === 1) {
+        el.proportion = 2
+      } else if (globalProportions === 2 || globalProportions === 3) {
+        el.proportion = 0
+      }
     })
     changeIconHolders(copyArr)
     changeIconsBackEnd(copyIconsBackEnd)//---BACKEND
