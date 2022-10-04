@@ -3,7 +3,7 @@ import "./CreatorHeader.scss"
 import { connect } from "react-redux"
 import i18n, { t } from "../../../i18n";
 
-import AmpioLogo from "../../../assets/ampio_logo.png"
+import AmpioLogo from "../../../assets/ampio_logo.svg"
 import actionsVisual from "../../MainCreator/PanelPreview/duck/actions"
 
 const CreatorHeader = ({ version, changeLanguage }) => {
