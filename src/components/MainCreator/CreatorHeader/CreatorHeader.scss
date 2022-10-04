@@ -1,4 +1,4 @@
-.header_container{
+.header_container {
   width: 100%;
   min-width: 1280px;
   display: flex;
@@ -6,7 +6,7 @@
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 25px 0px;
   position: relative;
 
-  .nav_container{
+  .nav_container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,22 +18,23 @@
     margin: 28px 0 18px;
     padding: 0 15px;
 
-    .nav_brand{
+    .nav_brand {
       transition: opacity 300ms ease;
       cursor: pointer;
-      
-      .nav_logo{
+
+      .nav_logo {
         width: auto;
         height: 45px;
         margin-left: 50px;
+        outline: none;
       }
     }
-    
-    .nav_brand:hover{
+
+    .nav_brand:hover {
       opacity: 0.6;
     }
-  
-    .nav_header{
+
+    .nav_header {
       font-size: 45px;
       line-height: 45px;
       position: absolute;
@@ -46,7 +47,8 @@
       cursor: default;
     }
   }
-  .version{
+
+  .version {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -57,7 +59,8 @@
     font-size: 12px;
     cursor: default;
   }
-  .languale_button_box{
+
+  .languale_button_box {
     position: absolute;
     right: 0;
     top: 0;
@@ -65,7 +68,7 @@
     margin-right: 18px;
     display: flex;
 
-    .languale_button{
+    .languale_button {
       font-family: 'Montserrat', sans-serif;
       color: #333333;
       font-size: 12px;
@@ -74,7 +77,8 @@
       border: none;
       cursor: pointer;
     }
-    .languale_slash{
+
+    .languale_slash {
       font-family: 'Montserrat', sans-serif;
       color: rgb(236, 105, 92);
       font-size: 18px;
