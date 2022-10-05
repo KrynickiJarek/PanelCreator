@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   fullScreen: false,
   allIcons: false,
 }
+//version wersja tutaj zmieniaj 
 
 const visualReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {

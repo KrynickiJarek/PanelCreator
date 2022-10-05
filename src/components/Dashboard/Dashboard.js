@@ -102,11 +102,13 @@ export const Dashboard = memo(function Dashboard({
 
   let sc = 5
 
+
   if (!(isChrome || isEdge || isOpera)) {
     showAlert(20)
   }
 
   useEffect(() => {
+    //version wersja tutaj zmieniaj 
     updateVersion("1.04c")
     // eslint-disable-next-line 
   }, [])
