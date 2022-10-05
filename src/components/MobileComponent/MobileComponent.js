@@ -1,7 +1,7 @@
 import React from 'react';
 import "./MobileComponent.scss"
 
-import AmpioLogo from "../../assets/ampio_logo.svg"
+import AmpioLogo from "../../assets/ampio_logo.png"
 import Mobile from "../../assets/mobile.svg"
 import { t } from "../../i18n";
 

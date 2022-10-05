@@ -1,6 +1,6 @@
 import React from 'react';
 import "./LoadingView.scss"
-import AmpioLogo from "../../assets/ampio_logo.svg"
+import AmpioLogo from "../../assets/ampio_logo.png"
 
 const LoadingView = () => {
 
