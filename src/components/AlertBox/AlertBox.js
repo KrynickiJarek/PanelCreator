@@ -58,7 +58,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                 </>
                 :
                 <>
-                  {alert < 20 &&
+                  {(alert < 20 || alert === 200) &&
                     <div className="alert_button_back"
                       onClick={() => removeAlert()}
                     >

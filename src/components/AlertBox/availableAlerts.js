@@ -80,6 +80,10 @@ const availableAlerts = [
     code: 105,
     text: "RESET_ALL_FRAMES_ALERT_SMOKED_GLASS",
   },
+  {
+    code: 200,
+    text: "UNSUPPORTED_CHARACTER",
+  },
 ]
 
 export default availableAlerts
