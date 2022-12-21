@@ -8,7 +8,7 @@ const INITIAL_STATE = {
   removeIcons: false,
   panelName: "",
   timeOfCreation: null,
-  version: "1.05",
+  version: "1.06",
   warnings: [],
   warningsReRender: false,
   alert: null,
