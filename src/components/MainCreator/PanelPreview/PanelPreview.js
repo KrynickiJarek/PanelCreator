@@ -100,6 +100,7 @@ const PanelPreview = ({
   resetCut,
   chosenTab,
   resetTab,
+  resetSubtab,
   chosenModel,
   resetModel,
   resetAllAfterModelChange,
@@ -510,6 +511,7 @@ const PanelPreview = ({
     setVisualSmooth(false)
     changeIconHolders(arrIconHolders);
     resetTab("model")
+    resetSubtab("default")
     handleShowWarnings()
     allowFrameTitle(false)
     // eslint-disable-next-line
@@ -4392,6 +4394,7 @@ const PanelPreview = ({
         resetCut()
         resetPanelColorBackEnd()
         resetTab("model")
+        resetSubtab("default")
         resetModel()
         changePanelTypeBackEnd(availableModels[0].backEndPanelType)
         updateFavoriteIcons([])
@@ -4436,6 +4439,7 @@ const PanelPreview = ({
       resetCut()
       resetPanelColorBackEnd()
       resetTab("model")
+      resetSubtab("default")
       resetModel()
       changePanelTypeBackEnd(availableModels[0].backEndPanelType)
       updateFavoriteIcons([])
@@ -5666,7 +5670,7 @@ const PanelPreview = ({
 const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color.color,
   chosenCut: state.frontEndData.color.cut,
-  chosenTab: state.frontEndData.tab,
+  chosenTab: state.frontEndData.tab.tab,
   chosenModel: state.frontEndData.model.chosenModel,
   resetAllAfterModelChangeFlag: state.frontEndData.model.resetAllAfterModelChangeFlag,
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
@@ -5752,6 +5756,7 @@ const mapDispatchToProps = dispatch => ({
   resetColor: (income) => dispatch(actionsColor.resetColor(income)),
   resetCut: (income) => dispatch(actionsColor.resetCut(income)),
   resetTab: (income) => dispatch(actionsTab.change(income)),
+  resetSubtab: (income) => dispatch(actionsTab.changeSubtab(income)),
 
   changePanelNameBackEnd: (income) => dispatch(actionsBackEnd.changePanelName(income)),
   changePanelTextBackEnd: (income) => dispatch(actionsBackEnd.changePanelText(income)),

@@ -176,7 +176,7 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
 };
 
 const mapStateToProps = state => ({
-  tab: state.frontEndData.tab,
+  tab: state.frontEndData.tab.tab,
   iconHolders: state.frontEndData.icon.iconHolders,
   languageRender: state.frontEndData.visual.languageRender,
 })

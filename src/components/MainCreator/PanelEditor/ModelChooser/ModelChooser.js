@@ -181,7 +181,7 @@ const ModelChooser = ({
 
 const mapStateToProps = state => ({
   panelModel: state.frontEndData.model.chosenModel,
-  chosenTab: state.frontEndData.tab,
+  chosenTab: state.frontEndData.tab.tab,
   languageRender: state.frontEndData.visual.languageRender,
   panelTextBackEnd: state.backEndData.panelText,
   iconsBackEnd: state.backEndData.icons,

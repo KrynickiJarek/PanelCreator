@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
-import actions from "./duck/actions"
+import actions from "../../PanelEditor/duck/actions.js"
 import "./IconEditor.scss"
 import { t } from "../../../../i18n";
 
 import Favorite from "../../../../assets/favorite.svg"
 import Own from "../../../../assets/own.svg"
+import Status_leds from "../../../../assets/status_leds.svg"
+import Keyboards from "../../../../assets/keyboards.svg"
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
@@ -19,7 +21,7 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, chosenModel, showAlert }) => {
+export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, chosenModel, showAlert }) => {
 
   const [unlock, setUnlock] = useState(false)
   const [loadingIcon, setLoadingIcon] = useState(false)
@@ -171,6 +173,14 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
     return !favoriteIcons.includes(icon)
   }
 
+  const handleClickStatusIcons = () => {
+    changeSubtab("status_icons")
+  }
+
+  const handleClickIcons = () => {
+    changeSubtab("default")
+  }
+
 
   return (
     <div className="scroll_container">
@@ -208,16 +218,24 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
           <Tab.Container defaultActiveKey="ulubione" mountOnEnter>
             <div className="nav_col">
               <Nav variant="pills" className="flex-column">
-                <Nav.Link eventKey="ulubione" >
+                <Nav.Link eventKey="ulubione" onClick={handleClickIcons}>
                   <img src={Favorite} alt="own" className="favorite_nav" />
                   {t("FAVOURITE")}
                 </Nav.Link>
-                <Nav.Link eventKey="własne" >
+                <Nav.Link eventKey="własne" onClick={handleClickIcons}>
                   <img src={Own} alt="own" className="favorite_nav" />
                   {t("CUSTOM")}
                 </Nav.Link>
+                {/* <Nav.Link eventKey="diody" onClick={handleClickStatusIcons}>
+                  <img src={Status_leds} alt="status leds" className="favorite_nav" />
+                  {t("STATUS_LEDS")}
+                </Nav.Link>
+                <Nav.Link eventKey="klawiatury" onClick={handleClickIcons}>
+                  <img src={Keyboards} alt="keybords" className="favorite_nav" />
+                  {t("KEYBOARDS")}
+                </Nav.Link> */}
                 {iconCategories.map((el, i) => (
-                  <Nav.Link key={i} eventKey={el.name}>{t(el.name)}</Nav.Link>
+                  <Nav.Link key={i} eventKey={el.name} onClick={handleClickIcons}>{t(el.name)}</Nav.Link>
                 ))}
               </Nav>
             </div>
@@ -340,6 +358,63 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
 
                   </div>
                 </Tab.Pane>
+                <Tab.Pane eventKey="diody">
+                  <div className="icons">
+                    <div className="instruction_box">
+                      <h1>test</h1>
+                      {/* <p className="instruction_bold">{t("CUSTOM_ICONS_INSTRUCTION_BOLD_1")}</p>
+                      <p className="instruction">{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_1")}</p>
+                      <label htmlFor="inputUploadIcon" >
+                        <div className="select_button">
+                          {t("SELECT_FILE")}
+                          <div className="button_arrows" />
+                        </div>
+                      </label>
+                      <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} /> */}
+                    </div>
+                    {/* 
+                    {ownIcons.map((image, index) =>
+                      <IconToDrag key={index} image={image} isInOwn={true} ownIconIndex={index} />)}
+
+                    {loadingIcon &&
+                      <div className="icon_box">
+                        <div className="icon_drag">
+                          <div class="lds-dual-ring" />
+                        </div>
+                      </div>
+                    }
+
+                    <div className="instruction_box">
+                      <p className="instruction_bold" style={{ marginTop: "20px" }}>{t("CUSTOM_ICONS_INSTRUCTION_BOLD_2")}</p>
+
+                      {panels.length === 0 || (panels.length === 1 && indexOfLastPanel !== -1) ?
+                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_OTHER_PROJECTS")}</p>
+                        :
+                        <>
+                          <p className="instruction" >{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_2")}</p>
+                          {panels.map((panel, index) =>
+                            <div key={index}>
+                              {indexOfLastPanel !== index &&
+                                <>
+                                  <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
+
+                                  {panel.frontEndData.icon.ownIcons.length === 0 ?
+                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_CUSTOM_ICONS")}</p>
+                                    :
+                                    <div className="icons">
+                                      {panel.frontEndData.icon.ownIcons.map((image, index) =>
+                                        <IconToDrag key={index} image={image} isInOtherOwn={true} />)}
+                                    </div>
+                                  }
+                                </>
+                              }
+                            </div>
+                          )}
+                        </>
+                      }
+                    </div> */}
+                  </div>
+                </Tab.Pane>
                 {iconCategories.map((el, i) => (
                   <Tab.Pane eventKey={el.name} key={i}>
                     <div className="icons">
@@ -361,8 +436,8 @@ export const IconEditor = ({ visual, toggleVisual, favoriteIcons, ownIcons, upda
             </div>
           </Tab.Container>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
 
   );
 }
@@ -384,6 +459,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  changeSubtab: tab => dispatch(actions.changeSubtab(tab)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   updateOwnIcons: (income) => dispatch(actions.updateOwnIcons(income)),

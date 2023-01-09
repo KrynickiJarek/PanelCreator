@@ -5,6 +5,7 @@ import Backend from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import EN from "./languages/en.json";
 import PL from "./languages/pl.json";
+import SK from "./languages/sk.json";
 
 
 const resources = {
@@ -13,6 +14,9 @@ const resources = {
   },
   pl: {
     translation: PL,
+  },
+  sk: {
+    translation: SK,
   },
 };
 

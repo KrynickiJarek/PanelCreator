@@ -166,7 +166,7 @@ export const ReDragUp = ({
 }
 
 const mapStateToProps = state => ({
-  chosenTab: state.frontEndData.tab,
+  chosenTab: state.frontEndData.tab.tab,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
   scale: state.frontEndData.visual.scale,

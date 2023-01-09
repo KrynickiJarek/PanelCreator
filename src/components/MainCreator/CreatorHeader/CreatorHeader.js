@@ -29,8 +29,12 @@ const CreatorHeader = ({ version, changeLanguage }) => {
           PL
         </button>
         <span className="languale_slash">/</span>
-        <button className="languale_button" style={{ fontWeight: i18n.language.split('-')[0] !== "pl" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("en"); rerenderAll() }}>
+        <button className="languale_button" style={{ fontWeight: i18n.language.split('-')[0] === "en" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("en"); rerenderAll() }}>
           ENG
+        </button>
+        <span className="languale_slash">/</span>
+        <button className="languale_button" style={{ fontWeight: i18n.language.split('-')[0] === "sk" ? 'bold' : 'normal' }} type="submit" onClick={() => { i18n.changeLanguage("sk"); rerenderAll() }}>
+          SK
         </button>
       </div>
 

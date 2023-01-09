@@ -823,7 +823,7 @@ const PanelPreviewFullScreen = ({
 const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color.color,
   chosenCut: state.frontEndData.color.cut,
-  chosenTab: state.frontEndData.tab,
+  chosenTab: state.frontEndData.tab.tab,
   chosenModel: state.frontEndData.model.chosenModel,
   frameHolders: state.frontEndData.frame.frameHolders,
   visual: state.frontEndData.visual.visual,

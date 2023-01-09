@@ -18,6 +18,7 @@ const IconHolderStatus = ({
   removeIcons,
   chosenColor,
   chosenTab,
+  chosenSubtab,
   changeIconHolders,
   index,
   iconHolders,
@@ -27,6 +28,7 @@ const IconHolderStatus = ({
   lastDroppedDot,
   rotationDot,
   panelRotation,
+  panelModel
 }) => {
 
 
@@ -186,7 +188,34 @@ const IconHolderStatus = ({
       };
     };
   }
-  else if (selectedDot && chosenTab === "icons") {
+  else if (selectedDot && chosenTab === "icons" && chosenSubtab === "default") {
+    styleDropping = {
+      backgroundColor: "rgb(236, 105, 92)",
+      transform: "translateX(-50%) scale(3.2)",
+    };
+
+    if (panelRotation) {
+      styleArea = {
+        transform: "scale(2) rotate(90deg)",
+      };
+    } else {
+      styleArea = {
+        transform: "scale(2)",
+      };
+    }
+    styleDroppingAni = {
+      transform: "translateX(-50%) scale(2)",
+    };
+    styleZIndex = {
+      zIndex: "99",
+    };
+    if (animations) {
+      styleDroppingPulse = {
+        animation: "Ani 2s infinite",
+      };
+    };
+  }
+  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M-DOT-R14") {
     styleDropping = {
       backgroundColor: "rgb(236, 105, 92)",
       transform: "translateX(-50%) scale(3.2)",
@@ -253,7 +282,8 @@ const IconHolderStatus = ({
 
 
 const mapStateToProps = state => ({
-  chosenTab: state.frontEndData.tab,
+  chosenTab: state.frontEndData.tab.tab,
+  chosenSubtab: state.frontEndData.tab.subtab,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
   scale: state.frontEndData.visual.scale,
@@ -261,6 +291,7 @@ const mapStateToProps = state => ({
   removeIcon: state.frontEndData.visual.removeIcon,
   removeIcons: state.frontEndData.visual.removeIcons,
   iconsBackEnd: state.backEndData.icons,
+  panelModel: state.frontEndData.model.chosenModel.type,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),

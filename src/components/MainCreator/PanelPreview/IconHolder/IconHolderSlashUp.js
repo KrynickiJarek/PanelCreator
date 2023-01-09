@@ -290,7 +290,7 @@ export const IconHolderSlashUp = ({
 }
 
 const mapStateToProps = state => ({
-  chosenTab: state.frontEndData.tab,
+  chosenTab: state.frontEndData.tab.tab,
   chosenModel: state.frontEndData.model.chosenModel,
   iconHolders: state.frontEndData.icon.iconHolders,
   iconHoldersRender: state.frontEndData.icon.iconHoldersRender,
