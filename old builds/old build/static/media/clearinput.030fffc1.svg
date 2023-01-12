@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?> <!-- Created with Vectornator for iOS (http://vectornator.io/) --><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg height="100%" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" xmlns:vectornator="http://vectornator.io" version="1.1" viewBox="0 0 208.6 208.6">
+<metadata>
+<vectornator:setting key="DimensionsVisible" value="0"/>
+<vectornator:setting key="PencilOnly" value="0"/>
+<vectornator:setting key="SnapToPoints" value="0"/>
+<vectornator:setting key="OutlineMode" value="0"/>
+<vectornator:setting key="CMYKEnabledKey" value="0"/>
+<vectornator:setting key="RulersVisible" value="1"/>
+<vectornator:setting key="SnapToEdges" value="0"/>
+<vectornator:setting key="GuidesVisible" value="0"/>
+<vectornator:setting key="DisplayWhiteBackground" value="0"/>
+<vectornator:setting key="doHistoryDisabled" value="0"/>
+<vectornator:setting key="SnapToGuides" value="1"/>
+<vectornator:setting key="TimeLapseWatermarkDisabled" value="0"/>
+<vectornator:setting key="Units" value="Points"/>
+<vectornator:setting key="DynamicGuides" value="1"/>
+<vectornator:setting key="IsolateActiveLayer" value="0"/>
+<vectornator:setting key="SnapToGrid" value="0"/>
+</metadata>
+<defs/>
+<g id="Untitled" vectornator:layerName="Untitled">
+<path d="M2.5+104.3C2.5+48.0774+48.0774+2.5+104.3+2.5C160.523+2.5+206.1+48.0774+206.1+104.3C206.1+160.523+160.523+206.1+104.3+206.1C48.0774+206.1+2.5+160.523+2.5+104.3Z" opacity="1" fill="#dc3545"/>
+</g>
+<g id="g1890" vectornator:layerName="g1890">
+<path d="M145.963+41.8059L166.794+62.6373L166.794+62.6373L62.6373+166.794L62.6373+166.794L41.8059+145.963L41.8059+145.963L145.963+41.8059L145.963+41.8059Z" opacity="1" fill="#ffffff"/>
+<path d="M166.794+145.963L145.963+166.794L145.963+166.794L41.8059+62.6373L41.8059+62.6373L62.6373+41.8059L62.6373+41.8059L166.794+145.963L166.794+145.963Z" opacity="1" fill="#ffffff"/>
+</g>
+</svg>
