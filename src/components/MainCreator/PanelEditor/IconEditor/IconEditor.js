@@ -7,8 +7,8 @@ import { t } from "../../../../i18n";
 
 import Favorite from "../../../../assets/favorite.svg"
 import Own from "../../../../assets/own.svg"
-// import Status_leds from "../../../../assets/status_leds.svg"
-// import Keyboards from "../../../../assets/keyboards.svg"
+import Status_leds from "../../../../assets/status_leds.svg"
+import Keyboards from "../../../../assets/keyboards.svg"
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
@@ -173,13 +173,13 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
     return !favoriteIcons.includes(icon)
   }
 
-  // const handleClickStatusIcons = () => {
-  //   changeSubtab("status_icons")
-  // }
+  const handleClickStatusIcons = () => {
+    changeSubtab("status_icons")
+  }
 
-  // const handleClickIcons = () => {
-  //   changeSubtab("default")
-  // }
+  const handleClickIcons = () => {
+    changeSubtab("default")
+  }
 
 
   return (
@@ -219,28 +219,28 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
             <div className="nav_col">
               <Nav variant="pills" className="flex-column">
                 <Nav.Link eventKey="ulubione"
-                // onClick={handleClickIcons}
+                  onClick={handleClickIcons}
                 >
                   <img src={Favorite} alt="own" className="favorite_nav" />
                   {t("FAVOURITE")}
                 </Nav.Link>
                 <Nav.Link eventKey="własne"
-                // onClick={handleClickIcons}
+                  onClick={handleClickIcons}
                 >
                   <img src={Own} alt="own" className="favorite_nav" />
                   {t("CUSTOM")}
                 </Nav.Link>
-                {/* <Nav.Link eventKey="diody" onClick={handleClickStatusIcons}>
+                <Nav.Link eventKey="diody" onClick={handleClickStatusIcons}>
                   <img src={Status_leds} alt="status leds" className="favorite_nav" />
                   {t("STATUS_LEDS")}
                 </Nav.Link>
                 <Nav.Link eventKey="klawiatury" onClick={handleClickIcons}>
                   <img src={Keyboards} alt="keybords" className="favorite_nav" />
                   {t("KEYBOARDS")}
-                </Nav.Link> */}
+                </Nav.Link>
                 {iconCategories.map((el, i) => (
                   <Nav.Link key={i} eventKey={el.name}
-                  // onClick={handleClickIcons}
+                    onClick={handleClickIcons}
                   >{t(el.name)}</Nav.Link>
                 ))}
               </Nav>

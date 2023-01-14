@@ -51,6 +51,8 @@ const IconHolder = ({
 
 
 
+  cannotRemoveStatusIcon,
+  statusIconExist,
   lastDroppedDot,
   lastDroppedIcon,
   lastDroppedSlashUp,
@@ -317,6 +319,8 @@ const IconHolder = ({
           show={show}
           index={index}
           lastDroppedDot={lastDroppedDot}
+          statusIconExist={statusIconExist}
+          cannotRemoveStatusIcon={cannotRemoveStatusIcon}
           chosenColor={chosenColor}
           rotationDot={rotationDot}
           selectedDot={selectedDot}

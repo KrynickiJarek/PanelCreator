@@ -329,7 +329,7 @@ const PanelPreview = ({
         setHideAll(true)
         chosenModel.dotLocation.forEach(element => {
           arrIconHolders.push({
-            flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+            flag: element, cannotRemoveStatusIcon: false, statusIconExist: true, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
             textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
             splitIconProportions: 0
@@ -653,7 +653,7 @@ const PanelPreview = ({
 
 
 
-  useEffect(() => { //NATALECZKA
+  useEffect(() => {
 
     const checkProportions = []
     iconHolders.forEach((element, index) => {
@@ -678,7 +678,6 @@ const PanelPreview = ({
     }
     //eslint-disable-next-line
   }, [iconHolders, iconHoldersRender, addNewFrameState]);
-
 
 
   useEffect(() => {
@@ -1412,7 +1411,7 @@ const PanelPreview = ({
       setHideAll(true)
       chosenModel.dotLocation.forEach(element => {
         tempArr.push({
-          flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+          flag: element, cannotRemoveStatusIcon: false, statusIconExist: true, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
           textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
           splitIconProportions: 0
@@ -1887,8 +1886,8 @@ const PanelPreview = ({
   const handleSwitchSplitIconProportionsGlobal = () => {
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
-    console.log("iconHolders", iconHolders)
-    console.log("iconsBackEnd", iconsBackEnd)
+    // console.log("iconHolders", iconHolders)
+    // console.log("iconsBackEnd", iconsBackEnd)
     copyArr.forEach((el) => {
       if (globalProportions === 0) {
         el.splitIconProportions = 1
@@ -1917,7 +1916,7 @@ const PanelPreview = ({
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
 
     copyArr.forEach((el, index) => {
-      console.log("test", copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1))
+      // console.log("test", copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1))
       if (el.selectedUp || el.selectedDown) {
         if (el.splitIconProportions === 0) {
           el.splitIconProportions = 1
@@ -4984,6 +4983,8 @@ const PanelPreview = ({
                         fontDown,
                         fontDownWeight,
                         lastDroppedDot,
+                        statusIconExist,
+                        cannotRemoveStatusIcon,
                         lastDroppedIcon,
                         lastDroppedSlashUp,
                         lastDroppedSlashDown,
@@ -5177,6 +5178,8 @@ const PanelPreview = ({
 
                               <IconHolder
                                 index={index}
+                                statusIconExist={statusIconExist}
+                                cannotRemoveStatusIcon={cannotRemoveStatusIcon}
                                 lastDroppedDot={lastDroppedDot}
                                 lastDroppedIcon={lastDroppedIcon}
                                 lastDroppedSlashUp={lastDroppedSlashUp}
