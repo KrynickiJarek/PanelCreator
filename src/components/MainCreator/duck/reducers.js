@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   panelColorHex: availableColors[0].hex,
   panelCut: 0,
   icons: [],
+  skippedStatusIconsBackEnd: [],
   panelText: [],
   frames: [],
 }
@@ -48,6 +49,10 @@ const backEndDataReducers = (state = INITIAL_STATE, action) => {
     case types.CHANGE_ICONS:
       return {
         ...state, icons: action.item
+      }
+    case types.CHANGE_SKIPPED_STATUS_ICONS:
+      return {
+        ...state, skippedStatusIconsBackEnd: action.item
       }
     case types.CHANGE_FRAMES:
       return {

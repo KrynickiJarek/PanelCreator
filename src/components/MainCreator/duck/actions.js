@@ -32,6 +32,10 @@ const changeIcons = item => ({
   type: types.CHANGE_ICONS, item
 })
 
+const changeSkippedStatusIcons = item => ({
+  type: types.CHANGE_SKIPPED_STATUS_ICONS, item
+})
+
 const changeFrames = item => ({
   type: types.CHANGE_FRAMES, item
 })
@@ -54,6 +58,7 @@ const actions = {
   resetPanelCut,
   changePanelText,
   changeIcons,
+  changeSkippedStatusIcons,
   changeFrames,
   editFrameText,
   setBackEndReducers

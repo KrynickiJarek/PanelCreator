@@ -44,10 +44,9 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
     transform: "translateY(4px)"
   }
 
-  if (chosenColor.hex === "#30a32c") {
+  if (chosenColor.color.hex === "#30a32c") {
     greenStyle.backgroundColor = "rgb( 32, 114, 30)"
   }
-
 
 
   const onSelectFile = (e) => {
@@ -181,7 +180,6 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
     changeSubtab("default")
   }
 
-
   return (
     <div className="scroll_container">
       <div className="visual_background" style={(visual && chosenModel.type !== "MDOT_M6+_UNIVERSAL") ? { opacity: "1", zIndex: "999" } : { opacity: "0", zIndex: "-1" }}>
@@ -250,9 +248,9 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
                 <Tab.Pane eventKey="ulubione">
                   <div className="icons">
                     <div className="instruction_box">
-                      <p className="instruction_bold">{t("FAVOURITE_ICONS_INSTRUCTION_BOLD_1")}<span style={{ ...orangeStyle }} />.
+                      <p className="instruction_bold">{t("FAVOURITE_ICONS_INSTRUCTION_BOLD_1")}<span style={{ ...greenStyle }} />.
                         {t("FAVOURITE_ICONS_INSTRUCTION_BOLD_2")}
-                        <span style={{ ...greenStyle }} />.</p>
+                        <span style={{ ...orangeStyle }} />.</p>
                       <p className="instruction">{t("FAVOURITE_ICONS_INSTRUCTION_NORMAL_1")}</p>
 
                       {favoriteIcons.length === 0 &&
@@ -367,58 +365,18 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
                 <Tab.Pane eventKey="diody">
                   <div className="icons">
                     <div className="instruction_box">
-                      <h1>test</h1>
-                      {/* <p className="instruction_bold">{t("CUSTOM_ICONS_INSTRUCTION_BOLD_1")}</p>
-                      <p className="instruction">{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_1")}</p>
-                      <label htmlFor="inputUploadIcon" >
-                        <div className="select_button">
-                          {t("SELECT_FILE")}
-                          <div className="button_arrows" />
-                        </div>
-                      </label>
-                      <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} /> */}
-                    </div>
-                    {/* 
-                    {ownIcons.map((image, index) =>
-                      <IconToDrag key={index} image={image} isInOwn={true} ownIconIndex={index} />)}
-
-                    {loadingIcon &&
-                      <div className="icon_box">
-                        <div className="icon_drag">
-                          <div class="lds-dual-ring" />
-                        </div>
-                      </div>
-                    }
-
-                    <div className="instruction_box">
-                      <p className="instruction_bold" style={{ marginTop: "20px" }}>{t("CUSTOM_ICONS_INSTRUCTION_BOLD_2")}</p>
-
-                      {panels.length === 0 || (panels.length === 1 && indexOfLastPanel !== -1) ?
-                        <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_OTHER_PROJECTS")}</p>
-                        :
-                        <>
-                          <p className="instruction" >{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_2")}</p>
-                          {panels.map((panel, index) =>
-                            <div key={index}>
-                              {indexOfLastPanel !== index &&
-                                <>
-                                  <p className="instruction_bold" style={{ marginLeft: "20px", marginBottom: "5px" }}> {'\u2022'} {panel.backEndData.panelName} :</p>
-
-                                  {panel.frontEndData.icon.ownIcons.length === 0 ?
-                                    <p className="instruction" style={{ marginTop: "0", marginBottom: "5px", fontSize: "12px" }}>{t("NO_CUSTOM_ICONS")}</p>
-                                    :
-                                    <div className="icons">
-                                      {panel.frontEndData.icon.ownIcons.map((image, index) =>
-                                        <IconToDrag key={index} image={image} isInOtherOwn={true} />)}
-                                    </div>
-                                  }
-                                </>
-                              }
-                            </div>
-                          )}
-                        </>
+                      <p className="instruction_bold">{t("STATUS_ICONS_INSTRUCTION_BOLD_1")}</p>
+                      <p className="instruction">{t("STATUS_ICONS_INSTRUCTION_NORMAL_1")}
+                        <span style={{ ...greenStyle }} />.
+                        {t("STATUS_ICONS_INSTRUCTION_NORMAL_2")}</p>
+                      <p className="instruction">{t("STATUS_ICONS_INSTRUCTION_NORMAL_3")}<span style={{ ...orangeStyle }} />.
+                        {t("STATUS_ICONS_INSTRUCTION_NORMAL_4")}</p>
+                      <p className="instruction">
+                        {t("STATUS_ICONS_INSTRUCTION_NORMAL_5")}</p>
+                      {(chosenModel.type === "MDOT_2" || chosenModel.type === "M-DOT-R14") &&
+                        <p className="instruction_bold">{t("STATUS_ICONS_INSTRUCTION_BOLD_2")}</p>
                       }
-                    </div> */}
+                    </div>
                   </div>
                 </Tab.Pane>
                 {iconCategories.map((el, i) => (
@@ -460,7 +418,6 @@ const mapStateToProps = state => ({
   panels: state.panels.panels,
   indexOfLastPanel: state.panels.indexOfLastPanel,
   languageRender: state.frontEndData.visual.languageRender,
-
 
 })
 

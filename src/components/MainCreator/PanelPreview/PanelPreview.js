@@ -99,6 +99,7 @@ const PanelPreview = ({
   resetColor,
   resetCut,
   chosenTab,
+  chosenSubtab,
   resetTab,
   resetSubtab,
   chosenModel,
@@ -153,6 +154,7 @@ const PanelPreview = ({
   changePanelNameBackEnd,
   changePanelTextBackEnd,
   changeIconsBackEnd,
+  changeSkippedStatusIconsBackEnd,
   resetPanelColorBackEnd,
   changeFramesBackEnd,
   panelTextBackEnd,
@@ -467,6 +469,7 @@ const PanelPreview = ({
           })
         } else {
           changeIconsBackEnd([])
+          changeSkippedStatusIconsBackEnd([])
         }
         // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
         changePanelTextBackEnd([])
@@ -1550,6 +1553,7 @@ const PanelPreview = ({
         })
       } else {
         changeIconsBackEnd([])
+        changeSkippedStatusIconsBackEnd([])
       }
       // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       changePanelTextBackEnd([])
@@ -5415,104 +5419,105 @@ const PanelPreview = ({
                     {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
                   </div>
                   <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
-
-
-
-
-                  <div className="side_box" data-for="proportions_tooltip" data-tip={t("PROPORTIONS_TOOLTIP")}>
-                    <img src={globalProportions === 0 ? PropoportionsAllTo7030 : globalProportions === 1 ? PropoportionsAllTo3070 : globalProportions === 2 ? PropoportionsAllTo5050 : PropoportionsAllReset}
-                      alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportionsGlobal} />
-                    {globalProportions === 3 ? <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL_RESET")}</span> : <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL")}</span>}
-                  </div>
-                  {!areThereAnySplit &&
-                    <ReactTooltip id="proportions_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
-                  }
-
-                  {isAnySplitSelected !== 3 ?
-                    <div className="side_box" >
-                      <img
-                        src={isAnySplitSelected === 0 ? PropoportionsTo7030 : isAnySplitSelected === 1 ? PropoportionsTo3070 : PropoportionsTo5050}
-                        alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportions} />
-                      <span>{t("SIDE_ICON_PROPORTIONS")}</span>
-                    </div>
-                    :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("PROPORTIONS_SINGLE_TOOLTIP")}>
-                      <img
-                        src={PropoportionsTo7030}
-                        alt="proportions" className="side_icon" />
-                      <span>{t("SIDE_ICON_PROPORTIONS")}</span>
-                    </div>
-                  }
-
-
-                  {areThereAnyIcons ?
-                    <div className="side_box">
-                      <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
-                        onMouseOver={() => showRemoveIcons(true)}
-                        onMouseLeave={handleHideRemoveIcons}
-                      />
-                      <span>{t("DALETE_ALL_ICONS")}</span>
-                    </div>
-                    :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
-                      <img src={Clearallicons} alt="clearallicons" className="side_icon" />
-                      <span>{t("DALETE_ALL_ICONS")}</span>
-                    </div>
-                  }
-
-                  {isAnySelected ?
+                  {chosenSubtab !== "status_icons" &&
                     <>
-                      <div className="side_box">
-                        <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-                          onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
-                        <span>{t("DALETE_SELECTED_ICON")}</span>
-                      </div>
 
-                      <div className="side_box">
-                        <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-                        <span>{t("ROTATE_RIGHT")}</span>
+                      <div className="side_box" data-for="proportions_tooltip" data-tip={t("PROPORTIONS_TOOLTIP")}>
+                        <img src={globalProportions === 0 ? PropoportionsAllTo7030 : globalProportions === 1 ? PropoportionsAllTo3070 : globalProportions === 2 ? PropoportionsAllTo5050 : PropoportionsAllReset}
+                          alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportionsGlobal} />
+                        {globalProportions === 3 ? <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL_RESET")}</span> : <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL")}</span>}
                       </div>
-                      <div className="side_box">
-                        <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-                        <span>{t("ROTATE_LEFT")}</span>
-                      </div>
-                    </>
-                    :
-                    <>
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                        <img src={Clear} alt="clear" className="side_icon" />
-                        <span>{t("DALETE_SELECTED_ICON")}</span>
-                      </div>
+                      {!areThereAnySplit &&
+                        <ReactTooltip id="proportions_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
+                      }
 
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                        <img src={Rotateright} alt="rotateright" className="side_icon" />
-                        <span>{t("ROTATE_RIGHT")}</span>
-                      </div>
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                        <img src={Rotateleft} alt="rotateleft" className="side_icon" />
-                        <span>{t("ROTATE_LEFT")}</span>
-                      </div>
-                    </>
-                  }
-                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-                  <div className="side_box" >
+                      {isAnySplitSelected !== 3 ?
+                        <div className="side_box" >
+                          <img
+                            src={isAnySplitSelected === 0 ? PropoportionsTo7030 : isAnySplitSelected === 1 ? PropoportionsTo3070 : PropoportionsTo5050}
+                            alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportions} />
+                          <span>{t("SIDE_ICON_PROPORTIONS")}</span>
+                        </div>
+                        :
+                        <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("PROPORTIONS_SINGLE_TOOLTIP")}>
+                          <img
+                            src={PropoportionsTo7030}
+                            alt="proportions" className="side_icon" />
+                          <span>{t("SIDE_ICON_PROPORTIONS")}</span>
+                        </div>
+                      }
 
-                    {!downloading &&
-                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} style={{ cursor: "default" }} />
-                    }
-                    {downloading &&
-                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" style={{ filter: "invert(29%) sepia(6%) saturate(152%) hue-rotate(131deg) brightness(92%) contrast(90%)" }} />
-                    }
-                    {/* {downloading ?
+
+                      {areThereAnyIcons ?
+                        <div className="side_box">
+                          <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
+                            onMouseOver={() => showRemoveIcons(true)}
+                            onMouseLeave={handleHideRemoveIcons}
+                          />
+                          <span>{t("DALETE_ALL_ICONS")}</span>
+                        </div>
+                        :
+                        <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
+                          <img src={Clearallicons} alt="clearallicons" className="side_icon" />
+                          <span>{t("DALETE_ALL_ICONS")}</span>
+                        </div>
+                      }
+
+                      {isAnySelected ?
+                        <>
+                          <div className="side_box">
+                            <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
+                              onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
+                            <span>{t("DALETE_SELECTED_ICON")}</span>
+                          </div>
+
+                          <div className="side_box">
+                            <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                            <span>{t("ROTATE_RIGHT")}</span>
+                          </div>
+                          <div className="side_box">
+                            <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                            <span>{t("ROTATE_LEFT")}</span>
+                          </div>
+                        </>
+                        :
+                        <>
+                          <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                            <img src={Clear} alt="clear" className="side_icon" />
+                            <span>{t("DALETE_SELECTED_ICON")}</span>
+                          </div>
+
+                          <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                            <img src={Rotateright} alt="rotateright" className="side_icon" />
+                            <span>{t("ROTATE_RIGHT")}</span>
+                          </div>
+                          <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                            <img src={Rotateleft} alt="rotateleft" className="side_icon" />
+                            <span>{t("ROTATE_LEFT")}</span>
+                          </div>
+                        </>
+                      }
+                      <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+                      <div className="side_box" >
+
+                        {!downloading &&
+                          <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} style={{ cursor: "default" }} />
+                        }
+                        {downloading &&
+                          <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" style={{ filter: "invert(29%) sepia(6%) saturate(152%) hue-rotate(131deg) brightness(92%) contrast(90%)" }} />
+                        }
+                        {/* {downloading ?
                       <span>DEBUGGING</span>
                       :
                       <span
                         // style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
                         style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
                     } */}
-                  </div>
-
+                      </div>
+                    </>
+                  }
                 </>
+
               }
               {chosenTab === "text" &&
                 <>
@@ -5673,6 +5678,7 @@ const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color.color,
   chosenCut: state.frontEndData.color.cut,
   chosenTab: state.frontEndData.tab.tab,
+  chosenSubtab: state.frontEndData.tab.subtab,
   chosenModel: state.frontEndData.model.chosenModel,
   resetAllAfterModelChangeFlag: state.frontEndData.model.resetAllAfterModelChangeFlag,
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
@@ -5765,6 +5771,7 @@ const mapDispatchToProps = dispatch => ({
   resetPanelColorBackEnd: (income) => dispatch(actionsBackEnd.resetPanelColor(income)),
   resetPanelCutBackEnd: (income) => dispatch(actionsBackEnd.resetPanelCut(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+  changeSkippedStatusIconsBackEnd: (income) => dispatch(actionsBackEnd.changeSkippedStatusIcons(income)),
   changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
   changePanelTypeBackEnd: (income) => dispatch(actionsBackEnd.changePanelType(income)),
 

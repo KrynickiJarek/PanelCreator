@@ -877,6 +877,8 @@ export const Dashboard = memo(function Dashboard({
                                           fontDown,
                                           fontDownWeight,
                                           lastDroppedDot,
+                                          statusIconExist,
+                                          cannotRemoveStatusIcon,
                                           lastDroppedIcon,
                                           lastDroppedSlashUp,
                                           lastDroppedSlashDown,
@@ -1011,6 +1013,8 @@ export const Dashboard = memo(function Dashboard({
 
                                                 <IconHolder
                                                   index={index}
+                                                  statusIconExist={statusIconExist}
+                                                  cannotRemoveStatusIcon={statusIconExist}
                                                   lastDroppedDot={lastDroppedDot}
                                                   lastDroppedIcon={lastDroppedIcon}
                                                   lastDroppedSlashUp={lastDroppedSlashUp}

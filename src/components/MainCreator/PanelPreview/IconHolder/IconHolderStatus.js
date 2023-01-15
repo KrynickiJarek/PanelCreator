@@ -26,6 +26,8 @@ const IconHolderStatus = ({
   iconHolders,
   selectedDot,
   iconsBackEnd,
+  skippedStatusIconsBackEnd,
+  changeSkippedStatusIconsBackEnd,
   changeIconsBackEnd,
   lastDroppedDot,
   statusIconExist,
@@ -322,42 +324,10 @@ const IconHolderStatus = ({
     };
   };
 
-  // const handleClickStatusIcon = () => {
-  //   if (!cannotRemoveStatusIcon) {
-  //     const copyArr = iconHolders
-  //     if (copyArr[index].statusIconExist) {
-  //       copyArr[index].statusIconExist = false;
-  //       copyArr[index].lastDroppedDot = null;
-  //     } else {
-  //       copyArr[index].statusIconExist = true;
-  //     }
-  //     // checkQuantity()
-  //     changeIconHolders(copyArr)
-  //   }
-  // }
 
-  // const checkQuantity = () => {
-  //   const checkStatusIcons = []
-  //   const copyArr = iconHolders
-  //   iconHolders.forEach((element, index) => {
-  //     if (element.statusIconExist && element.flag) {
-  //       checkStatusIcons.push(index)
-  //     }
-  //   })
-  //   if (checkStatusIcons.length <= 2) {
-  //     copyArr.forEach((element, index) => {
-  //       element.cannotRemoveStatusIcon = element.statusIconExist;
-  //     })
-  //   } else {
-  //     copyArr.forEach((element, index) => {
-  //       element.cannotRemoveStatusIcon = false;
-  //     })
-  //   }
-  //   changeIconHolders(copyArr)
-  // }
   const handleClickStatusIcon = () => {
+    const copyArr = iconHolders
     if (!cannotRemoveStatusIcon) {
-      const copyArr = iconHolders
       if (copyArr[index].statusIconExist) {
         copyArr[index].statusIconExist = false;
         copyArr[index].lastDroppedDot = null;
@@ -381,6 +351,15 @@ const IconHolderStatus = ({
       }
       changeIconHolders(copyArr)
     }
+
+    const skippedStatusIconsToBackEnd = []
+    iconHolders.forEach((element, index) => {
+      if (!element.statusIconExist) {
+        skippedStatusIconsToBackEnd.push(index + 1)
+      }
+    })
+    console.log("skippedStatusIconsToBackEnd", skippedStatusIconsToBackEnd)
+    changeSkippedStatusIconsBackEnd(skippedStatusIconsToBackEnd)
   }
 
 
@@ -437,10 +416,12 @@ const mapStateToProps = state => ({
   removeIcon: state.frontEndData.visual.removeIcon,
   removeIcons: state.frontEndData.visual.removeIcons,
   iconsBackEnd: state.backEndData.icons,
+  skippedStatusIconsBackEnd: state.backEndData.skippedStatusIcons,
   panelModel: state.frontEndData.model.chosenModel.type,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  changeSkippedStatusIconsBackEnd: (income) => dispatch(actionsBackEnd.changeSkippedStatusIcons(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
 
 })

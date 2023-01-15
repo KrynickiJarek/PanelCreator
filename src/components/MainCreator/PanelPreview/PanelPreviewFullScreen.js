@@ -577,6 +577,8 @@ const PanelPreviewFullScreen = ({
                   fontDown,
                   fontDownWeight,
                   lastDroppedDot,
+                  statusIconExist,
+                  cannotRemoveStatusIcon,
                   lastDroppedIcon,
                   lastDroppedSlashUp,
                   lastDroppedSlashDown,
@@ -659,6 +661,8 @@ const PanelPreviewFullScreen = ({
 
                         <IconHolder
                           index={index}
+                          statusIconExist={statusIconExist}
+                          cannotRemoveStatusIcon={cannotRemoveStatusIcon}
                           lastDroppedDot={lastDroppedDot}
                           lastDroppedIcon={lastDroppedIcon}
                           lastDroppedSlashUp={lastDroppedSlashUp}
