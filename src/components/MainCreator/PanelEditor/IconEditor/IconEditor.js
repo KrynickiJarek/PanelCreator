@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import actions from "../../PanelEditor/duck/actions.js"
@@ -47,6 +47,17 @@ export const IconEditor = ({
   const [firstKeyboardIcon, setFirstKeyboardIcon] = useState(6)
   // const [selectedSet, setSelectedSet] = useState(0)
   const selectedSet = 0
+
+  useEffect(() => {
+    if (chosenModel.type === "MDOT_18") {
+      setFirstKeyboardIcon(6)
+    } else if (chosenModel.type === "MDOT_M18" ||
+      chosenModel.type === "MDOT_M18_UNIVERSAL" ||
+      chosenModel.type === "DOT") {
+      setFirstKeyboardIcon(9)
+    }
+    // eslint-disable-next-line
+  }, [chosenModel]);
 
   let orangeStyle = {
     height: "20px",
