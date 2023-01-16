@@ -334,7 +334,7 @@ const PanelPreview = ({
             flag: element, cannotRemoveStatusIcon: false, statusIconExist: true, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
             textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
-            splitIconProportions: 0
+            splitIconProportions: 0, highlightedForKeyboard: false
           })
         });
         chosenModel.dotLocation.forEach(element => {
@@ -1417,7 +1417,7 @@ const PanelPreview = ({
           flag: element, cannotRemoveStatusIcon: false, statusIconExist: true, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
           textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
-          splitIconProportions: 0
+          splitIconProportions: 0, highlightedForKeyboard: false
         })
       });
       changeIconHolders(tempArr);
@@ -4989,6 +4989,7 @@ const PanelPreview = ({
                         lastDroppedDot,
                         statusIconExist,
                         cannotRemoveStatusIcon,
+                        highlightedForKeyboard,
                         lastDroppedIcon,
                         lastDroppedSlashUp,
                         lastDroppedSlashDown,
@@ -5184,6 +5185,7 @@ const PanelPreview = ({
                                 index={index}
                                 statusIconExist={statusIconExist}
                                 cannotRemoveStatusIcon={cannotRemoveStatusIcon}
+                                highlightedForKeyboard={highlightedForKeyboard}
                                 lastDroppedDot={lastDroppedDot}
                                 lastDroppedIcon={lastDroppedIcon}
                                 lastDroppedSlashUp={lastDroppedSlashUp}

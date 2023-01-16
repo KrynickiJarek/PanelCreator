@@ -53,6 +53,7 @@ const IconHolder = ({
 
   cannotRemoveStatusIcon,
   statusIconExist,
+  highlightedForKeyboard,
   lastDroppedDot,
   lastDroppedIcon,
   lastDroppedSlashUp,
@@ -226,6 +227,35 @@ const IconHolder = ({
       };
     }
   }
+  else if (highlightedForKeyboard) {
+    if (chosenColor.hex !== "#30a32c") {
+      styleDropping = {
+        backgroundColor: "rgb(40, 167, 69)",
+        transform: "translateX(-50%) scale(1.45)",
+      };
+      if (animations) {
+        styleDroppingPulse = {
+          animation: "Ani 2s infinite",
+          filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+        };
+      }
+    } else {
+      styleDropping = {
+        backgroundColor: "rgb( 32, 114, 30)",
+        transform: "translateX(-50%) scale(2)",
+      };
+      if (animations) {
+        styleDroppingPulse = {
+          animation: "Ani 2s infinite",
+          filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+        };
+      }
+    };
+    styleDroppingAni = {
+      transform: "translateX(-50%) scale(1.75)",
+    }
+
+  }
 
   const [{ isOverToShow }, over] = useDrop({
     accept: "icon",
@@ -351,12 +381,7 @@ const IconHolder = ({
                   style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                     : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                 />)}
-              {/* {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
-                (<img src={Slash} alt="slash" className="slash"
-                  style={visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
-                    : chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
-                      : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
-                />)} */}
+
 
               {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                 (<img src={Slash} alt="slash" className="slash"

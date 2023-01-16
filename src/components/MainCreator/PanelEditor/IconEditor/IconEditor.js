@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import actions from "../../PanelEditor/duck/actions.js"
+import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../duck/actions"
 import "./IconEditor.scss"
 import { t } from "../../../../i18n";
 
@@ -14,6 +16,7 @@ import Unlocked from "../../../../assets/preview/unlock.svg"
 
 import IconToDrag from './IconToDrag';
 import iconCategories from "./iconCategories"
+import keyboardsSets from "./keyboardsSets"
 
 import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav'
@@ -21,10 +24,29 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, ownIcons, updateOwnIcons, panels, indexOfLastPanel, chosenColor, chosenModel, showAlert }) => {
+
+export const IconEditor = ({
+  changeSubtab,
+  visual,
+  toggleVisual,
+  favoriteIcons,
+  ownIcons,
+  updateOwnIcons,
+  panels,
+  indexOfLastPanel,
+  chosenColor,
+  chosenModel,
+  showAlert,
+  iconHolders,
+  changeIconHolders,
+  changeIconsBackEnd
+}) => {
 
   const [unlock, setUnlock] = useState(false)
   const [loadingIcon, setLoadingIcon] = useState(false)
+  const [firstKeyboardIcon, setFirstKeyboardIcon] = useState(6)
+  // const [selectedSet, setSelectedSet] = useState(0)
+  const selectedSet = 0
 
   let orangeStyle = {
     height: "20px",
@@ -179,6 +201,45 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
   const handleClickIcons = () => {
     changeSubtab("default")
   }
+
+  const handleClickAddKeybard = () => {
+    const copyArr = iconHolders
+    // BACKEND DODAJ
+    // DZIAŁANIE PRZYCISKU BOCZNEGO USUŃ WSYZSTKIE IKONY NAPRAW (MOŻE POWYŻSZE TO NAPRAWI)
+    let kyeboardKeyNumber = 0
+
+    for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
+      copyArr[i].lastDroppedIcon = { image: keyboardsSets[selectedSet].listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].lastDroppedSlashUp = null;
+      copyArr[i].lastDroppedSlashDown = null;
+
+      kyeboardKeyNumber = kyeboardKeyNumber + 1
+    }
+    changeIconHolders(copyArr)
+  }
+
+  const handleHoverAddKeybard = () => {
+    const copyArr = iconHolders
+    copyArr.forEach((el, index) => {
+      el.selectedDot = false;
+      el.selected = false;
+      el.selectedUp = false;
+      el.selectedDown = false;
+    })
+    for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
+      copyArr[i].highlightedForKeyboard = true
+    }
+    changeIconHolders(copyArr)
+  }
+
+  const handleStopHoverAddKeybard = () => {
+    const copyArr = iconHolders
+    copyArr.forEach((el, index) => {
+      copyArr[index].highlightedForKeyboard = false
+    })
+    changeIconHolders(copyArr)
+  }
+
 
   return (
     <div className="scroll_container">
@@ -379,6 +440,56 @@ export const IconEditor = ({ changeSubtab, visual, toggleVisual, favoriteIcons, 
                     </div>
                   </div>
                 </Tab.Pane>
+                <Tab.Pane eventKey="klawiatury">
+                  <div className="icons">
+                    <div className="instruction_box">
+                      {chosenModel.type !== "MDOT_18" &&
+                        chosenModel.type !== "MDOT_M18" &&
+                        chosenModel.type !== "MDOT_M18_UNIVERSAL" &
+                        chosenModel.type !== "M-DOT-R14" &&
+                        <>
+                          <p className="instruction">ROBOCZO: W wybranym modelu nie ma możliwości dodania klawiatury. Aby dodać klawiaturę wybierz jeden z poniższych modeli:</p>
+                          <ul>
+                            <li>{t("MDOT_18")}</li>
+                            <li>{t("MDOT_M18")}</li>
+                            <li>{t("MDOT_M18_UNIVERSAL")}</li>
+                            <li>{t("R14")}</li>
+                          </ul>
+                        </>
+                      }
+                      {chosenModel.type === "MDOT_18" &&
+                        <>
+                          <p className="instruction_bold">Wybierz pozycję klawiatury</p>
+                          <p className="instruction">ROBOCZO: w tym miejscu będą trzy kafle w stylu jak wybór fazy czy koloru i grafiką pokazującą,
+                            które pola zostaną uzupełnione. Wybrany kafel będzie miał border więc będzie wiadomo, który jest zaznaczony.</p>
+                          <button onClick={() => setFirstKeyboardIcon(6)}>Klawiatura na dole</button>
+                          <br />
+                          <button onClick={() => setFirstKeyboardIcon(3)}>Klawiatura w środku</button>
+                          <br />
+                          <button onClick={() => setFirstKeyboardIcon(0)}>Klawiatura na górze</button>
+                          <br />
+                        </>}
+                      {(chosenModel.type === "MDOT_18" ||
+                        chosenModel.type === "MDOT_M18" ||
+                        chosenModel.type === "MDOT_M18_UNIVERSAL" ||
+                        chosenModel.type === "M-DOT-R14") &&
+                        <>
+                          <p className="instruction_bold">Wybierz klawiaturę</p>
+                          <p className="instruction">ROBOCZO: w tym miejscu będą kafle w stylu jak wybór fazy czy koloru i grafiką pokazującą
+                            grafikę z klawiaturą (cały set z zachowaniem wielkości poszczególnych ikon ale z mniejszymi odstępami, żeby kafel nie był za duży</p>
+                          <p className="instruction">Po najechaniu na kafel podświetlą się na zielono pola, na których pojawi się klawiatura.
+                            do dodania alert, jeżeli użytkownik kliknie, a na polach jest jakaś ikona</p>
+
+                          <button
+                            onClick={handleClickAddKeybard}
+                            onMouseOver={handleHoverAddKeybard}
+                            onMouseLeave={handleStopHoverAddKeybard}
+                          >SET1</button>
+                        </>
+                      }
+                    </div>
+                  </div>
+                </Tab.Pane>
                 {iconCategories.map((el, i) => (
                   <Tab.Pane eventKey={el.name} key={i}>
                     <div className="icons">
@@ -419,6 +530,9 @@ const mapStateToProps = state => ({
   indexOfLastPanel: state.panels.indexOfLastPanel,
   languageRender: state.frontEndData.visual.languageRender,
 
+  iconHolders: state.frontEndData.icon.iconHolders,
+
+
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -426,6 +540,8 @@ const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   updateOwnIcons: (income) => dispatch(actions.updateOwnIcons(income)),
+  changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
+  changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)

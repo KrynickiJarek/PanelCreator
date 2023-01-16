@@ -26,7 +26,6 @@ const IconHolderStatus = ({
   iconHolders,
   selectedDot,
   iconsBackEnd,
-  skippedStatusIconsBackEnd,
   changeSkippedStatusIconsBackEnd,
   changeIconsBackEnd,
   lastDroppedDot,
