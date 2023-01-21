@@ -101,15 +101,6 @@ const IconHolderStatus = ({
 
   const handleDeleteForBackend = () => {
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    function Modulo(num, denom) {
-      if (num % denom >= 0) {
-        return Math.abs(num % denom);
-      }
-      else {
-        return num % denom + denom;
-      }
-    }
-
     const toDataURL = svg => fetch(svg)
       .then(response => response.blob())
       .then(blob => new Promise((resolve, reject) => {
@@ -137,7 +128,7 @@ const IconHolderStatus = ({
         let recordIcon = {
           number: numberBackEnd,
           type: 3,
-          rotation: Modulo((iconHolders[index].rotationDot), 360),
+          rotation: 0,
           svg: svgBackEnd,
           proportion: 0
         }

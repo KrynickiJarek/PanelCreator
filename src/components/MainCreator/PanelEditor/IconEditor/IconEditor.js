@@ -13,6 +13,7 @@ import Status_leds from "../../../../assets/status_leds.svg"
 import Keyboards from "../../../../assets/keyboards.svg"
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
+import noDotUni from "../../../../assets/lcd/noDotUni.svg"
 
 import IconToDrag from './IconToDrag';
 import iconCategories from "./iconCategories"
@@ -20,6 +21,7 @@ import keyboardsSets from "./keyboardsSets"
 
 import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav'
+
 
 
 
@@ -39,7 +41,8 @@ export const IconEditor = ({
   showAlert,
   iconHolders,
   changeIconHolders,
-  changeIconsBackEnd
+  changeIconsBackEnd,
+  iconsBackEnd
 }) => {
 
   const [unlock, setUnlock] = useState(false)
@@ -213,12 +216,43 @@ export const IconEditor = ({
     changeSubtab("default")
   }
 
+  const handleAddKeyboardBackend = (keyboardArrayForBackend, copyIconsBackEnd) => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // const copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
+    console.log("copyIconsBackEnd>>>>", copyIconsBackEnd)
+
+    keyboardArrayForBackend.forEach(element => {
+      const toDataURL = svg => fetch(svg)
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        }))
+
+      toDataURL(element.icon)
+        .then(svgBackEnd => {
+          let recordIcon = {
+            number: element.number,
+            type: element.type,
+            rotation: 0,
+            svg: svgBackEnd,
+            proportion: 0
+          }
+          copyIconsBackEnd.push(recordIcon)
+        })
+    })
+    changeIconsBackEnd(copyIconsBackEnd)
+  }
+
+
   const handleClickAddKeybard = () => {
     const copyArr = iconHolders
     // BACKEND DODAJ
-    // DZIAŁANIE PRZYCISKU BOCZNEGO USUŃ WSYZSTKIE IKONY NAPRAW (MOŻE POWYŻSZE TO NAPRAWI - DOKŁADNIE - BRAWO JAREK :) )
-    let kyeboardKeyNumber = 0
 
+    let kyeboardKeyNumber = 0
+    const keyboardArrayForBackend = []
     const statusLedsCheckArray = []
     copyArr.forEach((element, idx) => {
       if (element.statusIconExist && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
@@ -233,8 +267,21 @@ export const IconEditor = ({
         beyondKeyboardArray.push(idx)
       }
     })
+    const copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
 
     for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
+      keyboardArrayForBackend.push(
+        {
+          icon: keyboardsSets[selectedSet].listOfIcons[kyeboardKeyNumber].default,
+          number: i + 1,
+          type: 0
+        },
+        {
+          icon: noDotUni,
+          number: i + 1,
+          type: 3
+        }
+      )
       copyArr[i].lastDroppedIcon = { image: keyboardsSets[selectedSet].listOfIcons[kyeboardKeyNumber] }
       copyArr[i].statusIconExist = false;
       copyArr[i].cannotRemoveStatusIcon = false;
@@ -243,13 +290,23 @@ export const IconEditor = ({
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
     if (statusLedsCheckArray.length < 2) {
+      // copyIconsBackEnd.filter(element => { return !(statusLedsCheckArray.includes(element.number) && (element.type === 3))})
+      console.log("copyIconsBackEnd", copyIconsBackEnd)
+      // copyIconsBackEnd.filter(element => { return (element.number - 1 > firstKeyboardIcon || element.number - 1 < firstKeyboardIcon + 11) })
+      // copyIconsBackEnd.filter(element => { return (beyondKeyboardArray.includes(element.number)) })
+      // copyIconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3)) })
+      // copyIconsBackEnd.filter(element => { return element.numer === 1 })
+      // copyIconsBackEnd.push({ test: "test" })
+
       beyondKeyboardArray.forEach(element => {
+        // console.log("beyondKeyboardArray.includes(element)", beyondKeyboardArray.includes(element))
+        // console.log("beyondKeyboardArray , element", beyondKeyboardArray, element)
         copyArr[element].statusIconExist = true;
         copyArr[element].cannotRemoveStatusIcon = false;
       })
     }
     changeIconHolders(copyArr)
-
+    handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
   }
 
   const handleHoverAddKeybard = () => {
@@ -566,6 +623,7 @@ const mapStateToProps = state => ({
   languageRender: state.frontEndData.visual.languageRender,
 
   iconHolders: state.frontEndData.icon.iconHolders,
+  iconsBackEnd: state.backEndData.icons,
 
 
 })
