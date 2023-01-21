@@ -154,7 +154,6 @@ const PanelPreview = ({
   changePanelNameBackEnd,
   changePanelTextBackEnd,
   changeIconsBackEnd,
-  changeSkippedStatusIconsBackEnd,
   resetPanelColorBackEnd,
   changeFramesBackEnd,
   panelTextBackEnd,
@@ -331,7 +330,7 @@ const PanelPreview = ({
         setHideAll(true)
         chosenModel.dotLocation.forEach(element => {
           arrIconHolders.push({
-            flag: element, cannotRemoveStatusIcon: false, statusIconExist: true, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+            flag: element, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
             textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
             splitIconProportions: 0, highlightedForKeyboard: false
@@ -469,7 +468,6 @@ const PanelPreview = ({
           })
         } else {
           changeIconsBackEnd([])
-          changeSkippedStatusIconsBackEnd([])
         }
         // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
         changePanelTextBackEnd([])
@@ -558,11 +556,13 @@ const PanelPreview = ({
       setIsAnySplitSelected(3)
     }
 
-    if (iconsBackEnd.length > 0) {
+    const copyIconHoldersForAnyIcons = iconHolders.filter(element => element.lastDroppedIcon !== null || element.lastDroppedSlashUp !== null || element.lastDroppedSlashDown !== null || element.lastDroppedDot !== null)
+    if (copyIconHoldersForAnyIcons.length > 0) {
       setAreThereAnyIcons(true)
     } else {
       setAreThereAnyIcons(false)
     }
+
 
     if (iconsBackEnd.filter(element => element.type === 1 || element.type === 2).length > 0) {
       setAreThereAnySplit(true)
@@ -1414,7 +1414,7 @@ const PanelPreview = ({
       setHideAll(true)
       chosenModel.dotLocation.forEach(element => {
         tempArr.push({
-          flag: element, cannotRemoveStatusIcon: false, statusIconExist: true, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+          flag: element, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
           textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
           splitIconProportions: 0, highlightedForKeyboard: false
@@ -1465,7 +1465,7 @@ const PanelPreview = ({
       if (chosenModel.lcdScreen.lcdType === "slide") {
         const copyIconsBackEnd = []
 
-        const universalIconArr = [
+        const universalIconAndNoDotsArr = [
           {
             icon: Minusuni,
             number: 1,
@@ -1528,7 +1528,7 @@ const PanelPreview = ({
           },
         ]
 
-        universalIconArr.forEach(element => {
+        universalIconAndNoDotsArr.forEach(element => {
           const toDataURL = svg => fetch(svg)
             .then(response => response.blob())
             .then(blob => new Promise((resolve, reject) => {
@@ -1553,7 +1553,6 @@ const PanelPreview = ({
         })
       } else {
         changeIconsBackEnd([])
-        changeSkippedStatusIconsBackEnd([])
       }
       // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       changePanelTextBackEnd([])
@@ -1574,6 +1573,7 @@ const PanelPreview = ({
     setAlertAnswer(null)
     showRemoveIcons(false)
     const copyArr = iconHolders;
+    const copyFrontendArrayForBackend = iconHolders;
     copyArr.forEach((el) => {
       el.lastDroppedDot = null;
       el.lastDroppedIcon = null;
@@ -1594,7 +1594,7 @@ const PanelPreview = ({
     if (chosenModel.lcdScreen.lcdType === "slide") {
       const copyIconsBackEnd = []
 
-      const universalIconArr = [
+      const universalIconAndNoDotsArr = [
         {
           icon: Minusuni,
           number: 1,
@@ -1656,8 +1656,30 @@ const PanelPreview = ({
           type: 3
         },
       ]
+      copyFrontendArrayForBackend.forEach((element, index) => {
+        if (!element.statusIconExist && element.flag) {
+          let numberBackEnd = null
+          if (chosenModel.panelRotation) {
+            if (index % 3 === 0) {
+              numberBackEnd = index + 3
+            } else if (index % 3 === 2) {
+              numberBackEnd = index - 1
+            } else {
+              numberBackEnd = index + 1
+            }
+          } else {
+            numberBackEnd = index + 1
+          }
+          universalIconAndNoDotsArr.push({
+            icon: noDotUni,
+            number: numberBackEnd,
+            type: 3
+          })
+        }
+      })
 
-      universalIconArr.forEach(element => {
+
+      universalIconAndNoDotsArr.forEach(element => {
         const toDataURL = svg => fetch(svg)
           .then(response => response.blob())
           .then(blob => new Promise((resolve, reject) => {
@@ -1681,7 +1703,54 @@ const PanelPreview = ({
           })
       })
     } else {
-      changeIconsBackEnd([])
+      const copyIconsBackEnd = []
+      const noDotsArr = []
+      copyFrontendArrayForBackend.forEach((element, index) => {
+        if (!element.statusIconExist && element.flag) {
+          let numberBackEnd = null
+          if (chosenModel.panelRotation) {
+            if (index % 3 === 0) {
+              numberBackEnd = index + 3
+            } else if (index % 3 === 2) {
+              numberBackEnd = index - 1
+            } else {
+              numberBackEnd = index + 1
+            }
+          } else {
+            numberBackEnd = index + 1
+          }
+          noDotsArr.push({
+            icon: noDotUni,
+            number: numberBackEnd,
+            type: 3
+          })
+        }
+      })
+
+
+      noDotsArr.forEach(element => {
+        const toDataURL = svg => fetch(svg)
+          .then(response => response.blob())
+          .then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result)
+            reader.onerror = reject
+            reader.readAsDataURL(blob)
+          }))
+
+        toDataURL(element.icon)
+          .then(svgBackEnd => {
+            let recordIcon = {
+              number: element.number,
+              type: element.type,
+              rotation: 0,
+              proportion: 0,
+              svg: svgBackEnd
+            }
+            copyIconsBackEnd.push(recordIcon)
+            changeIconsBackEnd(copyIconsBackEnd)
+          })
+      })
     }
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
@@ -1890,8 +1959,6 @@ const PanelPreview = ({
   const handleSwitchSplitIconProportionsGlobal = () => {
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
-    // console.log("iconHolders", iconHolders)
-    // console.log("iconsBackEnd", iconsBackEnd)
     copyArr.forEach((el) => {
       if (globalProportions === 0) {
         el.splitIconProportions = 1
@@ -1920,7 +1987,6 @@ const PanelPreview = ({
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
 
     copyArr.forEach((el, index) => {
-      // console.log("test", copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1))
       if (el.selectedUp || el.selectedDown) {
         if (el.splitIconProportions === 0) {
           el.splitIconProportions = 1
@@ -5773,7 +5839,6 @@ const mapDispatchToProps = dispatch => ({
   resetPanelColorBackEnd: (income) => dispatch(actionsBackEnd.resetPanelColor(income)),
   resetPanelCutBackEnd: (income) => dispatch(actionsBackEnd.resetPanelCut(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
-  changeSkippedStatusIconsBackEnd: (income) => dispatch(actionsBackEnd.changeSkippedStatusIcons(income)),
   changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
   changePanelTypeBackEnd: (income) => dispatch(actionsBackEnd.changePanelType(income)),
 

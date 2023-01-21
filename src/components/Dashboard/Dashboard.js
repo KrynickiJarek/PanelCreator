@@ -474,7 +474,6 @@ export const Dashboard = memo(function Dashboard({
           let copyNumber = 0
           copyPanels.forEach(panel => {
             if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
-              console.log("copyNumber warunek", panel.frontEndData.visual.panelName)
 
               if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
                 let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
@@ -486,7 +485,6 @@ export const Dashboard = memo(function Dashboard({
               }
             }
           })
-          console.log("copyNumber", copyNumber)
           if (copyNumber > 0) {
             let name = endocedData.frontEndData.visual.panelName
             endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`

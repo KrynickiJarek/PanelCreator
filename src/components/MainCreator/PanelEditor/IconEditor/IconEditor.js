@@ -216,17 +216,40 @@ export const IconEditor = ({
   const handleClickAddKeybard = () => {
     const copyArr = iconHolders
     // BACKEND DODAJ
-    // DZIAŁANIE PRZYCISKU BOCZNEGO USUŃ WSYZSTKIE IKONY NAPRAW (MOŻE POWYŻSZE TO NAPRAWI)
+    // DZIAŁANIE PRZYCISKU BOCZNEGO USUŃ WSYZSTKIE IKONY NAPRAW (MOŻE POWYŻSZE TO NAPRAWI - DOKŁADNIE - BRAWO JAREK :) )
     let kyeboardKeyNumber = 0
+
+    const statusLedsCheckArray = []
+    copyArr.forEach((element, idx) => {
+      if (element.statusIconExist && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+        statusLedsCheckArray.push(idx)
+      }
+    })
+
+    const beyondKeyboardArray = []
+
+    copyArr.forEach((element, idx) => {
+      if (element.flag && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+        beyondKeyboardArray.push(idx)
+      }
+    })
 
     for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
       copyArr[i].lastDroppedIcon = { image: keyboardsSets[selectedSet].listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].statusIconExist = false;
+      copyArr[i].cannotRemoveStatusIcon = false;
       copyArr[i].lastDroppedSlashUp = null;
       copyArr[i].lastDroppedSlashDown = null;
-
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
+    if (statusLedsCheckArray.length < 2) {
+      beyondKeyboardArray.forEach(element => {
+        copyArr[element].statusIconExist = true;
+        copyArr[element].cannotRemoveStatusIcon = false;
+      })
+    }
     changeIconHolders(copyArr)
+
   }
 
   const handleHoverAddKeybard = () => {
@@ -456,7 +479,7 @@ export const IconEditor = ({
                     <div className="instruction_box">
                       {chosenModel.type !== "MDOT_18" &&
                         chosenModel.type !== "MDOT_M18" &&
-                        chosenModel.type !== "MDOT_M18_UNIVERSAL" &
+                        chosenModel.type !== "MDOT_M18_UNIVERSAL" &&
                         chosenModel.type !== "M-DOT-R14" &&
                         <>
                           <p className="instruction">ROBOCZO: W wybranym modelu nie ma możliwości dodania klawiatury. Aby dodać klawiaturę wybierz jeden z poniższych modeli:</p>
@@ -479,7 +502,8 @@ export const IconEditor = ({
                           <br />
                           <button onClick={() => setFirstKeyboardIcon(0)}>Klawiatura na górze</button>
                           <br />
-                        </>}
+                        </>
+                      }
                       {(chosenModel.type === "MDOT_18" ||
                         chosenModel.type === "MDOT_M18" ||
                         chosenModel.type === "MDOT_M18_UNIVERSAL" ||

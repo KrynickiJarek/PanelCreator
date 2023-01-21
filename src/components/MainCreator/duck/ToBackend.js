@@ -25,11 +25,7 @@ const toBackend =
         svg: "XML" // przekopiowany xml, xml to base64
       }
     ],
-    skippedStatusIcons: [ // numery diod statusowych, które zostały usunięte i nie mają być drukowane przez BE
-      {
-        number: 1, // numer ikony liczony od 1 do 21, przy uniwersal wypełnij i wyślij ikonki pod polami 1,3,4,6,7,9, przy poziomym liczenie tak samo
-      }
-    ],
+
     panelText: [
       {
         number: 1, // jak icons 

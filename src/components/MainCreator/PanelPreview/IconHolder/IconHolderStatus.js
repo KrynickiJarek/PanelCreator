@@ -10,7 +10,7 @@ import Remove from "../../../../assets/preview/remove.svg"
 import ReDragDot from './ReDrag/ReDragDot';
 import RemoveStatusIcon from "../../../../assets/frame/removeframe.svg"
 import AddStatusIcon from "../../../../assets/frame/addframe.svg"
-
+import noDotUni from "../../../../assets/lcd/noDotUni.svg"
 const IconHolderStatus = ({
   show,
   scale,
@@ -26,14 +26,14 @@ const IconHolderStatus = ({
   iconHolders,
   selectedDot,
   iconsBackEnd,
-  changeSkippedStatusIconsBackEnd,
   changeIconsBackEnd,
   lastDroppedDot,
   statusIconExist,
   cannotRemoveStatusIcon,
   rotationDot,
   panelRotation,
-  panelModel
+  panelModel,
+  chosenModel
 }) => {
 
 
@@ -97,6 +97,76 @@ const IconHolderStatus = ({
         })
       // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     }
+  }
+
+  const handleDeleteForBackend = () => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    function Modulo(num, denom) {
+      if (num % denom >= 0) {
+        return Math.abs(num % denom);
+      }
+      else {
+        return num % denom + denom;
+      }
+    }
+
+    const toDataURL = svg => fetch(svg)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }))
+
+    toDataURL(noDotUni)
+      .then(svgBackEnd => {
+        let numberBackEnd = null
+        if (panelRotation) {
+          if (index % 3 === 0) {
+            numberBackEnd = index + 3
+          } else if (index % 3 === 2) {
+            numberBackEnd = index - 1
+          } else {
+            numberBackEnd = index + 1
+          }
+        } else {
+          numberBackEnd = index + 1
+        }
+
+        let recordIcon = {
+          number: numberBackEnd,
+          type: 3,
+          rotation: Modulo((iconHolders[index].rotationDot), 360),
+          svg: svgBackEnd,
+          proportion: 0
+        }
+
+        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 3)) })
+        copyIconsBackEnd.push(recordIcon)
+        changeIconsBackEnd(copyIconsBackEnd)
+      })
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+  }
+
+  const handleRemoveFromDeletedForBackend = () => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    let numberBackEnd = null
+    if (panelRotation) {
+      if (index % 3 === 0) {
+        numberBackEnd = index + 3
+      } else if (index % 3 === 2) {
+        numberBackEnd = index - 1
+      } else {
+        numberBackEnd = index + 1
+      }
+    } else {
+      numberBackEnd = index + 1
+    }
+
+    const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 3)) })
+    changeIconsBackEnd(copyIconsBackEnd)
+    // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -328,37 +398,33 @@ const IconHolderStatus = ({
     const copyArr = iconHolders
     if (!cannotRemoveStatusIcon) {
       if (copyArr[index].statusIconExist) {
+        handleDeleteForBackend()
         copyArr[index].statusIconExist = false;
         copyArr[index].lastDroppedDot = null;
       } else {
+        handleRemoveFromDeletedForBackend()
         copyArr[index].statusIconExist = true;
       }
       const checkStatusIcons = []
+
       iconHolders.forEach((element, index) => {
         if (element.statusIconExist && element.flag) {
           checkStatusIcons.push(index)
         }
       })
-      if (checkStatusIcons.length <= 2) {
-        copyArr.forEach((element, index) => {
-          element.cannotRemoveStatusIcon = element.statusIconExist;
-        })
-      } else {
-        copyArr.forEach((element, index) => {
-          element.cannotRemoveStatusIcon = false;
-        })
+      if (chosenModel.lcdScreen.lcdType !== "slide") {
+        if (checkStatusIcons.length <= 2) {
+          copyArr.forEach((element, index) => {
+            element.cannotRemoveStatusIcon = element.statusIconExist;
+          })
+        } else {
+          copyArr.forEach((element, index) => {
+            element.cannotRemoveStatusIcon = false;
+          })
+        }
       }
       changeIconHolders(copyArr)
     }
-
-    const skippedStatusIconsToBackEnd = []
-    iconHolders.forEach((element, index) => {
-      if (!element.statusIconExist) {
-        skippedStatusIconsToBackEnd.push(index + 1)
-      }
-    })
-    console.log("skippedStatusIconsToBackEnd", skippedStatusIconsToBackEnd)
-    changeSkippedStatusIconsBackEnd(skippedStatusIconsToBackEnd)
   }
 
 
@@ -415,12 +481,11 @@ const mapStateToProps = state => ({
   removeIcon: state.frontEndData.visual.removeIcon,
   removeIcons: state.frontEndData.visual.removeIcons,
   iconsBackEnd: state.backEndData.icons,
-  skippedStatusIconsBackEnd: state.backEndData.skippedStatusIcons,
   panelModel: state.frontEndData.model.chosenModel.type,
+  chosenModel: state.frontEndData.model.chosenModel,
 })
 const mapDispatchToProps = dispatch => ({
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
-  changeSkippedStatusIconsBackEnd: (income) => dispatch(actionsBackEnd.changeSkippedStatusIcons(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
 
 })
