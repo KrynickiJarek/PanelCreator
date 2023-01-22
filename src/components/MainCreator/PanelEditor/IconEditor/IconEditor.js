@@ -18,12 +18,15 @@ import noDotUni from "../../../../assets/lcd/noDotUni.svg"
 import IconToDrag from './IconToDrag';
 import iconCategories from "./iconCategories"
 import keyboardsSets from "./keyboardsSets"
+import keyboardsSetsLabels from "./keyboardsSetsLabels"
 
 import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav'
 
 
-
+import keyboardTop from "../../../../assets/keyboards/keyboard_top.svg"
+import keyboardMiddle from "../../../../assets/keyboards/keyboard_middle.svg"
+import keyboardBottom from "../../../../assets/keyboards/keyboard_bottom.svg"
 
 
 
@@ -44,12 +47,10 @@ export const IconEditor = ({
   changeIconsBackEnd,
   iconsBackEnd
 }) => {
-
+  console.log('keyboardsSetsLabels', keyboardsSetsLabels)
   const [unlock, setUnlock] = useState(false)
   const [loadingIcon, setLoadingIcon] = useState(false)
   const [firstKeyboardIcon, setFirstKeyboardIcon] = useState(6)
-  // const [selectedSet, setSelectedSet] = useState(0)
-  const selectedSet = 0
 
   useEffect(() => {
     if (chosenModel.type === "MDOT_18") {
@@ -208,8 +209,8 @@ export const IconEditor = ({
     return !favoriteIcons.includes(icon)
   }
 
-  const handleClickStatusIcons = () => {
-    changeSubtab("status_icons")
+  const handleClickStatusIcons = (income) => {
+    changeSubtab(income)
   }
 
   const handleClickIcons = () => {
@@ -218,9 +219,6 @@ export const IconEditor = ({
 
   const handleAddKeyboardBackend = (keyboardArrayForBackend, copyIconsBackEnd) => {
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    // const copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
-    console.log("copyIconsBackEnd>>>>", copyIconsBackEnd)
-
     keyboardArrayForBackend.forEach(element => {
       const toDataURL = svg => fetch(svg)
         .then(response => response.blob())
@@ -247,16 +245,20 @@ export const IconEditor = ({
   }
 
 
-  const handleClickAddKeybard = () => {
+  const handleClickAddKeybard = (setNumber) => {
     const copyArr = iconHolders
-    // BACKEND DODAJ
-
     let kyeboardKeyNumber = 0
     const keyboardArrayForBackend = []
     const statusLedsCheckArray = []
+    let numberWithStatusIcon = null
+
     copyArr.forEach((element, idx) => {
       if (element.statusIconExist && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
         statusLedsCheckArray.push(idx)
+      }
+
+      if (statusLedsCheckArray.length === 1 && element.lastDroppedDot && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+        numberWithStatusIcon = idx + 1
       }
     })
 
@@ -267,12 +269,13 @@ export const IconEditor = ({
         beyondKeyboardArray.push(idx)
       }
     })
-    const copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
+    let copyIconsBackEnd = []
+
 
     for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
       keyboardArrayForBackend.push(
         {
-          icon: keyboardsSets[selectedSet].listOfIcons[kyeboardKeyNumber].default,
+          icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber].default,
           number: i + 1,
           type: 0
         },
@@ -282,7 +285,7 @@ export const IconEditor = ({
           type: 3
         }
       )
-      copyArr[i].lastDroppedIcon = { image: keyboardsSets[selectedSet].listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].lastDroppedIcon = { image: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber] }
       copyArr[i].statusIconExist = false;
       copyArr[i].cannotRemoveStatusIcon = false;
       copyArr[i].lastDroppedSlashUp = null;
@@ -290,20 +293,14 @@ export const IconEditor = ({
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
     if (statusLedsCheckArray.length < 2) {
-      // copyIconsBackEnd.filter(element => { return !(statusLedsCheckArray.includes(element.number) && (element.type === 3))})
-      console.log("copyIconsBackEnd", copyIconsBackEnd)
-      // copyIconsBackEnd.filter(element => { return (element.number - 1 > firstKeyboardIcon || element.number - 1 < firstKeyboardIcon + 11) })
-      // copyIconsBackEnd.filter(element => { return (beyondKeyboardArray.includes(element.number)) })
-      // copyIconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3)) })
-      // copyIconsBackEnd.filter(element => { return element.numer === 1 })
-      // copyIconsBackEnd.push({ test: "test" })
-
+      console.log("numberWithStatusIcon", numberWithStatusIcon)
+      copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3) && (element.number !== numberWithStatusIcon)) })
       beyondKeyboardArray.forEach(element => {
-        // console.log("beyondKeyboardArray.includes(element)", beyondKeyboardArray.includes(element))
-        // console.log("beyondKeyboardArray , element", beyondKeyboardArray, element)
         copyArr[element].statusIconExist = true;
         copyArr[element].cannotRemoveStatusIcon = false;
       })
+    } else {
+      copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
     }
     changeIconHolders(copyArr)
     handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
@@ -380,11 +377,11 @@ export const IconEditor = ({
                   <img src={Own} alt="own" className="favorite_nav" />
                   {t("CUSTOM")}
                 </Nav.Link>
-                <Nav.Link eventKey="diody" onClick={handleClickStatusIcons}>
+                <Nav.Link eventKey="diody" onClick={() => handleClickStatusIcons("status_icons")}>
                   <img src={Status_leds} alt="status leds" className="favorite_nav" />
                   {t("STATUS_LEDS")}
                 </Nav.Link>
-                <Nav.Link eventKey="klawiatury" onClick={handleClickIcons}>
+                <Nav.Link eventKey="klawiatury" onClick={() => handleClickStatusIcons("keyboards")}>
                   <img src={Keyboards} alt="keybords" className="favorite_nav" />
                   {t("KEYBOARDS")}
                 </Nav.Link>
@@ -553,12 +550,28 @@ export const IconEditor = ({
                           <p className="instruction_bold">Wybierz pozycję klawiatury</p>
                           <p className="instruction">ROBOCZO: w tym miejscu będą trzy kafle w stylu jak wybór fazy czy koloru i grafiką pokazującą,
                             które pola zostaną uzupełnione. Wybrany kafel będzie miał border więc będzie wiadomo, który jest zaznaczony.</p>
-                          <button onClick={() => setFirstKeyboardIcon(6)}>Klawiatura na dole</button>
-                          <br />
-                          <button onClick={() => setFirstKeyboardIcon(3)}>Klawiatura w środku</button>
-                          <br />
-                          <button onClick={() => setFirstKeyboardIcon(0)}>Klawiatura na górze</button>
-                          <br />
+
+
+                          <div className="keyboard_box">
+                            <div className="keyboard_link" style={firstKeyboardIcon === 6 ? { border: "3px solid #EC695C" } : {}}
+                              onClick={() => setFirstKeyboardIcon(6)} >
+                              <img src={keyboardBottom} alt="keyboard_bottom" className="keyboard_img" />
+                              < p className="keyboard_name" style={firstKeyboardIcon === 6 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_BOTTOM")}</p>
+                            </div>
+
+                            <div className="keyboard_link" style={firstKeyboardIcon === 3 ? { border: "3px solid #EC695C" } : {}}
+                              onClick={() => setFirstKeyboardIcon(3)} >
+                              <img src={keyboardMiddle} alt="keyboard_middle" className="keyboard_img" />
+                              < p className="keyboard_name" style={firstKeyboardIcon === 3 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_MIDDLE")}</p>
+                            </div>
+
+                            <div className="keyboard_link" style={firstKeyboardIcon === 0 ? { border: "3px solid #EC695C" } : {}}
+                              onClick={() => setFirstKeyboardIcon(0)} >
+                              <img src={keyboardTop} alt="keyboard_top" className="keyboard_img" />
+                              < p className="keyboard_name" style={firstKeyboardIcon === 0 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_TOP")}</p>
+                            </div>
+                          </div>
+
                         </>
                       }
                       {(chosenModel.type === "MDOT_18" ||
@@ -572,11 +585,21 @@ export const IconEditor = ({
                           <p className="instruction">Po najechaniu na kafel podświetlą się na zielono pola, na których pojawi się klawiatura.
                             do dodania alert, jeżeli użytkownik kliknie, a na polach jest jakaś ikona</p>
 
-                          <button
-                            onClick={handleClickAddKeybard}
-                            onMouseOver={handleHoverAddKeybard}
-                            onMouseLeave={handleStopHoverAddKeybard}
-                          >SET1</button>
+
+                          <div className="keyboard_box">
+                            {keyboardsSets.map((el, i) => (
+                              <div className="keyboard_set_link"
+                                onClick={() => handleClickAddKeybard(i)}
+                                onMouseOver={handleHoverAddKeybard}
+                                onMouseLeave={handleStopHoverAddKeybard}
+                              >
+                                <img
+                                  src={keyboardsSetsLabels[0]?.listOfLabels[i]?.default}
+                                  alt="keyboard_set" className="keyboard_set" />
+                                < p className="keyboard_set_name">{t("KEYBOARD_SET")} {i + 1}</p>
+                              </div>
+                            ))}
+                          </div>
                         </>
                       }
                     </div>

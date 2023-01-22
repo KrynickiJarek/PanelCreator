@@ -5487,7 +5487,7 @@ const PanelPreview = ({
                     {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
                   </div>
                   <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
-                  {chosenSubtab !== "status_icons" &&
+                  {chosenSubtab !== "status_icons" && chosenSubtab !== "keyboards" &&
                     <>
 
                       <div className="side_box" data-for="proportions_tooltip" data-tip={t("PROPORTIONS_TOOLTIP")}>

@@ -256,5 +256,9 @@
   "DEFAULT_SCALE_TOOLTIP": "Domyślne skalowanie",
   "FULLSCREEN_ON_TOOLTIP": "Włącz podgląd pełnoekranowy",
   "FULLSCREEN_OFF_TOOLTIP": "Wyłącz podgląd pełnoekranowy",
-  "FULLSCREEN_OFF": "Wyłącz podgląd pełno-\nekranowy"
+  "FULLSCREEN_OFF": "Wyłącz podgląd pełno-\nekranowy",
+  "KEYBOARD_BOTTOM": "Klawiatura na dole",
+  "KEYBOARD_MIDDLE": "Klawiatura na środku",
+  "KEYBOARD_TOP": "Klawiatura na górze",
+  "KEYBOARD_SET": "Zestaw"
 }
