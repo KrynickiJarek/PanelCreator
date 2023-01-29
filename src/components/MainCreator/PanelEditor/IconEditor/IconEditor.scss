@@ -334,7 +334,7 @@
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin: 20px 0;
 
   .keyboard_link,
   .keyboard_set_link {
@@ -388,7 +388,31 @@
   }
 
   .keyboard_set_link {
-    border: 3px solid #EC695C;
     min-height: 150px;
   }
+
+  .keyboard_set_link:hover {
+    border: 3px solid #EC695C;
+  }
+}
+
+.models_no_keyboard_list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  list-style-type: disc;
+  margin-bottom: 60px;
+
+
+  .models_no_keyboard_list_element {
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    color: #333333;
+    margin-top: 5px;
+    cursor: default;
+    text-align: left;
+
+  }
+
 }

@@ -90,6 +90,8 @@ import noDotUni from "../../../assets/lcd/noDotUni.svg"
 import IconHolder from './IconHolder/IconHolder';
 import PanelPreviewFullScreen from './PanelPreviewFullScreen';
 
+import keyboardsSets from "../PanelEditor/IconEditor/keyboardsSets"
+
 const PanelPreview = ({
   frameTitleFlag,
   frameTitle,
@@ -237,8 +239,9 @@ const PanelPreview = ({
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
 
-  const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
-  const [lcdNew, setLcdNew] = useState((chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? true : false)
+  const [lcdShow, setLcdShow] = useState((chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide") ? true : false)
+  const [lcdNew, setLcdNew] = useState(chosenModel.lcdScreen?.lcdType === "slide" ? true : false)
+  const [rfid, setRfid] = useState(chosenModel.lcdScreen?.lcdType === "rfid" ? true : false)
   const [hideAll, setHideAll] = useState(true)
 
   const [removeAll, setRemoveAll] = useState(false)
@@ -330,7 +333,7 @@ const PanelPreview = ({
         setHideAll(true)
         chosenModel.dotLocation.forEach(element => {
           arrIconHolders.push({
-            flag: element, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+            flag: element, lockedForKeyboard: false, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
             textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
             splitIconProportions: 0, highlightedForKeyboard: false
@@ -358,11 +361,12 @@ const PanelPreview = ({
         setNewFrameHide(arrNewFrameHide)
         setNewFrameChange(arrNewFrameChange)
         setTempFrame(arrTempFrame)
-        changeIconHolders(arrIconHolders);
+        // changeIconHolders(arrIconHolders);?? przeniesione do końca każdej ścieżki na potrzeby rfid
         changeFrameText("")
         setTextFrame(false)
-        chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
-        (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
+        chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide" ? setLcdShow(true) : setLcdShow(false);
+        chosenModel.lcdScreen?.lcdType === "slide" ? setLcdNew(true) : setLcdNew(false);
+        chosenModel.lcdScreen?.lcdType === "rfid" ? setRfid(true) : setRfid(false);
         setVisualSmooth(false)
         changeFrameHolders([])
         changeFramesBackEnd([])
@@ -466,7 +470,12 @@ const PanelPreview = ({
                 changeIconsBackEnd(copyIconsBackEnd)
               })
           })
+          changeIconHolders(arrIconHolders);
+        } else if (chosenModel.lcdScreen.lcdType === "rfid") {
+          // console.log("arrIconHolders", arrIconHolders)
+          fillR14(arrIconHolders)
         } else {
+          changeIconHolders(arrIconHolders);
           changeIconsBackEnd([])
         }
         // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
@@ -1414,14 +1423,13 @@ const PanelPreview = ({
       setHideAll(true)
       chosenModel.dotLocation.forEach(element => {
         tempArr.push({
-          flag: element, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+          flag: element, lockedForKeyboard: false, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
           textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
           splitIconProportions: 0, highlightedForKeyboard: false
         })
       });
-      changeIconHolders(tempArr);
-
+      // (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false); czy to trzeba dodać??
       const arrNewFrame = [];
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
@@ -1551,13 +1559,19 @@ const PanelPreview = ({
               changeIconsBackEnd(copyIconsBackEnd)
             })
         })
+        changeIconHolders(tempArr);
+
+      } else if (chosenModel.lcdScreen.lcdType === "rfid") {
+        // console.log("tempArr", tempArr)
+        fillR14(tempArr)
       } else {
+        changeIconHolders(tempArr);
         changeIconsBackEnd([])
       }
       // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       changePanelTextBackEnd([])
       setTextFrame(false)
-      chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
+      chosenModel.lcdScreen === "slide" || chosenModel.lcdScreen === "noslide" ? setLcdShow(true) : setLcdShow(false)
     }, 300);
     return () => clearTimeout(modeltimeout);
   }
@@ -1575,19 +1589,21 @@ const PanelPreview = ({
     const copyArr = iconHolders;
     const copyFrontendArrayForBackend = iconHolders;
     copyArr.forEach((el) => {
-      el.lastDroppedDot = null;
-      el.lastDroppedIcon = null;
-      el.lastDroppedSlashUp = null;
-      el.lastDroppedSlashDown = null;
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-      el.rotationIcon = false;
-      el.rotationUp = 0;
-      el.rotationDown = 0;
-      el.rotationDot = false;
-      el.splitIconProportions = 0;
+      if (!el.lockedForKeyboard) {
+        el.lastDroppedDot = null;
+        el.lastDroppedIcon = null;
+        el.lastDroppedSlashUp = null;
+        el.lastDroppedSlashDown = null;
+        el.selectedDot = false;
+        el.selected = false;
+        el.selectedUp = false;
+        el.selectedDown = false;
+        el.rotationIcon = false;
+        el.rotationUp = 0;
+        el.rotationDown = 0;
+        el.rotationDot = false;
+        el.splitIconProportions = 0;
+      }
     })
     changeIconHolders(copyArr)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
@@ -4474,25 +4490,6 @@ const PanelPreview = ({
   }
 
 
-  // const handleBack = () => {
-  // hideCreator(false)
-  // handleClearAll()
-
-  // const dahsboardTimeout = setTimeout(() => {
-  //   showDashboard(true)
-  //   // handleClearAll()
-  //   changePanelName("")
-  //   changePanelNameBackEnd("")
-  //   resetColor()
-  //   resetPanelColorBackEnd()
-  //   resetTab("model")
-  //   resetModel()
-  //   updateFavoriteIcons([])
-  //   updateOwnIcons([])
-  // }, 400);
-  // return () => clearTimeout(dahsboardTimeout);
-  // }
-
   const goBack = () => {
     setAlertAnswer(null)
     hideCreator(false)
@@ -4514,6 +4511,65 @@ const PanelPreview = ({
       updateOwnIcons([])
     }, 400);
     return () => clearTimeout(dahsboardTimeout);
+  }
+
+  const fillR14 = (copyArr) => {
+    let kyeboardKeyNumber = 0
+    const keyboardArrayForBackend = []
+    let copyIconsBackEnd = []
+
+    for (let i = 9; i < 21; i++) {
+      keyboardArrayForBackend.push(
+        {
+          icon: keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber],
+          number: i + 1,
+          type: 0
+        },
+        {
+          icon: noDotUni,
+          number: i + 1,
+          type: 3
+        }
+      )
+      copyArr[i].lastDroppedIcon = { image: keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].statusIconExist = false;
+      copyArr[i].cannotRemoveStatusIcon = false;
+      copyArr[i].lastDroppedSlashUp = null;
+      copyArr[i].lastDroppedSlashDown = null;
+      copyArr[i].lockedForKeyboard = true;
+      kyeboardKeyNumber = kyeboardKeyNumber + 1
+    }
+
+    copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < 9 || element.number - 1 > 20) })
+    changeIconHolders(copyArr)
+    handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
+  }
+
+  const handleAddKeyboardBackend = (keyboardArrayForBackend, copyIconsBackEnd) => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    keyboardArrayForBackend.forEach(element => {
+      const toDataURL = svg => fetch(svg)
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        }))
+
+      toDataURL(element.icon)
+        .then(svgBackEnd => {
+          let recordIcon = {
+            number: element.number,
+            type: element.type,
+            rotation: 0,
+            svg: svgBackEnd,
+            proportion: 0
+          }
+          copyIconsBackEnd.push(recordIcon)
+        })
+    })
+    changeIconsBackEnd(copyIconsBackEnd)
   }
 
 
@@ -4642,7 +4698,7 @@ const PanelPreview = ({
 
 
                 <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                  {hideAll && !visual &&
+                  {hideAll && !visual && false &&
                     <>
                       {newFrameChange.map((el, index) =>
                         <div key={index}
@@ -5054,6 +5110,7 @@ const PanelPreview = ({
                         fontDownWeight,
                         lastDroppedDot,
                         statusIconExist,
+                        lockedForKeyboard,
                         cannotRemoveStatusIcon,
                         highlightedForKeyboard,
                         lastDroppedIcon,
@@ -5084,173 +5141,176 @@ const PanelPreview = ({
                               )}>
                           {flag === 1 &&
                             <>
-                              <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
-                                <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : {
-                                  transform: "rotate(90deg)",
-                                  transformOrigin: `center ${10.4 * sc}px`,
-                                  transition: "0.4s ease"
-                                }}>
-                                  {textUpOff &&
-                                    <form onSubmit={handleSubmit}>
-                                      <div style={!chosenModel.panelRotation ?
-                                        { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
-                                        :
-                                        { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
-                                        <input className="text_input"
-                                          type="text"
-                                          autoComplete="off"
-                                          maxLength="16"
-                                          style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
-                                            (
-                                              (chosenColor.hex !== "#30a32c") ? {
-                                                ...textStyle,
-                                                ...textUpStyle,
-                                                fontFamily: fontUp,
-                                                fontWeight: fontUpWeight,
-                                                border: "2px solid rgb(40, 167, 69)"
-                                              } :
-                                                {
+                              {!lockedForKeyboard &&
+                                <>
+                                  <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
+                                    <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : {
+                                      transform: "rotate(90deg)",
+                                      transformOrigin: `center ${10.4 * sc}px`,
+                                      transition: "0.4s ease"
+                                    }}>
+                                      {textUpOff &&
+                                        <form onSubmit={handleSubmit}>
+                                          <div style={!chosenModel.panelRotation ?
+                                            { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
+                                            :
+                                            { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
+                                            <input className="text_input"
+                                              type="text"
+                                              autoComplete="off"
+                                              maxLength="16"
+                                              style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
+                                                (
+                                                  (chosenColor.hex !== "#30a32c") ? {
+                                                    ...textStyle,
+                                                    ...textUpStyle,
+                                                    fontFamily: fontUp,
+                                                    fontWeight: fontUpWeight,
+                                                    border: "2px solid rgb(40, 167, 69)"
+                                                  } :
+                                                    {
+                                                      ...textStyle,
+                                                      ...textUpStyle,
+                                                      fontFamily: fontUp,
+                                                      fontWeight: fontUpWeight,
+                                                      border: "2px solid rgb(32, 114, 30)",
+                                                    }
+                                                )
+                                                : {
                                                   ...textStyle,
                                                   ...textUpStyle,
                                                   fontFamily: fontUp,
                                                   fontWeight: fontUpWeight,
-                                                  border: "2px solid rgb(32, 114, 30)",
-                                                }
-                                            )
-                                            : {
-                                              ...textStyle,
-                                              ...textUpStyle,
-                                              fontFamily: fontUp,
-                                              fontWeight: fontUpWeight,
-                                            }}
-                                          disabled={chosenTab !== "text" && true}
-                                          onMouseOver={showBorder}
-                                          onMouseLeave={hideBorder}
-                                          value={textUp}
-                                          onChange={(text) => handleChangeTextUp(index, text)}
-                                          onClick={() => handleChangeFontUp(index)}
-                                          onFocus={() => { handleFocusInput(index, "up") }}
-                                          onKeyDown={handleKeyPress}
-                                        />
-                                        <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
-                                          {textUp}
-                                        </span>
+                                                }}
+                                              disabled={chosenTab !== "text" && true}
+                                              onMouseOver={showBorder}
+                                              onMouseLeave={hideBorder}
+                                              value={textUp}
+                                              onChange={(text) => handleChangeTextUp(index, text)}
+                                              onClick={() => handleChangeFontUp(index)}
+                                              onFocus={() => { handleFocusInput(index, "up") }}
+                                              onKeyDown={handleKeyPress}
+                                            />
+                                            <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
+                                              {textUp}
+                                            </span>
 
-                                        {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
-                                          <input type="image" src={Submitinput} alt="submitinput"
-                                            style={{
-                                              height: `${3.6 * sc}px`,
-                                              width: `${3.6 * sc}px`,
-                                              transform: "translateX(75%)",
-                                              gridArea: '1 / 1 / 2 / 2',
+                                            {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
+                                              <input type="image" src={Submitinput} alt="submitinput"
+                                                style={{
+                                                  height: `${3.6 * sc}px`,
+                                                  width: `${3.6 * sc}px`,
+                                                  transform: "translateX(75%)",
+                                                  gridArea: '1 / 1 / 2 / 2',
 
-                                            }}
-                                          />
-                                        }
-                                        {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
-                                          <input type="image" src={Submitinputdark} alt="submitinput"
-                                            style={{
-                                              height: `${3.6 * sc}px`,
-                                              width: `${3.6 * sc}px`,
-                                              transform: "translateX(75%)",
-                                              gridArea: '1 / 1 / 2 / 2',
-                                            }}
-                                          />
-                                        }
-                                        {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
-                                          <img src={Clearinput} alt="clearinput"
-                                            style={{
-                                              height: `${3.6 * sc}px`,
-                                              width: `${3.6 * sc}px`,
-                                              transform: "translate(200%, 0%)",
-                                              gridArea: '1 / 1 / 2 / 2',
-                                              cursor: "pointer",
-                                            }}
-                                            onClick={() => { handleClearInput(index, "up") }}
-                                          />
-                                        }
-                                      </div>
-                                    </form>
-                                  }
-                                  <form onSubmit={handleSubmit}>
-                                    <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown, fontWeight: fontDownWeight }}>
-                                      <input className="text_input"
-                                        type="text"
-                                        autoComplete="off"
-                                        maxLength="16"
-                                        style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
-                                          (
-                                            (chosenColor.hex !== "#30a32c") ? {
-                                              ...textStyle,
-                                              fontFamily: fontDown,
-                                              fontWeight: fontDownWeight,
-                                              border: "2px solid rgb(40, 167, 69)"
-                                            } :
-                                              {
+                                                }}
+                                              />
+                                            }
+                                            {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
+                                              <input type="image" src={Submitinputdark} alt="submitinput"
+                                                style={{
+                                                  height: `${3.6 * sc}px`,
+                                                  width: `${3.6 * sc}px`,
+                                                  transform: "translateX(75%)",
+                                                  gridArea: '1 / 1 / 2 / 2',
+                                                }}
+                                              />
+                                            }
+                                            {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                              <img src={Clearinput} alt="clearinput"
+                                                style={{
+                                                  height: `${3.6 * sc}px`,
+                                                  width: `${3.6 * sc}px`,
+                                                  transform: "translate(200%, 0%)",
+                                                  gridArea: '1 / 1 / 2 / 2',
+                                                  cursor: "pointer",
+                                                }}
+                                                onClick={() => { handleClearInput(index, "up") }}
+                                              />
+                                            }
+                                          </div>
+                                        </form>
+                                      }
+                                      <form onSubmit={handleSubmit}>
+                                        <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown, fontWeight: fontDownWeight }}>
+                                          <input className="text_input"
+                                            type="text"
+                                            autoComplete="off"
+                                            maxLength="16"
+                                            style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
+                                              (
+                                                (chosenColor.hex !== "#30a32c") ? {
+                                                  ...textStyle,
+                                                  fontFamily: fontDown,
+                                                  fontWeight: fontDownWeight,
+                                                  border: "2px solid rgb(40, 167, 69)"
+                                                } :
+                                                  {
+                                                    ...textStyle,
+                                                    fontFamily: fontDown,
+                                                    fontWeight: fontDownWeight,
+                                                    border: "2px solid rgb(32, 114, 30)"
+                                                  }
+                                              )
+                                              : {
                                                 ...textStyle,
                                                 fontFamily: fontDown,
-                                                fontWeight: fontDownWeight,
-                                                border: "2px solid rgb(32, 114, 30)"
-                                              }
-                                          )
-                                          : {
-                                            ...textStyle,
-                                            fontFamily: fontDown,
-                                            fontWeight: fontDownWeight
-                                          }}
-                                        disabled={chosenTab !== "text" && true}
-                                        onMouseOver={showBorder}
-                                        onMouseLeave={hideBorder}
-                                        value={textDown}
-                                        onChange={(text) => handleChangeTextDown(index, text)}
-                                        onClick={() => handleChangeFontDown(index)}
-                                        onFocus={() => { handleFocusInput(index, "down") }}
-                                        onKeyDown={handleKeyPress}
-                                      />
-                                      <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
-                                        {textDown}
-                                      </span>
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
-                                        <input type="image" src={Submitinput} alt="submitinput"
-                                          style={{
-                                            height: `${3.6 * sc}px`,
-                                            width: `${3.6 * sc}px`,
-                                            transform: "translateX(75%)",
-                                            gridArea: '1 / 1 / 2 / 2',
-                                          }}
-                                        />
-                                      }
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
-                                        <input type="image" src={Submitinputdark} alt="submitinput"
-                                          style={{
-                                            height: `${3.6 * sc}px`,
-                                            width: `${3.6 * sc}px`,
-                                            transform: "translateX(75%)",
-                                            gridArea: '1 / 1 / 2 / 2',
-                                          }}
-                                        />
-                                      }
-                                      {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
-                                        <img src={Clearinput} alt="clearinput"
-                                          style={{
-                                            height: `${3.6 * sc}px`,
-                                            width: `${3.6 * sc}px`,
-                                            transform: "translate(200%, 0%)",
-                                            gridArea: '1 / 1 / 2 / 2',
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() => { handleClearInput(index, "down") }}
-                                        />
-                                      }
+                                                fontWeight: fontDownWeight
+                                              }}
+                                            disabled={chosenTab !== "text" && true}
+                                            onMouseOver={showBorder}
+                                            onMouseLeave={hideBorder}
+                                            value={textDown}
+                                            onChange={(text) => handleChangeTextDown(index, text)}
+                                            onClick={() => handleChangeFontDown(index)}
+                                            onFocus={() => { handleFocusInput(index, "down") }}
+                                            onKeyDown={handleKeyPress}
+                                          />
+                                          <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
+                                            {textDown}
+                                          </span>
+                                          {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
+                                            <input type="image" src={Submitinput} alt="submitinput"
+                                              style={{
+                                                height: `${3.6 * sc}px`,
+                                                width: `${3.6 * sc}px`,
+                                                transform: "translateX(75%)",
+                                                gridArea: '1 / 1 / 2 / 2',
+                                              }}
+                                            />
+                                          }
+                                          {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
+                                            <input type="image" src={Submitinputdark} alt="submitinput"
+                                              style={{
+                                                height: `${3.6 * sc}px`,
+                                                width: `${3.6 * sc}px`,
+                                                transform: "translateX(75%)",
+                                                gridArea: '1 / 1 / 2 / 2',
+                                              }}
+                                            />
+                                          }
+                                          {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
+                                            <img src={Clearinput} alt="clearinput"
+                                              style={{
+                                                height: `${3.6 * sc}px`,
+                                                width: `${3.6 * sc}px`,
+                                                transform: "translate(200%, 0%)",
+                                                gridArea: '1 / 1 / 2 / 2',
+                                                cursor: "pointer",
+                                              }}
+                                              onClick={() => { handleClearInput(index, "down") }}
+                                            />
+                                          }
+                                        </div>
+                                      </form>
                                     </div>
-                                  </form>
-                                </div>
-                              </div>
-
+                                  </div>
+                                </>}
                               <IconHolder
                                 index={index}
                                 statusIconExist={statusIconExist}
                                 cannotRemoveStatusIcon={cannotRemoveStatusIcon}
+                                lockedForKeyboard={lockedForKeyboard}
                                 highlightedForKeyboard={highlightedForKeyboard}
                                 lastDroppedDot={lastDroppedDot}
                                 lastDroppedIcon={lastDroppedIcon}
@@ -5276,6 +5336,7 @@ const PanelPreview = ({
                       )}
 
 
+                      {(rfid) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
                       {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
                       {(lcdShow && visual && lcdNew) &&
                         <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>

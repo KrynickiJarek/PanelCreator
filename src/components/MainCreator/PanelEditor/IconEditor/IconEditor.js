@@ -42,22 +42,34 @@ export const IconEditor = ({
   chosenColor,
   chosenModel,
   showAlert,
+  alertAnswer,
   iconHolders,
   changeIconHolders,
   changeIconsBackEnd,
   iconsBackEnd
 }) => {
-  console.log('keyboardsSetsLabels', keyboardsSetsLabels)
   const [unlock, setUnlock] = useState(false)
   const [loadingIcon, setLoadingIcon] = useState(false)
-  const [firstKeyboardIcon, setFirstKeyboardIcon] = useState(6)
+  const [firstKeyboardIcon, setFirstKeyboardIcon] = useState()
+  const [chosenSetNumber, setChosenSetNumber] = useState(null)
+
+  useEffect(() => {
+    if (alertAnswer === 300) {
+      handleConfirmRecoverDots()
+    }
+    if (alertAnswer === 301) {
+      handleConfirmAddKeyboard()
+    }
+    // eslint-disable-next-line 
+  }, [alertAnswer])
+
 
   useEffect(() => {
     if (chosenModel.type === "MDOT_18") {
       setFirstKeyboardIcon(6)
     } else if (chosenModel.type === "MDOT_M18" ||
       chosenModel.type === "MDOT_M18_UNIVERSAL" ||
-      chosenModel.type === "DOT") {
+      chosenModel.type === "M-DOT-R14") {
       setFirstKeyboardIcon(9)
     }
     // eslint-disable-next-line
@@ -246,12 +258,145 @@ export const IconEditor = ({
 
 
   const handleClickAddKeybard = (setNumber) => {
-    const copyArr = iconHolders
+    setChosenSetNumber(setNumber)
+    const copyArr = JSON.parse(JSON.stringify(iconHolders))
+    let kyeboardKeyNumber = 0
+    const keyboardArrayForBackend = []
+    const statusLedsCheckArray = []
+    const areThereAnyIcons = []
+    // let numberWithStatusIcon = null //potrzebne tylko w handleConfirmRecoverDots?
+
+    copyArr.forEach((element, idx) => {
+      if (idx >= firstKeyboardIcon && idx < firstKeyboardIcon + 12) {
+        if (element?.lastDroppedIcon
+          || element?.lastDroppedDot
+          || element?.lastDroppedSlashUp
+          || element?.lastDroppedSlashDown) {
+          areThereAnyIcons.push(idx)
+        }
+      }
+    })
+
+    if (areThereAnyIcons.length && chosenModel.type !== "M-DOT-R14") {
+      showAlert(301);
+    } else {
+      copyArr.forEach((element, idx) => {
+        if (element.statusIconExist && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+          statusLedsCheckArray.push(idx)
+        }
+
+        // if (statusLedsCheckArray.length === 1 && element.lastDroppedDot && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+        //   numberWithStatusIcon = idx + 1
+        // } //potrzebne tylko w handleConfirmRecoverDots?
+      })
+
+      const beyondKeyboardArray = []
+
+      copyArr.forEach((element, idx) => {
+        if (element.flag && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+          beyondKeyboardArray.push(idx)
+        }
+      })
+      let copyIconsBackEnd = []
+      // console.log('keyboardsSets', keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber])
+      // console.log('keyboardsSets', keyboardsSets)
+
+      for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
+        keyboardArrayForBackend.push(
+          {
+            // icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber].default,
+            icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber],
+            number: i + 1,
+            type: 0
+          },
+          {
+            icon: noDotUni,
+            number: i + 1,
+            type: 3
+          }
+        )
+        copyArr[i].lastDroppedIcon = { image: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber] }
+        copyArr[i].statusIconExist = false;
+        copyArr[i].cannotRemoveStatusIcon = false;
+        copyArr[i].lastDroppedSlashUp = null;
+        copyArr[i].lastDroppedSlashDown = null;
+        kyeboardKeyNumber = kyeboardKeyNumber + 1
+      }
+      if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M-DOT-R14") {
+        showAlert(300);
+        // copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3) && (element.number !== numberWithStatusIcon)) })
+        // beyondKeyboardArray.forEach(element => {
+        //   copyArr[element].statusIconExist = true;
+        //   copyArr[element].cannotRemoveStatusIcon = false;
+        // })
+      } else {
+        copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
+        changeIconHolders(copyArr)
+        handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
+      }
+    }
+  }
+
+  const handleConfirmAddKeyboard = () => {
+    const copyArr = JSON.parse(JSON.stringify(iconHolders))
+    let kyeboardKeyNumber = 0
+    const keyboardArrayForBackend = []
+    const statusLedsCheckArray = []
+
+    copyArr.forEach((element, idx) => {
+      if (element.statusIconExist && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+        statusLedsCheckArray.push(idx)
+      }
+
+    })
+
+    const beyondKeyboardArray = []
+
+    copyArr.forEach((element, idx) => {
+      if (element.flag && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
+        beyondKeyboardArray.push(idx)
+      }
+    })
+    let copyIconsBackEnd = []
+
+
+    for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
+      keyboardArrayForBackend.push(
+        {
+          icon: keyboardsSets[chosenSetNumber].listOfIcons[kyeboardKeyNumber].default,
+          number: i + 1,
+          type: 0
+        },
+        {
+          icon: noDotUni,
+          number: i + 1,
+          type: 3
+        }
+      )
+      copyArr[i].lastDroppedIcon = { image: keyboardsSets[chosenSetNumber].listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].statusIconExist = false;
+      copyArr[i].cannotRemoveStatusIcon = false;
+      copyArr[i].lastDroppedSlashUp = null;
+      copyArr[i].lastDroppedSlashDown = null;
+      kyeboardKeyNumber = kyeboardKeyNumber + 1
+    }
+    if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M-DOT-R14") {
+      showAlert(300);
+      setChosenSetNumber(chosenSetNumber)
+    } else {
+      copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
+      changeIconHolders(copyArr)
+      handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
+    }
+  }
+
+
+  const handleConfirmRecoverDots = () => {
+    const copyArr = JSON.parse(JSON.stringify(iconHolders))
     let kyeboardKeyNumber = 0
     const keyboardArrayForBackend = []
     const statusLedsCheckArray = []
     let numberWithStatusIcon = null
-
     copyArr.forEach((element, idx) => {
       if (element.statusIconExist && (idx < firstKeyboardIcon || idx > firstKeyboardIcon + 11)) {
         statusLedsCheckArray.push(idx)
@@ -275,7 +420,7 @@ export const IconEditor = ({
     for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
       keyboardArrayForBackend.push(
         {
-          icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber].default,
+          icon: keyboardsSets[chosenSetNumber]?.listOfIcons[kyeboardKeyNumber].default,
           number: i + 1,
           type: 0
         },
@@ -285,26 +430,24 @@ export const IconEditor = ({
           type: 3
         }
       )
-      copyArr[i].lastDroppedIcon = { image: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].lastDroppedIcon = { image: keyboardsSets[chosenSetNumber]?.listOfIcons[kyeboardKeyNumber] }
       copyArr[i].statusIconExist = false;
       copyArr[i].cannotRemoveStatusIcon = false;
       copyArr[i].lastDroppedSlashUp = null;
       copyArr[i].lastDroppedSlashDown = null;
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
-    if (statusLedsCheckArray.length < 2) {
-      console.log("numberWithStatusIcon", numberWithStatusIcon)
-      copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3) && (element.number !== numberWithStatusIcon)) })
-      beyondKeyboardArray.forEach(element => {
-        copyArr[element].statusIconExist = true;
-        copyArr[element].cannotRemoveStatusIcon = false;
-      })
-    } else {
-      copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) })
-    }
+
+    copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3) && (element.number !== numberWithStatusIcon)) })
+    beyondKeyboardArray.forEach(element => {
+      copyArr[element].statusIconExist = true;
+      copyArr[element].cannotRemoveStatusIcon = false;
+    })
+    setChosenSetNumber(null)
     changeIconHolders(copyArr)
     handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
   }
+
 
   const handleHoverAddKeybard = () => {
     const copyArr = iconHolders
@@ -514,16 +657,24 @@ export const IconEditor = ({
                 <Tab.Pane eventKey="diody">
                   <div className="icons">
                     <div className="instruction_box">
-                      <p className="instruction_bold">{t("STATUS_ICONS_INSTRUCTION_BOLD_1")}</p>
-                      <p className="instruction">{t("STATUS_ICONS_INSTRUCTION_NORMAL_1")}
-                        <span style={{ ...greenStyle }} />.
-                        {t("STATUS_ICONS_INSTRUCTION_NORMAL_2")}</p>
-                      <p className="instruction">{t("STATUS_ICONS_INSTRUCTION_NORMAL_3")}<span style={{ ...orangeStyle }} />.
-                        {t("STATUS_ICONS_INSTRUCTION_NORMAL_4")}</p>
-                      <p className="instruction">
-                        {t("STATUS_ICONS_INSTRUCTION_NORMAL_5")}</p>
-                      {(chosenModel.type === "MDOT_2" || chosenModel.type === "M-DOT-R14") &&
-                        <p className="instruction_bold">{t("STATUS_ICONS_INSTRUCTION_BOLD_2")}</p>
+                      {(chosenModel.type === "MDOT_2" || chosenModel.type === "M-DOT-R14") ?
+                        <>
+                          <p className="instruction_bold">{t("STATUS_ICONS_INSTRUCTION_BOLD_3")}</p>
+                          <p className="instruction">
+                            {t("STATUS_ICONS_INSTRUCTION_NORMAL_6")}</p>
+                        </>
+                        :
+                        <>
+                          <p className="instruction_bold">{chosenModel.type === "MDOT_M18_UNIVERSAL" ? t("STATUS_ICONS_INSTRUCTION_BOLD_2") : t("STATUS_ICONS_INSTRUCTION_BOLD_1")}</p>
+                          <p className="instruction">{t("STATUS_ICONS_INSTRUCTION_NORMAL_1")}
+                            <span style={{ ...greenStyle }} />.
+                            {t("STATUS_ICONS_INSTRUCTION_NORMAL_2")}</p>
+                          <p className="instruction">{t("STATUS_ICONS_INSTRUCTION_NORMAL_3")}<span style={{ ...orangeStyle }} />.
+                            {t("STATUS_ICONS_INSTRUCTION_NORMAL_4")}</p>
+                          {chosenModel.type !== "MDOT_M18_UNIVERSAL" &&
+                            <p className="instruction">
+                              {t("STATUS_ICONS_INSTRUCTION_NORMAL_5")}</p>}
+                        </>
                       }
                     </div>
                   </div>
@@ -536,22 +687,19 @@ export const IconEditor = ({
                         chosenModel.type !== "MDOT_M18_UNIVERSAL" &&
                         chosenModel.type !== "M-DOT-R14" &&
                         <>
-                          <p className="instruction">ROBOCZO: W wybranym modelu nie ma możliwości dodania klawiatury. Aby dodać klawiaturę wybierz jeden z poniższych modeli:</p>
-                          <ul>
-                            <li>{t("MDOT_18")}</li>
-                            <li>{t("MDOT_M18")}</li>
-                            <li>{t("MDOT_M18_UNIVERSAL")}</li>
-                            <li>{t("R14")}</li>
-                          </ul>
+                          <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_1")}</p>
+                          <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_1")}</p>
+                          <ol className="models_no_keyboard_list" >
+                            <li key={"models_no_keyboard_list1"} className="models_no_keyboard_list_element">{t("MDOT_18")}</li>
+                            <li key={"models_no_keyboard_list2"} className="models_no_keyboard_list_element">{t("MDOT_M18")}</li>
+                            <li key={"models_no_keyboard_list3"} className="models_no_keyboard_list_element">{t("MDOT_M18_UNIVERSAL")}</li>
+                            <li key={"models_no_keyboard_list4"} className="models_no_keyboard_list_element">{t("M-DOT-R14")}</li>
+                          </ol>
                         </>
                       }
                       {chosenModel.type === "MDOT_18" &&
                         <>
-                          <p className="instruction_bold">Wybierz pozycję klawiatury</p>
-                          <p className="instruction">ROBOCZO: w tym miejscu będą trzy kafle w stylu jak wybór fazy czy koloru i grafiką pokazującą,
-                            które pola zostaną uzupełnione. Wybrany kafel będzie miał border więc będzie wiadomo, który jest zaznaczony.</p>
-
-
+                          <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_2")}</p>
                           <div className="keyboard_box">
                             <div className="keyboard_link" style={firstKeyboardIcon === 6 ? { border: "3px solid #EC695C" } : {}}
                               onClick={() => setFirstKeyboardIcon(6)} >
@@ -579,12 +727,11 @@ export const IconEditor = ({
                         chosenModel.type === "MDOT_M18_UNIVERSAL" ||
                         chosenModel.type === "M-DOT-R14") &&
                         <>
-                          <p className="instruction_bold">Wybierz klawiaturę</p>
-                          <p className="instruction">ROBOCZO: w tym miejscu będą kafle w stylu jak wybór fazy czy koloru i grafiką pokazującą
-                            grafikę z klawiaturą (cały set z zachowaniem wielkości poszczególnych ikon ale z mniejszymi odstępami, żeby kafel nie był za duży</p>
-                          <p className="instruction">Po najechaniu na kafel podświetlą się na zielono pola, na których pojawi się klawiatura.
-                            do dodania alert, jeżeli użytkownik kliknie, a na polach jest jakaś ikona</p>
+                          <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_3")}</p>
+                          <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_2")}<span style={{ ...greenStyle }} />
+                            {t("KEYBOARD_INSTRUCTION_NORMAL_3")}</p>
 
+                          <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_4")}</p>
 
                           <div className="keyboard_box">
                             {keyboardsSets.map((el, i) => (
@@ -592,6 +739,7 @@ export const IconEditor = ({
                                 onClick={() => handleClickAddKeybard(i)}
                                 onMouseOver={handleHoverAddKeybard}
                                 onMouseLeave={handleStopHoverAddKeybard}
+                                key={i}
                               >
                                 <img
                                   src={keyboardsSetsLabels[0]?.listOfLabels[i]?.default}
@@ -636,6 +784,7 @@ const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color,
   chosenModel: state.frontEndData.model.chosenModel,
   visual: state.frontEndData.visual.visual,
+  alertAnswer: state.frontEndData.visual.alertAnswer,
   favoriteIcons: state.frontEndData.icon.favoriteIcons,
   ownIcons: state.frontEndData.icon.ownIcons,
   favoriteIconsRender: state.frontEndData.icon.favoriteIconsRender,

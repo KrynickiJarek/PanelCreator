@@ -84,6 +84,14 @@ const availableAlerts = [
     code: 200,
     text: "UNSUPPORTED_CHARACTER",
   },
+  {
+    code: 300,
+    text: "NO_DOTS_KEYBOARD_ALERT",
+  },
+  {
+    code: 301,
+    text: "ICONS_IN_KEYBOARD_AREA_ALERT",
+  },
 ]
 
 export default availableAlerts
