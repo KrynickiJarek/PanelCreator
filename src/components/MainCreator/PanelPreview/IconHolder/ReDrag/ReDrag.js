@@ -19,7 +19,8 @@ export const ReDrag = ({
   iconsBackEnd,
   changeIconsBackEnd,
   rotationIcon,
-  chosenModel,
+  lockedForKeyboard,
+  chosenModel
 }) => {
 
   const [backgroundColorWhileDragging, setBackgroundColorWhileDragging] = useState("transparent")
@@ -33,7 +34,7 @@ export const ReDrag = ({
   }
 
   const handleSelect = () => {
-    if (chosenTab === "icons") {
+    if (chosenTab === "icons" && !lockedForKeyboard) {
       const copyArr = iconHolders
       copyArr.forEach((el, i) => {
         if (i === index) {

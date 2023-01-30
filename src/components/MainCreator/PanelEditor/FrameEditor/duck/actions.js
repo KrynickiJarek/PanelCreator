@@ -15,7 +15,9 @@ const changeFrameFontInfo = item => ({
 const changeFrameShape = item => ({
   type: types.CHANGE_FRAME_SHAPE, item
 })
-
+const changeRfidShape = item => ({
+  type: types.CHANGE_RFID_SHAPE, item
+})
 const addNewFrame = item => ({
   type: types.ADD_NEW_FRAME, item
 })
@@ -78,6 +80,7 @@ const actions = {
   changeFrameFontWeight,
   changeFrameFontInfo,
   changeFrameShape,
+  changeRfidShape,
   addNewFrame,
   removeFrame,
   overFrame,

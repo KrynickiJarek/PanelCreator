@@ -69,7 +69,7 @@ export const IconEditor = ({
       setFirstKeyboardIcon(6)
     } else if (chosenModel.type === "MDOT_M18" ||
       chosenModel.type === "MDOT_M18_UNIVERSAL" ||
-      chosenModel.type === "M-DOT-R14") {
+      chosenModel.type === "M_DOT_R14") {
       setFirstKeyboardIcon(9)
     }
     // eslint-disable-next-line
@@ -277,7 +277,7 @@ export const IconEditor = ({
       }
     })
 
-    if (areThereAnyIcons.length && chosenModel.type !== "M-DOT-R14") {
+    if (areThereAnyIcons.length && chosenModel.type !== "M_DOT_R14") {
       showAlert(301);
     } else {
       copyArr.forEach((element, idx) => {
@@ -322,7 +322,7 @@ export const IconEditor = ({
         copyArr[i].lastDroppedSlashDown = null;
         kyeboardKeyNumber = kyeboardKeyNumber + 1
       }
-      if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M-DOT-R14") {
+      if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M_DOT_R14") {
         showAlert(300);
         // copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3) && (element.number !== numberWithStatusIcon)) })
         // beyondKeyboardArray.forEach(element => {
@@ -380,7 +380,7 @@ export const IconEditor = ({
       copyArr[i].lastDroppedSlashDown = null;
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
-    if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M-DOT-R14") {
+    if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M_DOT_R14") {
       showAlert(300);
       setChosenSetNumber(chosenSetNumber)
     } else {
@@ -657,7 +657,7 @@ export const IconEditor = ({
                 <Tab.Pane eventKey="diody">
                   <div className="icons">
                     <div className="instruction_box">
-                      {(chosenModel.type === "MDOT_2" || chosenModel.type === "M-DOT-R14") ?
+                      {(chosenModel.type === "MDOT_2" || chosenModel.type === "M_DOT_R14") ?
                         <>
                           <p className="instruction_bold">{t("STATUS_ICONS_INSTRUCTION_BOLD_3")}</p>
                           <p className="instruction">
@@ -685,7 +685,7 @@ export const IconEditor = ({
                       {chosenModel.type !== "MDOT_18" &&
                         chosenModel.type !== "MDOT_M18" &&
                         chosenModel.type !== "MDOT_M18_UNIVERSAL" &&
-                        chosenModel.type !== "M-DOT-R14" &&
+                        chosenModel.type !== "M_DOT_R14" &&
                         <>
                           <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_1")}</p>
                           <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_1")}</p>
@@ -693,7 +693,7 @@ export const IconEditor = ({
                             <li key={"models_no_keyboard_list1"} className="models_no_keyboard_list_element">{t("MDOT_18")}</li>
                             <li key={"models_no_keyboard_list2"} className="models_no_keyboard_list_element">{t("MDOT_M18")}</li>
                             <li key={"models_no_keyboard_list3"} className="models_no_keyboard_list_element">{t("MDOT_M18_UNIVERSAL")}</li>
-                            <li key={"models_no_keyboard_list4"} className="models_no_keyboard_list_element">{t("M-DOT-R14")}</li>
+                            <li key={"models_no_keyboard_list4"} className="models_no_keyboard_list_element">{t("M_DOT_R14")}</li>
                           </ol>
                         </>
                       }
@@ -725,7 +725,7 @@ export const IconEditor = ({
                       {(chosenModel.type === "MDOT_18" ||
                         chosenModel.type === "MDOT_M18" ||
                         chosenModel.type === "MDOT_M18_UNIVERSAL" ||
-                        chosenModel.type === "M-DOT-R14") &&
+                        chosenModel.type === "M_DOT_R14") &&
                         <>
                           <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_3")}</p>
                           <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_2")}<span style={{ ...greenStyle }} />

@@ -130,7 +130,7 @@
   "MDOT_18_HORIZONTAL": "M-DOT-18 Poziomy",
   "MDOT_M18": "M-DOT-M18",
   "MDOT_M18_UNIVERSAL": "M-DOT-M18 Przewijany",
-  "M-DOT-R14": "M-DOT-R14",
+  "M_DOT_R14": "M-DOT-R14",
   "MDOT_2_INFO": "Dwupolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm.",
   "MDOT_4_INFO": "Czteropolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm.",
   "MDOT_6_INFO": "Sześciopolowy, szklany panel dotykowy w rozmiarze 90 mm x 90 mm.",
@@ -275,5 +275,7 @@
   "NO_DOTS_KEYBOARD_ALERT": "Uwaga! Niewystarczająca liczba diod stanu na obszarze poza dodawaną klawiaturą. Dodanie klawiatury spowoduje ich przyrócenie.",
   "ICONS_IN_KEYBOARD_AREA_ALERT": "Uwaga! Wszystkie ikony na obszarze dodawanej klawiatury zostaną usunięte.",
   "M-DOT-R14_INFO": "+++++++dodać opis++++++++",
-  "M-DOT-R14_LINK": "https://help.ampio.com/pl/moduly/m-dot-2/"
+  "M-DOT-R14_LINK": "https://help.ampio.com/pl/moduly/m-dot-2/",
+  "FRAMES_HEADER_RFID": "Ramka czytnika RFID",
+  "FRAMES_RFID_INSTRUCTION_BOLD": "Wybież rodzaj narożników ramki czytnika RFID."
 }

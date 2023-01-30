@@ -375,6 +375,7 @@ const IconHolder = ({
                   chosenColor={chosenColor}
                   rotationIcon={rotationIcon}
                   panelRotation={panelRotation}
+                  lockedForKeyboard={lockedForKeyboard}
                   visual={visual}
                 />
               }
@@ -401,6 +402,7 @@ const IconHolder = ({
 
             </div>
           </div>
+
         </div>
         {!lockedForKeyboard &&
           <>

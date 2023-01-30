@@ -113,6 +113,7 @@ const PanelPreview = ({
   chosenFrameFontWeight,
   chosenFrameFontInfo,
   chosenFrameShape,
+  chosenRfidShape,
   addNewFrameState,
   addNewFrame,
   removeFrameState,
@@ -127,6 +128,7 @@ const PanelPreview = ({
   changeFrameFont,
   changeFrameFontWeight,
   changeFrameShape,
+  changeRfidShape,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
   overFrameReRender,
@@ -328,7 +330,7 @@ const PanelPreview = ({
       allowFrameTitle(false)
       frameTitle(false)
 
-
+      const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
       const modeltimeout = setTimeout(() => {
         setHideAll(true)
         chosenModel.dotLocation.forEach(element => {
@@ -339,17 +341,16 @@ const PanelPreview = ({
             splitIconProportions: 0, highlightedForKeyboard: false
           })
         });
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrNewFrame.push(element)
         });
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrNewFrameHide.push(element)
         });
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrNewFrameChange.push(element)
         });
-
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrTempFrame.frameArr.push({
             flag: element,
             rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -361,7 +362,7 @@ const PanelPreview = ({
         setNewFrameHide(arrNewFrameHide)
         setNewFrameChange(arrNewFrameChange)
         setTempFrame(arrTempFrame)
-        // changeIconHolders(arrIconHolders);?? przeniesione do końca każdej ścieżki na potrzeby rfid
+
         changeFrameText("")
         setTextFrame(false)
         chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide" ? setLcdShow(true) : setLcdShow(false);
@@ -472,7 +473,6 @@ const PanelPreview = ({
           })
           changeIconHolders(arrIconHolders);
         } else if (chosenModel.lcdScreen.lcdType === "rfid") {
-          // console.log("arrIconHolders", arrIconHolders)
           fillR14(arrIconHolders)
         } else {
           changeIconHolders(arrIconHolders);
@@ -489,22 +489,22 @@ const PanelPreview = ({
 
 
   useEffect(() => {
+    const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
     const arrNewFrame = [];
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
     const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
-    const arrIconHolders = iconHolders
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrNewFrame.push(element)
     });
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrNewFrameHide.push(element)
     });
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrNewFrameChange.push(element)
     });
 
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrTempFrame.frameArr.push({
         flag: element,
         rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -512,12 +512,14 @@ const PanelPreview = ({
         fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
       })
     });
-    arrIconHolders.forEach(element => element.singleFrameTemp = false)
     setNewFrame(arrNewFrame)
     setNewFrameHide(arrNewFrameHide)
     setNewFrameChange(arrNewFrameChange)
     setTempFrame(arrTempFrame)
+
+    const arrIconHolders = iconHolders
     setVisualSmooth(false)
+    arrIconHolders.forEach(element => element.singleFrameTemp = false)
     changeIconHolders(arrIconHolders);
     resetTab("model")
     resetSubtab("default")
@@ -759,18 +761,22 @@ const PanelPreview = ({
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
 
-      chosenModel.dotLocation.forEach(element => {
+
+      const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
+
+
+      modelSource.forEach(element => {
         arrNewFrame.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameHide.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameChange.push(element)
       });
 
 
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrTempFrame.frameArr.push({
           flag: element,
           rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -1290,6 +1296,23 @@ const PanelPreview = ({
     lcdStyle.left = `${(chosenModel.lcdScreen.lcdLeft + 0.9) * sc}px`;
   }
 
+  const rfidStyle = {};
+  lcdStyle.transition = "400ms ease";
+  rfidStyle.border = "2px solid black";
+  rfidStyle.height = `${chosenModel.lcdScreen.lcdHeight * sc}px`;
+  rfidStyle.width = `${chosenModel.lcdScreen.lcdWidth * sc}px`;
+  rfidStyle.top = `${chosenModel.lcdScreen.lcdTop * sc}px`;
+  rfidStyle.left = `${chosenModel.lcdScreen.lcdLeft * sc}px`;
+  if (visual) {
+    rfidStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+  }
+  if (chosenRfidShape === "sharp") {
+    rfidStyle.borderRadius = "0";
+  }
+  if (chosenRfidShape === "round") {
+    rfidStyle.borderRadius = `${3 * sc}px`;
+  }
+
 
   const lcdIconStyle = {};
   lcdIconStyle.height = `${7 * sc}px`;
@@ -1421,6 +1444,9 @@ const PanelPreview = ({
     setFrameTitles(false)
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
+
+      const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
+
       chosenModel.dotLocation.forEach(element => {
         tempArr.push({
           flag: element, lockedForKeyboard: false, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
@@ -1429,24 +1455,23 @@ const PanelPreview = ({
           splitIconProportions: 0, highlightedForKeyboard: false
         })
       });
-      // (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false); czy to trzeba dodać??
       const arrNewFrame = [];
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
 
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrame.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameHide.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameChange.push(element)
       });
 
 
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrTempFrame.frameArr.push({
           flag: element,
           rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -1461,8 +1486,6 @@ const PanelPreview = ({
       changeFrameText("")
       changeFrameHolders([])
       changeFramesBackEnd([])
-
-
 
       const copyWarnings = warnings.filter(warning => warning.code === 7)
       updateWarnings(copyWarnings)
@@ -1562,7 +1585,6 @@ const PanelPreview = ({
         changeIconHolders(tempArr);
 
       } else if (chosenModel.lcdScreen.lcdType === "rfid") {
-        // console.log("tempArr", tempArr)
         fillR14(tempArr)
       } else {
         changeIconHolders(tempArr);
@@ -2731,7 +2753,7 @@ const PanelPreview = ({
         }
       }
 
-      if (chosenModel.lcdScreen !== false) {
+      if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && index < 9) {
             for (let j = 0; j < 9; j++) {
@@ -3003,7 +3025,7 @@ const PanelPreview = ({
       }
 
 
-      if (chosenModel.lcdScreen !== false) {
+      if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s") {
             for (let j = 0; j < 9; j++) {
@@ -3052,6 +3074,21 @@ const PanelPreview = ({
           if (index === 3) {
             copyArrChange[3] = "r"
             copyArrChange[4] = "r"
+          }
+        }
+      }
+      if (chosenModel.type === "M_DOT_R14") {
+        if (copyArr[0] === "s") {
+          if (index === 1 || index === 2) {
+            copyArrChange[1] = "r"
+            copyArrChange[2] = "r"
+          }
+        }
+
+        if (copyArr[2] === "s") {
+          if (index === 0) {
+            copyArrChange[0] = "r"
+            copyArrChange[1] = "r"
           }
         }
       }
@@ -3182,7 +3219,6 @@ const PanelPreview = ({
     setNewFrameChange(arrNewFrameChange);
     overFrameReRender()
   });
-
 
   // const handleFrameClick = useCallback((index) => {
   const handleFrameClick = (index) => {
@@ -3485,7 +3521,7 @@ const PanelPreview = ({
       }
 
 
-      if (chosenModel.lcdScreen !== false) {
+      if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && index < 9) {
             for (let j = 0; j < 9; j++) {
@@ -3730,7 +3766,7 @@ const PanelPreview = ({
         }
 
 
-        if (chosenModel.lcdScreen !== false) {
+        if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
           for (let i = 0; i < 9; i++) {
             if (copyArr[i] === "s") {
               for (let j = 0; j < 9; j++) {
@@ -3786,6 +3822,20 @@ const PanelPreview = ({
               copyArr[3] = 1
               copyArr[4] = 0
             }
+          }
+        }
+      } else if (chosenModel.type === "M_DOT_R14") {
+        if (copyArr[0] === "s") {
+          if (index === 1 || index === 2) {
+            copyArr[1] = 0
+            copyArr[2] = 1
+          }
+        }
+
+        if (copyArr[2] === "s") {
+          if (index === 0 || index === 1) {
+            copyArr[0] = 1
+            copyArr[1] = 0
           }
         }
       } else if (chosenModel.type === "MDOT_4") {
@@ -4236,6 +4286,9 @@ const PanelPreview = ({
     changeFramesShapeToSharp()
     setAllFramesSharpRound(prev => !prev)
     changeFrameShape("sharp")
+    if (chosenModel.type === "M_DOT_R14") {
+      changeRfidShape("sharp")
+    }
 
     const copyFrameBackEnd = framesBackEnd
     copyFrameBackEnd.forEach(frame => {
@@ -4248,6 +4301,9 @@ const PanelPreview = ({
     changeFramesShapeToRound()
     setAllFramesSharpRound(prev => !prev)
     changeFrameShape("round")
+    if (chosenModel.type === "M_DOT_R14") {
+      changeRfidShape("round")
+    }
 
     const copyFrameBackEnd = framesBackEnd
     copyFrameBackEnd.forEach(frame => {
@@ -4512,7 +4568,6 @@ const PanelPreview = ({
     }, 400);
     return () => clearTimeout(dahsboardTimeout);
   }
-
   const fillR14 = (copyArr) => {
     let kyeboardKeyNumber = 0
     const keyboardArrayForBackend = []
@@ -4645,6 +4700,7 @@ const PanelPreview = ({
                               )} >
 
                           {el !== 0 && showFramBlackLight &&
+                            // !el.lockedForKeyboard &&
                             <div style={el === 1 ? { ...frameCellStyle } :
                               chosenColor.hex !== "#30a32c" ?
                                 { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
@@ -4698,7 +4754,7 @@ const PanelPreview = ({
 
 
                 <div className="panel_content" style={{ ...contentStyle, position: "absolute" }}>
-                  {hideAll && !visual && false &&
+                  {hideAll && !visual &&
                     <>
                       {newFrameChange.map((el, index) =>
                         <div key={index}
@@ -5331,12 +5387,28 @@ const PanelPreview = ({
                                 visual={visual}
                                 splitIconProportions={splitIconProportions}
                               />
+                              {lockedForKeyboard &&
+                                <div key={index}
+                                  style={
+                                    ((index + 2) % 3 === 0) ?
+                                      (
+                                        ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                          : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                      )
+                                      : (
+                                        ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                          : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                      )} />
+                              }
                             </>}
                         </div>
                       )}
 
 
-                      {(rfid) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
+                      {(rfid) && <div className="lcd" style={{ ...rfidStyle, borderColor: chosenColor.iconColor }} />}
+
+
+
                       {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
                       {(lcdShow && visual && lcdNew) &&
                         <div className="lcd_visual" style={{ ...lcdStyle, padding: `${2 * sc}px ${1 * sc}px` }}>
@@ -5393,6 +5465,7 @@ const PanelPreview = ({
                       }
                     </>
                   }
+
                 </div>
               </div>
 
@@ -5814,6 +5887,7 @@ const mapStateToProps = state => ({
   chosenFrameFontWeight: state.frontEndData.frame.chosenFrameFontWeight,
   chosenFrameFontInfo: state.frontEndData.frame.chosenFrameFontInfo,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
   addNewFrameState: state.frontEndData.frame.addNewFrame,
   removeFrameState: state.frontEndData.frame.removeFrame,
   lastRemovedFrameIndex: state.frontEndData.frame.lastRemovedFrameIndex,
@@ -5860,6 +5934,7 @@ const mapDispatchToProps = dispatch => ({
   changeFrameHoldersTemp: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
   changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
   changeFrameShape: shape => dispatch(actionsFrame.changeFrameShape(shape)),
+  changeRfidShape: shape => dispatch(actionsFrame.changeRfidShape(shape)),
   changeFramesShapeToSharp: (income) => dispatch(actionsFrame.changeFramesShapeToSharp(income)),
   changeFramesShapeToRound: (income) => dispatch(actionsFrame.changeFramesShapeToRound(income)),
   overFrameAll: (income) => dispatch(actionsFrame.overFrameAll(income)),

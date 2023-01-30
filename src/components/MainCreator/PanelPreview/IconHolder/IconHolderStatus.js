@@ -284,7 +284,7 @@ const IconHolderStatus = ({
       };
     };
   }
-  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M-DOT-R14" && statusIconExist && !cannotRemoveStatusIcon) {
+  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M_DOT_R14" && statusIconExist && !cannotRemoveStatusIcon) {
     styleStatusIconsMask = {
       display: "block",
       transform: "translateX(-50%) scale(3.2)",
@@ -329,7 +329,7 @@ const IconHolderStatus = ({
       zIndex: "99",
     };
   }
-  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M-DOT-R14" && !statusIconExist && !cannotRemoveStatusIcon) {
+  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M_DOT_R14" && !statusIconExist && !cannotRemoveStatusIcon) {
     styleStatusIconsMask = {
       display: "block",
       transform: "translateX(-50%) scale(3.2)",
@@ -361,7 +361,7 @@ const IconHolderStatus = ({
       };
     };
   }
-  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M-DOT-R14" && statusIconExist && cannotRemoveStatusIcon) {
+  else if (chosenTab === "icons" && chosenSubtab === "status_icons" && panelModel !== "MDOT_2" && panelModel !== "M_DOT_R14" && statusIconExist && cannotRemoveStatusIcon) {
     styleStatusIconsMask = {
       display: "block",
       transform: "translateX(-50%) scale(3.2)",

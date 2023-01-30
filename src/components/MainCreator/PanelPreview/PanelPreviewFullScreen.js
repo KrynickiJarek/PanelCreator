@@ -80,19 +80,18 @@ const PanelPreviewFullScreen = ({
   }, [time])
 
 
-  let frameCellStyle = {}
-  frameCellStyle.height = `${16 * sc}px`;
-  frameCellStyle.width = `${16 * sc}px`;
-  frameCellStyle.borderRadius = "50%";
-  frameCellStyle.transition = "400ms ease";
-  frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.5)";
-  frameCellStyle.opacity = "0";
-  frameCellStyle.margin = `${2 * sc}px auto`;
+  // let frameCellStyle = {}
+  // frameCellStyle.height = `${16 * sc}px`;
+  // frameCellStyle.width = `${16 * sc}px`;
+  // frameCellStyle.borderRadius = "50%";
+  // frameCellStyle.transition = "400ms ease";
+  // frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.5)";
+  // frameCellStyle.opacity = "0";
+  // frameCellStyle.margin = `${2 * sc}px auto`;
 
-  if ((chosenTab === "frame")) {
-    frameCellStyle.opacity = "1";
-  }
-
+  // if ((chosenTab === "frame")) {
+  //   frameCellStyle.opacity = "1";
+  // }
 
   let frameChangeStyle = {}
   frameChangeStyle.height = `${16 * sc}px`;

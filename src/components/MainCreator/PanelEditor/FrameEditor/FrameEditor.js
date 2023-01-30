@@ -31,12 +31,14 @@ const FrameEditor = ({
   changeFrameFontWeight,
   changeFrameFontInfo,
   changeFrameShape,
+  changeRfidShape,
   addNewFrame,
   removeFrame,
   overFrame,
   chosenFrameFont,
   chosenFrameFontWeight,
   chosenFrameShape,
+  chosenRfidShape,
   frameHolders,
   frameHoldersTemp,
   visual,
@@ -150,6 +152,39 @@ const FrameEditor = ({
         </div>
       </div>
       <div className="frame_container">
+        {chosenModel.type === "M_DOT_R14" &&
+          <>
+
+
+            <h2 className="frame_header">{t("FRAMES_HEADER_RFID")}</h2>
+            <div className="rfid_content">
+              <p className="instruction_bold">{t("FRAMES_RFID_INSTRUCTION_BOLD")}</p>
+
+              <div className="frame_choosing_box">
+
+                <div className="frame_shape_link" style={(chosenRfidShape === "sharp") ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
+                  onClick={() => { changeRfidShape("sharp") }} >
+                  {(chosenRfidShape === "sharp") && <div className="frame_chosen" />}
+                  < p className="shape_name">{t("STRAIGHT")}</p>
+                  <img src={Sharpframe} alt="sharpframe" className="shape_image" />
+                </div>
+
+                <div className="frame_shape_link" style={chosenRfidShape === "round" ? { border: "3px solid #EC695C" } : {}}
+                  onClick={() => { changeRfidShape("round") }} >
+                  {chosenRfidShape === "round" && <div className="frame_chosen" />}
+                  < p className="shape_name">{t("ROUNDED")}</p>
+                  <img src={Roundframe} alt="roundframe" className="shape_image" />
+                </div>
+              </div>
+            </div>
+          </>
+
+        }
+
+
+
+
+
         <h2 className="frame_header">{t("FRAMES_HEADER")}</h2>
         <div className="frame_content">
           <p className="instruction_bold">{t("FRAMES_INSTRUCTION_BOLD")}</p>
@@ -412,6 +447,7 @@ const mapStateToProps = state => ({
   chosenFrameFontWeight: state.frontEndData.frame.chosenFrameFontWeight,
   chosenFrameFontInfo: state.frontEndData.frame.chosenFrameFontInfo,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
   frameList: state.frontEndData.frame.frameList,
   overFrameRender: state.frontEndData.frame.overFrameRender,
   frameHolders: state.frontEndData.frame.frameHolders,
@@ -429,6 +465,7 @@ const mapDispatchToProps = dispatch => ({
   changeFrameFontWeight: weight => dispatch(actions.changeFrameFontWeight(weight)),
   changeFrameFontInfo: font => dispatch(actions.changeFrameFontInfo(font)),
   changeFrameShape: shape => dispatch(actions.changeFrameShape(shape)),
+  changeRfidShape: shape => dispatch(actions.changeRfidShape(shape)),
   addNewFrame: (income) => dispatch(actions.addNewFrame(income)),
   removeFrame: (frame) => dispatch(actions.removeFrame(frame)),
   overFrame: (frame) => dispatch(actions.overFrame(frame)),
