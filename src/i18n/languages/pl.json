@@ -271,7 +271,6 @@
   "KEYBOARD_INSTRUCTION_NORMAL_2": "Po najechaniu kursorem myszy na wybrany zestaw kolorem ",
   "KEYBOARD_INSTRUCTION_NORMAL_3": " podświetlą się pola sensorowe, na których po kliknięciu zostanie dodana klawiatura.",
   "KEYBOARD_INSTRUCTION_NORMAL_4": "Uwaga! Wszystkie ikony oraz diody stanu z obszaru dodawanej klawiatury zostaną automatycznie usunięte.",
-  "KEYBOARD_INSTRUCTION_NORMAL_5": "Zestaw",
   "NO_DOTS_KEYBOARD_ALERT": "Uwaga! Niewystarczająca liczba diod stanu na obszarze poza dodawaną klawiaturą. Dodanie klawiatury spowoduje ich przyrócenie.",
   "ICONS_IN_KEYBOARD_AREA_ALERT": "Uwaga! Wszystkie ikony na obszarze dodawanej klawiatury zostaną usunięte.",
   "M-DOT-R14_INFO": "+++++++dodać opis++++++++",

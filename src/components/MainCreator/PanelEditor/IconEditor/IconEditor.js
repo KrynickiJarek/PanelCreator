@@ -46,23 +46,26 @@ export const IconEditor = ({
   iconHolders,
   changeIconHolders,
   changeIconsBackEnd,
-  iconsBackEnd
+  iconsBackEnd,
+  setAlertAnswer
 }) => {
   const [unlock, setUnlock] = useState(false)
   const [loadingIcon, setLoadingIcon] = useState(false)
   const [firstKeyboardIcon, setFirstKeyboardIcon] = useState()
   const [chosenSetNumber, setChosenSetNumber] = useState(null)
 
+
   useEffect(() => {
     if (alertAnswer === 300) {
       handleConfirmRecoverDots()
+      setAlertAnswer(null)
     }
     if (alertAnswer === 301) {
       handleConfirmAddKeyboard()
+      setAlertAnswer(null)
     }
     // eslint-disable-next-line 
-  }, [alertAnswer])
-
+  }, [alertAnswer, chosenSetNumber])
 
   useEffect(() => {
     if (chosenModel.type === "MDOT_18") {
@@ -265,7 +268,6 @@ export const IconEditor = ({
     const statusLedsCheckArray = []
     const areThereAnyIcons = []
     // let numberWithStatusIcon = null //potrzebne tylko w handleConfirmRecoverDots?
-
     copyArr.forEach((element, idx) => {
       if (idx >= firstKeyboardIcon && idx < firstKeyboardIcon + 12) {
         if (element?.lastDroppedIcon
@@ -298,8 +300,6 @@ export const IconEditor = ({
         }
       })
       let copyIconsBackEnd = []
-      // console.log('keyboardsSets', keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber])
-      // console.log('keyboardsSets', keyboardsSets)
 
       for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
         keyboardArrayForBackend.push(
@@ -322,7 +322,7 @@ export const IconEditor = ({
         copyArr[i].lastDroppedSlashDown = null;
         kyeboardKeyNumber = kyeboardKeyNumber + 1
       }
-      if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M_DOT_R14") {
+      if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M_DOT_R14" && chosenModel.type !== "MDOT_M18_UNIVERSAL") {
         showAlert(300);
         // copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number - 1 < firstKeyboardIcon || element.number - 1 > firstKeyboardIcon + 11) && (element.type === 3) && (element.number !== numberWithStatusIcon)) })
         // beyondKeyboardArray.forEach(element => {
@@ -380,7 +380,7 @@ export const IconEditor = ({
       copyArr[i].lastDroppedSlashDown = null;
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
-    if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M_DOT_R14") {
+    if (statusLedsCheckArray.length < 2 && chosenModel.type !== "M_DOT_R14" && chosenModel.type !== "MDOT_M18_UNIVERSAL") {
       showAlert(300);
       setChosenSetNumber(chosenSetNumber)
     } else {
@@ -744,7 +744,7 @@ export const IconEditor = ({
                                 <img
                                   src={keyboardsSetsLabels[0]?.listOfLabels[i]?.default}
                                   alt="keyboard_set" className="keyboard_set" />
-                                < p className="keyboard_set_name">{t("KEYBOARD_SET")} {i + 1}</p>
+                                < p className="keyboard_set_name">{el.setName}</p>
                               </div>
                             ))}
                           </div>
@@ -804,9 +804,10 @@ const mapDispatchToProps = dispatch => ({
   changeSubtab: tab => dispatch(actions.changeSubtab(tab)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
-  updateOwnIcons: (income) => dispatch(actions.updateOwnIcons(income)),
+  updateOwnIcons: (income) => dispatch(actionsIcon.updateOwnIcons(income)),
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+  setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)

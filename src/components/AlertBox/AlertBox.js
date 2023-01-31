@@ -11,7 +11,11 @@ import "./AlertBox.scss"
 const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
 
   useEffect(() => {
+    // console.log('useEffect removeAlert')
     removeAlert()
+    // return () => {
+    // removeAlert()
+    // }
     //reserowanie alertu przy odświeżeniu 
     // eslint-disable-next-line 
   }, [])

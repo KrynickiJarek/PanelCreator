@@ -980,7 +980,6 @@ const PanelPreview = ({
   }, [chosenTab]);
 
 
-
   useEffect(() => {
     if (alertAnswer === 2) {
       goBack()
@@ -1592,12 +1591,12 @@ const PanelPreview = ({
       }
       // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       changePanelTextBackEnd([])
-      setTextFrame(false)
-      chosenModel.lcdScreen === "slide" || chosenModel.lcdScreen === "noslide" ? setLcdShow(true) : setLcdShow(false)
+      setTextFrame(false);
+      chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide" ? setLcdShow(true) : setLcdShow(false);
+
     }, 300);
     return () => clearTimeout(modeltimeout);
   }
-
   const handleHideRemoveIcons = () => {
     if (alert !== 4) {
       showRemoveIcons(false)
@@ -4410,6 +4409,7 @@ const PanelPreview = ({
 
   const printPdf = () => {
     setAlertAnswer(null)
+    console.log("backEndData", backEndData)
     setDownloading(true)
     let dataToSend = {
       frontEndData,
@@ -4419,6 +4419,7 @@ const PanelPreview = ({
     }
     let frontEndDataStr = JSON.stringify(dataToSend);
     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+    console.log("frontEndDataB64", frontEndDataB64)
     fetchWithTimeout(frontEndDataB64)
   }
 

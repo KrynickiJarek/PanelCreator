@@ -5,12 +5,21 @@ const importAll = (r) => {
 
 const keyboardsSets = [
   {
-    setId: 1,
-    listOfIcons: importAll(require.context("../../../../assets/keyboards/1", true, /\.(svg)$/))
+    setName: "Calibri bold",
+    listOfIcons: importAll(require.context("../../../../assets/keyboards/calibri_bold", true, /\.(svg)$/))
   },
   {
-    setId: 2,
-    listOfIcons: importAll(require.context("../../../../assets/keyboards/2", true, /\.(svg)$/))
+    setName: "Calibri",
+    listOfIcons: importAll(require.context("../../../../assets/keyboards/calibri", true, /\.(svg)$/))
+  },
+  {
+    setName: "Montserrat bold",
+    listOfIcons: importAll(require.context("../../../../assets/keyboards/montserrat_bold", true, /\.(svg)$/))
+  }
+  ,
+  {
+    setName: "Montserrat",
+    listOfIcons: importAll(require.context("../../../../assets/keyboards/montserrat", true, /\.(svg)$/))
   }
 ];
 
