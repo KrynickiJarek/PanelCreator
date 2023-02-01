@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import actions from "../../PanelEditor/duck/actions.js"
+import actionsIcon from "../../PanelEditor/IconEditor/duck/actions.js"
 import "./IconEditor.scss"
 import { t } from "../../../../i18n";
 
@@ -468,7 +469,7 @@ const mapDispatchToProps = dispatch => ({
   changeSubtab: tab => dispatch(actions.changeSubtab(tab)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
-  updateOwnIcons: (income) => dispatch(actions.updateOwnIcons(income)),
+  updateOwnIcons: (income) => dispatch(actionsIcon.updateOwnIcons(income)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)
