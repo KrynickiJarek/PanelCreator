@@ -28,6 +28,14 @@ const setFrontEndReducerIcon = item => ({
   type: types.SET_FRONT_END_REDUCER_ICON, item
 })
 
+const updateOwnLogo = item => ({
+  type: types.UPDATE_OWN_LOGO, item
+})
+
+const setRfidType = item => ({
+  type: types.SET_RFID_TYPE, item
+})
+
 
 
 
@@ -39,7 +47,9 @@ const actions = {
   removeIconFromFavorite,
   isAnySelected,
   setFrontEndReducerIcon,
-  setAreThereAnyIcons
+  setAreThereAnyIcons,
+  updateOwnLogo,
+  setRfidType
 }
 
 export default actions

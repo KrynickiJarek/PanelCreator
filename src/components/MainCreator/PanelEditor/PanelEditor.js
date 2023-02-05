@@ -27,7 +27,7 @@ import FrameFill from "../../../assets/editornav/frame_fill.svg"
 import Color from "../../../assets/editornav/color.svg"
 import ColorFill from "../../../assets/editornav/color_fill.svg"
 
-const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelected }) => {
+const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelected, chosenModel }) => {
 
   const [modelHover, setModelHover] = useState(false)
   const [iconsHover, setIconsHover] = useState(false)
@@ -134,7 +134,7 @@ const PanelEditor = ({ tab, change, iconHolders, changeIconHolders, isAnySelecte
               <img src={Text} alt="text" className="button_icon" />
               {(textHover || tab === "text") && <img src={TextFill} alt="text" className="button_icon_hover" />}
               <div className="button_text_box">
-                <p className="button_text" style={tab === "text" ? { fontWeight: "700" } : {}}>{t("TITLES")}</p>
+                <p className="button_text" style={tab === "text" ? { fontWeight: "700" } : {}}>{chosenModel.type === "M_DOT_R14" ? t("TITLES_AND_RFID_READER") : t("TITLES")}</p>
               </div>
             </div>
           </Nav.Link>
@@ -179,6 +179,7 @@ const mapStateToProps = state => ({
   tab: state.frontEndData.tab.tab,
   iconHolders: state.frontEndData.icon.iconHolders,
   languageRender: state.frontEndData.visual.languageRender,
+  chosenModel: state.frontEndData.model.chosenModel,
 })
 
 const mapDispatchToProps = dispatch => ({

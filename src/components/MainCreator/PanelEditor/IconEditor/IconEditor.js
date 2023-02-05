@@ -233,6 +233,7 @@ export const IconEditor = ({
   }
 
   const handleAddKeyboardBackend = (keyboardArrayForBackend, copyIconsBackEnd) => {
+    console.log("111 copyIconsBackEnd", copyIconsBackEnd)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     keyboardArrayForBackend.forEach(element => {
       const toDataURL = svg => fetch(svg)
@@ -254,9 +255,10 @@ export const IconEditor = ({
             proportion: 0
           }
           copyIconsBackEnd.push(recordIcon)
-        })
+        }).then(changeIconsBackEnd(copyIconsBackEnd))
     })
-    changeIconsBackEnd(copyIconsBackEnd)
+    // changeIconsBackEnd(copyIconsBackEnd) zmienione na then
+
   }
 
 
@@ -304,8 +306,7 @@ export const IconEditor = ({
       for (let i = firstKeyboardIcon; i < firstKeyboardIcon + 12; i++) {
         keyboardArrayForBackend.push(
           {
-            // icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber].default,
-            icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber],
+            icon: keyboardsSets[setNumber].listOfIcons[kyeboardKeyNumber].default,
             number: i + 1,
             type: 0
           },
@@ -719,7 +720,6 @@ export const IconEditor = ({
                               < p className="keyboard_name" style={firstKeyboardIcon === 0 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_TOP")}</p>
                             </div>
                           </div>
-
                         </>
                       }
                       {(chosenModel.type === "MDOT_18" ||

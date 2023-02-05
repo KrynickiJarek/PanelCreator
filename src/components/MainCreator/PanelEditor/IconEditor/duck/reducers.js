@@ -10,6 +10,8 @@ const INITIAL_STATE = {
   ownIconsRender: false,
   isAnySelected: false,
   areThereAnyIcons: false,
+  ownLogo: null,
+  rfidType: 0
 }
 
 const iconReducer = (state = INITIAL_STATE, action) => {
@@ -51,6 +53,19 @@ const iconReducer = (state = INITIAL_STATE, action) => {
       }
     case types.SET_FRONT_END_REDUCER_ICON:
       return action.item
+
+
+    case types.UPDATE_OWN_LOGO:
+      return {
+        ...state, ownLogo: action.item
+        // , ownIconsRender: !state.ownIconsRender
+      }
+
+    case types.SET_RFID_TYPE:
+      return {
+        ...state, rfidType: action.item
+      }
+
     default:
       return state
   }

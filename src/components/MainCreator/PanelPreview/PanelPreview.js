@@ -85,6 +85,7 @@ import Minusuni from "../../../assets/lcd/minusuni.svg"
 import Leftuni from "../../../assets/lcd/leftuni.svg"
 import Rightuni from "../../../assets/lcd/rightuni.svg"
 import noDotUni from "../../../assets/lcd/noDotUni.svg"
+import Rfid_icon from "../../../assets/lcd/rfid.svg"
 
 
 import IconHolder from './IconHolder/IconHolder';
@@ -199,6 +200,8 @@ const PanelPreview = ({
   setFullScreen,
   setAllIcons,
   allIcons,
+  ownLogo,
+  rfidType
 }) => {
 
 
@@ -1175,6 +1178,20 @@ const PanelPreview = ({
   universalIconStyle.transition = "400ms ease";
 
 
+
+  let rfidIconStyle = {};
+  rfidIconStyle.height = `${5.07 * sc}px`;
+  rfidIconStyle.width = `${7.35 * sc}px`;
+  rfidIconStyle.position = "absolute";
+  rfidIconStyle.transform = "translate(-50%, -50%)"
+  rfidIconStyle.top = "50%";
+  rfidIconStyle.left = "50%";
+
+
+  if (rfidType !== 0) {
+    rfidIconStyle.top = `1px`;
+    rfidIconStyle.width = `${6 * sc}px`;
+  }
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
   visualStyle.height = `${chosenModel.height * sc}px`;
@@ -1296,20 +1313,70 @@ const PanelPreview = ({
   }
 
   const rfidStyle = {};
-  lcdStyle.transition = "400ms ease";
-  rfidStyle.border = "2px solid black";
+  rfidStyle.transition = "400ms ease";
+  rfidStyle.border = "none";
   rfidStyle.height = `${chosenModel.lcdScreen.lcdHeight * sc}px`;
   rfidStyle.width = `${chosenModel.lcdScreen.lcdWidth * sc}px`;
   rfidStyle.top = `${chosenModel.lcdScreen.lcdTop * sc}px`;
   rfidStyle.left = `${chosenModel.lcdScreen.lcdLeft * sc}px`;
+
+  const rfidBorderStyle = {};
+  const rfidBorderTopLeftStyle = {};
+  const rfidBorderTopRightStyle = {};
+  const rfidBorderBottomRightStyle = {};
+  const rfidBorderBottomLeftStyle = {};
+
+  rfidBorderStyle.transition = "400ms ease";
+  rfidBorderStyle.border = "2px solid black";
+  rfidBorderStyle.height = "50%";
+  rfidBorderStyle.width = "50%";
+  rfidBorderStyle.position = "absolute";
+
+  rfidBorderTopLeftStyle.borderRight = "none"
+  rfidBorderTopLeftStyle.borderBottom = "none"
+  rfidBorderTopLeftStyle.top = "0"
+  rfidBorderTopLeftStyle.left = "0"
+
+  rfidBorderTopRightStyle.borderLeft = "none"
+  rfidBorderTopRightStyle.borderBottom = "none"
+  rfidBorderTopRightStyle.top = "0"
+  rfidBorderTopRightStyle.right = "0"
+
+  rfidBorderBottomRightStyle.borderLeft = "none"
+  rfidBorderBottomRightStyle.borderTop = "none"
+  rfidBorderBottomRightStyle.bottom = "0"
+  rfidBorderBottomRightStyle.right = "0"
+
+  rfidBorderBottomLeftStyle.borderRight = "none"
+  rfidBorderBottomLeftStyle.borderTop = "none"
+  rfidBorderBottomLeftStyle.bottom = "0"
+  rfidBorderBottomLeftStyle.left = "0"
+
+
+
   if (visual) {
-    rfidStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderTopLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderTopRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderBottomRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderBottomLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
   }
   if (chosenRfidShape === "sharp") {
-    rfidStyle.borderRadius = "0";
+    rfidBorderTopLeftStyle.borderRadius = "0";
+    rfidBorderTopRightStyle.borderRadius = "0";
+    rfidBorderBottomRightStyle.borderRadius = "0";
+    rfidBorderBottomLeftStyle.filborderRadiuster = "0";
   }
   if (chosenRfidShape === "round") {
-    rfidStyle.borderRadius = `${3 * sc}px`;
+    rfidBorderTopLeftStyle.borderRadius = `${3 * sc}px 0 0 0`;
+    rfidBorderTopRightStyle.borderRadius = `0 ${3 * sc}px 0 0`;
+    rfidBorderBottomRightStyle.borderRadius = `0 0 ${3 * sc}px 0`;
+    rfidBorderBottomLeftStyle.borderRadius = `0 0 0 ${3 * sc}px`;
+  }
+
+
+  if (rfidType !== 0) {
+    rfidBorderTopLeftStyle.width = `${(((chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`;
+    rfidBorderTopRightStyle.width = `${(((chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`;
   }
 
 
@@ -4409,7 +4476,6 @@ const PanelPreview = ({
 
   const printPdf = () => {
     setAlertAnswer(null)
-    console.log("backEndData", backEndData)
     setDownloading(true)
     let dataToSend = {
       frontEndData,
@@ -4419,7 +4485,6 @@ const PanelPreview = ({
     }
     let frontEndDataStr = JSON.stringify(dataToSend);
     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
-    console.log("frontEndDataB64", frontEndDataB64)
     fetchWithTimeout(frontEndDataB64)
   }
 
@@ -4570,14 +4635,15 @@ const PanelPreview = ({
     return () => clearTimeout(dahsboardTimeout);
   }
   const fillR14 = (copyArr) => {
+    console.log("fillR14")
     let kyeboardKeyNumber = 0
     const keyboardArrayForBackend = []
-    let copyIconsBackEnd = []
+    // let copyIconsBackEnd = []
 
     for (let i = 9; i < 21; i++) {
       keyboardArrayForBackend.push(
         {
-          icon: keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber],
+          icon: keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber].default,
           number: i + 1,
           type: 0
         },
@@ -4595,13 +4661,12 @@ const PanelPreview = ({
       copyArr[i].lockedForKeyboard = true;
       kyeboardKeyNumber = kyeboardKeyNumber + 1
     }
-
-    copyIconsBackEnd = iconsBackEnd.filter(element => { return (element.number - 1 < 9 || element.number - 1 > 20) })
     changeIconHolders(copyArr)
-    handleAddKeyboardBackend(keyboardArrayForBackend, copyIconsBackEnd)
+    handleAddKeyboardBackend(keyboardArrayForBackend)
   }
 
-  const handleAddKeyboardBackend = (keyboardArrayForBackend, copyIconsBackEnd) => {
+  const handleAddKeyboardBackend = (keyboardArrayForBackend) => {
+    let copyIconsBackEnd = []
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     keyboardArrayForBackend.forEach(element => {
       const toDataURL = svg => fetch(svg)
@@ -4623,9 +4688,9 @@ const PanelPreview = ({
             proportion: 0
           }
           copyIconsBackEnd.push(recordIcon)
-        })
+        }).then(changeIconsBackEnd(copyIconsBackEnd))
     })
-    changeIconsBackEnd(copyIconsBackEnd)
+    // changeIconsBackEnd(copyIconsBackEnd) zmienione na then
   }
 
 
@@ -5406,8 +5471,33 @@ const PanelPreview = ({
                       )}
 
 
-                      {(rfid) && <div className="lcd" style={{ ...rfidStyle, borderColor: chosenColor.iconColor }} />}
+                      {(rfid) &&
+                        <div className="lcd" style={{ ...rfidStyle }}
+                        >
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderTopLeftStyle, borderColor: chosenColor.iconColor }} />
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderTopRightStyle, borderColor: chosenColor.iconColor }} />
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderBottomRightStyle, borderColor: chosenColor.iconColor }} />
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderBottomLeftStyle, borderColor: chosenColor.iconColor }} />
 
+                          < img src={Rfid_icon} alt="rfid" className="rfid_icon"
+                            style={{
+                              ...universalIconStyle,
+                              ...rfidIconStyle
+                            }}
+                          />
+
+                        </div>
+                      }
+
+
+                      {/* {(rfid) &&
+                        < img src={Rfid_icon} alt="rfid" className="rfid_icon"
+                          style={{
+                            ...universalIconStyle
+                            , top: `${6.65 * sc}px`, left: `${7.45 * sc}px`
+                          }}
+                        />
+                      } */}
 
 
                       {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
@@ -5927,6 +6017,9 @@ const mapStateToProps = state => ({
   ownIcons: state.frontEndData.icon.ownIcons,
   ownIconsRender: state.frontEndData.icon.ownIconsRender,
   languageRender: state.frontEndData.visual.languageRender,
+  ownLogo: state.frontEndData.icon.ownIcons,
+  rfidType: state.frontEndData.icon.rfidType,
+
 })
 
 const mapDispatchToProps = dispatch => ({

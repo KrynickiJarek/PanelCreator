@@ -276,5 +276,7 @@
   "M-DOT-R14_INFO": "+++++++dodać opis++++++++",
   "M-DOT-R14_LINK": "https://help.ampio.com/pl/moduly/m-dot-2/",
   "FRAMES_HEADER_RFID": "Ramka czytnika RFID",
-  "FRAMES_RFID_INSTRUCTION_BOLD": "Wybież rodzaj narożników ramki czytnika RFID."
+  "FRAMES_RFID_INSTRUCTION_BOLD": "Wybież rodzaj narożników ramki czytnika RFID.",
+  "TITLES_AND_RFID_READER": "Napisy i czytnik RFID",
+  "REPLACE": "Zastąp"
 }

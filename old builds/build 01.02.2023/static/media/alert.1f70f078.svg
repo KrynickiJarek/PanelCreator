@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Vectornator for iOS (http://vectornator.io/) -->
+
+<svg
+   height="100%"
+   style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;"
+   xml:space="preserve"
+   width="100%"
+   version="1.1"
+   viewBox="0 0 208.6 208.6"
+   id="svg939"
+   sodipodi:docname="alert.svg"
+   inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:vectornator="http://vectornator.io"><sodipodi:namedview
+   id="namedview941"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="1.9199425"
+   inkscape:cx="132.55605"
+   inkscape:cy="123.70162"
+   inkscape:window-width="1920"
+   inkscape:window-height="1027"
+   inkscape:window-x="0"
+   inkscape:window-y="25"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg939" />
+<metadata
+   id="metadata928">
+<vectornator:setting
+   key="DimensionsVisible"
+   value="0" />
+<vectornator:setting
+   key="PencilOnly"
+   value="0" />
+<vectornator:setting
+   key="SnapToPoints"
+   value="0" />
+<vectornator:setting
+   key="OutlineMode"
+   value="0" />
+<vectornator:setting
+   key="CMYKEnabledKey"
+   value="0" />
+<vectornator:setting
+   key="RulersVisible"
+   value="1" />
+<vectornator:setting
+   key="SnapToEdges"
+   value="0" />
+<vectornator:setting
+   key="GuidesVisible"
+   value="0" />
+<vectornator:setting
+   key="DisplayWhiteBackground"
+   value="0" />
+<vectornator:setting
+   key="doHistoryDisabled"
+   value="0" />
+<vectornator:setting
+   key="SnapToGuides"
+   value="1" />
+<vectornator:setting
+   key="TimeLapseWatermarkDisabled"
+   value="0" />
+<vectornator:setting
+   key="Units"
+   value="Points" />
+<vectornator:setting
+   key="DynamicGuides"
+   value="1" />
+<vectornator:setting
+   key="IsolateActiveLayer"
+   value="0" />
+<vectornator:setting
+   key="SnapToGrid"
+   value="0" />
+</metadata>
+<defs
+   id="defs930" />
+<g
+   id="Untitled"
+   vectornator:layerName="Untitled"
+   style="fill:#ffc107;fill-opacity:1"
+   transform="translate(-239.59051,-82.294132)">
+<path
+   d="M 2.6527,104.3 C 2.6527,48.0774 48.2301,2.5 104.453,2.5 c 56.222,0 101.8,45.5774 101.8,101.8 0,56.223 -45.578,101.8 -101.8,101.8 C 48.2301,206.1 2.6527,160.523 2.6527,104.3 Z"
+   opacity="1"
+   fill="#dc3545"
+   id="path932"
+   style="fill:#ffc107;fill-opacity:1" />
+<path
+   d="m 87.594,172.3 c 0,-9.226 7.4796,-16.706 16.706,-16.706 9.226,0 16.706,7.48 16.706,16.706 0,9.226 -7.48,16.706 -16.706,16.706 -9.2264,0 -16.706,-7.48 -16.706,-16.706 z"
+   opacity="1"
+   fill="#ffffff"
+   id="path934"
+   style="fill:#ffc107;fill-opacity:1" />
+<path
+   d="m 85.6697,28.6282 h 37.5663 l -4,117.1748 H 89.6695 Z"
+   opacity="1"
+   fill="#ffffff"
+   id="path936"
+   style="fill:#ffc107;fill-opacity:1" />
+</g>
+<path
+   style="fill:#ffc107;stroke-width:0.259645;fill-opacity:1"
+   d="m 18.382535,193.89265 c -4.5436,-1.104 -8.4046202,-4.71275 -9.7090002,-9.07464 -0.6617,-2.21273 -0.66084,-6.76531 0.002,-8.69811 0.87481,-2.55231 1.11959,-3.00463 11.4512202,-21.16108 4.76514,-8.37409 21.74561,-38.24216 29.6701,-52.18867 2.35313,-4.141339 7.69947,-13.546983 11.88074,-20.901435 4.18129,-7.35444 13.04659,-22.95262 19.70068,-34.66262 10.79849,-19.00339 12.25355,-21.43777 13.54286,-22.6579 2.42878,-2.29846 5.314545,-3.44091 8.664265,-3.43009 2.44234,0.008 3.85783,0.32595 5.87964,1.32113 2.66073,1.30969 3.98222,2.68731 5.87409,6.12359 0.92797,1.68551 5.07731,9.14026 9.22076,16.56611 6.48923,11.62994 46.94872,84.205035 50.44471,90.486325 0.6756,1.21384 4.35815,7.81532 8.18342,14.66995 14.97116,26.82724 13.9235,24.62579 13.96281,29.3399 0.0273,3.27461 -0.39238,5.06765 -1.7625,7.5297 -1.58295,2.84449 -4.39291,5.23938 -7.54046,6.42663 l -1.54772,0.58379 -83.21625,0.0441 c -70.251555,0.0372 -83.447575,-0.0121 -84.700995,-0.31667 z M 185.06533,184.8081 c 2.07851,-0.86846 2.92215,-2.34314 2.92215,-5.10796 0,-1.88158 -0.013,-1.91658 -2.14207,-5.80767 -1.17814,-2.15308 -19.55128,-35.14713 -40.82919,-73.32013 -30.88694,-55.411785 -38.84417,-69.502795 -39.46605,-69.888255 -1.07625,-0.66709 -2.70337,-0.62418 -3.77125,0.0995 -0.70201,0.4757 -8.403195,13.84475 -41.467605,71.986605 -22.33302,39.27133 -41.14889,72.45397 -41.81305,73.73921 -1.09366,2.11641 -1.20565,2.49889 -1.18746,4.05523 0.0257,2.2004 0.56451,3.14658 2.27788,4.00039 l 1.28932,0.6425 h 81.615735 c 72.85936,0 81.7183,-0.0429 82.57159,-0.39938 z m -83.33671,-14.02467 c -5.880785,-1.4257 -9.809815,-6.40395 -9.809815,-12.42945 0,-4.21981 1.6784,-7.62518 4.99998,-10.1446 5.061585,-3.83922 12.116745,-3.31858 16.658835,1.22935 5.11491,5.12149 4.99516,13.17876 -0.26905,18.10317 -3.27623,3.06476 -7.4685,4.23828 -11.57995,3.24153 z m -0.1251,-32.00106 c -2.668675,-0.95288 -4.685265,-2.92788 -5.619775,-5.50392 -0.30679,-0.84567 -1.0343,-8.39892 -2.63387,-27.34594 -1.21551,-14.397651 -2.20891,-26.665885 -2.20757,-27.262735 0.005,-2.44285 2.40471,-5.06858 6.35887,-6.9592 4.872725,-2.32982 8.687235,-2.39716 13.307805,-0.23493 3.28022,1.535 5.70204,3.82031 6.28467,5.93044 0.18772,0.67987 -0.24915,7.837037 -1.68173,27.551565 -1.06443,14.64821 -2.00978,26.98363 -2.10077,27.41204 -0.4964,2.33723 -2.55595,4.83399 -4.95621,6.00833 -1.90776,0.93338 -4.78686,1.10581 -6.75142,0.40435 z"
+   id="path1205" /></svg>
