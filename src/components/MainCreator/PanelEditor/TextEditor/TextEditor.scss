@@ -231,3 +231,71 @@
 .select_button:hover {
   border: 3px solid #EC695C;
 }
+
+.rfid_box {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 20px 0;
+
+  .rfid_link,
+  .rfid_set_link {
+    width: 200px;
+    min-width: 200px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 5px;
+    border: 3px solid transparent;
+    transition: 300ms ease;
+    cursor: pointer;
+    border-radius: 15px;
+    padding-bottom: 5px;
+
+    .rfid_img {
+      width: 80px;
+      height: 60px;
+      min-height: 150px;
+      margin: 7px;
+    }
+
+    .rfid_set {
+      width: 120px;
+      height: 100px;
+      min-height: 100px;
+      margin: 7px;
+    }
+
+    .rfid_name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      line-height: 18px;
+      font-weight: 400;
+      margin: 0 10px 5px 10px;
+    }
+
+    .rfid_set_name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      line-height: 18px;
+      font-weight: 700;
+      margin: 0 10px 5px 10px;
+    }
+  }
+
+  .rfid_link:hover {
+    border: 3px solid #EC695C;
+  }
+
+  .rfid_set_link {
+    min-height: 150px;
+  }
+
+  .rfid_set_link:hover {
+    border: 3px solid #EC695C;
+  }
+}

@@ -82,8 +82,8 @@ const TextEditor = ({ chosenTextFont,
                   const dataToProcess = {
                     "task": task,
                     "tool": "resizeimage",
-                    "pixels_width": 28,
-                    "pixels_height": 28,
+                    "pixels_width": 40,
+                    "pixels_height": 20,
                     "files": [
                       {
                         "server_filename": serverFileName,
@@ -109,13 +109,7 @@ const TextEditor = ({ chosenTextFont,
                         .then(response => response.text())
                         .then(function (svgDisplay) {
                           var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgDisplay);
-                          const image = {
-                            default: svgB64
-                          }
-                          // let copyOwnIcons = ownIcons
-                          // copyOwnIcons.push(image)
-                          // updateOwnIcons(copyOwnIcons)
-                          updateOwnLogo(image)
+                          updateOwnLogo(svgB64)
                         })
                         .catch(error => {
                           console.log(error)
@@ -184,35 +178,31 @@ const TextEditor = ({ chosenTextFont,
         {chosenModel.type === "M_DOT_R14" &&
           <div className="rfidContainer">
 
-            {/* <h2 className="text_header">{t("TITLE_HEADER")}</h2> */}
-            <h2 className="text_header">CZYTNIK RFID</h2>
+            <h2 className="text_header">{t("RFID_READER")}</h2>
             <div className="text_content">
               <div className="instruction_box">
-
-
-
                 <>
-                  <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_2")}</p>
-                  <div className="keyboard_box">
-                    <div className="keyboard_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
+                  <p className="instruction_bold">{t("RFID_INSTRUCTION_NORMAL_1")}</p>
+                  <div className="rfid_box">
+                    <div className="rfid_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(0)} >
-                      {/* <img src={keyboardBottom} alt="keyboard_bottom" className="keyboard_img" /> */}
-                      {/* < p className="keyboard_name" style={firstKeyboardIcon === 6 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_BOTTOM")}</p> */}
-                      <p>Logo RFID</p>
+                      {/* <img src={rfidBottom} alt="rfid_bottom" className="rfid_img" /> */}
+                      <p>ikona do dodania po dodaniu backendu</p>
+                      < p className="rfid_name" style={rfidType === 0 ? { fontWeight: "700" } : {}}>{t("RFID_LOGO")}</p>
                     </div>
 
-                    <div className="keyboard_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
+                    <div className="rfid_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(1)} >
-                      {/* <img src={keyboardMiddle} alt="keyboard_middle" className="keyboard_img" /> */}
-                      {/* < p className="keyboard_name" style={firstKeyboardIcon === 3 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_MIDDLE")}</p> */}
-                      <p>Własne logo</p>
+                      {/* <img src={rfidMiddle} alt="rfid_middle" className="rfid_img" /> */}
+                      <p>ikona do dodania po dodaniu backendu</p>
+                      < p className="rfid_name" style={rfidType === 1 ? { fontWeight: "700" } : {}}>{t("OWN_LOGO")}</p>
                     </div>
 
-                    <div className="keyboard_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
+                    <div className="rfid_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(2)} >
-                      {/* <img src={keyboardTop} alt="keyboard_top" className="keyboard_img" /> */}
-                      {/* < p className="keyboard_name" style={firstKeyboardIcon === 0 ? { fontWeight: "700" } : {}}>{t("KEYBOARD_TOP")}</p> */}
-                      <p>Własny tekst</p>
+                      <p>ikona do dodania po dodaniu backendu</p>
+                      {/* <img src={rfidTop} alt="rfid_top" className="rfid_img" /> */}
+                      < p className="rfid_name" style={rfidType === 2 ? { fontWeight: "700" } : {}}>{t("RFID_TEXT")}</p>
                     </div>
                   </div>
                 </>
@@ -221,23 +211,23 @@ const TextEditor = ({ chosenTextFont,
 
 
 
-
-
-
-
-                <p className="instruction_bold">{t("CUSTOM_ICONS_INSTRUCTION_BOLD_1")}</p>
-                <p className="instruction">{t("CUSTOM_ICONS_INSTRUCTION_NORMAL_1")}</p>
-                <label htmlFor="inputUploadIcon" >
-                  <div className="select_button">
-                    {ownLogo ? t("REPLACE") : t("SELECT_FILE")}
-                    <div className="button_arrows" />
-                  </div>
-                </label>
-                <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
+                {rfidType === 1 &&
+                  <>
+                    <p className="instruction_bold">{t("OWN_LOGO_INSTRUCTION_BOLD_1")}</p>
+                    <p className="instruction">{t("OWN_LOGO_INSTRUCTION_NORMAL_1")}</p>
+                    <p className="instruction">{t("OWN_LOGO_INSTRUCTION_NORMAL_2")}</p>
+                    <p className="instruction">/ w planach: dodać odczytane informacje na temat proporcji pliku</p>
+                    <p className="instruction">/ w planach: dodać plik do pobrania (w formacie .svg), który ułatwi dopasowanie logo. </p>
+                    <label htmlFor="inputUploadIcon" >
+                      <div className="select_button">
+                        {ownLogo ? t("REPLACE") : t("SELECT_FILE")}
+                        <div className="button_arrows" />
+                      </div>
+                    </label>
+                    <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
+                  </>}
               </div>
-
             </div>
-
 
 
           </div>
@@ -344,8 +334,8 @@ const mapStateToProps = state => ({
   chosenTextWeight: state.frontEndData.text.chosenTextWeight,
   languageRender: state.frontEndData.visual.languageRender,
   chosenModel: state.frontEndData.model.chosenModel,
-  ownLogo: state.frontEndData.icon.ownIcons,
-  rfidType: state.frontEndData.icon.ownIcons,
+  ownLogo: state.frontEndData.icon.ownLogo,
+  rfidType: state.frontEndData.icon.rfidType,
 
 })
 

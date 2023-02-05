@@ -57,8 +57,7 @@ const iconReducer = (state = INITIAL_STATE, action) => {
 
     case types.UPDATE_OWN_LOGO:
       return {
-        ...state, ownLogo: action.item
-        // , ownIconsRender: !state.ownIconsRender
+        ...state, ownLogo: action.item, ownIconsRender: !state.ownIconsRender
       }
 
     case types.SET_RFID_TYPE:

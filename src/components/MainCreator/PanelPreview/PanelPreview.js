@@ -201,7 +201,9 @@ const PanelPreview = ({
   setAllIcons,
   allIcons,
   ownLogo,
-  rfidType
+  updateOwnLogo,
+  rfidType,
+  setRfidType
 }) => {
 
 
@@ -332,6 +334,8 @@ const PanelPreview = ({
       changeFrameHoldersTemp(null)
       allowFrameTitle(false)
       frameTitle(false)
+      updateOwnLogo(null)
+      setRfidType(0)
 
       const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
       const modeltimeout = setTimeout(() => {
@@ -1180,6 +1184,7 @@ const PanelPreview = ({
 
 
   let rfidIconStyle = {};
+
   rfidIconStyle.height = `${5.07 * sc}px`;
   rfidIconStyle.width = `${7.35 * sc}px`;
   rfidIconStyle.position = "absolute";
@@ -1187,11 +1192,34 @@ const PanelPreview = ({
   rfidIconStyle.top = "50%";
   rfidIconStyle.left = "50%";
 
+  let ownLogoStyle = {};
+  ownLogoStyle.height = `${20 * sc}px`;
+  ownLogoStyle.width = `${40 * sc}px`;
+  ownLogoStyle.opacity = '1'
+
+  if (!ownLogo || rfidType !== 1) {
+    ownLogoStyle.opacity = '0'
+  }
 
   if (rfidType !== 0) {
     rfidIconStyle.top = `1px`;
     rfidIconStyle.width = `${6 * sc}px`;
   }
+
+  let rfidInputStyle = {}
+  rfidInputStyle.opacity = "0"
+  rfidInputStyle.position = "absolute";
+  rfidInputStyle.transform = "translate(-50%, -50%)"
+  rfidInputStyle.top = "50%";
+  rfidInputStyle.left = "50%";
+
+  if (rfidType === 2) {
+    rfidInputStyle.opacity = "1"
+  }
+
+
+
+
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
   visualStyle.height = `${chosenModel.height * sc}px`;
@@ -1552,6 +1580,8 @@ const PanelPreview = ({
       changeFrameText("")
       changeFrameHolders([])
       changeFramesBackEnd([])
+      updateOwnLogo(null)
+      setRfidType(0)
 
       const copyWarnings = warnings.filter(warning => warning.code === 7)
       updateWarnings(copyWarnings)
@@ -4509,10 +4539,6 @@ const PanelPreview = ({
     }
   }
 
-
-
-
-
   const debugFetchWithTimeout = (frontEndDataB64) => {
     let ctrl = new AbortController()
     let signal = ctrl.signal
@@ -4635,7 +4661,6 @@ const PanelPreview = ({
     return () => clearTimeout(dahsboardTimeout);
   }
   const fillR14 = (copyArr) => {
-    console.log("fillR14")
     let kyeboardKeyNumber = 0
     const keyboardArrayForBackend = []
     // let copyIconsBackEnd = []
@@ -5485,19 +5510,78 @@ const PanelPreview = ({
                               ...rfidIconStyle
                             }}
                           />
+                          < img src={ownLogo} alt="rfid" className="rfid_icon"
+                            style={{
+                              ...universalIconStyle,
+                              ...rfidIconStyle,
+                              ...ownLogoStyle,
+                              top: "50%"
+                            }}
+                          />
+
+                          {/* <div style={{ ...rfidInputStyle }}>
+                            <div style={!visual ? {
+                              ...autoResizeInputStyle,
+                              // top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, 
+                              // transition: "0s"
+                            } :
+                              {
+                                ...autoResizeInputStyle,
+                                // top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, 
+                                transition: "0.4s ease"
+                              }}>
+                              <input className="text_input_frame"
+                                type="text"
+                                autoComplete="off"
+                                maxLength="16"
+                                style={(isFocusedInputFrame) ?
+                                  (
+                                    (chosenColor.hex !== "#30a32c") ? {
+                                      ...textStyleFrame,
+                                      fontFamily: chosenFrameFont,
+                                      fontWeight: chosenFrameFontWeight,
+                                      border: "2px dashed rgb(40, 167, 69)",
+                                      backgroundColor: chosenColor.hex,
+                                    } :
+                                      {
+                                        ...textStyleFrame,
+                                        fontFamily: chosenFrameFont,
+                                        fontWeight: chosenFrameFontWeight,
+                                        border: "2px dashed rgb(32, 114, 30)",
+                                        backgroundColor: chosenColor.hex,
+                                      }
+                                  )
+                                  : {
+                                    ...textStyleFrame,
+                                    fontFamily: chosenFrameFont,
+                                    fontWeight: chosenFrameFontWeight,
+                                    backgroundColor: chosenColor.hex,
+                                  }}
+                                disabled={chosenTab !== "text"}
+                                onMouseOver={showFrameBorder}
+                                onMouseLeave={hideFrameBorder}
+                                value={rfidText}
+                                onChange={(text) => handleChangeTextFrame(text)}
+                                onFocus={() => setIsFocusedInputFrame(true)}
+                                onKeyDown={handleKeyPress}
+                              />
+                              <span style={{
+                                gridArea: '1 / 1 / 2 / 2',
+                                visibility: 'hidden',
+                                fontFamily: chosenFrameFont,
+                                fontWeight: chosenFrameFontWeight,
+                                padding: "0 8px",
+                                whiteSpace: "pre",
+                                margin: `0 ${1.5 * sc}px`
+                              }}>
+                                {rfidText}
+                              </span>
+                            </div>
+                          </div> */}
+
 
                         </div>
                       }
-
-
-                      {/* {(rfid) &&
-                        < img src={Rfid_icon} alt="rfid" className="rfid_icon"
-                          style={{
-                            ...universalIconStyle
-                            , top: `${6.65 * sc}px`, left: `${7.45 * sc}px`
-                          }}
-                        />
-                      } */}
 
 
                       {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
@@ -6017,7 +6101,7 @@ const mapStateToProps = state => ({
   ownIcons: state.frontEndData.icon.ownIcons,
   ownIconsRender: state.frontEndData.icon.ownIconsRender,
   languageRender: state.frontEndData.visual.languageRender,
-  ownLogo: state.frontEndData.icon.ownIcons,
+  ownLogo: state.frontEndData.icon.ownLogo,
   rfidType: state.frontEndData.icon.rfidType,
 
 })
@@ -6085,6 +6169,9 @@ const mapDispatchToProps = dispatch => ({
   updateFavoriteIcons: icon => dispatch(actionsIcon.updateFavoriteIcons(icon)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income)),
+  updateOwnLogo: (income) => dispatch(actionsIcon.updateOwnLogo(income)),
+  setRfidType: (income) => dispatch(actionsIcon.setRfidType(income)),
+
 })
 
 

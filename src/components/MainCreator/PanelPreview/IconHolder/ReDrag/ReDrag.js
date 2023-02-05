@@ -114,8 +114,6 @@ export const ReDrag = ({
     // eslint-disable-next-line
   }, [isDragging]);
 
-
-
   return (
     < img id="svg" ref={drag} src={image.default} alt="ICON" className="icon"
       style={visual ? { ...styleScale, transform: `rotate(${rotationIcon}deg)`, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }

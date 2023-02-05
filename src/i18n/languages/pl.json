@@ -278,5 +278,13 @@
   "FRAMES_HEADER_RFID": "Ramka czytnika RFID",
   "FRAMES_RFID_INSTRUCTION_BOLD": "Wybież rodzaj narożników ramki czytnika RFID.",
   "TITLES_AND_RFID_READER": "Napisy i czytnik RFID",
-  "REPLACE": "Zastąp"
+  "REPLACE": "ZASTĄP",
+  "RFID_READER": "Czytnik RFID",
+  "RFID_INSTRUCTION_NORMAL_1": "Wybierz rodzaj ramki z czytnikiem RFID",
+  "RFID_LOGO": "Logo RFID",
+  "OWN_LOGO": "Własne logo",
+  "RFID_TEXT": "Własny tekst",
+  "OWN_LOGO_INSTRUCTION_BOLD_1": "Aby dodać własne logo należy wczytać je z dysku.",
+  "OWN_LOGO_INSTRUCTION_NORMAL_1": "Możliwe jest dodawanie plików z rozszerzeniem SVG o rozmiarze do 100kB. Aby logo wyświetlało się poprawnie powinno mieć proporcje 2 : 1, przezroczyste tło i czarny kolor.",
+  "OWN_LOGO_INSTRUCTION_NORMAL_2": "Wczytany plik automatycznie zajmie cały obszar przeznaczony na logo, który ma wymiary 40 mm x 20 mm. W celu uzyskania grafiki w miejszym rozmiarze należy uwzględnić to przy tworzeniu plku SVG"
 }
