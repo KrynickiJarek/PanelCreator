@@ -36,6 +36,22 @@ const setRfidType = item => ({
   type: types.SET_RFID_TYPE, item
 })
 
+const setRfidText = item => ({
+  type: types.SET_RFID_TEXT, item
+})
+
+const setRfidTextFont = item => ({
+  type: types.SET_RFID_TEXT_FONT, item
+})
+
+
+const setRfidTextFontWeight = item => ({
+  type: types.SET_RFID_TEXT_FONT_WEIGHT, item
+})
+
+const setRfidTextFontSize = item => ({
+  type: types.SET_RFID_TEXT_FONT_SIZE, item
+})
 
 
 
@@ -49,7 +65,11 @@ const actions = {
   setFrontEndReducerIcon,
   setAreThereAnyIcons,
   updateOwnLogo,
-  setRfidType
+  setRfidType,
+  setRfidText,
+  setRfidTextFont,
+  setRfidTextFontWeight,
+  setRfidTextFontSize
 }
 
 export default actions

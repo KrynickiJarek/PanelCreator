@@ -11,7 +11,11 @@ const INITIAL_STATE = {
   isAnySelected: false,
   areThereAnyIcons: false,
   ownLogo: null,
-  rfidType: 0
+  rfidType: 0,
+  rfidText: '',
+  rfidTextFont: null,
+  rfidTextFontWeight: '',
+  rfidTextFontSize: 5
 }
 
 const iconReducer = (state = INITIAL_STATE, action) => {
@@ -63,6 +67,28 @@ const iconReducer = (state = INITIAL_STATE, action) => {
     case types.SET_RFID_TYPE:
       return {
         ...state, rfidType: action.item
+      }
+
+    case types.SET_RFID_TEXT:
+      return {
+        ...state, rfidText: action.item
+      }
+
+
+    case types.SET_RFID_TEXT_FONT:
+      return {
+        ...state, rfidTextFont: action.item
+      }
+
+
+    case types.SET_RFID_TEXT_FONT_WEIGHT:
+      return {
+        ...state, rfidTextFontWeight: action.item
+      }
+
+    case types.SET_RFID_TEXT_FONT_SIZE:
+      return {
+        ...state, rfidTextFontSize: (action.item > 2 && action.item <= 10) ? action.item : state.rfidTextFontSize
       }
 
     default:

@@ -1,24 +1,25 @@
 .model_container {
-	display: flex;
-	flex-direction: column;
-	padding: 55px 25px 0 35px;
-	height: 100%;
-	width: 100%;
-	overflow-y: auto;
-	background-color: white;
-	position: absolute;
-  
-	.model_header {
-		font-size: 24px;
-		font-weight: 700;
-		font-family: 'Montserrat', sans-serif;
-		color: #333333;
-		align-self: flex-start;
-		position: relative;
-		margin-left: 10px;
-		margin-bottom: 15px;
-		cursor: default;
-	}
+  display: flex;
+  flex-direction: column;
+  padding: 55px 25px 0 35px;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+
+  .model_header {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    color: #333333;
+    align-self: flex-start;
+    position: relative;
+    margin-left: 10px;
+    margin-bottom: 15px;
+    cursor: default;
+  }
+
   .instruction_bold {
     font-size: 16px;
     font-weight: 700;
@@ -31,35 +32,37 @@
     margin-bottom: 5px;
     margin-left: 10px;
   }
-	.model_header::before {
-		content: "";
-		position: absolute;
-		top: -24px;
-		width: 30px;
-		height: 8px;
-		background-color: rgb(236, 105, 92);
-	}
-	.model_content {
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		// justify-content: space-around;
-		justify-content: flex-start;
-		flex-wrap: wrap;
+
+  .model_header::before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    width: 30px;
+    height: 8px;
+    background-color: rgb(236, 105, 92);
+  }
+
+  .model_content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    // justify-content: space-around;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     margin-bottom: 220px;
 
-		.model_section {
-			margin: 10px;
+    .model_section {
+      margin: 10px;
       width: 200px;
-			min-height: 275px;
+      min-height: 275px;
       position: relative;
 
-      .model_push{
+      .model_push {
         position: absolute;
-        top:0;
+        top: 0;
         left: 0;
         width: 100%;
-        transition:  400ms ease;
+        transition: 400ms ease;
       }
 
       .model_link {
@@ -68,14 +71,14 @@
         justify-content: flex-start;
         align-items: center;
         border: 3px solid transparent;
-        transition:  400ms ease;
+        transition: 400ms ease;
         background-color: white;
         position: absolute;
-        top:0;
+        top: 0;
         left: 0;
         width: 100%;
 
-        .model_box{
+        .model_box {
           width: 190px;
           height: 220px;
           display: flex;
@@ -107,7 +110,7 @@
           cursor: pointer;
         }
 
-        .button_box{
+        .button_box {
           display: flex;
           width: 100%;
           justify-content: space-between;
@@ -126,7 +129,7 @@
             align-self: flex-end;
             position: relative;
             margin: 0 5px 5px 5px;
-            
+
             .button_arrows {
               position: absolute;
               right: 0;
@@ -138,6 +141,7 @@
               background-repeat: no-repeat;
             }
           }
+
           .more_info_button:hover {
             border: 2px solid #EC695C;
           }
@@ -156,7 +160,8 @@
             align-self: flex-end;
             position: relative;
             margin: 0 5px 5px 5px;
-            
+            display: block;
+
             .button_arrows {
               position: absolute;
               right: 0;
@@ -168,26 +173,26 @@
               background-repeat: no-repeat;
             }
           }
+
           .select_button:hover {
             border: 2px solid #EC695C;
           }
         }
-        }
-
-        .model_link:hover {
-          border: 3px solid #EC695C;
-        }
       }
-	}
+
+      .model_link:hover {
+        border: 3px solid #EC695C;
+      }
+    }
+  }
 
 }
 
 .model_container::-webkit-scrollbar {
-	width: 12px;
+  width: 12px;
 }
+
 .model_container::-webkit-scrollbar-thumb {
-	background: rgb(217, 217, 217);
-	border-radius: 10px;
+  background: rgb(217, 217, 217);
+  border-radius: 10px;
 }
-
-

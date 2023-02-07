@@ -68,6 +68,7 @@ import PropoportionsTo5050 from "../../../assets/side/proportions_to_50_50.svg"
 
 import Submitinput from "../../../assets/preview/submitinput.svg"
 import Clearinput from "../../../assets/preview/clearinput.svg"
+import Resizeinput from "../../../assets/preview/resizeinput.svg"
 import Submitinputdark from "../../../assets/preview/submitinputdark.svg"
 import Removeall from "../../../assets/preview/remove.svg"
 
@@ -203,7 +204,15 @@ const PanelPreview = ({
   ownLogo,
   updateOwnLogo,
   rfidType,
-  setRfidType
+  setRfidType,
+  rfidText,
+  rfidTextFont,
+  rfidTextFontWeight,
+  rfidTextFontSize,
+  setRfidText,
+  setRfidTextFont,
+  setRfidTextFontWeight,
+  setRfidTextFontSize
 }) => {
 
 
@@ -234,6 +243,8 @@ const PanelPreview = ({
 
   const [overDescriptions, setOverDescriptions] = useState(false)
   const [overUpDescriptions, setOverUpDescriptions] = useState(false)
+
+  const [isFocusedInputRfid, setIsFocusedInputRfid] = useState(false)
 
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
@@ -981,6 +992,7 @@ const PanelPreview = ({
     if (chosenTab !== "text") {
       setIsFocusedInputIndex(null)
       setIsFocusedInputSide(null)
+      setIsFocusedInputRfid(false)
     } else if (chosenTab !== "frame") {
       setIsFocusedInputFrame(false)
     }
@@ -1425,6 +1437,17 @@ const PanelPreview = ({
   autoResizeInputStyle.alignItems = "center";
   autoResizeInputStyle.justifyItems = "center";
 
+  const autoResizeRfidInputStyle = {};
+  autoResizeRfidInputStyle.fontSize = `${rfidTextFontSize * sc}px`
+  autoResizeRfidInputStyle.lineHeight = `${rfidTextFontSize * sc}px`
+  autoResizeRfidInputStyle.height = `${rfidTextFontSize * 1.44 * sc}px`;
+  autoResizeRfidInputStyle.width = `${rfidTextFontSize * 2 * sc}px`;
+  autoResizeRfidInputStyle.transition = "400ms ease";
+  autoResizeRfidInputStyle.position = "absolute";
+  autoResizeRfidInputStyle.display = "inline-grid";
+  autoResizeRfidInputStyle.alignItems = "center";
+  autoResizeRfidInputStyle.justifyItems = "center";
+
   const textStyle = {};
   textStyle.backgroundColor = "transparent";
   textStyle.color = chosenColor.iconColor;
@@ -1459,6 +1482,14 @@ const PanelPreview = ({
   if (visual) {
     textStyle.color = "white";
     textStyle.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
+  }
+  const textRfidStyle = {};
+  textRfidStyle.fontSize = `${rfidTextFontSize * sc}px`
+  textRfidStyle.lineHeight = `${rfidTextFontSize * sc}px`
+  textRfidStyle.height = `${rfidTextFontSize * 1.45 * sc}px`;
+
+  if (overDescriptions) {
+    textRfidStyle.color = chosenColor.iconColor;
   }
 
 
@@ -1582,6 +1613,10 @@ const PanelPreview = ({
       changeFramesBackEnd([])
       updateOwnLogo(null)
       setRfidType(0)
+      setRfidText('')
+      setRfidTextFont(null)
+      setRfidTextFontSize(5)
+      setRfidTextFontWeight('')
 
       const copyWarnings = warnings.filter(warning => warning.code === 7)
       updateWarnings(copyWarnings)
@@ -2359,8 +2394,61 @@ const PanelPreview = ({
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   };
 
+  const handleChangeTextRfid = (text) => {
+    setRfidText(checkCharracters(text.target.value))
+    // setRerenderTextWarning(prev => !prev)
 
-  const handleChangeFontDown = (index) => {
+    // +++RFID---------------------------------------------------------------------+++dodać backend
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // const copyPanelTextBackEnd = panelTextBackEnd
+
+    // let numberBackEnd = null
+    // if (chosenModel.panelRotation) {
+    //   if (index % 3 === 0) {
+    //     numberBackEnd = index + 3
+    //   } else if (index % 3 === 2) {
+    //     numberBackEnd = index - 1
+    //   } else {
+    //     numberBackEnd = index + 1
+    //   }
+    // } else {
+    //   numberBackEnd = index + 1
+    // }
+
+
+    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
+
+    // let recordText = {
+    //   number: numberBackEnd,
+    //   type: 0,
+    //   title: checkCharracters(text.target.value).toUpperCase(),
+    //   font: chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+    // }
+    // if (recordTextIndex > -1) {
+    //   if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
+    //     copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
+    //   }
+    //   else if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
+    //     let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(numberBackEnd)
+    //     if (recordTextLastIndex > -1) {
+    //       if (copyPanelTextBackEnd[recordTextLastIndex].type === 0) {
+    //         copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
+    //       } else {
+    //         copyPanelTextBackEnd.push(recordText)
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   copyPanelTextBackEnd.push(recordText)
+    // }
+    // changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+  };
+
+
+
+  const handleChangeFontDown = (e, index) => {
+    e.stopPropagation();
     const copyArr = iconHolders;
     copyArr[index].fontDown = chosenTextFont
     copyArr[index].fontDownWeight = chosenTextWeight
@@ -2379,7 +2467,8 @@ const PanelPreview = ({
   }
 
 
-  const handleChangeFontUp = (index) => {
+  const handleChangeFontUp = (e, index) => {
+    e.stopPropagation();
     const copyArr = iconHolders;
     copyArr[index].fontUp = chosenTextFont
     copyArr[index].fontUpWeight = chosenTextWeight
@@ -2398,6 +2487,23 @@ const PanelPreview = ({
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
+  const handleChangeFontRfid = (e) => {
+    e.stopPropagation();
+    setRfidTextFont(chosenTextFont)
+    setRfidTextFontWeight(chosenTextWeight)
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // const copyPanelTextBackEnd = panelTextBackEnd
+    // +++RFID---------------------------------------------------------------------+++dodać backend
+    // copyPanelTextBackEnd.forEach(element => { 
+    //   if ((element.number === index + 1) && element.type === 0) {
+    //     // element.font = chosenTextFont
+    //     // element.fontWeight = chosenTextWeight
+    //     element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
+    //   }
+    // })
+    // changePanelTextBackEnd(copyPanelTextBackEnd)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+  }
 
 
 
@@ -2408,8 +2514,11 @@ const PanelPreview = ({
       el.fontUpWeight = chosenTextWeight;
       el.fontDown = chosenTextFont;
       el.fontDownWeight = chosenTextWeight;
+      // +++RFID---------------------------------------------------------------------+++
     })
     changeIconHolders(copyArr)
+    setRfidTextFont(chosenTextFont)
+    setRfidTextFontWeight(chosenTextWeight)
     filterWarnings(3)
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
@@ -2443,6 +2552,7 @@ const PanelPreview = ({
     setIsFocusedInputSide(null)
     setIsFocusedInputFrame(false)
     setIsFocusedInputName(false)
+    setIsFocusedInputRfid(false)
   }
 
 
@@ -2455,13 +2565,35 @@ const PanelPreview = ({
       setIsFocusedInputSide(null)
       setIsFocusedInputFrame(false)
       setIsFocusedInputName(false)
+      setIsFocusedInputRfid(false)
     }
   }
 
   const handleFocusInput = (index, side) => {
     setIsFocusedInputIndex(index)
     setIsFocusedInputSide(side)
+    setIsFocusedInputRfid(false)
   }
+
+  const handleFocusInputRfid = () => {
+    setIsFocusedInputRfid(true)
+    setIsFocusedInputIndex(null)
+    setIsFocusedInputSide(null)
+    setIsFocusedInputFrame(false)
+    setIsFocusedInputName(false)
+  }
+
+  const handleRfidTextSmaller = (e) => {
+    e.stopPropagation()
+    // +++RFID---------------------------------------------------------------------+++
+    setRfidTextFontSize(rfidTextFontSize - 0.5)
+  }
+  const handleRfidTextBigger = (e) => {
+    e.stopPropagation()
+    // +++RFID---------------------------------------------------------------------+++
+    setRfidTextFontSize(rfidTextFontSize + 0.5)
+  }
+
 
 
   const handleClearInput = (index, side) => {
@@ -2502,12 +2634,36 @@ const PanelPreview = ({
     changeIconHolders(copyArr)
     setIsFocusedInputIndex(null)
     setIsFocusedInputSide(null)
+    setIsFocusedInputRfid(false)
 
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
+  const handleClearInputRfid = (side) => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // const copyPanelTextBackEnd = panelTextBackEnd
 
+    // let numberBackEnd = null
+    // if (chosenModel.panelRotation) {
+    //   if (index % 3 === 0) {
+    //     numberBackEnd = index + 3
+    //   } else if (index % 3 === 2) {
+    //     numberBackEnd = index - 1
+    //   } else {
+    //     numberBackEnd = index + 1
+    //   }
+    // } else {
+    //   numberBackEnd = index + 1
+    // }
+
+    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
+    // changePanelTextBackEnd(copyPanelTextBackEnd)
+
+    setRfidText("")
+    setIsFocusedInputRfid(false)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+  }
 
 
 
@@ -4688,6 +4844,11 @@ const PanelPreview = ({
     }
     changeIconHolders(copyArr)
     handleAddKeyboardBackend(keyboardArrayForBackend)
+    setRfidType(0)
+    setRfidText('')
+    setRfidTextFont(null)
+    setRfidTextFontSize(5)
+    setRfidTextFontWeight('')
   }
 
   const handleAddKeyboardBackend = (keyboardArrayForBackend) => {
@@ -4717,15 +4878,22 @@ const PanelPreview = ({
     })
     // changeIconsBackEnd(copyIconsBackEnd) zmienione na then
   }
-
-
+  const handleClickOutside = () => {
+    setIsFocusedInputRfid(false)
+    setIsFocusedInputIndex(null)
+    setIsFocusedInputSide(null)
+    // setIsFocusedInputFrame(false)
+    // setIsFocusedInputName(false)
+  }
 
   return (
     <>
       {fullScreen &&
         <PanelPreviewFullScreen />
       }
-      <div className="panelpreview_container" style={panelPreviewStyle}>
+      <div className="panelpreview_container" style={panelPreviewStyle}
+        onClick={handleClickOutside}
+      >
         <div className="preview_container" >
           <Warning />
           <div className="preview_top">
@@ -5334,7 +5502,7 @@ const PanelPreview = ({
                                               onMouseLeave={hideBorder}
                                               value={textUp}
                                               onChange={(text) => handleChangeTextUp(index, text)}
-                                              onClick={() => handleChangeFontUp(index)}
+                                              onClick={(e) => handleChangeFontUp(e, index)}
                                               onFocus={() => { handleFocusInput(index, "up") }}
                                               onKeyDown={handleKeyPress}
                                             />
@@ -5409,7 +5577,7 @@ const PanelPreview = ({
                                             onMouseLeave={hideBorder}
                                             value={textDown}
                                             onChange={(text) => handleChangeTextDown(index, text)}
-                                            onClick={() => handleChangeFontDown(index)}
+                                            onClick={(e) => handleChangeFontDown(e, index)}
                                             onFocus={() => { handleFocusInput(index, "down") }}
                                             onKeyDown={handleKeyPress}
                                           />
@@ -5519,66 +5687,123 @@ const PanelPreview = ({
                             }}
                           />
 
-                          {/* <div style={{ ...rfidInputStyle }}>
-                            <div style={!visual ? {
-                              ...autoResizeInputStyle,
-                              // top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, 
-                              // transition: "0s"
-                            } :
-                              {
-                                ...autoResizeInputStyle,
-                                // top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, 
-                                transition: "0.4s ease"
+                          {rfidType === 2 &&
+                            <form onSubmit={handleSubmit}>
+                              <div style={{
+                                ...autoResizeRfidInputStyle,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                fontFamily: rfidTextFont,
+                                fontWeight: rfidTextFontWeight,
                               }}>
-                              <input className="text_input_frame"
-                                type="text"
-                                autoComplete="off"
-                                maxLength="16"
-                                style={(isFocusedInputFrame) ?
-                                  (
-                                    (chosenColor.hex !== "#30a32c") ? {
-                                      ...textStyleFrame,
-                                      fontFamily: chosenFrameFont,
-                                      fontWeight: chosenFrameFontWeight,
-                                      border: "2px dashed rgb(40, 167, 69)",
-                                      backgroundColor: chosenColor.hex,
-                                    } :
-                                      {
-                                        ...textStyleFrame,
-                                        fontFamily: chosenFrameFont,
-                                        fontWeight: chosenFrameFontWeight,
-                                        border: "2px dashed rgb(32, 114, 30)",
-                                        backgroundColor: chosenColor.hex,
-                                      }
-                                  )
-                                  : {
-                                    ...textStyleFrame,
-                                    fontFamily: chosenFrameFont,
-                                    fontWeight: chosenFrameFontWeight,
-                                    backgroundColor: chosenColor.hex,
-                                  }}
-                                disabled={chosenTab !== "text"}
-                                onMouseOver={showFrameBorder}
-                                onMouseLeave={hideFrameBorder}
-                                value={rfidText}
-                                onChange={(text) => handleChangeTextFrame(text)}
-                                onFocus={() => setIsFocusedInputFrame(true)}
-                                onKeyDown={handleKeyPress}
-                              />
-                              <span style={{
-                                gridArea: '1 / 1 / 2 / 2',
-                                visibility: 'hidden',
-                                fontFamily: chosenFrameFont,
-                                fontWeight: chosenFrameFontWeight,
-                                padding: "0 8px",
-                                whiteSpace: "pre",
-                                margin: `0 ${1.5 * sc}px`
-                              }}>
-                                {rfidText}
-                              </span>
-                            </div>
-                          </div> */}
+                                <input className="text_rfid_input"
+                                  type="text"
+                                  autoComplete="off"
+                                  maxLength="20"
+                                  style={(isFocusedInputRfid) ?
+                                    (
+                                      (chosenColor.hex !== "#30a32c") ? {
+                                        ...textStyle,
+                                        ...textRfidStyle,
+                                        fontFamily: rfidTextFont,
+                                        fontWeight: rfidTextFontWeight,
+                                        border: "2px solid rgb(40, 167, 69)"
+                                      } :
+                                        {
+                                          ...textStyle,
+                                          ...textRfidStyle,
+                                          fontFamily: rfidTextFont,
+                                          fontWeight: rfidTextFontWeight,
+                                          border: "2px solid rgb(32, 114, 30)",
+                                        }
+                                    )
+                                    : {
+                                      ...textStyle,
+                                      ...textRfidStyle,
+                                      fontFamily: rfidTextFont,
+                                      fontWeight: rfidTextFontWeight,
+                                    }}
+                                  disabled={(chosenTab !== "text" || rfidType !== 2)}
+                                  onMouseOver={showBorder}
+                                  onMouseLeave={hideBorder}
+                                  value={rfidText}
+                                  onChange={(text) => handleChangeTextRfid(text)}
+                                  onClick={(e) => handleChangeFontRfid(e)}
+                                  onFocus={() => handleFocusInputRfid()}
 
+                                  onKeyDown={handleKeyPress}
+                                />
+                                <span style={{
+                                  gridArea: '1 / 1 / 2 / 2',
+                                  visibility: 'hidden',
+                                  padding: "0 15px", whiteSpace: "pre"
+                                }}
+                                >
+                                  {rfidText}
+                                </span>
+
+                                {isFocusedInputRfid && rfidTextFontSize > 2.5 &&
+                                  <img src={Resizeinput} alt="resizeinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: rfidTextFontSize >= 10 ? "translate(75%, 0%)" : "translate(75%, 75%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => { handleRfidTextSmaller(e) }}
+                                  />
+                                }
+                                {isFocusedInputRfid && rfidTextFontSize < 10 &&
+                                  <img src={Resizeinput} alt="resizeinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: rfidTextFontSize <= 2.5 ? "translate(75%, 0%) rotate(180deg)" : "translate(75%, -75%) rotate(180deg)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => { handleRfidTextBigger(e) }}
+                                  />
+                                }
+
+
+                                {(isFocusedInputRfid && chosenColor.hex !== "#30a32c") &&
+                                  <input type="image" src={Submitinput} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translateX(200%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+
+                                    }}
+                                  />
+                                }
+                                {(isFocusedInputRfid && chosenColor.hex === "#30a32c") &&
+                                  <input type="image" src={Submitinputdark} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translateX(200%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                    }}
+                                  />
+                                }
+                                {isFocusedInputRfid &&
+                                  <img src={Clearinput} alt="clearinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translate(325%, 0%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => { handleClearInputRfid() }}
+                                  />
+                                }
+                              </div>
+                            </form>
+                          }
 
                         </div>
                       }
@@ -6103,6 +6328,10 @@ const mapStateToProps = state => ({
   languageRender: state.frontEndData.visual.languageRender,
   ownLogo: state.frontEndData.icon.ownLogo,
   rfidType: state.frontEndData.icon.rfidType,
+  rfidText: state.frontEndData.icon.rfidText,
+  rfidTextFont: state.frontEndData.icon.rfidTextFont,
+  rfidTextFontWeight: state.frontEndData.icon.rfidTextFontWeight,
+  rfidTextFontSize: state.frontEndData.icon.rfidTextFontSize,
 
 })
 
@@ -6171,6 +6400,10 @@ const mapDispatchToProps = dispatch => ({
   setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income)),
   updateOwnLogo: (income) => dispatch(actionsIcon.updateOwnLogo(income)),
   setRfidType: (income) => dispatch(actionsIcon.setRfidType(income)),
+  setRfidText: (income) => dispatch(actionsIcon.setRfidText(income)),
+  setRfidTextFont: (income) => dispatch(actionsIcon.setRfidTextFont(income)),
+  setRfidTextFontWeight: (income) => dispatch(actionsIcon.setRfidTextFontWeight(income)),
+  setRfidTextFontSize: (income) => dispatch(actionsIcon.setRfidTextFontSize(income)),
 
 })
 
