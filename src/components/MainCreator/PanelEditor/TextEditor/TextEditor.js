@@ -188,19 +188,19 @@ const TextEditor = ({ chosenTextFont,
                 <>
                   <p className="instruction_bold">{t("RFID_INSTRUCTION_NORMAL_1")}</p>
                   <div className="rfid_box">
-                    <div className="rfid_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
+                    <div className="rfid_type_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(0)} >
                       <img src={RfidDefault} alt="rfid_default" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 0 ? { fontWeight: "700" } : {}}>{t("RFID_LOGO")}</p>
                     </div>
 
-                    <div className="rfid_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
+                    <div className="rfid_type_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(1)} >
                       <img src={RfidLogo} alt="rfid_logo" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 1 ? { fontWeight: "700" } : {}}>{t("OWN_LOGO")}</p>
                     </div>
 
-                    <div className="rfid_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
+                    <div className="rfid_type_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(2)} >
                       <img src={RfidTekst} alt="rfid_tekst" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 2 ? { fontWeight: "700" } : {}}>{t("RFID_TEXT")}</p>

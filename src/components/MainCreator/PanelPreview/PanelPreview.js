@@ -783,6 +783,10 @@ const PanelPreview = ({
     } else {
       filterWarnings(3)
     }
+    if (isFocusedInputRfid) {
+      // console.log("Jareczek")
+      setRfidTextFont(chosenTextFont)
+    }
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
   }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, chosenTextWeight, rerenderTextWarning]);

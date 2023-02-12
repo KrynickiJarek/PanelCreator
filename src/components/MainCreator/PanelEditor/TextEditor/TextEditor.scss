@@ -241,7 +241,8 @@
   margin: 20px 0;
 
   .rfid_link,
-  .rfid_set_link {
+  .rfid_set_link,
+  .rfid_type_link {
     width: 200px;
     min-width: 200px;
     min-height: 120px;
@@ -264,8 +265,9 @@
     }
 
     .rfid_type_img {
-      width: 144px;
-      height: 90px;
+      width: 198px;
+      // height: 90px;
+      height: auto;
       margin: 7px;
     }
 
@@ -303,5 +305,11 @@
 
   .rfid_set_link:hover {
     border: 3px solid #EC695C;
+  }
+
+  .rfid_type_link {
+    width: 250px;
+    min-width: 250px;
+    min-height: 140px;
   }
 }
