@@ -10,6 +10,10 @@ import { t } from "../../../../i18n";
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
+import RfidDefault from "../../../../assets/rfid/rfid_default.svg"
+import RfidLogo from "../../../../assets/rfid/rfid_logo.svg"
+import RfidTekst from "../../../../assets/rfid/rfid_tekst.svg"
+
 const TextEditor = ({ chosenTextFont,
   changeTextWeight,
   changeTextFont,
@@ -186,22 +190,19 @@ const TextEditor = ({ chosenTextFont,
                   <div className="rfid_box">
                     <div className="rfid_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(0)} >
-                      {/* <img src={rfidBottom} alt="rfid_bottom" className="rfid_img" /> */}
-                      <p>ikona do dodania po dodaniu backendu</p>
+                      <img src={RfidDefault} alt="rfid_default" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 0 ? { fontWeight: "700" } : {}}>{t("RFID_LOGO")}</p>
                     </div>
 
                     <div className="rfid_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(1)} >
-                      {/* <img src={rfidMiddle} alt="rfid_middle" className="rfid_img" /> */}
-                      <p>ikona do dodania po dodaniu backendu</p>
+                      <img src={RfidLogo} alt="rfid_logo" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 1 ? { fontWeight: "700" } : {}}>{t("OWN_LOGO")}</p>
                     </div>
 
                     <div className="rfid_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
                       onClick={() => setRfidType(2)} >
-                      <p>ikona do dodania po dodaniu backendu</p>
-                      {/* <img src={rfidTop} alt="rfid_top" className="rfid_img" /> */}
+                      <img src={RfidTekst} alt="rfid_tekst" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 2 ? { fontWeight: "700" } : {}}>{t("RFID_TEXT")}</p>
                     </div>
                   </div>
