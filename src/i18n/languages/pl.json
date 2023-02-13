@@ -226,7 +226,6 @@
   "SIGNS": "Znaki",
   "NUMBERS": "Numery",
   "TITLE_HEADER": "Dodaj podpisy do ikon (opcjonalne)",
-  "TITLE_INSTRUCTION_BOLD": "Wybierz font, a następnie dodaj opisy pod lub nad ikonami klikając w zaznaczone pola.",
   "TITLE_INSTRUCTION_NORMAL": "Aby utworzyć opis nad ikoną użyj opcji \"Włącz opisy nad ikonami\" w menu bocznym",
   "SAMPLE_TEXT": "Przykładowy tekst napisany fontem ",
   "FRAMES_HEADER": "Dodaj ramki (opcjonalne)",
@@ -286,5 +285,12 @@
   "RFID_TEXT": "Własny tekst",
   "OWN_LOGO_INSTRUCTION_BOLD_1": "Aby dodać własne logo należy wczytać je z dysku.",
   "OWN_LOGO_INSTRUCTION_NORMAL_1": "Możliwe jest dodawanie plików z rozszerzeniem SVG o rozmiarze do 100kB. Aby logo wyświetlało się poprawnie powinno mieć proporcje 2 : 1, przezroczyste tło i czarny kolor.",
-  "OWN_LOGO_INSTRUCTION_NORMAL_2": "Wczytany plik automatycznie zajmie cały obszar przeznaczony na logo, który ma wymiary 40 mm x 20 mm. W celu uzyskania grafiki w miejszym rozmiarze należy uwzględnić to przy tworzeniu plku SVG"
+  "OWN_LOGO_INSTRUCTION_NORMAL_2": "Wczytany plik automatycznie zajmie cały obszar przeznaczony na logo, który ma wymiary 40 mm x 20 mm. W celu uzyskania grafiki w miejszym rozmiarze należy uwzględnić to przy tworzeniu plku SVG.",
+  "WARNING_9_TOO_LONG_RFID_TEXT": "Tekst w czytniku RFID jest za długi. Skróć go, aby móc wydrukować panel do pliku pdf.",
+  "TOO_LONG_RFID_TEXT_ALERT": "Tekst w czytniku RFID jest za długi. Skróć go, aby móc wydrukować panel do pliku pdf.",
+  "TITLE_INSTRUCTION_BOLD": "Aby dodać opis pod lub nad ikoną kliknij w odpowiednie pole. Tekst będzie miał font wybrany w dolnej sekcji.",
+  "RFID_FONT_INSTRUCTION_BOLD": "Tekst będzie miał font wybrany w dolnej sekcji.",
+  "RFID_FONT_INSTRUCTION_NORMAL": "Maksymalna długość tektu to 20 znaków. Napis musi się rówież mieścić się w obszarze ramki czytnika RFID",
+  "FONT_INSTRUCTION_BOLD": "Po kliknięciu w pole tekstowe zostanie przypisany wybrany font.",
+  "FONT_HEADER": "Font"
 }

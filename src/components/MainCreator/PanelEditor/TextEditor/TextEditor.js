@@ -217,16 +217,41 @@ const TextEditor = ({ chosenTextFont,
                     <p className="instruction_bold">{t("OWN_LOGO_INSTRUCTION_BOLD_1")}</p>
                     <p className="instruction">{t("OWN_LOGO_INSTRUCTION_NORMAL_1")}</p>
                     <p className="instruction">{t("OWN_LOGO_INSTRUCTION_NORMAL_2")}</p>
-                    <p className="instruction">/ w planach: dodać odczytane informacje na temat proporcji pliku</p>
-                    <p className="instruction">/ w planach: dodać plik do pobrania (w formacie .svg), który ułatwi dopasowanie logo. </p>
-                    <label htmlFor="inputUploadIcon" >
+                    <label htmlFor="inputUploadIcon" className="rfid_logo_input_button">
                       <div className="select_button">
                         {ownLogo ? t("REPLACE") : t("SELECT_FILE")}
                         <div className="button_arrows" />
                       </div>
                     </label>
                     <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
+                    {/* 
+                    // tutaj ewenntualnie dodąć podgląd 
+                    
+                    {ownLogo && < img src={ownLogo} alt="rfid" className="rfid_icon"
+                    // style={{
+                    //   ...universalIconStyle,
+                    //   ...rfidIconStyle,
+                    //   ...ownLogoStyle,
+                    //   top: "50%"
+                    // }}
+                    />
+                    } */}
+
+
+
                   </>}
+
+
+
+
+
+
+                {rfidType === 2 &&
+                  <>
+                    <p className="instruction_bold">{t("RFID_FONT_INSTRUCTION_BOLD")}</p>
+                    <p className="instruction">{t("RFID_FONT_INSTRUCTION_NORMAL")}</p>
+                  </>
+                }
               </div>
             </div>
 
@@ -237,9 +262,15 @@ const TextEditor = ({ chosenTextFont,
 
 
         <h2 className="text_header">{t("TITLE_HEADER")}</h2>
-        <p className="instruction_bold">{t("TITLE_INSTRUCTION_BOLD")}</p>
-        <p className="instruction">{t("TITLE_INSTRUCTION_NORMAL")}</p>
+        <div className="textContainer">
+          <p className="instruction_bold">{t("TITLE_INSTRUCTION_BOLD")}</p>
+          <p className="instruction">{t("TITLE_INSTRUCTION_NORMAL")}</p>
+        </div>
+
+
+        <h2 className="text_header">{t("FONT_HEADER")}</h2>
         <div className="text_content">
+          <p className="instruction_bold">{t("FONT_INSTRUCTION_BOLD")}</p>
 
 
           <div className="font_link" style={chosenTextFont === "Calibri-bold" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold", fontWeight: "700" }

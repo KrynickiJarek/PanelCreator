@@ -184,9 +184,13 @@
 }
 
 .rfidContainer {
-  margin-bottom: 60px;
+  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
+}
+
+.textContainer {
+  margin-bottom: 50px;
 }
 
 .text_container::-webkit-scrollbar {
@@ -196,6 +200,10 @@
 .text_container::-webkit-scrollbar-thumb {
   background: rgb(217, 217, 217);
   border-radius: 10px;
+}
+
+.rfid_logo_input_button {
+  display: flex;
 }
 
 

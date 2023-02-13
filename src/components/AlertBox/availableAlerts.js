@@ -60,7 +60,10 @@ const availableAlerts = [
     code: 16,
     text: "ICON_UPLOAD_ERROR_ALERT",
   },
-
+  {
+    code: 17,
+    text: "TOO_LONG_RFID_TEXT_ALERT",
+  },
   {
     code: 20,
     text: "WRONG_BROWSER_ALERT",

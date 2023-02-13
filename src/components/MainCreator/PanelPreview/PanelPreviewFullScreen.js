@@ -23,6 +23,7 @@ import LCDMinus from "../../../assets/lcd/minus.svg"
 import Minusuni from "../../../assets/lcd/minusuni.svg"
 import Leftuni from "../../../assets/lcd/leftuni.svg"
 import Rightuni from "../../../assets/lcd/rightuni.svg"
+import Rfid_icon from "../../../assets/lcd/rfid.svg"
 
 
 import IconHolder from './IconHolder/IconHolder';
@@ -40,7 +41,14 @@ const PanelPreviewFullScreen = ({
   iconHolders,
   panelName,
   textUpOff,
-  setFullScreen
+  setFullScreen,
+  rfidType,
+  ownLogo,
+  rfidText,
+  rfidTextFont,
+  rfidTextFontWeight,
+  rfidTextFontSize,
+  chosenRfidShape
 }) => {
 
 
@@ -49,8 +57,14 @@ const PanelPreviewFullScreen = ({
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
 
-  const lcdShow = chosenModel.lcdScreen ? true : false
-  const lcdNew = (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? true : false
+  const lcdShow = (chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide") ? true : false;
+  const lcdNew = chosenModel?.lcdScreen?.lcdType === "slide" ? true : false
+
+  console.log("lcdNew", lcdNew)
+  console.log("lcdShow", lcdShow)
+
+
+
 
 
   const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
@@ -79,19 +93,124 @@ const PanelPreviewFullScreen = ({
     return () => clearInterval(intervalID);
   }, [time])
 
+  const rfidStyle = {};
+  rfidStyle.transition = "400ms ease";
+  rfidStyle.border = "none";
+  rfidStyle.height = `${chosenModel.lcdScreen.lcdHeight * sc}px`;
+  rfidStyle.width = `${chosenModel.lcdScreen.lcdWidth * sc}px`;
+  rfidStyle.top = `${chosenModel.lcdScreen.lcdTop * sc}px`;
+  rfidStyle.left = `${chosenModel.lcdScreen.lcdLeft * sc}px`;
 
-  // let frameCellStyle = {}
-  // frameCellStyle.height = `${16 * sc}px`;
-  // frameCellStyle.width = `${16 * sc}px`;
-  // frameCellStyle.borderRadius = "50%";
-  // frameCellStyle.transition = "400ms ease";
-  // frameCellStyle.backgroundColor = "rgba(236, 105, 92, 0.5)";
-  // frameCellStyle.opacity = "0";
-  // frameCellStyle.margin = `${2 * sc}px auto`;
+  const rfidBorderStyle = {};
+  const rfidBorderTopLeftStyle = {};
+  const rfidBorderTopRightStyle = {};
+  const rfidBorderBottomRightStyle = {};
+  const rfidBorderBottomLeftStyle = {};
 
-  // if ((chosenTab === "frame")) {
-  //   frameCellStyle.opacity = "1";
-  // }
+  rfidBorderStyle.transition = "400ms ease";
+  rfidBorderStyle.border = "2px solid black";
+  rfidBorderStyle.height = "50%";
+  rfidBorderStyle.width = "50%";
+  rfidBorderStyle.position = "absolute";
+
+
+
+
+  rfidBorderTopLeftStyle.borderRight = "none"
+  rfidBorderTopLeftStyle.borderBottom = "none"
+  rfidBorderTopLeftStyle.top = "0"
+  rfidBorderTopLeftStyle.left = "0"
+
+  rfidBorderTopRightStyle.borderLeft = "none"
+  rfidBorderTopRightStyle.borderBottom = "none"
+  rfidBorderTopRightStyle.top = "0"
+  rfidBorderTopRightStyle.right = "0"
+
+  rfidBorderBottomRightStyle.borderLeft = "none"
+  rfidBorderBottomRightStyle.borderTop = "none"
+  rfidBorderBottomRightStyle.bottom = "0"
+  rfidBorderBottomRightStyle.right = "0"
+
+  rfidBorderBottomLeftStyle.borderRight = "none"
+  rfidBorderBottomLeftStyle.borderTop = "none"
+  rfidBorderBottomLeftStyle.bottom = "0"
+  rfidBorderBottomLeftStyle.left = "0"
+
+
+
+  if (visual) {
+    rfidBorderTopLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderTopRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderBottomRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderBottomLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+  }
+  if (chosenRfidShape === "sharp") {
+    rfidBorderTopLeftStyle.borderRadius = "0";
+    rfidBorderTopRightStyle.borderRadius = "0";
+    rfidBorderBottomRightStyle.borderRadius = "0";
+    rfidBorderBottomLeftStyle.filborderRadiuster = "0";
+  }
+  if (chosenRfidShape === "round") {
+    rfidBorderTopLeftStyle.borderRadius = `${3 * sc}px 0 0 0`;
+    rfidBorderTopRightStyle.borderRadius = `0 ${3 * sc}px 0 0`;
+    rfidBorderBottomRightStyle.borderRadius = `0 0 ${3 * sc}px 0`;
+    rfidBorderBottomLeftStyle.borderRadius = `0 0 0 ${3 * sc}px`;
+  }
+
+
+  if (rfidType !== 0) {
+    rfidBorderTopLeftStyle.width = `${(((chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`;
+    rfidBorderTopRightStyle.width = `${(((chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`;
+  }
+
+  let rfidIconStyle = {};
+
+  rfidIconStyle.height = `${8 * sc}px`;
+  rfidIconStyle.width = `${10.7 * sc}px`;
+  rfidIconStyle.position = "absolute";
+  rfidIconStyle.transform = "translate(-50%, -50%)"
+  rfidIconStyle.top = "50%";
+  rfidIconStyle.left = "50%";
+
+  let ownLogoStyle = {};
+  ownLogoStyle.height = `${20 * sc}px`;
+  ownLogoStyle.width = `${40 * sc}px`;
+  ownLogoStyle.opacity = '1'
+
+  if (!ownLogo || rfidType !== 1) {
+    ownLogoStyle.opacity = '0'
+  }
+
+  if (rfidType !== 0) {
+    rfidIconStyle.top = `1px`;
+    rfidIconStyle.width = `${6 * sc}px`;
+  }
+
+  const autoResizeRfidInputStyle = {};
+  autoResizeRfidInputStyle.fontSize = `${rfidTextFontSize * sc}px`
+  autoResizeRfidInputStyle.lineHeight = `${rfidTextFontSize * sc}px`
+  autoResizeRfidInputStyle.height = `${rfidTextFontSize * 1.44 * sc}px`;
+  autoResizeRfidInputStyle.width = `${rfidTextFontSize * 2 * sc}px`;
+  autoResizeRfidInputStyle.transition = "400ms ease";
+  autoResizeRfidInputStyle.position = "absolute";
+  autoResizeRfidInputStyle.display = "inline-grid";
+  autoResizeRfidInputStyle.alignItems = "center";
+  autoResizeRfidInputStyle.justifyItems = "center";
+
+
+  const rfidInput = document.querySelector("#text_rfid_input")
+  const rfidWrapperBorderStyle = {};
+  rfidWrapperBorderStyle.border = "none";
+  rfidWrapperBorderStyle.height = `${(chosenModel.lcdScreen.lcdHeight - 5) * sc}px`;
+  rfidWrapperBorderStyle.width = `${(chosenModel.lcdScreen.lcdWidth - 5) * sc}px`;
+  rfidWrapperBorderStyle.position = "absolute";
+  rfidWrapperBorderStyle.top = `${2.5 * sc}px`;
+  rfidWrapperBorderStyle.left = `${2.5 * sc}px`;
+
+  if (((rfidInput?.clientWidth) / sc) > 60) {
+    rfidWrapperBorderStyle.borderLeft = "3px solid rgb(220, 53, 69)";
+    rfidWrapperBorderStyle.borderRight = "3px solid rgb(220, 53, 69)";
+  }
 
   let frameChangeStyle = {}
   frameChangeStyle.height = `${16 * sc}px`;
@@ -217,7 +336,15 @@ const PanelPreviewFullScreen = ({
   universalIconStyle.width = `${7.5 * sc}px`;
   universalIconStyle.transition = "400ms ease";
 
-
+  if (visual) {
+    universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))";
+    frameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    singleFrameStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+  } else if (chosenColor.iconColor === "white") {
+    universalIconStyle.filter = "grayscale(100%) invert(1) brightness(10)";
+  } else {
+    universalIconStyle.filter = "grayscale(100%) brightness(0)";
+  }
 
 
   let visualStyle = {}
@@ -226,7 +353,7 @@ const PanelPreviewFullScreen = ({
   visualStyle.top = "0";
   visualStyle.left = "0";
 
-  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka
+  if (chosenCut === 5 && !chosenModel.panelRotation) {
     visualStyle.width = `${(chosenModel.width + 5) * sc}px`;
     visualStyle.height = `${(chosenModel.height + 5) * sc}px`;
     visualStyle.top = `${-2.5 * sc}px`;
@@ -246,7 +373,7 @@ const PanelPreviewFullScreen = ({
   }
 
 
-  let cutBorderStyle = {}//--NATALECZKA
+  let cutBorderStyle = {}
   if (chosenCut) {
     cutBorderStyle.border = `${chosenCut * sc}px outset ${chosenColor.hex}`
     cutBorderStyle.opacity = "0.4"
@@ -283,7 +410,7 @@ const PanelPreviewFullScreen = ({
   logoStyle.filter = "invert(79%) sepia(5%) saturate(8%) hue-rotate(322deg) brightness(84%) contrast(83%)";
 
 
-  if (chosenCut === 5 && !chosenModel.panelRotation) { //--Nataleczka xx
+  if (chosenCut === 5 && !chosenModel.panelRotation) {
     logoStyle.bottom = `${6.5 * sc}px`;
     logoStyle.right = `${6.5 * sc}px`;
   } else if (chosenCut === 5 && chosenModel.panelRotation) {
@@ -350,13 +477,17 @@ const PanelPreviewFullScreen = ({
   textStyle.width = "100%";
   textStyle.transition = "400ms ease";
 
-
-
-
   if (visual) {
     textStyle.color = "white";
     textStyle.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
   }
+
+  const textRfidStyle = {};
+  textRfidStyle.fontSize = `${rfidTextFontSize * sc}px`
+  textRfidStyle.lineHeight = `${rfidTextFontSize * sc}px`
+  textRfidStyle.height = `${rfidTextFontSize * 1.45 * sc}px`;
+
+
 
 
   const textStyleFrame = {};
@@ -685,6 +816,82 @@ const PanelPreviewFullScreen = ({
                   </div>
                 )}
 
+                {chosenModel?.lcdScreen?.lcdType === "rfid" &&
+                  <div className="lcd" style={{ ...rfidStyle }}
+                  >
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderTopLeftStyle, borderColor: chosenColor.iconColor }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderTopRightStyle, borderColor: chosenColor.iconColor }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderBottomRightStyle, borderColor: chosenColor.iconColor }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderBottomLeftStyle, borderColor: chosenColor.iconColor }} />
+
+                    < img src={Rfid_icon} alt="rfid" className="rfid_icon"
+                      style={{
+                        ...universalIconStyle,
+                        ...rfidIconStyle
+                      }}
+                    />
+                    < img src={ownLogo} alt="rfid" className="rfid_icon"
+                      style={{
+                        ...universalIconStyle,
+                        ...rfidIconStyle,
+                        ...ownLogoStyle,
+                        top: "50%"
+                      }}
+                    />
+
+                    <form
+                      style={{
+                        transition: "0.4s ease",
+                        opacity: rfidType === 2 ? "1" : "0"
+                      }}
+
+                    >
+                      <div
+                        style={{
+                          ...rfidWrapperBorderStyle,
+                          overflow: "hidden"
+                        }}
+                      >
+                        <div style={{
+                          ...autoResizeRfidInputStyle,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          fontFamily: rfidTextFont,
+                          fontWeight: rfidTextFontWeight,
+                        }}>
+
+                          <input
+                            className="text_rfid_input"
+                            id="text_rfid_input"
+                            type="text"
+                            autoComplete="off"
+                            maxLength="20"
+                            style={{
+                              ...textStyle,
+                              ...textRfidStyle,
+                              fontFamily: rfidTextFont,
+                              fontWeight: rfidTextFontWeight,
+                            }}
+                            disabled={(chosenTab !== "text" || rfidType !== 2)}
+                            value={rfidText}
+                          />
+                          <span
+                            style={{
+                              gridArea: '1 / 1 / 2 / 2',
+                              visibility: 'hidden',
+                              padding: "0 15px", whiteSpace: "pre"
+                            }}
+                          >
+                            {rfidText}
+                          </span>
+
+
+
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                }
 
                 {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
                 {(lcdShow && visual && lcdNew) &&
@@ -834,6 +1041,14 @@ const mapStateToProps = state => ({
   iconHolders: state.frontEndData.icon.iconHolders,
   panelName: state.frontEndData.visual.panelName,
   textUpOff: state.frontEndData.text.textUpOff,
+  ownLogo: state.frontEndData.icon.ownLogo,
+  rfidType: state.frontEndData.icon.rfidType,
+  rfidText: state.frontEndData.icon.rfidText,
+  rfidTextFont: state.frontEndData.icon.rfidTextFont,
+  rfidTextFontWeight: state.frontEndData.icon.rfidTextFontWeight,
+  rfidTextFontSize: state.frontEndData.icon.rfidTextFontSize,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
+
 })
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),

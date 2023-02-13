@@ -36,6 +36,10 @@ const availableWarnings = [
     code: 8,
     text: "WARNING_8_SPLIT_ICONS_SINGLE_FRAME",
   },
+  {
+    code: 9,
+    text: "WARNING_9_TOO_LONG_RFID_TEXT",
+  }
 ]
 
 export default availableWarnings

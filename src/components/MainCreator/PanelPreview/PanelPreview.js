@@ -316,6 +316,26 @@ const PanelPreview = ({
   }
   // JARECZEK
 
+  useEffect(() => {
+    if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      let checkWarnings = warnings.filter(element => element.code === 9)
+      if (checkWarnings.length === 0) {
+        pushWarnings(9)
+      }
+    } else {
+      filterWarnings(9)
+    }
+    // eslint-disable-next-line
+  }, [rfidText, rfidType]);
+
+  useEffect(() => {
+    if (rfidType !== 2) {
+      setIsFocusedInputRfid(false)
+    }
+    // eslint-disable-next-line
+  }, [rfidType]);
+
+
 
   useEffect(() => {
     if (chosenColor.RAL === "RAL 9003" && visual) {
@@ -784,7 +804,6 @@ const PanelPreview = ({
       filterWarnings(3)
     }
     if (isFocusedInputRfid) {
-      // console.log("Jareczek")
       setRfidTextFont(chosenTextFont)
     }
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
@@ -4702,6 +4721,8 @@ const PanelPreview = ({
       setNoPanelName(true)
     } else if (!allIcons) {
       showAlert(8);
+    } else if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      showAlert(17);
     } else {
       printPdf()
       // setDownloading(true)
@@ -5709,133 +5730,138 @@ const PanelPreview = ({
                             }}
                           />
 
-                          {rfidType === 2 &&
-                            <form onSubmit={handleSubmit}>
-                              <div
-                                style={{
-                                  ...rfidWrapperBorderStyle,
-                                  overflow: isFocusedInputRfid ? "visible" : "hidden"
-                                }}
-                              >
-                                <div style={{
-                                  ...autoResizeRfidInputStyle,
-                                  top: "50%",
-                                  transform: "translateY(-50%)",
-                                  fontFamily: rfidTextFont,
-                                  fontWeight: rfidTextFontWeight,
-                                }}>
+                          <form onSubmit={handleSubmit}
+                            style={{
+                              transition: "0.4s ease",
+                              opacity: rfidType === 2 ? "1" : "0"
+                            }}
 
-                                  <input className="text_rfid_input"
-                                    id="text_rfid_input"
-                                    type="text"
-                                    autoComplete="off"
-                                    maxLength="20"
-                                    style={(isFocusedInputRfid) ?
-                                      (
-                                        (chosenColor.hex !== "#30a32c") ? {
-                                          ...textStyle,
-                                          ...textRfidStyle,
-                                          fontFamily: rfidTextFont,
-                                          fontWeight: rfidTextFontWeight,
-                                          border: "2px solid rgb(40, 167, 69)"
-                                        } :
-                                          {
-                                            ...textStyle,
-                                            ...textRfidStyle,
-                                            fontFamily: rfidTextFont,
-                                            fontWeight: rfidTextFontWeight,
-                                            border: "2px solid rgb(32, 114, 30)",
-                                          }
-                                      )
-                                      : {
+                          >
+                            <div
+                              style={{
+                                ...rfidWrapperBorderStyle,
+                                overflow: isFocusedInputRfid ? "visible" : "hidden"
+                              }}
+                            >
+                              <div style={{
+                                ...autoResizeRfidInputStyle,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                fontFamily: rfidTextFont,
+                                fontWeight: rfidTextFontWeight,
+                              }}>
+
+                                <input
+                                  className="text_rfid_input"
+                                  id="text_rfid_input"
+                                  type="text"
+                                  autoComplete="off"
+                                  maxLength="20"
+                                  style={(isFocusedInputRfid) ?
+                                    (
+                                      (chosenColor.hex !== "#30a32c") ? {
                                         ...textStyle,
                                         ...textRfidStyle,
                                         fontFamily: rfidTextFont,
                                         fontWeight: rfidTextFontWeight,
-                                      }}
-                                    disabled={(chosenTab !== "text" || rfidType !== 2)}
-                                    onMouseOver={showBorder}
-                                    onMouseLeave={hideBorder}
-                                    value={rfidText}
-                                    onChange={(text) => handleChangeTextRfid(text)}
-                                    onClick={(e) => handleChangeFontRfid(e)}
-                                    onFocus={() => handleFocusInputRfid()}
+                                        border: "2px solid rgb(40, 167, 69)"
+                                      } :
+                                        {
+                                          ...textStyle,
+                                          ...textRfidStyle,
+                                          fontFamily: rfidTextFont,
+                                          fontWeight: rfidTextFontWeight,
+                                          border: "2px solid rgb(32, 114, 30)",
+                                        }
+                                    )
+                                    : {
+                                      ...textStyle,
+                                      ...textRfidStyle,
+                                      fontFamily: rfidTextFont,
+                                      fontWeight: rfidTextFontWeight,
+                                    }}
+                                  disabled={(chosenTab !== "text" || rfidType !== 2)}
+                                  onMouseOver={showBorder}
+                                  onMouseLeave={hideBorder}
+                                  value={rfidText}
+                                  onChange={(text) => handleChangeTextRfid(text)}
+                                  onClick={(e) => handleChangeFontRfid(e)}
+                                  onFocus={() => handleFocusInputRfid()}
 
-                                    onKeyDown={handleKeyPress}
-                                  />
-                                  <span style={{
+                                  onKeyDown={handleKeyPress}
+                                />
+                                <span
+                                  style={{
                                     gridArea: '1 / 1 / 2 / 2',
                                     visibility: 'hidden',
                                     padding: "0 15px", whiteSpace: "pre"
                                   }}
-                                  >
-                                    {rfidText}
-                                  </span>
+                                >
+                                  {rfidText}
+                                </span>
 
-                                  {isFocusedInputRfid && rfidTextFontSize > 2.5 &&
-                                    <img src={Resizeinput} alt="resizeinput"
-                                      style={{
-                                        height: `${3.6 * sc}px`,
-                                        width: `${3.6 * sc}px`,
-                                        transform: rfidTextFontSize >= 10 ? "translate(75%, 0%)" : "translate(75%, 75%)",
-                                        gridArea: '1 / 1 / 2 / 2',
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={(e) => { handleRfidTextSmaller(e) }}
-                                    />
-                                  }
-                                  {isFocusedInputRfid && rfidTextFontSize < 10 &&
-                                    <img src={Resizeinput} alt="resizeinput"
-                                      style={{
-                                        height: `${3.6 * sc}px`,
-                                        width: `${3.6 * sc}px`,
-                                        transform: rfidTextFontSize <= 2.5 ? "translate(75%, 0%) rotate(180deg)" : "translate(75%, -75%) rotate(180deg)",
-                                        gridArea: '1 / 1 / 2 / 2',
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={(e) => { handleRfidTextBigger(e) }}
-                                    />
-                                  }
+                                {isFocusedInputRfid && rfidTextFontSize > 2.5 &&
+                                  <img src={Resizeinput} alt="resizeinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: rfidTextFontSize >= 10 ? "translate(75%, 0%)" : "translate(75%, 75%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => { handleRfidTextSmaller(e) }}
+                                  />
+                                }
+                                {isFocusedInputRfid && rfidTextFontSize < 10 &&
+                                  <img src={Resizeinput} alt="resizeinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: rfidTextFontSize <= 2.5 ? "translate(75%, 0%) rotate(180deg)" : "translate(75%, -75%) rotate(180deg)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => { handleRfidTextBigger(e) }}
+                                  />
+                                }
 
 
-                                  {(isFocusedInputRfid && chosenColor.hex !== "#30a32c") &&
-                                    <input type="image" src={Submitinput} alt="submitinput"
-                                      style={{
-                                        height: `${3.6 * sc}px`,
-                                        width: `${3.6 * sc}px`,
-                                        transform: "translateX(200%)",
-                                        gridArea: '1 / 1 / 2 / 2',
+                                {(isFocusedInputRfid && chosenColor.hex !== "#30a32c") &&
+                                  <input type="image" src={Submitinput} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translateX(200%)",
+                                      gridArea: '1 / 1 / 2 / 2',
 
-                                      }}
-                                    />
-                                  }
-                                  {(isFocusedInputRfid && chosenColor.hex === "#30a32c") &&
-                                    <input type="image" src={Submitinputdark} alt="submitinput"
-                                      style={{
-                                        height: `${3.6 * sc}px`,
-                                        width: `${3.6 * sc}px`,
-                                        transform: "translateX(200%)",
-                                        gridArea: '1 / 1 / 2 / 2',
-                                      }}
-                                    />
-                                  }
-                                  {isFocusedInputRfid &&
-                                    <img src={Clearinput} alt="clearinput"
-                                      style={{
-                                        height: `${3.6 * sc}px`,
-                                        width: `${3.6 * sc}px`,
-                                        transform: "translate(325%, 0%)",
-                                        gridArea: '1 / 1 / 2 / 2',
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => { handleClearInputRfid() }}
-                                    />
-                                  }
-                                </div>
+                                    }}
+                                  />
+                                }
+                                {(isFocusedInputRfid && chosenColor.hex === "#30a32c") &&
+                                  <input type="image" src={Submitinputdark} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translateX(200%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                    }}
+                                  />
+                                }
+                                {isFocusedInputRfid &&
+                                  <img src={Clearinput} alt="clearinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translate(325%, 0%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => { handleClearInputRfid() }}
+                                  />
+                                }
                               </div>
-                            </form>
-                          }
-
+                            </div>
+                          </form>
                         </div>
                       }
 
