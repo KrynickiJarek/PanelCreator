@@ -60,13 +60,6 @@ const PanelPreviewFullScreen = ({
   const lcdShow = (chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide") ? true : false;
   const lcdNew = chosenModel?.lcdScreen?.lcdType === "slide" ? true : false
 
-  console.log("lcdNew", lcdNew)
-  console.log("lcdShow", lcdShow)
-
-
-
-
-
   const [panelContainerHeight, setPanelContainerHeight] = useState("100%")
   const [panelContainerWidth, setPanelContainerWidth] = useState("100%")
 
@@ -112,9 +105,7 @@ const PanelPreviewFullScreen = ({
   rfidBorderStyle.height = "50%";
   rfidBorderStyle.width = "50%";
   rfidBorderStyle.position = "absolute";
-
-
-
+  rfidBorderStyle.borderColor = chosenColor.iconColor;
 
   rfidBorderTopLeftStyle.borderRight = "none"
   rfidBorderTopLeftStyle.borderBottom = "none"
@@ -139,6 +130,7 @@ const PanelPreviewFullScreen = ({
 
 
   if (visual) {
+    rfidBorderStyle.borderColor = "white";
     rfidBorderTopLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
     rfidBorderTopRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
     rfidBorderBottomRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
@@ -819,10 +811,10 @@ const PanelPreviewFullScreen = ({
                 {chosenModel?.lcdScreen?.lcdType === "rfid" &&
                   <div className="lcd" style={{ ...rfidStyle }}
                   >
-                    <div style={{ ...rfidBorderStyle, ...rfidBorderTopLeftStyle, borderColor: chosenColor.iconColor }} />
-                    <div style={{ ...rfidBorderStyle, ...rfidBorderTopRightStyle, borderColor: chosenColor.iconColor }} />
-                    <div style={{ ...rfidBorderStyle, ...rfidBorderBottomRightStyle, borderColor: chosenColor.iconColor }} />
-                    <div style={{ ...rfidBorderStyle, ...rfidBorderBottomLeftStyle, borderColor: chosenColor.iconColor }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderTopLeftStyle }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderTopRightStyle }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderBottomRightStyle }} />
+                    <div style={{ ...rfidBorderStyle, ...rfidBorderBottomLeftStyle }} />
 
                     < img src={Rfid_icon} alt="rfid" className="rfid_icon"
                       style={{
@@ -872,7 +864,7 @@ const PanelPreviewFullScreen = ({
                               fontFamily: rfidTextFont,
                               fontWeight: rfidTextFontWeight,
                             }}
-                            disabled={(chosenTab !== "text" || rfidType !== 2)}
+                            disabled
                             value={rfidText}
                           />
                           <span
@@ -884,9 +876,6 @@ const PanelPreviewFullScreen = ({
                           >
                             {rfidText}
                           </span>
-
-
-
                         </div>
                       </div>
                     </form>

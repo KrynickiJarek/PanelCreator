@@ -236,15 +236,7 @@ const TextEditor = ({ chosenTextFont,
                     // }}
                     />
                     } */}
-
-
-
                   </>}
-
-
-
-
-
 
                 {rfidType === 2 &&
                   <>
@@ -269,8 +261,8 @@ const TextEditor = ({ chosenTextFont,
 
 
         <h2 className="text_header">{t("FONT_HEADER")}</h2>
+        <p className="instruction_bold">{t("FONT_INSTRUCTION_BOLD")}</p>
         <div className="text_content">
-          <p className="instruction_bold">{t("FONT_INSTRUCTION_BOLD")}</p>
 
 
           <div className="font_link" style={chosenTextFont === "Calibri-bold" && chosenTextWeight === "700" ? { border: "3px solid #EC695C", fontFamily: "Calibri-bold", fontWeight: "700" }
