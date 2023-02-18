@@ -160,6 +160,7 @@ const PanelPreview = ({
   changePanelNameBackEnd,
   changePanelTextBackEnd,
   changeIconsBackEnd,
+  changeRfidBackEnd,
   resetPanelColorBackEnd,
   changeFramesBackEnd,
   panelTextBackEnd,
@@ -212,7 +213,8 @@ const PanelPreview = ({
   setRfidText,
   setRfidTextFont,
   setRfidTextFontWeight,
-  setRfidTextFontSize
+  setRfidTextFontSize,
+  rfidBackEnd
 }) => {
 
 
@@ -525,11 +527,13 @@ const PanelPreview = ({
               })
           })
           changeIconHolders(arrIconHolders);
+          changeRfidBackEnd([])
         } else if (chosenModel.lcdScreen.lcdType === "rfid") {
           fillR14(arrIconHolders)
         } else {
           changeIconHolders(arrIconHolders);
           changeIconsBackEnd([])
+          changeRfidBackEnd([])
         }
         // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
         changePanelTextBackEnd([])
@@ -1757,21 +1761,23 @@ const PanelPreview = ({
             })
         })
         changeIconHolders(tempArr);
+        changeRfidBackEnd([])
 
       } else if (chosenModel.lcdScreen.lcdType === "rfid") {
         fillR14(tempArr)
       } else {
         changeIconHolders(tempArr);
         changeIconsBackEnd([])
+        changeRfidBackEnd([])
       }
       // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       changePanelTextBackEnd([])
       setTextFrame(false);
       chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide" ? setLcdShow(true) : setLcdShow(false);
-
     }, 300);
     return () => clearTimeout(modeltimeout);
   }
+
   const handleHideRemoveIcons = () => {
     if (alert !== 4) {
       showRemoveIcons(false)
@@ -2439,53 +2445,9 @@ const PanelPreview = ({
 
   const handleChangeTextRfid = (text) => {
     setRfidText(checkCharracters(text.target.value))
-    // setRerenderTextWarning(prev => !prev)
-
-    // +++RFID---------------------------------------------------------------------+++dodać backend
-    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    // const copyPanelTextBackEnd = panelTextBackEnd
-
-    // let numberBackEnd = null
-    // if (chosenModel.panelRotation) {
-    //   if (index % 3 === 0) {
-    //     numberBackEnd = index + 3
-    //   } else if (index % 3 === 2) {
-    //     numberBackEnd = index - 1
-    //   } else {
-    //     numberBackEnd = index + 1
-    //   }
-    // } else {
-    //   numberBackEnd = index + 1
-    // }
-
-
-    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
-
-    // let recordText = {
-    //   number: numberBackEnd,
-    //   type: 0,
-    //   title: checkCharracters(text.target.value).toUpperCase(),
-    //   font: chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
-    // }
-    // if (recordTextIndex > -1) {
-    //   if (copyPanelTextBackEnd[recordTextIndex].type === 0) {
-    //     copyPanelTextBackEnd.splice(recordTextIndex, 1, recordText)
-    //   }
-    //   else if (copyPanelTextBackEnd[recordTextIndex].type === 1) {
-    //     let recordTextLastIndex = copyPanelTextBackEnd.map(item => item.number).lastIndexOf(numberBackEnd)
-    //     if (recordTextLastIndex > -1) {
-    //       if (copyPanelTextBackEnd[recordTextLastIndex].type === 0) {
-    //         copyPanelTextBackEnd.splice(recordTextLastIndex, 1, recordText)
-    //       } else {
-    //         copyPanelTextBackEnd.push(recordText)
-    //       }
-    //     }
-    //   }
-    // } else {
-    //   copyPanelTextBackEnd.push(recordText)
-    // }
-    // changePanelTextBackEnd(copyPanelTextBackEnd)
-    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].text = text.target.value
+    changeRfidBackEnd(rfidBackendCopy)
   };
 
 
@@ -2534,6 +2496,10 @@ const PanelPreview = ({
     e.stopPropagation();
     setRfidTextFont(chosenTextFont)
     setRfidTextFontWeight(chosenTextWeight)
+    console.log("chosenTextFont", chosenTextFont)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].font = chosenTextFont
+    changeRfidBackEnd(rfidBackendCopy)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     // const copyPanelTextBackEnd = panelTextBackEnd
     // +++RFID---------------------------------------------------------------------+++dodać backend
@@ -2630,11 +2596,18 @@ const PanelPreview = ({
     e.stopPropagation()
     // +++RFID---------------------------------------------------------------------+++
     setRfidTextFontSize(rfidTextFontSize - 0.5)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].fontsize = rfidTextFontSize - 0.5
+    changeRfidBackEnd(rfidBackendCopy)
+
   }
   const handleRfidTextBigger = (e) => {
     e.stopPropagation()
     // +++RFID---------------------------------------------------------------------+++
     setRfidTextFontSize(rfidTextFontSize + 0.5)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].fontsize = rfidTextFontSize + 0.5
+    changeRfidBackEnd(rfidBackendCopy)
   }
 
 
@@ -4583,6 +4556,9 @@ const PanelPreview = ({
     changeFrameShape("sharp")
     if (chosenModel.type === "M_DOT_R14") {
       changeRfidShape("sharp")
+      const rfidBackendCopy = rfidBackEnd
+      rfidBackendCopy[0].cornerRadious = 1
+      changeRfidBackEnd(rfidBackendCopy)
     }
 
     const copyFrameBackEnd = framesBackEnd
@@ -4590,6 +4566,7 @@ const PanelPreview = ({
       frame.cornerRadious = 0
     })
     changeFramesBackEnd(copyFrameBackEnd)
+
   }
 
   const handleChangeFramesToRound = () => {
@@ -4598,6 +4575,9 @@ const PanelPreview = ({
     changeFrameShape("round")
     if (chosenModel.type === "M_DOT_R14") {
       changeRfidShape("round")
+      const rfidBackendCopy = rfidBackEnd
+      rfidBackendCopy[0].cornerRadious = 0
+      changeRfidBackEnd(rfidBackendCopy)
     }
 
     const copyFrameBackEnd = framesBackEnd
@@ -4894,6 +4874,13 @@ const PanelPreview = ({
     setRfidTextFont(null)
     setRfidTextFontSize(5)
     setRfidTextFontWeight('')
+    changeRfidBackEnd([{
+      cornerRadious: 0,
+      svg: null,
+      text: "",
+      font: "Calibri-bold",
+      fontsize: 5
+    }])
   }
 
   const handleAddKeyboardBackend = (keyboardArrayForBackend) => {
@@ -6167,13 +6154,13 @@ const PanelPreview = ({
                         {downloading &&
                           <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" style={{ filter: "invert(29%) sepia(6%) saturate(152%) hue-rotate(131deg) brightness(92%) contrast(90%)" }} />
                         }
-                        {/* {downloading ?
-                      <span>DEBUGGING</span>
-                      :
-                      <span
-                        // style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
-                        style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
-                    } */}
+                        {downloading ?
+                          <span>DEBUGGING</span>
+                          :
+                          <span
+                            style={{ color: "red" }}>{t("DEBUG")}</span>
+                          // style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
+                        }
                       </div>
                     </>
                   }
@@ -6392,6 +6379,7 @@ const mapStateToProps = state => ({
   rfidTextFontWeight: state.frontEndData.icon.rfidTextFontWeight,
   rfidTextFontSize: state.frontEndData.icon.rfidTextFontSize,
 
+  rfidBackEnd: state.backEndData.rfid,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -6441,6 +6429,7 @@ const mapDispatchToProps = dispatch => ({
   resetPanelColorBackEnd: (income) => dispatch(actionsBackEnd.resetPanelColor(income)),
   resetPanelCutBackEnd: (income) => dispatch(actionsBackEnd.resetPanelCut(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+  changeRfidBackEnd: (income) => dispatch(actionsBackEnd.changeRfid(income)),
   changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
   changePanelTypeBackEnd: (income) => dispatch(actionsBackEnd.changePanelType(income)),
 

@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   icons: [],
   panelText: [],
   frames: [],
+  rfid: [],
 }
 
 const backEndDataReducers = (state = INITIAL_STATE, action) => {
@@ -48,6 +49,10 @@ const backEndDataReducers = (state = INITIAL_STATE, action) => {
     case types.CHANGE_ICONS:
       return {
         ...state, icons: action.item
+      }
+    case types.CHANGE_RFID:
+      return {
+        ...state, rfid: action.item
       }
     case types.CHANGE_FRAMES:
       return {
