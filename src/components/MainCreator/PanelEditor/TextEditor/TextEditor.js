@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import actions from "./duck/actions"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../../MainCreator/duck/actions"
 
 import "./TextEditor.scss"
 import { t } from "../../../../i18n";
@@ -28,7 +29,13 @@ const TextEditor = ({ chosenTextFont,
   ownLogo,
   updateOwnLogo,
   rfidType,
-  setRfidType
+  setRfidType,
+
+  changeRfidBackEnd,
+  rfidBackEnd,
+  chosenRfidShape,
+  rfidTextFontSize,
+  rfidText
 
 
 }) => {
@@ -114,6 +121,9 @@ const TextEditor = ({ chosenTextFont,
                         .then(function (svgDisplay) {
                           var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgDisplay);
                           updateOwnLogo(svgB64)
+                          const rfidBackendCopy = rfidBackEnd
+                          rfidBackendCopy[0].svg = svgB64;
+                          changeRfidBackEnd(rfidBackendCopy)
                         })
                         .catch(error => {
                           console.log(error)
@@ -142,6 +152,39 @@ const TextEditor = ({ chosenTextFont,
       document.getElementById("inputUploadIcon").value = null
     }
   };
+
+  const handleSetRfidType = (type) => {
+    console.log('own logo', ownLogo)
+    if (type === 0) {
+      // const rfidBackendCopy = rfidBackEnd
+      // rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+      // rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+      changeRfidBackEnd([{
+        cornerRadious: chosenRfidShape === "sharp" ? 0 : 1,
+        svg: null,
+        text: "",
+        font: "Calibri-bold",
+        fontsize: 5
+      }])
+    } else if (type === 1) {
+      changeRfidBackEnd([{
+        cornerRadious: chosenRfidShape === "sharp" ? 0 : 1,
+        svg: ownLogo,
+        text: "",
+        font: "Calibri-bold",
+        fontsize: 5
+      }])
+    } else if (type === 2) {
+      changeRfidBackEnd([{
+        cornerRadious: chosenRfidShape === "sharp" ? 0 : 1,
+        svg: null,
+        text: rfidText,
+        font: chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont,
+        fontsize: rfidTextFontSize
+      }])
+    }
+    setRfidType(type)
+  }
 
 
 
@@ -189,19 +232,22 @@ const TextEditor = ({ chosenTextFont,
                   <p className="instruction_bold">{t("RFID_INSTRUCTION_NORMAL_1")}</p>
                   <div className="rfid_box">
                     <div className="rfid_type_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
-                      onClick={() => setRfidType(0)} >
+                      // onClick={() => setRfidType(0)} >
+                      onClick={() => handleSetRfidType(0)} >
                       <img src={RfidDefault} alt="rfid_default" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 0 ? { fontWeight: "700" } : {}}>{t("RFID_LOGO")}</p>
                     </div>
 
                     <div className="rfid_type_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
-                      onClick={() => setRfidType(1)} >
+                      // onClick={() => setRfidType(1)} >
+                      onClick={() => handleSetRfidType(1)} >
                       <img src={RfidLogo} alt="rfid_logo" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 1 ? { fontWeight: "700" } : {}}>{t("OWN_LOGO")}</p>
                     </div>
 
                     <div className="rfid_type_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
-                      onClick={() => setRfidType(2)} >
+                      // onClick={() => setRfidType(2)} >
+                      onClick={() => handleSetRfidType(2)} >
                       <img src={RfidTekst} alt="rfid_tekst" className="rfid_type_img" />
                       < p className="rfid_name" style={rfidType === 2 ? { fontWeight: "700" } : {}}>{t("RFID_TEXT")}</p>
                     </div>
@@ -360,7 +406,10 @@ const mapStateToProps = state => ({
   chosenModel: state.frontEndData.model.chosenModel,
   ownLogo: state.frontEndData.icon.ownLogo,
   rfidType: state.frontEndData.icon.rfidType,
-
+  rfidBackEnd: state.backEndData.rfid,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
+  rfidTextFontSize: state.frontEndData.icon.rfidTextFontSize,
+  rfidText: state.frontEndData.icon.rfidText,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -370,6 +419,8 @@ const mapDispatchToProps = dispatch => ({
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   updateOwnLogo: (income) => dispatch(actionsIcon.updateOwnLogo(income)),
   setRfidType: (income) => dispatch(actionsIcon.setRfidType(income)),
+  changeRfidBackEnd: (income) => dispatch(actionsBackEnd.changeRfid(income)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextEditor)

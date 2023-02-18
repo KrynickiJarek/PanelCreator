@@ -780,16 +780,14 @@ const PanelPreview = ({
     // }
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // console.log("chosenTextFont", chosenTextFont)
+    // console.log("chosenTextWeight", chosenTextWeight)
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if (element.number === isFocusedInputIndex + 1) {
         if (element.type === 0 && isFocusedInputSide === "down") {
-          // element.font = chosenTextFont
-          // element.fontWeight = chosenTextWeight
           element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
         } else if (element.type === 1 && isFocusedInputSide === "up") {
-          // element.font = chosenTextFont
-          // element.fontWeight = chosenTextWeight
           element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
         }
       }
@@ -809,6 +807,10 @@ const PanelPreview = ({
     }
     if (isFocusedInputRfid) {
       setRfidTextFont(chosenTextFont)
+      setRfidTextFontWeight(chosenTextWeight)
+      const rfidBackendCopy = rfidBackEnd
+      rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+      changeRfidBackEnd(rfidBackendCopy)
     }
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
@@ -2462,8 +2464,6 @@ const PanelPreview = ({
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if ((element.number === index + 1) && element.type === 0) {
-        // element.font = chosenTextFont
-        // element.fontWeight = chosenTextWeight
         element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
       }
     })
@@ -2496,21 +2496,11 @@ const PanelPreview = ({
     e.stopPropagation();
     setRfidTextFont(chosenTextFont)
     setRfidTextFontWeight(chosenTextWeight)
-    console.log("chosenTextFont", chosenTextFont)
-    const rfidBackendCopy = rfidBackEnd
-    rfidBackendCopy[0].font = chosenTextFont
-    changeRfidBackEnd(rfidBackendCopy)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    // const copyPanelTextBackEnd = panelTextBackEnd
-    // +++RFID---------------------------------------------------------------------+++dodać backend
-    // copyPanelTextBackEnd.forEach(element => { 
-    //   if ((element.number === index + 1) && element.type === 0) {
-    //     // element.font = chosenTextFont
-    //     // element.fontWeight = chosenTextWeight
-    //     element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
-    //   }
-    // })
-    // changePanelTextBackEnd(copyPanelTextBackEnd)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+    changeRfidBackEnd(rfidBackendCopy)
+
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
@@ -2523,7 +2513,6 @@ const PanelPreview = ({
       el.fontUpWeight = chosenTextWeight;
       el.fontDown = chosenTextFont;
       el.fontDownWeight = chosenTextWeight;
-      // +++RFID---------------------------------------------------------------------+++
     })
     changeIconHolders(copyArr)
     setRfidTextFont(chosenTextFont)
@@ -2533,11 +2522,15 @@ const PanelPreview = ({
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
-      // element.font = chosenTextFont
-      // element.fontWeight = chosenTextWeight
       element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
     })
     changePanelTextBackEnd(copyPanelTextBackEnd)
+
+
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+    changeRfidBackEnd(rfidBackendCopy)
+
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
 
   }
@@ -4557,7 +4550,7 @@ const PanelPreview = ({
     if (chosenModel.type === "M_DOT_R14") {
       changeRfidShape("sharp")
       const rfidBackendCopy = rfidBackEnd
-      rfidBackendCopy[0].cornerRadious = 1
+      rfidBackendCopy[0].cornerRadious = 0
       changeRfidBackEnd(rfidBackendCopy)
     }
 
@@ -4576,7 +4569,7 @@ const PanelPreview = ({
     if (chosenModel.type === "M_DOT_R14") {
       changeRfidShape("round")
       const rfidBackendCopy = rfidBackEnd
-      rfidBackendCopy[0].cornerRadious = 0
+      rfidBackendCopy[0].cornerRadious = 1
       changeRfidBackEnd(rfidBackendCopy)
     }
 
@@ -4874,6 +4867,7 @@ const PanelPreview = ({
     setRfidTextFont(null)
     setRfidTextFontSize(5)
     setRfidTextFontWeight('')
+    changeRfidShape("sharp")
     changeRfidBackEnd([{
       cornerRadious: 0,
       svg: null,

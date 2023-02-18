@@ -171,16 +171,14 @@ const FrameEditor = ({
               <div className="frame_choosing_box">
 
                 <div className="frame_shape_link" style={(chosenRfidShape === "sharp") ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
-                  // onClick={() => { changeRfidShape("sharp") }} >
-                  onClick={() => { handleChangeRfidShape("sharp", 1) }} >
+                  onClick={() => { handleChangeRfidShape("sharp", 0) }} >
                   {(chosenRfidShape === "sharp") && <div className="frame_chosen" />}
                   < p className="shape_name">{t("STRAIGHT")}</p>
                   <img src={Sharpframe} alt="sharpframe" className="shape_image" />
                 </div>
 
                 <div className="frame_shape_link" style={chosenRfidShape === "round" ? { border: "3px solid #EC695C" } : {}}
-                  // onClick={() => { changeRfidShape("round") }} >
-                  onClick={() => { handleChangeRfidShape("round", 0) }} >
+                  onClick={() => { handleChangeRfidShape("round", 1) }} >
                   {chosenRfidShape === "round" && <div className="frame_chosen" />}
                   < p className="shape_name">{t("ROUNDED")}</p>
                   <img src={Roundframe} alt="roundframe" className="shape_image" />
