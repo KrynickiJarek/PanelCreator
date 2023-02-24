@@ -4726,7 +4726,8 @@ const PanelPreview = ({
       clearTimeout(serverTimeout)
     }, 8000)
 
-    fetch("https://23f5e1973b5a048ffaaa0bd0183b5f87.ampio.pl", {
+    // fetch("https://kreator.ampio.pl/generatepdf", {//stary url do debugowania 
+    fetch("https://23f5e1973b5a048ffaaa0bd0183b5f87.ampio.pl/generatepdf", {
       signal,
       method: "POST",
       body: JSON.stringify({ backEndData, frontEndDataB64 }),
