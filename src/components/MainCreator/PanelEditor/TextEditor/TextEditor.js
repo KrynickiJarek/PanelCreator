@@ -93,8 +93,10 @@ const TextEditor = ({ chosenTextFont,
                   const dataToProcess = {
                     "task": task,
                     "tool": "resizeimage",
-                    "pixels_width": 40,
-                    "pixels_height": 20,
+                    "pixels_width": 152,
+                    // "pixels_width": 229.69416, 
+                    // "pixels_height": 114.84278,
+                    "pixels_height": 76,
                     "files": [
                       {
                         "server_filename": serverFileName,
