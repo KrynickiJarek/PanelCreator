@@ -473,7 +473,7 @@ const availablePanels = [
     sideColumnFrameWidth: 21.06,
     centerColumnFrameWidth: 27.28,
     marginFrameSide: 10.3,
-    backEndPanelType: 8,
+    backEndPanelType: 9,
     picture: (require("../../../../assets/panelpictures/mdotr14.jpg")).default,
     info: "M-DOT-R14_INFO",
     link: "M-DOT-R14_LINK",
