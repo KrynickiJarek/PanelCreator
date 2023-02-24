@@ -301,7 +301,6 @@ const PanelPreview = ({
     return () => clearTimeout(resizeTimeout);
   }, [panelContainerHeight, panelContainerWidth, chosenModel]);
 
-  // JARECZEK
 
   const rfidInput = document.querySelector("#text_rfid_input")
   const rfidWrapperBorderStyle = {};
@@ -316,7 +315,6 @@ const PanelPreview = ({
     rfidWrapperBorderStyle.borderLeft = "3px solid rgb(220, 53, 69)";
     rfidWrapperBorderStyle.borderRight = "3px solid rgb(220, 53, 69)";
   }
-  // JARECZEK
 
   useEffect(() => {
     if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
@@ -4728,7 +4726,7 @@ const PanelPreview = ({
       clearTimeout(serverTimeout)
     }, 8000)
 
-    fetch("https://kreator.ampio.pl/generatepdf", {
+    fetch("https://23f5e1973b5a048ffaaa0bd0183b5f87.ampio.pl", {
       signal,
       method: "POST",
       body: JSON.stringify({ backEndData, frontEndDataB64 }),
