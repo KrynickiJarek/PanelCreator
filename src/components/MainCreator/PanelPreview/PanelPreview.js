@@ -33,7 +33,7 @@ import Zoomout from "../../../assets/scale/zoomout.svg"
 import Alert from "../../../assets/side/alert.svg"
 
 import Savetopdf from "../../../assets/side/savetopdf.svg"
-import Savetopdfdebug from "../../../assets/side/savetopdfdebug.svg"
+// import Savetopdfdebug from "../../../assets/side/savetopdfdebug.svg"
 import Savetopdfload from "../../../assets/side/savetopdf_load.svg"
 import Downloadpdfarrow from "../../../assets/side/downloadpdf_arrow.svg"
 import Saveandback from "../../../assets/side/saveandback.svg"
@@ -135,6 +135,7 @@ const PanelPreview = ({
   changeFramesShapeToRound,
   overFrameReRender,
   textFrameRender,
+  overFrameRender,
   overFrameAll,
   chosenTextFont,
   chosenTextWeight,
@@ -274,7 +275,28 @@ const PanelPreview = ({
   const [globalProportions, setGlobalProportions] = useState(0)
   const [areThereAnySplit, setAreThereAnySplit] = useState(false)
   const [isAnySplitSelected, setIsAnySplitSelected] = useState(3)
-  const allChar = [" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "/", "-", "a", "ą", "b", "c", "ć", "d", "e", "ę", "f", "g", "h", "i", "j", "k", "l", "ł", "m", "n", "ń", "o", "ó", "p", "r", "s", "ś", "t", "u", "w", "y", "z", "ź", "ż", "q", "x", "v", "A", "Ą", "B", "C", "Ć", "D", "E", "Ę", "F", "G", "H", "I", "J", "K", "L", "Ł", "M", "N", "Ń", "O", "Ó", "P", "R", "S", "Ś", "T", "U", "W", "Y", "Z", "Ź", "Ż", "Q", "V", "X", "à", "â", "ä", "ô", "é", "è", "ë", "ê", "ï", "î", "ç", "ù", "û", "ü", "ÿ", "æ", "œ", "À", "Â", "Ä", "Ô", "É", "È", "Ë", "Ê", "Ï", "Î", "Ÿ", "Ç", "Ù", "Û", "Ü", "Æ", "Œ", "ö", "ü", "ß", "Ö", "Ü", "ẞ", "à", "è", "ì", "í", "î", "ò", "ù", "ú", "À", "È", "Ì", "Í", "Î", "Ò", "Ù", "Ú", "á", "ñ", "ú", "ü", "Á", "Ñ", "Ú", "Ü", 'ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'ل', 'م', 'ن', 'و', 'ه', 'ي', "č", "ď", "ĺ", "ľ", "ň", "ŕ", "š", "ť", "ú", "ý", "ž", "Č", "Ď", "Ĺ", "Ľ", "Ň", "Ŕ", "Š", "Ť", "Ú", "Ý", "Ž"];
+  const [tooLongTextDownArray, setTooLongTextDownArray] = useState([])
+  const [tooLongTextUpArray, setTooLongTextUpArray] = useState([])
+  const [tooLongTextFrameArray, setTooLongTextFrameArray] = useState([])
+  const allChar = [
+    "!",
+    "@",
+    "#",
+    "$",
+    "%",
+    "^",
+    "&",
+    "*",
+    "_",
+    "-",
+    "+",
+    "/",
+    `/`,
+    `(`,
+    `)`,
+    `[`,
+    `]`,
+    "=", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "/", "-", "a", "ą", "b", "c", "ć", "d", "e", "ę", "f", "g", "h", "i", "j", "k", "l", "ł", "m", "n", "ń", "o", "ó", "p", "r", "s", "ś", "t", "u", "w", "y", "z", "ź", "ż", "q", "x", "v", "A", "Ą", "B", "C", "Ć", "D", "E", "Ę", "F", "G", "H", "I", "J", "K", "L", "Ł", "M", "N", "Ń", "O", "Ó", "P", "R", "S", "Ś", "T", "U", "W", "Y", "Z", "Ź", "Ż", "Q", "V", "X", "à", "â", "ä", "ô", "é", "è", "ë", "ê", "ï", "î", "ç", "ù", "û", "ü", "ÿ", "æ", "œ", "À", "Â", "Ä", "Ô", "É", "È", "Ë", "Ê", "Ï", "Î", "Ÿ", "Ç", "Ù", "Û", "Ü", "Æ", "Œ", "ö", "ü", "ß", "Ö", "Ü", "ẞ", "à", "è", "ì", "í", "î", "ò", "ù", "ú", "À", "È", "Ì", "Í", "Î", "Ò", "Ù", "Ú", "á", "ñ", "ú", "ü", "Á", "Ñ", "Ú", "Ü", 'ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'ل', 'م', 'ن', 'و', 'ه', 'ي', "č", "ď", "ĺ", "ľ", "ň", "ŕ", "š", "ť", "ú", "ý", "ž", "Č", "Ď", "Ĺ", "Ľ", "Ň", "Ŕ", "Š", "Ť", "Ú", "Ý", "Ž"];
   const checkCharracters = (text) => {
     if (!text.split('').every(char => allChar.includes(char))) {
       showAlert(200);
@@ -315,6 +337,14 @@ const PanelPreview = ({
     rfidWrapperBorderStyle.borderLeft = "3px solid rgb(220, 53, 69)";
     rfidWrapperBorderStyle.borderRight = "3px solid rgb(220, 53, 69)";
   }
+
+  const textIconWrapperBorderStyle = {}
+  textIconWrapperBorderStyle.border = "none";
+  textIconWrapperBorderStyle.height = `${5 * sc}px`;
+  textIconWrapperBorderStyle.width = `${18 * sc}px`;
+  textIconWrapperBorderStyle.position = "absolute";
+  textIconWrapperBorderStyle.left = "50%";
+  textIconWrapperBorderStyle.transform = "translateX(-50%)"
 
   useEffect(() => {
     if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
@@ -584,7 +614,17 @@ const PanelPreview = ({
   }, [dashboard]);
 
 
-
+  useEffect(() => {
+    if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
+      const checkWarningsText = warnings.filter(element => element.code === 2)
+      if (checkWarningsText.length === 0) {
+        pushWarnings(2)
+      }
+    } else {
+      filterWarnings(2)
+    }
+    // eslint-disable-next-line
+  }, [tooLongTextDownArray, tooLongTextUpArray]);
 
   useEffect(() => {
     const copyIconHolders = iconHolders.filter(element => element.lastDroppedDot !== null)
@@ -597,15 +637,16 @@ const PanelPreview = ({
       filterWarnings(1)
     }
 
-    const copyIconHoldersText = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9)
-    if (copyIconHoldersText.length > 0) {
-      const checkWarningsText = warnings.filter(element => element.code === 2)
-      if (checkWarningsText.length === 0) {
-        pushWarnings(2)
-      }
-    } else {
-      filterWarnings(2)
-    }
+    // const copyIconHoldersText = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9) //zastąpione powyżej
+    // if (copyIconHoldersText.length > 0) {
+    //   const checkWarningsText = warnings.filter(element => element.code === 2)
+    //   if (checkWarningsText.length === 0) {
+    //     pushWarnings(2)
+    //   }
+    // } else {
+    //   filterWarnings(2)
+    // }
+
 
     const copyIconHoldersSelected = iconHolders.filter(element => element.selectedDot || element.selected || element.selectedUp || element.selectedDown)
     if (copyIconHoldersSelected.length > 0) {
@@ -658,9 +699,9 @@ const PanelPreview = ({
 
 
   useEffect(() => {
-    const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
-
-    if (copyFrameHoldersText.length > 0 || frameText.length > 9) {
+    // const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
+    // if (copyFrameHoldersText.length > 0 || frameText.length > 9) {
+    if (tooLongTextFrameArray.length) {
       const checkWarningsText = warnings.filter(element => element.code === 5)
       if (checkWarningsText.length === 0) {
         pushWarnings(5)
@@ -669,7 +710,8 @@ const PanelPreview = ({
       filterWarnings(5)
     }
     // eslint-disable-next-line
-  }, [textFrameRender, addNewFrameState, removeFrameState]);
+  }, [tooLongTextFrameArray]);
+  // }, [textFrameRender, addNewFrameState, removeFrameState, tooLongTextFrameArray]);
 
 
 
@@ -717,8 +759,15 @@ const PanelPreview = ({
     } else {
       filterWarnings(6)
     }
+
+    checkInputsWidth()
     // eslint-disable-next-line
   }, [iconHolders, iconHoldersRender, textFrameRender, addNewFrameState]);
+
+  useEffect(() => {
+    checkFrameInputsWidth()
+    // eslint-disable-next-line
+  }, [frameHolders, textFrameRender, addNewFrameState, overFrameRender]);
 
 
 
@@ -4694,8 +4743,14 @@ const PanelPreview = ({
       setNoPanelName(true)
     } else if (!allIcons) {
       showAlert(8);
-    } else if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      // } else if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+    }
+    if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
       showAlert(17);
+    } else if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
+      showAlert(18);
+    } else if (tooLongTextFrameArray.length) {
+      showAlert(19);
     } else {
       printPdf()
       // setDownloading(true)
@@ -4711,60 +4766,60 @@ const PanelPreview = ({
     }
   }
 
-  const debugFetchWithTimeout = (frontEndDataB64) => {
-    let ctrl = new AbortController()
-    let signal = ctrl.signal
+  // const debugFetchWithTimeout = (frontEndDataB64) => {
+  //   let ctrl = new AbortController()
+  //   let signal = ctrl.signal
 
 
-    let headers = new Headers();
-    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-    headers.append('Access-Control-Allow-Credentials', 'true');
+  //   let headers = new Headers();
+  //   headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  //   headers.append('Access-Control-Allow-Credentials', 'true');
 
-    let serverTimeout = setTimeout(() => {
-      ctrl.abort()
-      setDownloading(false)
-      clearTimeout(serverTimeout)
-    }, 8000)
+  //   let serverTimeout = setTimeout(() => {
+  //     ctrl.abort()
+  //     setDownloading(false)
+  //     clearTimeout(serverTimeout)
+  //   }, 8000)
 
-    // fetch("https://kreator.ampio.pl/generatepdf", {//stary url do debugowania 
-    fetch("https://23f5e1973b5a048ffaaa0bd0183b5f87.ampio.pl/generatepdf", {
-      signal,
-      method: "POST",
-      body: JSON.stringify({ backEndData, frontEndDataB64 }),
-      headers: headers
-    })
-      .then(res => res.blob())
-      .then(blob => {
-        let fileName = chosenModel.name + "_" + panelName + ".pdf"
-        saveAs(blob, fileName);
-        setDownloading(false)
-        clearTimeout(serverTimeout)
-      })
-      .catch(error => {
-        setDownloading(false)
-        console.log(error)
-        clearTimeout(serverTimeout)
-      })
-  }
+  //   // fetch("https://kreator.ampio.pl/generatepdf", {//stary url do debugowania 
+  //   fetch("https://23f5e1973b5a048ffaaa0bd0183b5f87.ampio.pl/generatepdf", {
+  //     signal,
+  //     method: "POST",
+  //     body: JSON.stringify({ backEndData, frontEndDataB64 }),
+  //     headers: headers
+  //   })
+  //     .then(res => res.blob())
+  //     .then(blob => {
+  //       let fileName = chosenModel.name + "_" + panelName + ".pdf"
+  //       saveAs(blob, fileName);
+  //       setDownloading(false)
+  //       clearTimeout(serverTimeout)
+  //     })
+  //     .catch(error => {
+  //       setDownloading(false)
+  //       console.log(error)
+  //       clearTimeout(serverTimeout)
+  //     })
+  // }
 
-  const handlePrintPdfDebug = () => {
+  // const handlePrintPdfDebug = () => {
 
-    if (panelName === "") {
-      setNoPanelName(true)
-    } else {
-      setDownloading(true)
-      let dataToSend = {
-        frontEndData,
-        backEndData,
-        show: true,
-        hide: false
-      }
-      let frontEndDataStr = JSON.stringify(dataToSend);
-      let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+  //   if (panelName === "") {
+  //     setNoPanelName(true)
+  //   } else {
+  //     setDownloading(true)
+  //     let dataToSend = {
+  //       frontEndData,
+  //       backEndData,
+  //       show: true,
+  //       hide: false
+  //     }
+  //     let frontEndDataStr = JSON.stringify(dataToSend);
+  //     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
 
-      debugFetchWithTimeout(frontEndDataB64)
-    }
-  }
+  //     debugFetchWithTimeout(frontEndDataB64)
+  //   }
+  // }
 
 
 
@@ -4909,6 +4964,35 @@ const PanelPreview = ({
     setIsFocusedInputSide(null)
     // setIsFocusedInputFrame(false)
     // setIsFocusedInputName(false)
+  }
+
+  const checkInputsWidth = () => {
+    const tempTooLongTextDownArray = []
+    const tempTooLongTextUpArray = []
+    iconHolders.forEach((element, index) => {
+      if (element.flag === 1) {
+        if ((((document.querySelector(`#icon_input_down_${index}`)?.clientWidth) / sc) > (18 + 5.2))) {
+          tempTooLongTextDownArray.push(index)
+        }
+        if ((((document.querySelector(`#icon_input_up_${index}`)?.clientWidth) / sc) > (18 + 5.2))) {
+          tempTooLongTextUpArray.push(index)
+        }
+      }
+    })
+    setTooLongTextDownArray(tempTooLongTextDownArray)
+    setTooLongTextUpArray(tempTooLongTextUpArray)
+  }
+
+  const checkFrameInputsWidth = () => {
+    const tempTooLongTextFrameArray = []
+    frameHolders.forEach((element, index) => {
+      // console.log("jareczek >>>>>>>", document.querySelector(`#frame_input_${index}`)?.clientWidth / sc)
+      // console.log("jareczek >>>>>>> 222222", (element?.frameInfo?.columns * 18) + 5.2)
+      if ((((document.querySelector(`#frame_input_${index}`)?.clientWidth) / sc) > ((element?.frameInfo?.columns * 18) + 5.2))) {
+        tempTooLongTextFrameArray.push(index)
+      }
+    })
+    setTooLongTextFrameArray(tempTooLongTextFrameArray)
   }
 
   return (
@@ -5165,53 +5249,101 @@ const PanelPreview = ({
                             )}
                             {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
-                                <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
-                                  { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
-                                  <input className="text_input_frame"
-                                    autoComplete="off"
-                                    type="text"
-                                    maxLength="16"
-                                    style={(chosenColor.RAL === "RAL 9003" && visual) ?
-                                      {
-                                        ...textStyleFrame,
-                                        fontFamily: frame.framePrint.frameFont,
-                                        fontWeight: frame.framePrint.frameFontWeight,
-                                        backgroundColor: "rgb(233,233,233)",
-                                        border: "none",
+                                <div style={{
+                                  ...textIconWrapperBorderStyle,
+                                  width: `${frame?.frameInfo?.columns * 18 * sc}px`,
+                                  top: `${(frame.framePrint.textY - 2.5) * sc}px`,
+                                  left: `${frame.framePrint.textX * sc}px`,
+                                  overflow: tooLongTextFrameArray?.includes(i) ? "hidden" : "visible",
+                                  borderLeft: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  borderRight: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none"
+                                }}>
+                                  <div style={!visual ?
+                                    {
+                                      ...autoResizeInputStyle,
+                                      // top: `${frame.framePrint.textY * sc}px`, 
+                                      // left: `${frame.framePrint.textX * sc}px`, 
+                                      top: `${2.5 * sc}px`,
+                                      transition: "0s"
+                                    } :
+                                    {
+                                      ...autoResizeInputStyle,
+                                      //  top: `${frame.framePrint.textY * sc}px`, 
+                                      //  left: `${frame.framePrint.textX * sc}px`, 
+                                      top: `${2.5 * sc}px`,
+                                      transition: "0.4s ease"
+                                    }}>
+                                    <input className="text_input_frame"
+                                      id={`frame_input_${i}`}
+                                      autoComplete="off"
+                                      type="text"
+                                      maxLength="16"
+                                      style={(chosenColor.RAL === "RAL 9003" && visual) ?
+                                        {
+                                          ...textStyleFrame,
+                                          fontFamily: frame.framePrint.frameFont,
+                                          fontWeight: frame.framePrint.frameFontWeight,
+                                          backgroundColor: "rgb(233,233,233)",
+                                          border: "none",
+                                        }
+                                        :
+                                        {
+                                          ...textStyleFrame,
+                                          fontFamily: frame.framePrint.frameFont,
+                                          fontWeight: frame.framePrint.frameFontWeight,
+                                          backgroundColor: chosenColor.hex,
+                                          border: "none",
+                                        }
                                       }
-                                      :
-                                      {
-                                        ...textStyleFrame,
-                                        fontFamily: frame.framePrint.frameFont,
-                                        fontWeight: frame.framePrint.frameFontWeight,
-                                        backgroundColor: chosenColor.hex,
-                                        border: "none",
-                                      }
-                                    }
-                                    disabled={true}
-                                    value={frame.framePrint.text}
-                                  />
-                                  <span style={{
-                                    fontFamily: frame.framePrint.frameFont,
-                                    fontWeight: frame.framePrint.frameFontWeight,
-                                    gridArea: '1 / 1 / 2 / 2',
-                                    visibility: 'hidden',
-                                    whiteSpace: "pre",
-                                    margin: `0 ${1.5 * sc}px`
-                                  }}>
-                                    {frame.framePrint.text}
-                                  </span>
+                                      disabled={true}
+                                      value={frame.framePrint.text}
+                                    />
+                                    <span style={{
+                                      fontFamily: frame.framePrint.frameFont,
+                                      fontWeight: frame.framePrint.frameFontWeight,
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      visibility: 'hidden',
+                                      whiteSpace: "pre",
+                                      margin: `0 ${1.5 * sc}px`
+                                    }}>
+                                      {frame.framePrint.text}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             }
                             {(frame.framePrint.text !== "" && frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
+                                {/* <div style={{
+                                  ...textIconWrapperBorderStyle,
+                                  width: `${frame?.frameInfo?.columns * 18 * sc}px`,
+                                  top: `${(frame.framePrint.textY - 2.5) * sc}px`,
+                                  left: `${frame.framePrint.textX * sc}px`,
+                                  borderLeft: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  borderRight: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none"
+                                }}>
+                                  <div style={!visual ?
+                                    {
+                                      ...autoResizeInputStyle,
+                                      // top: `${frame.framePrint.textY * sc}px`, 
+                                      // left: `${frame.framePrint.textX * sc}px`, 
+                                      top: `${2.5 * sc}px`,
+                                      transition: "0s"
+                                    } :
+                                    {
+                                      ...autoResizeInputStyle,
+                                      //  top: `${frame.framePrint.textY * sc}px`, 
+                                      //  left: `${frame.framePrint.textX * sc}px`, 
+                                      top: `${2.5 * sc}px`,
+                                      transition: "0.4s ease"
+                                    }}> */}
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                   { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                   <input className="text_input_frame"
+                                    id={`frame_input_${i}`}
                                     type="text"
                                     autoComplete="off"
-                                    maxLength="16"
+                                    maxLength="40"
                                     style={
                                       {
                                         ...textStyleFrame,
@@ -5325,95 +5457,123 @@ const PanelPreview = ({
                           }
                         </div>
                       )}
-
                       {textFrame && chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS" && frameTitleFlag &&
                         <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
                           <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
                             <form onSubmit={handleSubmit}>
-                              <div style={{ ...autoResizeInputStyle, top: `${tempFrame.textY * sc}px`, left: `${tempFrame.textX * sc}px`, transition: "0s" }}>
-
-
-                                <input className="text_input_frame"
-                                  type="text"
-                                  autoComplete="off"
-                                  maxLength="16"
-                                  style={(isFocusedInputFrame) ?
-                                    (
-                                      (chosenColor.hex !== "#30a32c") ? {
-                                        ...textStyleFrame,
-                                        fontFamily: chosenFrameFont,
-                                        fontWeight: chosenFrameFontWeight,
-                                        border: "2px dashed rgb(40, 167, 69)",
-                                        backgroundColor: chosenColor.hex,
-                                      } :
-                                        {
+                              <div style={{
+                                ...textIconWrapperBorderStyle,
+                                width: `${frameHoldersTemp?.frameInfo?.columns * 18 * sc}px`,
+                                top: `${(tempFrame.textY - 2.5) * sc}px`,
+                                left: `${tempFrame.textX * sc}px`,
+                                overflow: isFocusedInputFrame ? "visible" : "hidden",
+                              }}>
+                                <div style={{
+                                  position: "absolute",
+                                  width: "3px",
+                                  height: "100%",
+                                  left: "0",
+                                  borderLeft: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 18) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  zIndex: "999999"
+                                }} />
+                                <div style={{
+                                  position: "absolute",
+                                  width: "3px",
+                                  height: "100%",
+                                  right: "0",
+                                  borderRight: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 18) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  zIndex: "999999"
+                                }} />
+                                <div style={{
+                                  ...autoResizeInputStyle,
+                                  top: `${2.5 * sc}px`,
+                                  // top: `${tempFrame.textY * sc}px`, 
+                                  // left: `${tempFrame.textX * sc}px`, 
+                                  transition: "0s"
+                                }}>
+                                  <input className="text_input_frame"
+                                    id={`frame_input_temp`}
+                                    type="text"
+                                    autoComplete="off"
+                                    maxLength={`${(frameHoldersTemp?.frameInfo?.columns * 10) + 10}`}
+                                    style={(isFocusedInputFrame) ?
+                                      (
+                                        (chosenColor.hex !== "#30a32c") ? {
                                           ...textStyleFrame,
                                           fontFamily: chosenFrameFont,
                                           fontWeight: chosenFrameFontWeight,
-                                          border: "2px dashed rgb(32, 114, 30)",
+                                          border: "2px dashed rgb(40, 167, 69)",
                                           backgroundColor: chosenColor.hex,
-                                        }
-                                    )
-                                    : {
-                                      ...textStyleFrame,
-                                      fontFamily: chosenFrameFont,
-                                      fontWeight: chosenFrameFontWeight,
-                                      backgroundColor: chosenColor.hex,
-                                    }}
-                                  disabled={chosenTab !== "frame" && true}
-                                  onMouseOver={showFrameBorder}
-                                  onMouseLeave={hideFrameBorder}
-                                  value={frameText}
-                                  onChange={(text) => handleChangeTextFrame(text)}
-                                  onFocus={() => setIsFocusedInputFrame(true)}
-                                  onKeyDown={handleKeyPress}
-                                />
-                                <span style={{
-                                  gridArea: '1 / 1 / 2 / 2',
-                                  visibility: 'hidden',
-                                  fontFamily: chosenFrameFont,
-                                  fontWeight: chosenFrameFontWeight,
-                                  padding: "0 8px",
-                                  whiteSpace: "pre",
-                                  margin: `0 ${1.5 * sc}px`
-                                }}>
-                                  {frameText}
-                                </span>
+                                        } :
+                                          {
+                                            ...textStyleFrame,
+                                            fontFamily: chosenFrameFont,
+                                            fontWeight: chosenFrameFontWeight,
+                                            border: "2px dashed rgb(32, 114, 30)",
+                                            backgroundColor: chosenColor.hex,
+                                          }
+                                      )
+                                      : {
+                                        ...textStyleFrame,
+                                        fontFamily: chosenFrameFont,
+                                        fontWeight: chosenFrameFontWeight,
+                                        backgroundColor: chosenColor.hex,
+                                      }}
+                                    disabled={chosenTab !== "frame" && true}
+                                    onMouseOver={showFrameBorder}
+                                    onMouseLeave={hideFrameBorder}
+                                    value={frameText}
+                                    onChange={(text) => handleChangeTextFrame(text)}
+                                    onFocus={() => setIsFocusedInputFrame(true)}
+                                    onKeyDown={handleKeyPress}
+                                  />
+                                  <span style={{
+                                    gridArea: '1 / 1 / 2 / 2',
+                                    visibility: 'hidden',
+                                    fontFamily: chosenFrameFont,
+                                    fontWeight: chosenFrameFontWeight,
+                                    padding: "0 8px",
+                                    whiteSpace: "pre",
+                                    margin: `0 ${1.5 * sc}px`
+                                  }}>
+                                    {frameText}
+                                  </span>
 
 
-                                {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
-                                  <input type="image" src={Submitinput} alt="submitinput"
-                                    style={{
-                                      height: `${3.6 * sc}px`,
-                                      width: `${3.6 * sc}px`,
-                                      transform: "translate(75%, -50%)",
-                                      gridArea: '1 / 1 / 2 / 2',
-                                    }}
-                                  />
-                                }
-                                {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
-                                  <input type="image" src={Submitinputdark} alt="submitinput"
-                                    style={{
-                                      height: `${3.6 * sc}px`,
-                                      width: `${3.6 * sc}px`,
-                                      transform: "translate(75%, -50%)",
-                                      gridArea: '1 / 1 / 2 / 2',
-                                    }}
-                                  />
-                                }
+                                  {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
+                                    <input type="image" src={Submitinput} alt="submitinput"
+                                      style={{
+                                        height: `${3.6 * sc}px`,
+                                        width: `${3.6 * sc}px`,
+                                        transform: "translate(75%, -50%)",
+                                        gridArea: '1 / 1 / 2 / 2',
+                                      }}
+                                    />
+                                  }
+                                  {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
+                                    <input type="image" src={Submitinputdark} alt="submitinput"
+                                      style={{
+                                        height: `${3.6 * sc}px`,
+                                        width: `${3.6 * sc}px`,
+                                        transform: "translate(75%, -50%)",
+                                        gridArea: '1 / 1 / 2 / 2',
+                                      }}
+                                    />
+                                  }
 
-                                {isFocusedInputFrame &&
-                                  <img src={Clearinput} alt="clearinput"
-                                    style={{
-                                      height: `${3.6 * sc}px`,
-                                      width: `${3.6 * sc}px`,
-                                      transform: "translate(200%, -50%)",
-                                      gridArea: '1 / 1 / 2 / 2',
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={handleClearInputFrame}
-                                  />
-                                }
+                                  {isFocusedInputFrame &&
+                                    <img src={Clearinput} alt="clearinput"
+                                      style={{
+                                        height: `${3.6 * sc}px`,
+                                        width: `${3.6 * sc}px`,
+                                        transform: "translate(200%, -50%)",
+                                        gridArea: '1 / 1 / 2 / 2',
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={handleClearInputFrame}
+                                    />
+                                  }
+                                </div>
                               </div>
                             </form>
                           </div>
@@ -5491,62 +5651,161 @@ const PanelPreview = ({
                                     }}>
                                       {textUpOff &&
                                         <form onSubmit={handleSubmit}>
-                                          <div style={!chosenModel.panelRotation ?
+                                          <div style={{
+                                            ...textIconWrapperBorderStyle,
+                                            width: `${18 * sc}px`,
+                                            // top: `${(14.35 - 1) * sc}px`,
+                                            top: !chosenModel.panelRotation ? `${(-1.5 - 1) * sc}px` : `${(2.85 - 1) * sc}px`,
+                                            overflow: !(isFocusedInputIndex === index && isFocusedInputSide === "up") && tooLongTextUpArray?.includes(index) ? "hidden" : "visible",
+                                            borderLeft: tooLongTextUpArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none",
+                                            borderRight: tooLongTextUpArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none"
+                                          }}>
+                                            {/* <div style={!chosenModel.panelRotation ?
                                             { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
                                             :
-                                            { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
-                                            <input className="text_input"
-                                              type="text"
-                                              autoComplete="off"
-                                              maxLength="16"
-                                              style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
-                                                (
-                                                  (chosenColor.hex !== "#30a32c") ? {
-                                                    ...textStyle,
-                                                    ...textUpStyle,
-                                                    fontFamily: fontUp,
-                                                    fontWeight: fontUpWeight,
-                                                    border: "2px solid rgb(40, 167, 69)"
-                                                  } :
-                                                    {
+                                            { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}> */}
+                                            <div style={{ ...autoResizeInputStyle, top: `${1 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
+                                              <input className="text_input"
+                                                id={`icon_input_up_${index}`}
+                                                type="text"
+                                                autoComplete="off"
+                                                maxLength="16"
+                                                style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
+                                                  (
+                                                    (chosenColor.hex !== "#30a32c") ? {
                                                       ...textStyle,
                                                       ...textUpStyle,
                                                       fontFamily: fontUp,
                                                       fontWeight: fontUpWeight,
-                                                      border: "2px solid rgb(32, 114, 30)",
+                                                      border: "2px solid rgb(40, 167, 69)"
+                                                    } :
+                                                      {
+                                                        ...textStyle,
+                                                        ...textUpStyle,
+                                                        fontFamily: fontUp,
+                                                        fontWeight: fontUpWeight,
+                                                        border: "2px solid rgb(32, 114, 30)",
+                                                      }
+                                                  )
+                                                  : {
+                                                    ...textStyle,
+                                                    ...textUpStyle,
+                                                    fontFamily: fontUp,
+                                                    fontWeight: fontUpWeight,
+                                                  }}
+                                                disabled={chosenTab !== "text" && true}
+                                                onMouseOver={showBorder}
+                                                onMouseLeave={hideBorder}
+                                                value={textUp}
+                                                onChange={(text) => handleChangeTextUp(index, text)}
+                                                onClick={(e) => handleChangeFontUp(e, index)}
+                                                onFocus={() => { handleFocusInput(index, "up") }}
+                                                onKeyDown={handleKeyPress}
+                                              />
+                                              <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
+                                                {textUp}
+                                              </span>
+
+                                              {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
+                                                <input type="image" src={Submitinput} alt="submitinput"
+                                                  style={{
+                                                    height: `${3.6 * sc}px`,
+                                                    width: `${3.6 * sc}px`,
+                                                    transform: "translateX(75%)",
+                                                    gridArea: '1 / 1 / 2 / 2',
+
+                                                  }}
+                                                />
+                                              }
+                                              {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
+                                                <input type="image" src={Submitinputdark} alt="submitinput"
+                                                  style={{
+                                                    height: `${3.6 * sc}px`,
+                                                    width: `${3.6 * sc}px`,
+                                                    transform: "translateX(75%)",
+                                                    gridArea: '1 / 1 / 2 / 2',
+                                                  }}
+                                                />
+                                              }
+                                              {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                                <img src={Clearinput} alt="clearinput"
+                                                  style={{
+                                                    height: `${3.6 * sc}px`,
+                                                    width: `${3.6 * sc}px`,
+                                                    transform: "translate(200%, 0%)",
+                                                    gridArea: '1 / 1 / 2 / 2',
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => { handleClearInput(index, "up") }}
+                                                />
+                                              }
+                                            </div>
+                                          </div>
+                                        </form>
+                                      }
+                                      <form onSubmit={handleSubmit}>
+                                        <div style={{
+                                          ...textIconWrapperBorderStyle,
+                                          width: `${18 * sc}px`,
+                                          top: `${(14.35 - 1) * sc}px`,
+                                          overflow: !(isFocusedInputIndex === index && isFocusedInputSide === "down") && tooLongTextDownArray?.includes(index) ? "hidden" : "visible",
+                                          borderLeft: tooLongTextDownArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none",
+                                          borderRight: tooLongTextDownArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none"
+                                        }}>
+                                          <div style={{
+                                            ...autoResizeInputStyle,
+                                            // top: `${14.35 * sc}px`,
+                                            top: `${1 * sc}px`,
+                                            fontFamily: fontDown, fontWeight: fontDownWeight
+                                          }}>
+                                            <input className="text_input"
+                                              id={`icon_input_down_${index}`}
+                                              type="text"
+                                              autoComplete="off"
+                                              maxLength="16"
+                                              style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
+                                                (
+                                                  (chosenColor.hex !== "#30a32c") ? {
+                                                    ...textStyle,
+                                                    fontFamily: fontDown,
+                                                    fontWeight: fontDownWeight,
+                                                    border: "2px solid rgb(40, 167, 69)"
+                                                  } :
+                                                    {
+                                                      ...textStyle,
+                                                      fontFamily: fontDown,
+                                                      fontWeight: fontDownWeight,
+                                                      border: "2px solid rgb(32, 114, 30)"
                                                     }
                                                 )
                                                 : {
                                                   ...textStyle,
-                                                  ...textUpStyle,
-                                                  fontFamily: fontUp,
-                                                  fontWeight: fontUpWeight,
+                                                  fontFamily: fontDown,
+                                                  fontWeight: fontDownWeight
                                                 }}
                                               disabled={chosenTab !== "text" && true}
                                               onMouseOver={showBorder}
                                               onMouseLeave={hideBorder}
-                                              value={textUp}
-                                              onChange={(text) => handleChangeTextUp(index, text)}
-                                              onClick={(e) => handleChangeFontUp(e, index)}
-                                              onFocus={() => { handleFocusInput(index, "up") }}
+                                              value={textDown}
+                                              onChange={(text) => handleChangeTextDown(index, text)}
+                                              onClick={(e) => handleChangeFontDown(e, index)}
+                                              onFocus={() => { handleFocusInput(index, "down") }}
                                               onKeyDown={handleKeyPress}
                                             />
                                             <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
-                                              {textUp}
+                                              {textDown}
                                             </span>
-
-                                            {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
+                                            {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
                                               <input type="image" src={Submitinput} alt="submitinput"
                                                 style={{
                                                   height: `${3.6 * sc}px`,
                                                   width: `${3.6 * sc}px`,
                                                   transform: "translateX(75%)",
                                                   gridArea: '1 / 1 / 2 / 2',
-
                                                 }}
                                               />
                                             }
-                                            {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
+                                            {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
                                               <input type="image" src={Submitinputdark} alt="submitinput"
                                                 style={{
                                                   height: `${3.6 * sc}px`,
@@ -5556,7 +5815,7 @@ const PanelPreview = ({
                                                 }}
                                               />
                                             }
-                                            {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                            {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
                                               <img src={Clearinput} alt="clearinput"
                                                 style={{
                                                   height: `${3.6 * sc}px`,
@@ -5565,82 +5824,10 @@ const PanelPreview = ({
                                                   gridArea: '1 / 1 / 2 / 2',
                                                   cursor: "pointer",
                                                 }}
-                                                onClick={() => { handleClearInput(index, "up") }}
+                                                onClick={() => { handleClearInput(index, "down") }}
                                               />
                                             }
                                           </div>
-                                        </form>
-                                      }
-                                      <form onSubmit={handleSubmit}>
-                                        <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown, fontWeight: fontDownWeight }}>
-                                          <input className="text_input"
-                                            type="text"
-                                            autoComplete="off"
-                                            maxLength="16"
-                                            style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
-                                              (
-                                                (chosenColor.hex !== "#30a32c") ? {
-                                                  ...textStyle,
-                                                  fontFamily: fontDown,
-                                                  fontWeight: fontDownWeight,
-                                                  border: "2px solid rgb(40, 167, 69)"
-                                                } :
-                                                  {
-                                                    ...textStyle,
-                                                    fontFamily: fontDown,
-                                                    fontWeight: fontDownWeight,
-                                                    border: "2px solid rgb(32, 114, 30)"
-                                                  }
-                                              )
-                                              : {
-                                                ...textStyle,
-                                                fontFamily: fontDown,
-                                                fontWeight: fontDownWeight
-                                              }}
-                                            disabled={chosenTab !== "text" && true}
-                                            onMouseOver={showBorder}
-                                            onMouseLeave={hideBorder}
-                                            value={textDown}
-                                            onChange={(text) => handleChangeTextDown(index, text)}
-                                            onClick={(e) => handleChangeFontDown(e, index)}
-                                            onFocus={() => { handleFocusInput(index, "down") }}
-                                            onKeyDown={handleKeyPress}
-                                          />
-                                          <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
-                                            {textDown}
-                                          </span>
-                                          {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
-                                            <input type="image" src={Submitinput} alt="submitinput"
-                                              style={{
-                                                height: `${3.6 * sc}px`,
-                                                width: `${3.6 * sc}px`,
-                                                transform: "translateX(75%)",
-                                                gridArea: '1 / 1 / 2 / 2',
-                                              }}
-                                            />
-                                          }
-                                          {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
-                                            <input type="image" src={Submitinputdark} alt="submitinput"
-                                              style={{
-                                                height: `${3.6 * sc}px`,
-                                                width: `${3.6 * sc}px`,
-                                                transform: "translateX(75%)",
-                                                gridArea: '1 / 1 / 2 / 2',
-                                              }}
-                                            />
-                                          }
-                                          {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
-                                            <img src={Clearinput} alt="clearinput"
-                                              style={{
-                                                height: `${3.6 * sc}px`,
-                                                width: `${3.6 * sc}px`,
-                                                transform: "translate(200%, 0%)",
-                                                gridArea: '1 / 1 / 2 / 2',
-                                                cursor: "pointer",
-                                              }}
-                                              onClick={() => { handleClearInput(index, "down") }}
-                                            />
-                                          }
                                         </div>
                                       </form>
                                     </div>
@@ -6139,7 +6326,7 @@ const PanelPreview = ({
                         </>
                       }
                       <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-                      <div className="side_box" >
+                      {/* <div className="side_box" >
 
                         {!downloading &&
                           <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} style={{ cursor: "default" }} />
@@ -6151,10 +6338,10 @@ const PanelPreview = ({
                           <span>DEBUGGING</span>
                           :
                           <span
-                            style={{ color: "red" }}>{t("DEBUG")}</span>
-                          // style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
+                            // style={{ color: "red" }}>{t("DEBUG")}</span>
+                          style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
                         }
-                      </div>
+                      </div> */}
                     </>
                   }
                 </>

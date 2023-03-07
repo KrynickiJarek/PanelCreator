@@ -65,6 +65,14 @@ const availableAlerts = [
     text: "TOO_LONG_RFID_TEXT_ALERT",
   },
   {
+    code: 18,
+    text: "WARNING_2_LONG_DESCRIPTIONS",
+  },
+  {
+    code: 19,
+    text: "WARNING_5_LONG_FRAME_TITLE",
+  },
+  {
     code: 20,
     text: "WRONG_BROWSER_ALERT",
   },

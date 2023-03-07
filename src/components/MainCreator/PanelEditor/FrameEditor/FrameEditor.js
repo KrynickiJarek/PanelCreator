@@ -396,7 +396,7 @@ const FrameEditor = ({
                               className="text_input"
                               type="text"
                               autoComplete="off"
-                              maxLength="16"
+                              maxLength={`${(frame?.frameInfo?.columns * 10) + 10}`}
                               value={frameText}
                               onChange={(text) => handleChangeTextFrame(text)}
                             />
