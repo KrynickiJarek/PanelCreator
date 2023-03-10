@@ -292,5 +292,6 @@
   "FONT_INSTRUCTION_BOLD": "Po kliknięciu w pole tekstowe zostanie przypisany wybrany font.",
   "FONT_HEADER": "Font",
   "WARNING_2_LONG_DESCRIPTIONS": "Zastosowano za długi opis ikony. Skróć go, aby móc wydrukować panel do pliku pdf.",
-  "WARNING_5_LONG_FRAME_TITLE": "Zastosowano za długi tytuł ramki. Skróć go, aby móc wydrukować panel do pliku pdf."
+  "WARNING_5_LONG_FRAME_TITLE": "Zastosowano za długi tytuł ramki. Skróć go, aby móc wydrukować panel do pliku pdf.",
+  "NEW": "Nowe"
 }

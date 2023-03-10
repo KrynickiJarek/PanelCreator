@@ -5,6 +5,10 @@ const importAll = (r) => {
 
 const iconCategories = [
   {
+    name: "NEW",
+    listOfIcons: importAll(require.context("../../../../assets/icons/new", true, /\.(svg)$/))
+  },
+  {
     name: "SAFETY",
     listOfIcons: importAll(require.context("../../../../assets/icons/security", true, /\.(svg)$/))
   },

@@ -292,5 +292,6 @@
   "FONT_INSTRUCTION_BOLD": "Vybrané písmo bude použité po kliknutí na textové pole.",
   "FONT_HEADER": "Font",
   "WARNING_2_LONG_DESCRIPTIONS": "Popisky sú príliš dlhé. Skráťte ich a uložte panel do súboru PDF.",
-  "WARNING_5_LONG_FRAME_TITLE": "Popisky sú príliš dlhé. Skráťte ich a uložte panel do súboru PDF."
+  "WARNING_5_LONG_FRAME_TITLE": "Popisky sú príliš dlhé. Skráťte ich a uložte panel do súboru PDF.",
+  "NEW": "Nový"
 }

@@ -341,7 +341,7 @@ const PanelPreview = ({
   const textIconWrapperBorderStyle = {}
   textIconWrapperBorderStyle.border = "none";
   textIconWrapperBorderStyle.height = `${5 * sc}px`;
-  textIconWrapperBorderStyle.width = `${18 * sc}px`;
+  textIconWrapperBorderStyle.width = `${15 * sc}px`;
   textIconWrapperBorderStyle.position = "absolute";
   textIconWrapperBorderStyle.left = "50%";
   textIconWrapperBorderStyle.transform = "translateX(-50%)"
@@ -1089,7 +1089,6 @@ const PanelPreview = ({
     }
   }, [chosenTab]);
 
-
   useEffect(() => {
     if (alertAnswer === 2) {
       goBack()
@@ -1108,7 +1107,7 @@ const PanelPreview = ({
       handleClearAllText()
     }
     if (alertAnswer === 8) {
-      printPdf()
+      handleTryPrintPdfAfterNoAllIconsConfirm()
     }
     // eslint-disable-next-line 
   }, [alertAnswer])
@@ -4743,8 +4742,18 @@ const PanelPreview = ({
       setNoPanelName(true)
     } else if (!allIcons) {
       showAlert(8);
-      // } else if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+    } else if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      showAlert(17);
+    } else if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
+      showAlert(18);
+    } else if (tooLongTextFrameArray.length) {
+      showAlert(19);
+    } else {
+      printPdf()
     }
+  }
+
+  const handleTryPrintPdfAfterNoAllIconsConfirm = () => {
     if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
       showAlert(17);
     } else if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
@@ -4753,16 +4762,6 @@ const PanelPreview = ({
       showAlert(19);
     } else {
       printPdf()
-      // setDownloading(true)
-      // let dataToSend = {
-      //   frontEndData,
-      //   backEndData,
-      //   show: true,
-      //   hide: false
-      // }
-      // let frontEndDataStr = JSON.stringify(dataToSend);
-      // let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
-      // fetchWithTimeout(frontEndDataB64)
     }
   }
 
@@ -4971,10 +4970,10 @@ const PanelPreview = ({
     const tempTooLongTextUpArray = []
     iconHolders.forEach((element, index) => {
       if (element.flag === 1) {
-        if ((((document.querySelector(`#icon_input_down_${index}`)?.clientWidth) / sc) > (18 + 5.2))) {
+        if ((((document.querySelector(`#icon_input_down_${index}`)?.clientWidth) / sc) > (15 + 5.2))) {
           tempTooLongTextDownArray.push(index)
         }
-        if ((((document.querySelector(`#icon_input_up_${index}`)?.clientWidth) / sc) > (18 + 5.2))) {
+        if ((((document.querySelector(`#icon_input_up_${index}`)?.clientWidth) / sc) > (15 + 5.2))) {
           tempTooLongTextUpArray.push(index)
         }
       }
@@ -4986,9 +4985,7 @@ const PanelPreview = ({
   const checkFrameInputsWidth = () => {
     const tempTooLongTextFrameArray = []
     frameHolders.forEach((element, index) => {
-      // console.log("jareczek >>>>>>>", document.querySelector(`#frame_input_${index}`)?.clientWidth / sc)
-      // console.log("jareczek >>>>>>> 222222", (element?.frameInfo?.columns * 18) + 5.2)
-      if ((((document.querySelector(`#frame_input_${index}`)?.clientWidth) / sc) > ((element?.frameInfo?.columns * 18) + 5.2))) {
+      if ((((document.querySelector(`#frame_input_${index}`)?.clientWidth) / sc) > ((element?.frameInfo?.columns * 15) + 5.2))) {
         tempTooLongTextFrameArray.push(index)
       }
     })
@@ -5251,7 +5248,7 @@ const PanelPreview = ({
                               <div style={{ position: "absolute", width: "100%" }}>
                                 <div style={{
                                   ...textIconWrapperBorderStyle,
-                                  width: `${frame?.frameInfo?.columns * 18 * sc}px`,
+                                  width: `${frame?.frameInfo?.columns * 15 * sc}px`,
                                   top: `${(frame.framePrint.textY - 2.5) * sc}px`,
                                   left: `${frame.framePrint.textX * sc}px`,
                                   overflow: tooLongTextFrameArray?.includes(i) ? "hidden" : "visible",
@@ -5314,29 +5311,7 @@ const PanelPreview = ({
                             }
                             {(frame.framePrint.text !== "" && frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
-                                {/* <div style={{
-                                  ...textIconWrapperBorderStyle,
-                                  width: `${frame?.frameInfo?.columns * 18 * sc}px`,
-                                  top: `${(frame.framePrint.textY - 2.5) * sc}px`,
-                                  left: `${frame.framePrint.textX * sc}px`,
-                                  borderLeft: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none",
-                                  borderRight: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none"
-                                }}>
-                                  <div style={!visual ?
-                                    {
-                                      ...autoResizeInputStyle,
-                                      // top: `${frame.framePrint.textY * sc}px`, 
-                                      // left: `${frame.framePrint.textX * sc}px`, 
-                                      top: `${2.5 * sc}px`,
-                                      transition: "0s"
-                                    } :
-                                    {
-                                      ...autoResizeInputStyle,
-                                      //  top: `${frame.framePrint.textY * sc}px`, 
-                                      //  left: `${frame.framePrint.textX * sc}px`, 
-                                      top: `${2.5 * sc}px`,
-                                      transition: "0.4s ease"
-                                    }}> */}
+
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                   { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                   <input className="text_input_frame"
@@ -5463,7 +5438,7 @@ const PanelPreview = ({
                             <form onSubmit={handleSubmit}>
                               <div style={{
                                 ...textIconWrapperBorderStyle,
-                                width: `${frameHoldersTemp?.frameInfo?.columns * 18 * sc}px`,
+                                width: `${frameHoldersTemp?.frameInfo?.columns * 15 * sc}px`,
                                 top: `${(tempFrame.textY - 2.5) * sc}px`,
                                 left: `${tempFrame.textX * sc}px`,
                                 overflow: isFocusedInputFrame ? "visible" : "hidden",
@@ -5473,7 +5448,7 @@ const PanelPreview = ({
                                   width: "3px",
                                   height: "100%",
                                   left: "0",
-                                  borderLeft: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 18) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  borderLeft: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 15) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
                                   zIndex: "999999"
                                 }} />
                                 <div style={{
@@ -5481,7 +5456,7 @@ const PanelPreview = ({
                                   width: "3px",
                                   height: "100%",
                                   right: "0",
-                                  borderRight: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 18) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  borderRight: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 15) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
                                   zIndex: "999999"
                                 }} />
                                 <div style={{
@@ -5653,7 +5628,7 @@ const PanelPreview = ({
                                         <form onSubmit={handleSubmit}>
                                           <div style={{
                                             ...textIconWrapperBorderStyle,
-                                            width: `${18 * sc}px`,
+                                            width: `${15 * sc}px`,
                                             // top: `${(14.35 - 1) * sc}px`,
                                             top: !chosenModel.panelRotation ? `${(-1.5 - 1) * sc}px` : `${(2.85 - 1) * sc}px`,
                                             overflow: !(isFocusedInputIndex === index && isFocusedInputSide === "up") && tooLongTextUpArray?.includes(index) ? "hidden" : "visible",
@@ -5746,7 +5721,7 @@ const PanelPreview = ({
                                       <form onSubmit={handleSubmit}>
                                         <div style={{
                                           ...textIconWrapperBorderStyle,
-                                          width: `${18 * sc}px`,
+                                          width: `${15 * sc}px`,
                                           top: `${(14.35 - 1) * sc}px`,
                                           overflow: !(isFocusedInputIndex === index && isFocusedInputSide === "down") && tooLongTextDownArray?.includes(index) ? "hidden" : "visible",
                                           borderLeft: tooLongTextDownArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none",
