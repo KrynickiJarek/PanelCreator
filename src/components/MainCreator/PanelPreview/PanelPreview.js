@@ -4723,6 +4723,7 @@ const PanelPreview = ({
   }
 
   const printPdf = () => {
+    console.log("123>>> printPdf")
     setAlertAnswer(null)
     setDownloading(true)
     let frontEndDataNoAlerts = frontEndData
@@ -4737,9 +4738,12 @@ const PanelPreview = ({
     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
     fetchWithTimeout(frontEndDataB64)
   }
+  console.log("123>>> alertAnswer", alertAnswer)
 
 
   const handlePrintPdf = () => {
+    console.log("123>>> handlePrintPdf")
+
     if (panelName === "") {
       setNoPanelName(true)
     } else if (!allIcons) {
@@ -4756,6 +4760,7 @@ const PanelPreview = ({
   }
 
   const handleTryPrintPdfAfterNoAllIconsConfirm = () => {
+    setAlertAnswer(null)
     if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
       showAlert(17);
     } else if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
