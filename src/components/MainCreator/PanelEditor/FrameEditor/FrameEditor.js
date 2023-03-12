@@ -31,12 +31,14 @@ const FrameEditor = ({
   changeFrameFontWeight,
   changeFrameFontInfo,
   changeFrameShape,
+  changeRfidShape,
   addNewFrame,
   removeFrame,
   overFrame,
   chosenFrameFont,
   chosenFrameFontWeight,
   chosenFrameShape,
+  chosenRfidShape,
   frameHolders,
   frameHoldersTemp,
   visual,
@@ -45,7 +47,9 @@ const FrameEditor = ({
   warnings,
   editFrameText,
   editFrameTextBackEnd,
-  chosenColor
+  chosenColor,
+  changeRfidBackEnd,
+  rfidBackEnd
 }) => {
   const [unlock, setUnlock] = useState(false)
   const [confirmWait, setConfirmWait] = useState(true)
@@ -108,6 +112,12 @@ const FrameEditor = ({
     }, 300);
     return () => clearTimeout(scrollTimeout);
   }
+  const handleChangeRfidShape = (typefrontend, typeBackend) => {
+    changeRfidShape(typefrontend)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].cornerRadious = typeBackend
+    changeRfidBackEnd(rfidBackendCopy)
+  }
 
 
   return (
@@ -150,6 +160,39 @@ const FrameEditor = ({
         </div>
       </div>
       <div className="frame_container">
+        {chosenModel.type === "M_DOT_R14" &&
+          <>
+
+
+            <h2 className="frame_header">{t("FRAMES_HEADER_RFID")}</h2>
+            <div className="rfid_content">
+              <p className="instruction_bold">{t("FRAMES_RFID_INSTRUCTION_BOLD")}</p>
+
+              <div className="frame_choosing_box">
+
+                <div className="frame_shape_link" style={(chosenRfidShape === "sharp") ? { border: "3px solid #EC695C", borderRadius: "0" } : { borderRadius: "0" }}
+                  onClick={() => { handleChangeRfidShape("sharp", 0) }} >
+                  {(chosenRfidShape === "sharp") && <div className="frame_chosen" />}
+                  < p className="shape_name">{t("STRAIGHT")}</p>
+                  <img src={Sharpframe} alt="sharpframe" className="shape_image" />
+                </div>
+
+                <div className="frame_shape_link" style={chosenRfidShape === "round" ? { border: "3px solid #EC695C" } : {}}
+                  onClick={() => { handleChangeRfidShape("round", 1) }} >
+                  {chosenRfidShape === "round" && <div className="frame_chosen" />}
+                  < p className="shape_name">{t("ROUNDED")}</p>
+                  <img src={Roundframe} alt="roundframe" className="shape_image" />
+                </div>
+              </div>
+            </div>
+          </>
+
+        }
+
+
+
+
+
         <h2 className="frame_header">{t("FRAMES_HEADER")}</h2>
         <div className="frame_content">
           <p className="instruction_bold">{t("FRAMES_INSTRUCTION_BOLD")}</p>
@@ -353,7 +396,7 @@ const FrameEditor = ({
                               className="text_input"
                               type="text"
                               autoComplete="off"
-                              maxLength="16"
+                              maxLength={`${(frame?.frameInfo?.columns * 10) + 10}`}
                               value={frameText}
                               onChange={(text) => handleChangeTextFrame(text)}
                             />
@@ -405,13 +448,13 @@ const FrameEditor = ({
 };
 
 
-
 const mapStateToProps = state => ({
   chosenModel: state.frontEndData.model.chosenModel,
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
   chosenFrameFontWeight: state.frontEndData.frame.chosenFrameFontWeight,
   chosenFrameFontInfo: state.frontEndData.frame.chosenFrameFontInfo,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
   frameList: state.frontEndData.frame.frameList,
   overFrameRender: state.frontEndData.frame.overFrameRender,
   frameHolders: state.frontEndData.frame.frameHolders,
@@ -422,6 +465,7 @@ const mapStateToProps = state => ({
   languageRender: state.frontEndData.visual.languageRender,
   warnings: state.frontEndData.visual.warnings,
   chosenColor: state.frontEndData.color.color,
+  rfidBackEnd: state.backEndData.rfid,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -429,6 +473,7 @@ const mapDispatchToProps = dispatch => ({
   changeFrameFontWeight: weight => dispatch(actions.changeFrameFontWeight(weight)),
   changeFrameFontInfo: font => dispatch(actions.changeFrameFontInfo(font)),
   changeFrameShape: shape => dispatch(actions.changeFrameShape(shape)),
+  changeRfidShape: shape => dispatch(actions.changeRfidShape(shape)),
   addNewFrame: (income) => dispatch(actions.addNewFrame(income)),
   removeFrame: (frame) => dispatch(actions.removeFrame(frame)),
   overFrame: (frame) => dispatch(actions.overFrame(frame)),
@@ -436,6 +481,7 @@ const mapDispatchToProps = dispatch => ({
   changeFrameText: (frame) => dispatch(actions.changeFrameText(frame)),
   editFrameText: (text, index) => dispatch(actions.editFrameText(text, index)),
   editFrameTextBackEnd: (text, index) => dispatch(actionsBackEnd.editFrameText(text, index)),
+  changeRfidBackEnd: (income) => dispatch(actionsBackEnd.changeRfid(income)),
   allowFrameTitle: (frame) => dispatch(actions.allowFrameTitle(frame)),
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
 })

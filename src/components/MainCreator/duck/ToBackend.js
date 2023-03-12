@@ -12,6 +12,7 @@ const toBackend =
     // 6 - MDOT-18
     // 7 - MDOT-18 poziomy
     // 8 - MDOT-M18
+    // 9 - MDOT_R14<---------------------------------------------------------------------------------------------------------------------------------nowe_do_obsłużenia
     // XXXX- MDOT-M18 uniwersalny ---- nie ma, traktujemy jak 8-MDOT-M18
     panelColorRal: 9005, // RAL
     panelColorHex: "#060707", // hex jako string
@@ -25,6 +26,7 @@ const toBackend =
         svg: "XML" // przekopiowany xml, xml to base64
       }
     ],
+
     panelText: [
       {
         number: 1, // jak icons 
@@ -42,7 +44,16 @@ const toBackend =
         title: "TYTUŁ", // jak nie ma to null
         font: "Calibri", // nazwa czcionki
       }
-    ]
+    ],
+    rfid: [{// <---------------------------------------------------------------------------------------------------------------------------------nowe_do_obsłużenia
+      // tablica z jednym elementem (miałem problem z samym elementem bez tablicy dlatego tak) - w każdym innym przypadku niż MDOT-R14 będzie to pusta tablica - ok?
+      cornerRadious: 0, // zaokrąglenie ramki, analogicznie jak dla pozostałych ramek: 0 - proste, 1 - zaokrąglone
+      svg: "XML", // analogicznie do ikon przekopiowany xml, xml to base64. Wymiary grafiki 20x40. Domyślna wartość to null i tylko jak jest inna to drukujesz ten wariant (ikona rfid na ramce, ramka z przerwą)
+      text: "", // jeżeli występuje to drukujesz ten wariant (ikona rfid na ramce, ramka z przerwą)
+      // jeżeli nie ma obu powyższych to domyślny wariant - logo rfid na środku, ramka bez przerwy 
+      font: "Calibri", // nazwa czcionki, analogicznie jak przy ramkach i ikonach 
+      fontsize: 5 // to jest nowość - napis ten przyjmuje wartości od 2.5 do 10 (co 0.5) i jest to wielkość w milimetrach - komentarza w mailu 
+    }]
   },
   frontEndData: {
     //mój stan reduxowy do przytrzymania
@@ -51,3 +62,10 @@ const toBackend =
 export default toBackend
 
 
+changeRfidBackEnd([{
+  cornerRadious: 0,
+  svg: null,
+  text: "",
+  font: "Calibri-bold",
+  fontsize: 5
+}])

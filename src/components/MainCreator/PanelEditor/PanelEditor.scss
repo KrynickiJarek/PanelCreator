@@ -1,95 +1,93 @@
-.editor_container{
-    height: 100%;
+.editor_container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  min-width: 700px;
+  width: 60%;
+
+
+
+
+  .editor_nav {
+    align-self: center;
+    width: 80%;
+    max-width: 800px;
+    min-width: 500px;
+    height: 90px;
     display: flex;
-    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     align-items: center;
-    flex-grow: 1;
-    min-width: 700px;
-    width: 60%;
+    margin: 25px 50px;
 
+    .nav-link {
+      outline: none !important;
+      padding: 0;
+      margin: 0;
+    }
 
+    .editor_button {
+      min-height: 110px;
+      width: 111px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
 
+      .button_icon {
+        height: 70px;
+        width: 70px;
+        position: absolute;
+        top: 0;
+        z-index: 1;
+      }
 
-    .editor_nav{
-        align-self: center;
-        width: 80%;
-        max-width: 800px;
-        min-width: 500px;
-        height: 90px;
-        display:flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
+      .button_icon_hover {
+        height: 70px;
+        width: 70px;
+        position: absolute;
+        top: 0;
+        z-index: 2;
+      }
+
+      .button_text_box {
+        display: flex;
+        justify-content: center;
         align-items: center;
-        margin: 25px 50px;
+        height: fit-content;
 
-        .nav-link {
-            outline: none !important;
-            padding: 0;
-            // margin: 0 20px;
-            margin: 0 5px;
-         }
-
-        .editor_button{
-            // height: 90px; 
-            min-height: 110px; 
-            width: 105px; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-
-            .button_icon{
-                height: 70px; 
-                width: 70px;   
-                position: absolute;
-                top:0;
-                z-index: 1;
-            }
-
-            .button_icon_hover{
-                height: 70px; 
-                width: 70px;   
-                position: absolute;
-                top:0;
-                z-index: 2;
-            }
-            .button_text_box{
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: fit-content;
-
-              .button_text{
-                height: 32px;
-                font-size: 16px;
-                line-height: 16px;
-                font-weight: 500;
-                font-family: 'Montserrat', sans-serif;
-                color: #333333;   
-                position: absolute;
-                bottom: 0;
-                margin-bottom: 0;
-                z-index: 2;
-                // white-space: nowrap;
-            }
-
-            }
-
-
+        .button_text {
+          height: 32px;
+          font-size: 16px;
+          line-height: 16px;
+          font-weight: 500;
+          font-family: 'Montserrat', sans-serif;
+          color: #333333;
+          position: absolute;
+          bottom: 0;
+          margin-bottom: 0;
+          z-index: 2;
+          // white-space: nowrap;
         }
-    }
 
-    .editor_box{
-        flex-grow: 1;
-        min-width: 640px;
-        width: calc(100% - 130px);
-        margin-bottom: 50px;
-        border: 3px solid #EC695C;
-        position: relative;
-        background-color: white;
+      }
+
+
     }
+  }
+
+  .editor_box {
+    flex-grow: 1;
+    min-width: 640px;
+    width: calc(100% - 130px);
+    margin-bottom: 50px;
+    border: 3px solid #EC695C;
+    position: relative;
+    background-color: white;
+  }
 
 }
-

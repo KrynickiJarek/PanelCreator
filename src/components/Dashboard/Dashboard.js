@@ -30,6 +30,7 @@ import Savetopdf from "../../assets/dashboard/savetopdf.svg";
 import Minusuni from "../../assets/lcd/minusuni.svg"
 import Leftuni from "../../assets/lcd/leftuni.svg"
 import Rightuni from "../../assets/lcd/rightuni.svg"
+import Rfid_icon from "../../assets/lcd/rfid.svg"
 
 
 import CreatorHeader from "../MainCreator/CreatorHeader/CreatorHeader";
@@ -75,7 +76,15 @@ export const Dashboard = memo(function Dashboard({
   updateVersion,
   showAlert,
   alertAnswer,
-  setAlertAnswer
+  setAlertAnswer,
+
+  rfidType,
+  ownLogo,
+  rfidText,
+  rfidTextFont,
+  rfidTextFontWeight,
+  rfidTextFontSize,
+  chosenRfidShape
 }) {
 
   const [zoomId, setZoomId] = useState(null)
@@ -109,7 +118,7 @@ export const Dashboard = memo(function Dashboard({
 
   useEffect(() => {
     //version wersja tutaj zmieniaj 
-    updateVersion("1.07b")
+    updateVersion("1.09")
     // eslint-disable-next-line 
   }, [])
 
@@ -474,7 +483,6 @@ export const Dashboard = memo(function Dashboard({
           let copyNumber = 0
           copyPanels.forEach(panel => {
             if (panel.frontEndData.visual.panelName.includes(endocedData.frontEndData.visual.panelName + t("COPY"))) {
-              console.log("copyNumber warunek", panel.frontEndData.visual.panelName)
 
               if (Number.isInteger(parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)))) {
                 let numberTemp = parseInt(panel.frontEndData.visual.panelName.slice(-2, -1)) + 1
@@ -486,7 +494,6 @@ export const Dashboard = memo(function Dashboard({
               }
             }
           })
-          console.log("copyNumber", copyNumber)
           if (copyNumber > 0) {
             let name = endocedData.frontEndData.visual.panelName
             endocedData.frontEndData.visual.panelName = name + t("COPY") + ` (${copyNumber})`
@@ -877,6 +884,8 @@ export const Dashboard = memo(function Dashboard({
                                           fontDown,
                                           fontDownWeight,
                                           lastDroppedDot,
+                                          statusIconExist,
+                                          cannotRemoveStatusIcon,
                                           lastDroppedIcon,
                                           lastDroppedSlashUp,
                                           lastDroppedSlashDown,
@@ -1011,6 +1020,8 @@ export const Dashboard = memo(function Dashboard({
 
                                                 <IconHolder
                                                   index={index}
+                                                  statusIconExist={statusIconExist}
+                                                  cannotRemoveStatusIcon={statusIconExist}
                                                   lastDroppedDot={lastDroppedDot}
                                                   lastDroppedIcon={lastDroppedIcon}
                                                   lastDroppedSlashUp={lastDroppedSlashUp}
@@ -1035,7 +1046,176 @@ export const Dashboard = memo(function Dashboard({
                                         )}
 
 
-                                        {(panel.frontEndData.model.chosenModel.lcdScreen) && <div className="lcd" style={panel.frontEndData.model.chosenModel.lcdScreen ?
+                                        {panel.frontEndData.model.chosenModel.lcdScreen.lcdType === "rfid" &&
+                                          <div className="lcd" style={{
+                                            transition: "400ms ease",
+                                            border: "none",
+                                            height: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdHeight * sc}px`,
+                                            width: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth * sc}px`,
+                                            top: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdTop * sc}px`,
+                                            left: `${panel.frontEndData.model.chosenModel.lcdScreen.lcdLeft * sc}px`
+                                          }}
+                                          >
+                                            <div style={{
+
+
+                                              transition: "400ms ease",
+                                              border: "2px solid black",
+                                              height: "50%",
+                                              width: panel.frontEndData.icon.rfidType === 0 ? "50%" :
+                                                `${(((panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`,
+                                              position: "absolute",
+                                              borderColor: panel.frontEndData.color.color.iconColor,
+                                              borderRight: "none",
+                                              borderBottom: "none",
+                                              top: "0",
+                                              left: "0",
+                                              borderRadius: panel.frontEndData.frame.chosenRfidShape === "sharp" ? "0" : `${3 * sc}px 0 0 0`
+                                            }} />
+
+                                            <div style={{
+                                              transition: "400ms ease",
+                                              border: "2px solid black",
+                                              height: "50%",
+                                              width: panel.frontEndData.icon.rfidType === 0 ? "50%" : `${(((panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`,
+                                              position: "absolute",
+                                              borderColor: panel.frontEndData.color.color.iconColor,
+                                              borderLeft: "none",
+                                              borderBottom: "none",
+                                              top: "0",
+                                              right: "0",
+                                              borderRadius: panel.frontEndData.frame.chosenRfidShape === "sharp" ? "0" : `0 ${3 * sc}px 0 0`
+                                            }} />
+
+                                            <div style={{
+                                              transition: "400ms ease",
+                                              border: "2px solid black",
+                                              height: "50%",
+                                              width: "50%",
+                                              position: "absolute",
+                                              borderColor: panel.frontEndData.color.color.iconColor,
+                                              borderLeft: "none",
+                                              borderTop: "none",
+                                              bottom: "0",
+                                              right: "0",
+                                              borderRadius: panel.frontEndData.frame.chosenRfidShape === "sharp" ? "0" : `0 0 ${3 * sc}px 0`
+                                            }} />
+
+                                            <div style={{
+                                              transition: "400ms ease",
+                                              border: "2px solid black",
+                                              height: "50%",
+                                              width: "50%",
+                                              position: "absolute",
+                                              borderColor: panel.frontEndData.color.color.iconColor,
+                                              borderRight: "none",
+                                              borderTop: "none",
+                                              bottom: "0",
+                                              left: "0",
+                                              borderRadius: panel.frontEndData.frame.chosenRfidShape === "sharp" ? "0" : `0 0 0 ${3 * sc}px`
+                                            }} />
+
+
+                                            < img src={Rfid_icon} alt="rfid" className="rfid_icon"
+                                              style={{
+                                                transition: "400ms ease",
+                                                filter: panel.frontEndData.color.color.iconColor === "white" ? "grayscale(100%) invert(1) brightness(10)" : "grayscale(100%) brightness(0)",
+                                                height: `${8 * sc}px`,
+                                                width: panel.frontEndData.icon.rfidType === 0 ? `${10.7 * sc}px` : `${6 * sc}px`,
+                                                position: "absolute",
+                                                transform: "translate(-50%, -50%)",
+                                                top: panel.frontEndData.icon.rfidType === 0 ? "50%" : "1px",
+                                                left: "50%",
+                                              }}
+                                            />
+                                            < img src={panel.frontEndData.icon.ownLogo} alt="rfid" className="rfid_icon"
+                                              style={{
+                                                transition: "400ms ease",
+                                                filter: panel.frontEndData.color.color.iconColor === "white" ? "grayscale(100%) invert(1) brightness(10)" : "grayscale(100%) brightness(0)",
+                                                color: "red",
+                                                height: `${20 * sc}px`,
+                                                width: `${40 * sc}px`,
+                                                opacity: (!panel.frontEndData.icon.ownLogo || panel.frontEndData.icon.rfidType !== 1) ? "0" : "1",
+                                                position: "absolute",
+                                                transform: "translate(-50%, -50%)",
+                                                left: "50%",
+                                                top: "50%"
+                                              }}
+                                            />
+
+                                            <form
+                                              style={{
+                                                transition: "0.4s ease",
+                                                opacity: panel.frontEndData.icon.rfidType === 2 ? "1" : "0"
+                                              }}
+
+                                            >
+                                              <div
+                                                style={{
+                                                  height: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdHeight - 5) * sc}px`,
+                                                  width: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdWidth - 5) * sc}px`,
+                                                  border: 'none',
+                                                  position: "absolute",
+                                                  top: `${2.5 * sc}px`,
+                                                  left: `${2.5 * sc}px`,
+                                                  overflow: "hidden"
+                                                }}
+                                              >
+                                                <div style={{
+                                                  fontSize: `${panel.frontEndData.icon.rfidTextFontSize * sc}px`,
+                                                  lineHeight: `${panel.frontEndData.icon.rfidTextFontSize * sc}px`,
+                                                  height: `${panel.frontEndData.icon.rfidTextFontSize * 1.44 * sc}px`,
+                                                  width: `${panel.frontEndData.icon.rfidTextFontSize * 2 * sc}px`,
+                                                  transition: "400ms ease",
+                                                  position: "absolute",
+                                                  display: "inline-grid",
+                                                  alignItems: "center",
+                                                  justifyItems: "center",
+                                                  top: "50%",
+                                                  transform: "translateY(-50%)",
+                                                  fontFamily: panel.frontEndData.icon.rfidTextFont,
+                                                  fontWeight: panel.frontEndData.icon.rfidTextFontWeight,
+                                                }}>
+
+                                                  <input
+                                                    className="text_rfid_input"
+                                                    id="text_rfid_input"
+                                                    type="text"
+                                                    autoComplete="off"
+                                                    maxLength="20"
+                                                    style={{
+                                                      backgroundColor: "transparent",
+                                                      color: panel.frontEndData.color.color.iconColor,
+                                                      border: "2px solid transparent",
+                                                      borderRadius: `${0.9 * sc}px`,
+                                                      gridArea: "1 / 1 / 2 / 2",
+                                                      width: "100%",
+                                                      transition: "400ms ease",
+                                                      fontSize: `${panel.frontEndData.icon.rfidTextFontSize * sc}px`,
+                                                      lineHeight: `${panel.frontEndData.icon.rfidTextFontSize * sc}px`,
+                                                      height: `${panel.frontEndData.icon.rfidTextFontSize * 1.45 * sc}px`,
+                                                      fontFamily: panel.frontEndData.icon.rfidTextFont,
+                                                      fontWeight: panel.frontEndData.icon.rfidTextFontWeight,
+                                                    }}
+                                                    disabled
+                                                    value={panel.frontEndData.icon.rfidText}
+                                                  />
+                                                  <span
+                                                    style={{
+                                                      gridArea: '1 / 1 / 2 / 2',
+                                                      visibility: 'hidden',
+                                                      padding: "0 15px", whiteSpace: "pre"
+                                                    }}
+                                                  >
+                                                    {panel.frontEndData.icon.rfidText}
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </form>
+                                          </div>
+                                        }
+
+                                        {(panel.frontEndData.model.chosenModel.lcdScreen.lcdType === "slide" || panel.frontEndData.model.chosenModel.lcdScreen.lcdType === "noslide") && <div className="lcd" style={panel.frontEndData.model.chosenModel.lcdScreen ?
                                           panel.frontEndData.color.color.hex === "#f3f5f5" ?
                                             {
                                               height: `${(panel.frontEndData.model.chosenModel.lcdScreen.lcdHeight - 2.2) * sc}px`,
@@ -1247,9 +1427,10 @@ export const Dashboard = memo(function Dashboard({
               </div>
             </div>
           </div>
-        </div>
+        </div >
       }
-      {!dashboardSmooth &&
+      {
+        !dashboardSmooth &&
         <MainCreator dashboardSmooth={dashboardSmooth} />
       }
     </DndProvider >

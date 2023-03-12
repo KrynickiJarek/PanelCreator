@@ -60,7 +60,18 @@ const availableAlerts = [
     code: 16,
     text: "ICON_UPLOAD_ERROR_ALERT",
   },
-
+  {
+    code: 17,
+    text: "TOO_LONG_RFID_TEXT_ALERT",
+  },
+  {
+    code: 18,
+    text: "WARNING_2_LONG_DESCRIPTIONS",
+  },
+  {
+    code: 19,
+    text: "WARNING_5_LONG_FRAME_TITLE",
+  },
   {
     code: 20,
     text: "WRONG_BROWSER_ALERT",
@@ -83,6 +94,14 @@ const availableAlerts = [
   {
     code: 200,
     text: "UNSUPPORTED_CHARACTER",
+  },
+  {
+    code: 300,
+    text: "NO_DOTS_KEYBOARD_ALERT",
+  },
+  {
+    code: 301,
+    text: "ICONS_IN_KEYBOARD_AREA_ALERT",
   },
 ]
 

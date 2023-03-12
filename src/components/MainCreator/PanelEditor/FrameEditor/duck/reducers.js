@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   chosenFrameFontWeight: "700",
   chosenFrameFontInfo: "Calibri-bold",
   chosenFrameShape: "sharp",
+  chosenRfidShape: "sharp",
   addNewFrame: false,
   removeFrame: false,
   overFrameRender: false,
@@ -34,6 +35,10 @@ const frameReducer = (state = INITIAL_STATE, action) => {
     case types.CHANGE_FRAME_SHAPE:
       return {
         ...state, chosenFrameShape: action.item
+      }
+    case types.CHANGE_RFID_SHAPE:
+      return {
+        ...state, chosenRfidShape: action.item
       }
     case types.ADD_NEW_FRAME:
       const newFrameHolders = state.frameHolders

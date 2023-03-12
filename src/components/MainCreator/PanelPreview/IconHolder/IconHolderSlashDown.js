@@ -58,7 +58,6 @@ export const IconHolderSlashDown = ({
         return num % denom + denom;
       }
     }
-    // console.log("iconHolders[index]", iconHolders[index])
     const toDataURL = svg => fetch(svg)
       .then(response => response.blob())
       .then(blob => new Promise((resolve, reject) => {

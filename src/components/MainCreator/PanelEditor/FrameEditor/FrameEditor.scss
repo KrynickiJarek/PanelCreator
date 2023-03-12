@@ -111,7 +111,8 @@
       background-color: rgb(236, 105, 92);
     }
 
-    .frame_content {
+    .frame_content,
+    .rfid_content {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -352,4 +353,8 @@
   width: 20px;
   cursor: pointer;
   margin-left: 2px;
+}
+
+.rfid_content {
+  margin-bottom: 50px;
 }

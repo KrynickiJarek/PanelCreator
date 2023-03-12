@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../MainCreator/PanelPreview/duck/actions"
 import availableAlerts from "./availableAlerts"
@@ -9,6 +9,16 @@ import { t } from "../../i18n";
 import "./AlertBox.scss"
 
 const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
+
+  useEffect(() => {
+    // console.log('useEffect removeAlert')
+    removeAlert()
+    // return () => {
+    // removeAlert()
+    // }
+    //reserowanie alertu przy odświeżeniu 
+    // eslint-disable-next-line 
+  }, [])
 
   const handleRemoveAlert = () => {
     if (alert !== 4) {
@@ -41,7 +51,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
               </>
             }
             <div className="alert_button_container">
-              {alert < 10 || alert === 105 ?
+              {alert < 10 || alert === 105 || alert >= 300 ?
                 <>
                   <div className="alert_button_back"
                     onClick={handleRemoveAlert}
@@ -58,6 +68,7 @@ const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
                 </>
                 :
                 <>
+
                   {(alert < 20 || alert === 200) &&
                     <div className="alert_button_back"
                       onClick={() => removeAlert()}

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from "react-redux"
 import actions from "./duck/actions"
 import actionsVisual from "../../PanelPreview/duck/actions"
+import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
+import actionsBackEnd from "../../../MainCreator/duck/actions"
 
 import "./TextEditor.scss"
 import { t } from "../../../../i18n";
@@ -9,9 +11,183 @@ import { t } from "../../../../i18n";
 import Locked from "../../../../assets/preview/lock.svg"
 import Unlocked from "../../../../assets/preview/unlock.svg"
 
-const TextEditor = ({ chosenTextFont, changeTextWeight, changeTextFont, chosenTextWeight, visual, toggleVisual, chosenModel }) => {
+import RfidDefault from "../../../../assets/rfid/rfid_default.svg"
+import RfidLogo from "../../../../assets/rfid/rfid_logo.svg"
+import RfidTekst from "../../../../assets/rfid/rfid_tekst.svg"
+
+const TextEditor = ({ chosenTextFont,
+  changeTextWeight,
+  changeTextFont,
+  chosenTextWeight,
+  visual,
+  toggleVisual,
+  chosenModel,
+
+
+
+  showAlert,
+  ownLogo,
+  updateOwnLogo,
+  rfidType,
+  setRfidType,
+
+  changeRfidBackEnd,
+  rfidBackEnd,
+  chosenRfidShape,
+  rfidTextFontSize,
+  rfidText
+
+
+}) => {
 
   const [unlock, setUnlock] = useState(false)
+  // eslint-disable-next-line
+
+  const onSelectFile = (e) => {
+    const fileToUpload = e.target.files[0]
+    const fileName = e.target.files[0].name
+    if (e.target.files[0].type !== "image/svg+xml") {
+      showAlert(11);
+    } else if (e.target.files[0].size > 100000) {
+      showAlert(12);
+    } else {
+      const data = { public_key: "project_public_13a58c660ab0dec8d9d1244523fba194_JKpK5260dfc02c0b59b34f4fd247d31dcddcf" }
+
+      fetch("https://api.ilovepdf.com/v1/auth", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "*/*",
+        }
+      })
+        .then(response => response.json())
+        .then(json => {
+          const token = json.token
+          fetch("https://api.iloveimg.com/v1/start/resizeimage", {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          })
+            .then(response => response.json())
+            .then(json => {
+              const uploadServer = `https://${json.server}/v1/upload`
+              const processServer = `https://${json.server}/v1/process`
+              const downloadServer = `https://${json.server}/v1/download/${json.task}`
+              const task = json.task
+              const formData = new FormData();
+              formData.append('task', task);
+              formData.append('file', fileToUpload);
+
+              fetch(uploadServer, {
+                method: "POST",
+                body: formData,
+                headers: {
+                  "Authorization": `Bearer ${token}`
+                }
+              })
+                .then(response => response.json())
+                .then(json => {
+                  const serverFileName = json.server_filename
+                  const dataToProcess = {
+                    "task": task,
+                    "tool": "resizeimage",
+                    "pixels_width": 152,
+                    "pixels_height": 76,
+                    "files": [
+                      {
+                        "server_filename": serverFileName,
+                        "filename": fileName
+                      }
+                    ]
+                  }
+                  fetch(processServer, {
+                    method: "POST",
+                    body: JSON.stringify(dataToProcess),
+                    headers: {
+                      "Authorization": `Bearer ${token}`,
+                      "Content-Type": "application/json"
+                    }
+                  })
+                    .then(response => {
+                      fetch(downloadServer, {
+                        method: "GET",
+                        headers: {
+                          "Authorization": `Bearer ${token}`,
+                        }
+                      })
+                        .then(response => response.text())
+                        .then(function (svgDisplay) {
+                          var svgB64 = 'data:image/svg+xml;base64,' + btoa(svgDisplay);
+                          updateOwnLogo(svgB64)
+                          const rfidBackendCopy = rfidBackEnd
+                          rfidBackendCopy[0].svg = svgB64;
+                          changeRfidBackEnd(rfidBackendCopy)
+                        })
+                        .catch(error => {
+                          console.log(error)
+                          showAlert(16);
+                        })
+                    })
+                    .catch(error => {
+                      console.log(error)
+                      showAlert(16);
+                    })
+                })
+                .catch(error => {
+                  console.log(error)
+                  showAlert(16);
+                })
+            })
+            .catch(error => {
+              console.log(error)
+              showAlert(16);
+            })
+        })
+        .catch(error => {
+          console.log(error)
+          showAlert(16);
+        })
+      document.getElementById("inputUploadIcon").value = null
+    }
+  };
+
+  const handleSetRfidType = (type) => {
+    console.log('own logo', ownLogo)
+    if (type === 0) {
+      // const rfidBackendCopy = rfidBackEnd
+      // rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+      // rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+      changeRfidBackEnd([{
+        cornerRadious: chosenRfidShape === "sharp" ? 0 : 1,
+        svg: null,
+        text: "",
+        font: "Calibri-bold",
+        fontsize: 5
+      }])
+    } else if (type === 1) {
+      changeRfidBackEnd([{
+        cornerRadious: chosenRfidShape === "sharp" ? 0 : 1,
+        svg: ownLogo,
+        text: "",
+        font: "Calibri-bold",
+        fontsize: 5
+      }])
+    } else if (type === 2) {
+      changeRfidBackEnd([{
+        cornerRadious: chosenRfidShape === "sharp" ? 0 : 1,
+        svg: null,
+        text: rfidText,
+        font: chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont,
+        fontsize: rfidTextFontSize
+      }])
+    }
+    setRfidType(type)
+  }
+
+
+
 
 
   return (
@@ -44,10 +220,94 @@ const TextEditor = ({ chosenTextFont, changeTextWeight, changeTextFont, chosenTe
           </div>
         </div>
       </div>
+
       <div className="text_container">
+        {chosenModel.type === "M_DOT_R14" &&
+          <div className="rfidContainer">
+
+            <h2 className="text_header">{t("RFID_READER")}</h2>
+            <div className="text_content">
+              <div className="instruction_box">
+                <>
+                  <p className="instruction_bold">{t("RFID_INSTRUCTION_NORMAL_1")}</p>
+                  <div className="rfid_box">
+                    <div className="rfid_type_link" style={rfidType === 0 ? { border: "3px solid #EC695C" } : {}}
+                      // onClick={() => setRfidType(0)} >
+                      onClick={() => handleSetRfidType(0)} >
+                      <img src={RfidDefault} alt="rfid_default" className="rfid_type_img" />
+                      < p className="rfid_name" style={rfidType === 0 ? { fontWeight: "700" } : {}}>{t("RFID_LOGO")}</p>
+                    </div>
+
+                    <div className="rfid_type_link" style={rfidType === 1 ? { border: "3px solid #EC695C" } : {}}
+                      // onClick={() => setRfidType(1)} >
+                      onClick={() => handleSetRfidType(1)} >
+                      <img src={RfidLogo} alt="rfid_logo" className="rfid_type_img" />
+                      < p className="rfid_name" style={rfidType === 1 ? { fontWeight: "700" } : {}}>{t("OWN_LOGO")}</p>
+                    </div>
+
+                    <div className="rfid_type_link" style={rfidType === 2 ? { border: "3px solid #EC695C" } : {}}
+                      // onClick={() => setRfidType(2)} >
+                      onClick={() => handleSetRfidType(2)} >
+                      <img src={RfidTekst} alt="rfid_tekst" className="rfid_type_img" />
+                      < p className="rfid_name" style={rfidType === 2 ? { fontWeight: "700" } : {}}>{t("RFID_TEXT")}</p>
+                    </div>
+                  </div>
+                </>
+
+
+
+
+
+                {rfidType === 1 &&
+                  <>
+                    <p className="instruction_bold">{t("OWN_LOGO_INSTRUCTION_BOLD_1")}</p>
+                    <p className="instruction">{t("OWN_LOGO_INSTRUCTION_NORMAL_1")}</p>
+                    <p className="instruction">{t("OWN_LOGO_INSTRUCTION_NORMAL_2")}</p>
+                    <label htmlFor="inputUploadIcon" className="rfid_logo_input_button">
+                      <div className="select_button">
+                        {ownLogo ? t("REPLACE") : t("SELECT_FILE")}
+                        <div className="button_arrows" />
+                      </div>
+                    </label>
+                    <input type="file" id="inputUploadIcon" style={{ display: "none" }} onChange={onSelectFile} />
+                    {/* 
+                    // tutaj ewenntualnie dodąć podgląd 
+                    
+                    {ownLogo && < img src={ownLogo} alt="rfid" className="rfid_icon"
+                    // style={{
+                    //   ...universalIconStyle,
+                    //   ...rfidIconStyle,
+                    //   ...ownLogoStyle,
+                    //   top: "50%"
+                    // }}
+                    />
+                    } */}
+                  </>}
+
+                {rfidType === 2 &&
+                  <>
+                    <p className="instruction_bold">{t("RFID_FONT_INSTRUCTION_BOLD")}</p>
+                    <p className="instruction">{t("RFID_FONT_INSTRUCTION_NORMAL")}</p>
+                  </>
+                }
+              </div>
+            </div>
+
+
+          </div>
+        }
+
+
+
         <h2 className="text_header">{t("TITLE_HEADER")}</h2>
-        <p className="instruction_bold">{t("TITLE_INSTRUCTION_BOLD")}</p>
-        <p className="instruction">{t("TITLE_INSTRUCTION_NORMAL")}</p>
+        <div className="textContainer">
+          <p className="instruction_bold">{t("TITLE_INSTRUCTION_BOLD")}</p>
+          <p className="instruction">{t("TITLE_INSTRUCTION_NORMAL")}</p>
+        </div>
+
+
+        <h2 className="text_header">{t("FONT_HEADER")}</h2>
+        <p className="instruction_bold">{t("FONT_INSTRUCTION_BOLD")}</p>
         <div className="text_content">
 
 
@@ -144,12 +404,23 @@ const mapStateToProps = state => ({
   chosenTextWeight: state.frontEndData.text.chosenTextWeight,
   languageRender: state.frontEndData.visual.languageRender,
   chosenModel: state.frontEndData.model.chosenModel,
+  ownLogo: state.frontEndData.icon.ownLogo,
+  rfidType: state.frontEndData.icon.rfidType,
+  rfidBackEnd: state.backEndData.rfid,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
+  rfidTextFontSize: state.frontEndData.icon.rfidTextFontSize,
+  rfidText: state.frontEndData.icon.rfidText,
 })
 
 const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   changeTextFont: font => dispatch(actions.changeTextFont(font)),
   changeTextWeight: weight => dispatch(actions.changeTextWeight(weight)),
+  showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
+  updateOwnLogo: (income) => dispatch(actionsIcon.updateOwnLogo(income)),
+  setRfidType: (income) => dispatch(actionsIcon.setRfidType(income)),
+  changeRfidBackEnd: (income) => dispatch(actionsBackEnd.changeRfid(income)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextEditor)

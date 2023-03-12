@@ -155,13 +155,13 @@ const ModelChooser = ({
 
                 <div className={`resize-${id}`} style={zoomId === id ? { transition: "0.5s ease", opacity: "1" } : { transform: "translateY(-100%)", transition: "0.5s ease", opacity: "0.5" }}>
                   <p className="model_info" onClick={() => handleZoom(id)}>{t(panel.info)}</p>
-                  <div className="button_box">
-                    <div className="more_info_button"
+                  <div className="button_box" style={panel.type === "M_DOT_R14" ? { justifyContent: "flex-end" } : { justifyContent: "space-between" }}>
+                    {panel.type !== "M_DOT_R14" && <div className="more_info_button"
                       onClick={() => handleLink(panel.link)}
                     >
                       {t("MORE")}
                       <div className="button_arrows" />
-                    </div>
+                    </div>}
                     <div className="select_button"
                       onClick={() => { handlePanelChange(panel.type) }}
                     >

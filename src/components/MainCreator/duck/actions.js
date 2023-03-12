@@ -32,6 +32,10 @@ const changeIcons = item => ({
   type: types.CHANGE_ICONS, item
 })
 
+const changeRfid = item => ({
+  type: types.CHANGE_RFID, item
+})
+
 const changeFrames = item => ({
   type: types.CHANGE_FRAMES, item
 })
@@ -54,6 +58,7 @@ const actions = {
   resetPanelCut,
   changePanelText,
   changeIcons,
+  changeRfid,
   changeFrames,
   editFrameText,
   setBackEndReducers

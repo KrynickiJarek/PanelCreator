@@ -51,72 +51,77 @@ const IconHolder = ({
 
 
 
+  cannotRemoveStatusIcon,
+  statusIconExist,
+  highlightedForKeyboard,
   lastDroppedDot,
   lastDroppedIcon,
   lastDroppedSlashUp,
   lastDroppedSlashDown,
 
-  splitIconProportions
+  splitIconProportions,
+  lockedForKeyboard
 }) => {
-
   const handleDrop = (item) => {
-    const copyArr = iconHolders
-    copyArr.forEach((el) => {
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-    })
-    copyArr[index].lastDroppedIcon = item
-    copyArr[index].lastDroppedSlashDown = null
-    copyArr[index].lastDroppedSlashUp = null
-    changeIconHolders(copyArr)
+    if (!lockedForKeyboard) {
+      const copyArr = iconHolders
+      copyArr.forEach((el) => {
+        el.selectedDot = false;
+        el.selected = false;
+        el.selectedUp = false;
+        el.selectedDown = false;
+      })
+      copyArr[index].lastDroppedIcon = item
+      copyArr[index].lastDroppedSlashDown = null
+      copyArr[index].lastDroppedSlashUp = null
+      changeIconHolders(copyArr)
 
-    function Modulo(num, denom) {
-      if (num % denom >= 0) {
-        return Math.abs(num % denom);
+      function Modulo(num, denom) {
+        if (num % denom >= 0) {
+          return Math.abs(num % denom);
+        }
+        else {
+          return num % denom + denom;
+        }
       }
-      else {
-        return num % denom + denom;
-      }
-    }
 
-    const toDataURL = svg => fetch(svg)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result)
-        reader.onerror = reject
-        reader.readAsDataURL(blob)
-      }))
+      const toDataURL = svg => fetch(svg)
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        }))
 
-    toDataURL(iconHolders[index].lastDroppedIcon.image.default)
-      .then(svgBackEnd => {
-        let numberBackEnd = null
-        if (chosenModel.panelRotation) {
-          if (index % 3 === 0) {
-            numberBackEnd = index + 3
-          } else if (index % 3 === 2) {
-            numberBackEnd = index - 1
+      toDataURL(iconHolders[index].lastDroppedIcon.image.default)
+        .then(svgBackEnd => {
+          let numberBackEnd = null
+          if (chosenModel.panelRotation) {
+            if (index % 3 === 0) {
+              numberBackEnd = index + 3
+            } else if (index % 3 === 2) {
+              numberBackEnd = index - 1
+            } else {
+              numberBackEnd = index + 1
+            }
           } else {
             numberBackEnd = index + 1
           }
-        } else {
-          numberBackEnd = index + 1
-        }
 
-        let recordIcon = {
-          number: numberBackEnd,
-          type: 0,
-          rotation: Modulo((iconHolders[index].rotationIcon), 360),
-          svg: svgBackEnd,
-          proportion: 0
-        }
-        // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
-        const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 1 || element.type === 2)) })
-        copyIconsBackEnd.push(recordIcon)
-        changeIconsBackEnd(copyIconsBackEnd)
-      })
+          let recordIcon = {
+            number: numberBackEnd,
+            type: 0,
+            rotation: Modulo((iconHolders[index].rotationIcon), 360),
+            svg: svgBackEnd,
+            proportion: 0
+          }
+          // const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === index + 1) && (element.type === 0 || element.type === 1 || element.type === 2)) })
+          const copyIconsBackEnd = iconsBackEnd.filter(element => { return !((element.number === numberBackEnd) && (element.type === 0 || element.type === 1 || element.type === 2)) })
+          copyIconsBackEnd.push(recordIcon)
+          changeIconsBackEnd(copyIconsBackEnd)
+        })
+    }
   }
 
 
@@ -151,7 +156,7 @@ const IconHolder = ({
 
 
 
-  const isActive = isOver && canDrop;
+  const isActive = isOver && canDrop && !lockedForKeyboard;
   let styleDropping = {};
   let styleDroppingAni = {};
   let styleDroppingPulse = {};
@@ -174,7 +179,7 @@ const IconHolder = ({
   styleSignleFrameResize.transform = "scale(1)"
 
 
-  if (isActive) {
+  if (isActive && !lockedForKeyboard) {
     if (chosenColor.hex !== "#30a32c") {
       styleDropping = {
         backgroundColor: "rgb(40, 167, 69)",
@@ -210,7 +215,7 @@ const IconHolder = ({
     };
     warning = true;
   }
-  else if (canDrop || (selected && chosenTab === "icons")) {
+  else if ((canDrop && !lockedForKeyboard) || (selected && chosenTab === "icons")) {
     styleDropping = {
       backgroundColor: "rgb(236, 105, 92)",
       transform: "translateX(-50%) scale(1.45)",
@@ -223,6 +228,35 @@ const IconHolder = ({
         animation: "Ani 2s infinite",
       };
     }
+  }
+  else if (highlightedForKeyboard) {
+    if (chosenColor.hex !== "#30a32c") {
+      styleDropping = {
+        backgroundColor: "rgb(40, 167, 69)",
+        transform: "translateX(-50%) scale(1.45)",
+      };
+      if (animations) {
+        styleDroppingPulse = {
+          animation: "Ani 2s infinite",
+          filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+        };
+      }
+    } else {
+      styleDropping = {
+        backgroundColor: "rgb( 32, 114, 30)",
+        transform: "translateX(-50%) scale(2)",
+      };
+      if (animations) {
+        styleDroppingPulse = {
+          animation: "Ani 2s infinite",
+          filter: "invert(34%) sepia(98%) saturate(353%) hue-rotate(70deg) brightness(87%) contrast(102%)"
+        };
+      }
+    };
+    styleDroppingAni = {
+      transform: "translateX(-50%) scale(1.75)",
+    }
+
   }
 
   const [{ isOverToShow }, over] = useDrop({
@@ -317,6 +351,8 @@ const IconHolder = ({
           show={show}
           index={index}
           lastDroppedDot={lastDroppedDot}
+          statusIconExist={statusIconExist}
+          cannotRemoveStatusIcon={cannotRemoveStatusIcon}
           chosenColor={chosenColor}
           rotationDot={rotationDot}
           selectedDot={selectedDot}
@@ -339,6 +375,7 @@ const IconHolder = ({
                   chosenColor={chosenColor}
                   rotationIcon={rotationIcon}
                   panelRotation={panelRotation}
+                  lockedForKeyboard={lockedForKeyboard}
                   visual={visual}
                 />
               }
@@ -347,12 +384,7 @@ const IconHolder = ({
                   style={chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
                     : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
                 />)}
-              {/* {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
-                (<img src={Slash} alt="slash" className="slash"
-                  style={visual ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10) drop-shadow( 0 0 4px rgba(255, 255, 255, 1))" }
-                    : chosenColor.iconColor === "white" ? { ...styleScale, filter: "grayscale(100%) invert(1) brightness(10)" }
-                      : { ...styleScale, filter: "grayscale(100%) brightness(0)" }}
-                />)} */}
+
 
               {((lastDroppedSlashUp || lastDroppedSlashDown) && !show && !isActive) &&
                 (<img src={Slash} alt="slash" className="slash"
@@ -365,46 +397,49 @@ const IconHolder = ({
 
 
 
-              {(lastDroppedIcon && (upActive || downActive || isActive || removeIcons || (removeIcon && selected))) &&
+              {(lastDroppedIcon && !lockedForKeyboard && (upActive || downActive || isActive || removeIcons || (removeIcon && selected))) &&
                 (<img src={Remove} alt="remove" className="remove" style={styleScale} />)}
 
             </div>
           </div>
+
         </div>
+        {!lockedForKeyboard &&
+          <>
+            <IconHolderSlashUp
+              onUpActive={(income) => setUpActive(income)}
+              show={show}
+              showNow={showNow}
+              warning={warning}
+              index={index}
+              lastDroppedSlashUp={lastDroppedSlashUp}
+              chosenColor={chosenColor}
+              rotationUp={rotationUp}
+              selectedUp={selectedUp}
+              singleFrame={singleFrame}
+              singleFrameTemp={singleFrameTemp}
+              panelRotation={panelRotation}
+              visual={visual}
+              splitIconProportions={splitIconProportions}
+            />
 
-        <IconHolderSlashUp
-          onUpActive={(income) => setUpActive(income)}
-          show={show}
-          showNow={showNow}
-          warning={warning}
-          index={index}
-          lastDroppedSlashUp={lastDroppedSlashUp}
-          chosenColor={chosenColor}
-          rotationUp={rotationUp}
-          selectedUp={selectedUp}
-          singleFrame={singleFrame}
-          singleFrameTemp={singleFrameTemp}
-          panelRotation={panelRotation}
-          visual={visual}
-          splitIconProportions={splitIconProportions}
-        />
-
-        <IconHolderSlashDown
-          onDownActive={(income) => setDownActive(income)}
-          show={show}
-          showNow={showNow}
-          warning={warning}
-          index={index}
-          lastDroppedSlashDown={lastDroppedSlashDown}
-          chosenColor={chosenColor}
-          rotationDown={rotationDown}
-          selectedDown={selectedDown}
-          singleFrame={singleFrame}
-          singleFrameTemp={singleFrameTemp}
-          panelRotation={panelRotation}
-          visual={visual}
-          splitIconProportions={splitIconProportions}
-        />
+            <IconHolderSlashDown
+              onDownActive={(income) => setDownActive(income)}
+              show={show}
+              showNow={showNow}
+              warning={warning}
+              index={index}
+              lastDroppedSlashDown={lastDroppedSlashDown}
+              chosenColor={chosenColor}
+              rotationDown={rotationDown}
+              selectedDown={selectedDown}
+              singleFrame={singleFrame}
+              singleFrameTemp={singleFrameTemp}
+              panelRotation={panelRotation}
+              visual={visual}
+              splitIconProportions={splitIconProportions}
+            />
+          </>}
       </div>
     </>
   );

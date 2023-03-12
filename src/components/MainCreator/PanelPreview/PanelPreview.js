@@ -33,7 +33,7 @@ import Zoomout from "../../../assets/scale/zoomout.svg"
 import Alert from "../../../assets/side/alert.svg"
 
 import Savetopdf from "../../../assets/side/savetopdf.svg"
-import Savetopdfdebug from "../../../assets/side/savetopdfdebug.svg"
+// import Savetopdfdebug from "../../../assets/side/savetopdfdebug.svg"
 import Savetopdfload from "../../../assets/side/savetopdf_load.svg"
 import Downloadpdfarrow from "../../../assets/side/downloadpdf_arrow.svg"
 import Saveandback from "../../../assets/side/saveandback.svg"
@@ -68,6 +68,7 @@ import PropoportionsTo5050 from "../../../assets/side/proportions_to_50_50.svg"
 
 import Submitinput from "../../../assets/preview/submitinput.svg"
 import Clearinput from "../../../assets/preview/clearinput.svg"
+import Resizeinput from "../../../assets/preview/resizeinput.svg"
 import Submitinputdark from "../../../assets/preview/submitinputdark.svg"
 import Removeall from "../../../assets/preview/remove.svg"
 
@@ -85,10 +86,13 @@ import Minusuni from "../../../assets/lcd/minusuni.svg"
 import Leftuni from "../../../assets/lcd/leftuni.svg"
 import Rightuni from "../../../assets/lcd/rightuni.svg"
 import noDotUni from "../../../assets/lcd/noDotUni.svg"
+import Rfid_icon from "../../../assets/lcd/rfid.svg"
 
 
 import IconHolder from './IconHolder/IconHolder';
 import PanelPreviewFullScreen from './PanelPreviewFullScreen';
+
+import keyboardsSets from "../PanelEditor/IconEditor/keyboardsSets"
 
 const PanelPreview = ({
   frameTitleFlag,
@@ -99,6 +103,7 @@ const PanelPreview = ({
   resetColor,
   resetCut,
   chosenTab,
+  chosenSubtab,
   resetTab,
   resetSubtab,
   chosenModel,
@@ -110,6 +115,7 @@ const PanelPreview = ({
   chosenFrameFontWeight,
   chosenFrameFontInfo,
   chosenFrameShape,
+  chosenRfidShape,
   addNewFrameState,
   addNewFrame,
   removeFrameState,
@@ -124,10 +130,12 @@ const PanelPreview = ({
   changeFrameFont,
   changeFrameFontWeight,
   changeFrameShape,
+  changeRfidShape,
   changeFramesShapeToSharp,
   changeFramesShapeToRound,
   overFrameReRender,
   textFrameRender,
+  overFrameRender,
   overFrameAll,
   chosenTextFont,
   chosenTextWeight,
@@ -153,6 +161,7 @@ const PanelPreview = ({
   changePanelNameBackEnd,
   changePanelTextBackEnd,
   changeIconsBackEnd,
+  changeRfidBackEnd,
   resetPanelColorBackEnd,
   changeFramesBackEnd,
   panelTextBackEnd,
@@ -194,6 +203,19 @@ const PanelPreview = ({
   setFullScreen,
   setAllIcons,
   allIcons,
+  ownLogo,
+  updateOwnLogo,
+  rfidType,
+  setRfidType,
+  rfidText,
+  rfidTextFont,
+  rfidTextFontWeight,
+  rfidTextFontSize,
+  setRfidText,
+  setRfidTextFont,
+  setRfidTextFontWeight,
+  setRfidTextFontSize,
+  rfidBackEnd
 }) => {
 
 
@@ -225,6 +247,8 @@ const PanelPreview = ({
   const [overDescriptions, setOverDescriptions] = useState(false)
   const [overUpDescriptions, setOverUpDescriptions] = useState(false)
 
+  const [isFocusedInputRfid, setIsFocusedInputRfid] = useState(false)
+
   const [isFocusedInputIndex, setIsFocusedInputIndex] = useState(null)
   const [isFocusedInputSide, setIsFocusedInputSide] = useState(null)
   const [rerenderTextWarning, setRerenderTextWarning] = useState(false)
@@ -236,8 +260,9 @@ const PanelPreview = ({
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
 
-  const [lcdShow, setLcdShow] = useState(chosenModel.lcdScreen ? true : false)
-  const [lcdNew, setLcdNew] = useState((chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? true : false)
+  const [lcdShow, setLcdShow] = useState((chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide") ? true : false)
+  const [lcdNew, setLcdNew] = useState(chosenModel.lcdScreen?.lcdType === "slide" ? true : false)
+  const [rfid, setRfid] = useState(chosenModel.lcdScreen?.lcdType === "rfid" ? true : false)
   const [hideAll, setHideAll] = useState(true)
 
   const [removeAll, setRemoveAll] = useState(false)
@@ -250,7 +275,28 @@ const PanelPreview = ({
   const [globalProportions, setGlobalProportions] = useState(0)
   const [areThereAnySplit, setAreThereAnySplit] = useState(false)
   const [isAnySplitSelected, setIsAnySplitSelected] = useState(3)
-  const allChar = [" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "/", "-", "a", "ą", "b", "c", "ć", "d", "e", "ę", "f", "g", "h", "i", "j", "k", "l", "ł", "m", "n", "ń", "o", "ó", "p", "r", "s", "ś", "t", "u", "w", "y", "z", "ź", "ż", "q", "x", "v", "A", "Ą", "B", "C", "Ć", "D", "E", "Ę", "F", "G", "H", "I", "J", "K", "L", "Ł", "M", "N", "Ń", "O", "Ó", "P", "R", "S", "Ś", "T", "U", "W", "Y", "Z", "Ź", "Ż", "Q", "V", "X", "à", "â", "ä", "ô", "é", "è", "ë", "ê", "ï", "î", "ç", "ù", "û", "ü", "ÿ", "æ", "œ", "À", "Â", "Ä", "Ô", "É", "È", "Ë", "Ê", "Ï", "Î", "Ÿ", "Ç", "Ù", "Û", "Ü", "Æ", "Œ", "ö", "ü", "ß", "Ö", "Ü", "ẞ", "à", "è", "ì", "í", "î", "ò", "ù", "ú", "À", "È", "Ì", "Í", "Î", "Ò", "Ù", "Ú", "á", "ñ", "ú", "ü", "Á", "Ñ", "Ú", "Ü", 'ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'ل', 'م', 'ن', 'و', 'ه', 'ي', "č", "ď", "ĺ", "ľ", "ň", "ŕ", "š", "ť", "ú", "ý", "ž", "Č", "Ď", "Ĺ", "Ľ", "Ň", "Ŕ", "Š", "Ť", "Ú", "Ý", "Ž"];
+  const [tooLongTextDownArray, setTooLongTextDownArray] = useState([])
+  const [tooLongTextUpArray, setTooLongTextUpArray] = useState([])
+  const [tooLongTextFrameArray, setTooLongTextFrameArray] = useState([])
+  const allChar = [
+    "!",
+    "@",
+    "#",
+    "$",
+    "%",
+    "^",
+    "&",
+    "*",
+    "_",
+    "-",
+    "+",
+    "/",
+    `/`,
+    `(`,
+    `)`,
+    `[`,
+    `]`,
+    "=", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "/", "-", "a", "ą", "b", "c", "ć", "d", "e", "ę", "f", "g", "h", "i", "j", "k", "l", "ł", "m", "n", "ń", "o", "ó", "p", "r", "s", "ś", "t", "u", "w", "y", "z", "ź", "ż", "q", "x", "v", "A", "Ą", "B", "C", "Ć", "D", "E", "Ę", "F", "G", "H", "I", "J", "K", "L", "Ł", "M", "N", "Ń", "O", "Ó", "P", "R", "S", "Ś", "T", "U", "W", "Y", "Z", "Ź", "Ż", "Q", "V", "X", "à", "â", "ä", "ô", "é", "è", "ë", "ê", "ï", "î", "ç", "ù", "û", "ü", "ÿ", "æ", "œ", "À", "Â", "Ä", "Ô", "É", "È", "Ë", "Ê", "Ï", "Î", "Ÿ", "Ç", "Ù", "Û", "Ü", "Æ", "Œ", "ö", "ü", "ß", "Ö", "Ü", "ẞ", "à", "è", "ì", "í", "î", "ò", "ù", "ú", "À", "È", "Ì", "Í", "Î", "Ò", "Ù", "Ú", "á", "ñ", "ú", "ü", "Á", "Ñ", "Ú", "Ü", 'ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'ل', 'م', 'ن', 'و', 'ه', 'ي', "č", "ď", "ĺ", "ľ", "ň", "ŕ", "š", "ť", "ú", "ý", "ž", "Č", "Ď", "Ĺ", "Ľ", "Ň", "Ŕ", "Š", "Ť", "Ú", "Ý", "Ž"];
   const checkCharracters = (text) => {
     if (!text.split('').every(char => allChar.includes(char))) {
       showAlert(200);
@@ -277,6 +323,47 @@ const PanelPreview = ({
     return () => clearTimeout(resizeTimeout);
   }, [panelContainerHeight, panelContainerWidth, chosenModel]);
 
+
+  const rfidInput = document.querySelector("#text_rfid_input")
+  const rfidWrapperBorderStyle = {};
+  rfidWrapperBorderStyle.border = "none";
+  rfidWrapperBorderStyle.height = `${(chosenModel.lcdScreen.lcdHeight - 5) * sc}px`;
+  rfidWrapperBorderStyle.width = `${(chosenModel.lcdScreen.lcdWidth - 5) * sc}px`;
+  rfidWrapperBorderStyle.position = "absolute";
+  rfidWrapperBorderStyle.top = `${2.5 * sc}px`;
+  rfidWrapperBorderStyle.left = `${2.5 * sc}px`;
+
+  if (((rfidInput?.clientWidth) / sc) > 60) {
+    rfidWrapperBorderStyle.borderLeft = "3px solid rgb(220, 53, 69)";
+    rfidWrapperBorderStyle.borderRight = "3px solid rgb(220, 53, 69)";
+  }
+
+  const textIconWrapperBorderStyle = {}
+  textIconWrapperBorderStyle.border = "none";
+  textIconWrapperBorderStyle.height = `${5 * sc}px`;
+  textIconWrapperBorderStyle.width = `${15 * sc}px`;
+  textIconWrapperBorderStyle.position = "absolute";
+  textIconWrapperBorderStyle.left = "50%";
+  textIconWrapperBorderStyle.transform = "translateX(-50%)"
+
+  useEffect(() => {
+    if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      let checkWarnings = warnings.filter(element => element.code === 9)
+      if (checkWarnings.length === 0) {
+        pushWarnings(9)
+      }
+    } else {
+      filterWarnings(9)
+    }
+    // eslint-disable-next-line
+  }, [rfidText, rfidType]);
+
+  useEffect(() => {
+    if (rfidType !== 2) {
+      setIsFocusedInputRfid(false)
+    }
+    // eslint-disable-next-line
+  }, [rfidType]);
 
 
 
@@ -323,29 +410,30 @@ const PanelPreview = ({
       changeFrameHoldersTemp(null)
       allowFrameTitle(false)
       frameTitle(false)
+      updateOwnLogo(null)
+      setRfidType(0)
 
-
+      const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
       const modeltimeout = setTimeout(() => {
         setHideAll(true)
         chosenModel.dotLocation.forEach(element => {
           arrIconHolders.push({
-            flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+            flag: element, lockedForKeyboard: false, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
             selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
             textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
-            splitIconProportions: 0
+            splitIconProportions: 0, highlightedForKeyboard: false
           })
         });
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrNewFrame.push(element)
         });
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrNewFrameHide.push(element)
         });
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrNewFrameChange.push(element)
         });
-
-        chosenModel.dotLocation.forEach(element => {
+        modelSource.forEach(element => {
           arrTempFrame.frameArr.push({
             flag: element,
             rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -357,11 +445,12 @@ const PanelPreview = ({
         setNewFrameHide(arrNewFrameHide)
         setNewFrameChange(arrNewFrameChange)
         setTempFrame(arrTempFrame)
-        changeIconHolders(arrIconHolders);
+
         changeFrameText("")
         setTextFrame(false)
-        chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false);
-        (chosenModel.lcdScreen && chosenModel.lcdScreen.lcdType === "slide") ? setLcdNew(true) : setLcdNew(false);
+        chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide" ? setLcdShow(true) : setLcdShow(false);
+        chosenModel.lcdScreen?.lcdType === "slide" ? setLcdNew(true) : setLcdNew(false);
+        chosenModel.lcdScreen?.lcdType === "rfid" ? setRfid(true) : setRfid(false);
         setVisualSmooth(false)
         changeFrameHolders([])
         changeFramesBackEnd([])
@@ -465,8 +554,14 @@ const PanelPreview = ({
                 changeIconsBackEnd(copyIconsBackEnd)
               })
           })
+          changeIconHolders(arrIconHolders);
+          changeRfidBackEnd([])
+        } else if (chosenModel.lcdScreen.lcdType === "rfid") {
+          fillR14(arrIconHolders)
         } else {
+          changeIconHolders(arrIconHolders);
           changeIconsBackEnd([])
+          changeRfidBackEnd([])
         }
         // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
         changePanelTextBackEnd([])
@@ -479,22 +574,22 @@ const PanelPreview = ({
 
 
   useEffect(() => {
+    const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
     const arrNewFrame = [];
     const arrNewFrameHide = [];
     const arrNewFrameChange = [];
     const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
-    const arrIconHolders = iconHolders
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrNewFrame.push(element)
     });
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrNewFrameHide.push(element)
     });
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrNewFrameChange.push(element)
     });
 
-    chosenModel.dotLocation.forEach(element => {
+    modelSource.forEach(element => {
       arrTempFrame.frameArr.push({
         flag: element,
         rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -502,12 +597,14 @@ const PanelPreview = ({
         fh: 0, fw: 0, mt: 0, mb: 0, ml: 0, mr: 0,
       })
     });
-    arrIconHolders.forEach(element => element.singleFrameTemp = false)
     setNewFrame(arrNewFrame)
     setNewFrameHide(arrNewFrameHide)
     setNewFrameChange(arrNewFrameChange)
     setTempFrame(arrTempFrame)
+
+    const arrIconHolders = iconHolders
     setVisualSmooth(false)
+    arrIconHolders.forEach(element => element.singleFrameTemp = false)
     changeIconHolders(arrIconHolders);
     resetTab("model")
     resetSubtab("default")
@@ -517,7 +614,17 @@ const PanelPreview = ({
   }, [dashboard]);
 
 
-
+  useEffect(() => {
+    if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
+      const checkWarningsText = warnings.filter(element => element.code === 2)
+      if (checkWarningsText.length === 0) {
+        pushWarnings(2)
+      }
+    } else {
+      filterWarnings(2)
+    }
+    // eslint-disable-next-line
+  }, [tooLongTextDownArray, tooLongTextUpArray]);
 
   useEffect(() => {
     const copyIconHolders = iconHolders.filter(element => element.lastDroppedDot !== null)
@@ -530,15 +637,16 @@ const PanelPreview = ({
       filterWarnings(1)
     }
 
-    const copyIconHoldersText = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9)
-    if (copyIconHoldersText.length > 0) {
-      const checkWarningsText = warnings.filter(element => element.code === 2)
-      if (checkWarningsText.length === 0) {
-        pushWarnings(2)
-      }
-    } else {
-      filterWarnings(2)
-    }
+    // const copyIconHoldersText = iconHolders.filter(element => element.textUp.length > 9 || element.textDown.length > 9) //zastąpione powyżej
+    // if (copyIconHoldersText.length > 0) {
+    //   const checkWarningsText = warnings.filter(element => element.code === 2)
+    //   if (checkWarningsText.length === 0) {
+    //     pushWarnings(2)
+    //   }
+    // } else {
+    //   filterWarnings(2)
+    // }
+
 
     const copyIconHoldersSelected = iconHolders.filter(element => element.selectedDot || element.selected || element.selectedUp || element.selectedDown)
     if (copyIconHoldersSelected.length > 0) {
@@ -555,11 +663,13 @@ const PanelPreview = ({
       setIsAnySplitSelected(3)
     }
 
-    if (iconsBackEnd.length > 0) {
+    const copyIconHoldersForAnyIcons = iconHolders.filter(element => element.lastDroppedIcon !== null || element.lastDroppedSlashUp !== null || element.lastDroppedSlashDown !== null || element.lastDroppedDot !== null)
+    if (copyIconHoldersForAnyIcons.length > 0) {
       setAreThereAnyIcons(true)
     } else {
       setAreThereAnyIcons(false)
     }
+
 
     if (iconsBackEnd.filter(element => element.type === 1 || element.type === 2).length > 0) {
       setAreThereAnySplit(true)
@@ -589,9 +699,9 @@ const PanelPreview = ({
 
 
   useEffect(() => {
-    const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
-
-    if (copyFrameHoldersText.length > 0 || frameText.length > 9) {
+    // const copyFrameHoldersText = frameHolders.filter(element => element.type === "multi").filter(el => el.framePrint.text.length > 9)
+    // if (copyFrameHoldersText.length > 0 || frameText.length > 9) {
+    if (tooLongTextFrameArray.length) {
       const checkWarningsText = warnings.filter(element => element.code === 5)
       if (checkWarningsText.length === 0) {
         pushWarnings(5)
@@ -600,7 +710,8 @@ const PanelPreview = ({
       filterWarnings(5)
     }
     // eslint-disable-next-line
-  }, [textFrameRender, addNewFrameState, removeFrameState]);
+  }, [tooLongTextFrameArray]);
+  // }, [textFrameRender, addNewFrameState, removeFrameState, tooLongTextFrameArray]);
 
 
 
@@ -648,12 +759,19 @@ const PanelPreview = ({
     } else {
       filterWarnings(6)
     }
+
+    checkInputsWidth()
     // eslint-disable-next-line
   }, [iconHolders, iconHoldersRender, textFrameRender, addNewFrameState]);
 
+  useEffect(() => {
+    checkFrameInputsWidth()
+    // eslint-disable-next-line
+  }, [frameHolders, textFrameRender, addNewFrameState, overFrameRender]);
 
 
-  useEffect(() => { //NATALECZKA
+
+  useEffect(() => {
 
     const checkProportions = []
     iconHolders.forEach((element, index) => {
@@ -678,7 +796,6 @@ const PanelPreview = ({
     }
     //eslint-disable-next-line
   }, [iconHolders, iconHoldersRender, addNewFrameState]);
-
 
 
   useEffect(() => {
@@ -710,16 +827,14 @@ const PanelPreview = ({
     // }
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // console.log("chosenTextFont", chosenTextFont)
+    // console.log("chosenTextWeight", chosenTextWeight)
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if (element.number === isFocusedInputIndex + 1) {
         if (element.type === 0 && isFocusedInputSide === "down") {
-          // element.font = chosenTextFont
-          // element.fontWeight = chosenTextWeight
           element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
         } else if (element.type === 1 && isFocusedInputSide === "up") {
-          // element.font = chosenTextFont
-          // element.fontWeight = chosenTextWeight
           element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
         }
       }
@@ -737,6 +852,13 @@ const PanelPreview = ({
     } else {
       filterWarnings(3)
     }
+    if (isFocusedInputRfid) {
+      setRfidTextFont(chosenTextFont)
+      setRfidTextFontWeight(chosenTextWeight)
+      const rfidBackendCopy = rfidBackEnd
+      rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+      changeRfidBackEnd(rfidBackendCopy)
+    }
     // ---------------------------------------------------------------------------------------------------------------/BACKEND---------------------
     // eslint-disable-next-line
   }, [isFocusedInputIndex, isFocusedInputSide, chosenTextFont, chosenTextWeight, rerenderTextWarning]);
@@ -748,18 +870,22 @@ const PanelPreview = ({
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
 
-      chosenModel.dotLocation.forEach(element => {
+
+      const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
+
+
+      modelSource.forEach(element => {
         arrNewFrame.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameHide.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameChange.push(element)
       });
 
 
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrTempFrame.frameArr.push({
           flag: element,
           rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -957,12 +1083,11 @@ const PanelPreview = ({
     if (chosenTab !== "text") {
       setIsFocusedInputIndex(null)
       setIsFocusedInputSide(null)
+      setIsFocusedInputRfid(false)
     } else if (chosenTab !== "frame") {
       setIsFocusedInputFrame(false)
     }
   }, [chosenTab]);
-
-
 
   useEffect(() => {
     if (alertAnswer === 2) {
@@ -982,7 +1107,7 @@ const PanelPreview = ({
       handleClearAllText()
     }
     if (alertAnswer === 8) {
-      printPdf()
+      handleTryPrintPdfAfterNoAllIconsConfirm()
     }
     // eslint-disable-next-line 
   }, [alertAnswer])
@@ -1159,6 +1284,44 @@ const PanelPreview = ({
   universalIconStyle.transition = "400ms ease";
 
 
+
+  let rfidIconStyle = {};
+
+  rfidIconStyle.height = `${8 * sc}px`;
+  rfidIconStyle.width = `${10.7 * sc}px`;
+  rfidIconStyle.position = "absolute";
+  rfidIconStyle.transform = "translate(-50%, -50%)"
+  rfidIconStyle.top = "50%";
+  rfidIconStyle.left = "50%";
+
+  let ownLogoStyle = {};
+  ownLogoStyle.height = `${20 * sc}px`;
+  ownLogoStyle.width = `${40 * sc}px`;
+  ownLogoStyle.opacity = '1'
+
+  if (!ownLogo || rfidType !== 1) {
+    ownLogoStyle.opacity = '0'
+  }
+
+  if (rfidType !== 0) {
+    rfidIconStyle.top = `1px`;
+    rfidIconStyle.width = `${6 * sc}px`;
+  }
+
+  let rfidInputStyle = {}
+  rfidInputStyle.opacity = "0"
+  rfidInputStyle.position = "absolute";
+  rfidInputStyle.transform = "translate(-50%, -50%)"
+  rfidInputStyle.top = "50%";
+  rfidInputStyle.left = "50%";
+
+  if (rfidType === 2) {
+    rfidInputStyle.opacity = "1"
+  }
+
+
+
+
   let visualStyle = {}
   visualStyle.width = `${chosenModel.width * sc}px`;
   visualStyle.height = `${chosenModel.height * sc}px`;
@@ -1279,6 +1442,78 @@ const PanelPreview = ({
     lcdStyle.left = `${(chosenModel.lcdScreen.lcdLeft + 0.9) * sc}px`;
   }
 
+  const rfidStyle = {};
+  rfidStyle.transition = "400ms ease";
+  rfidStyle.border = "none";
+  rfidStyle.height = `${chosenModel.lcdScreen.lcdHeight * sc}px`;
+  rfidStyle.width = `${chosenModel.lcdScreen.lcdWidth * sc}px`;
+  rfidStyle.top = `${chosenModel.lcdScreen.lcdTop * sc}px`;
+  rfidStyle.left = `${chosenModel.lcdScreen.lcdLeft * sc}px`;
+
+  const rfidBorderStyle = {};
+  const rfidBorderTopLeftStyle = {};
+  const rfidBorderTopRightStyle = {};
+  const rfidBorderBottomRightStyle = {};
+  const rfidBorderBottomLeftStyle = {};
+
+  rfidBorderStyle.transition = "400ms ease";
+  rfidBorderStyle.border = "2px solid black";
+  rfidBorderStyle.height = "50%";
+  rfidBorderStyle.width = "50%";
+  rfidBorderStyle.position = "absolute";
+  rfidBorderStyle.borderColor = chosenColor.iconColor;
+
+
+
+
+  rfidBorderTopLeftStyle.borderRight = "none"
+  rfidBorderTopLeftStyle.borderBottom = "none"
+  rfidBorderTopLeftStyle.top = "0"
+  rfidBorderTopLeftStyle.left = "0"
+
+  rfidBorderTopRightStyle.borderLeft = "none"
+  rfidBorderTopRightStyle.borderBottom = "none"
+  rfidBorderTopRightStyle.top = "0"
+  rfidBorderTopRightStyle.right = "0"
+
+  rfidBorderBottomRightStyle.borderLeft = "none"
+  rfidBorderBottomRightStyle.borderTop = "none"
+  rfidBorderBottomRightStyle.bottom = "0"
+  rfidBorderBottomRightStyle.right = "0"
+
+  rfidBorderBottomLeftStyle.borderRight = "none"
+  rfidBorderBottomLeftStyle.borderTop = "none"
+  rfidBorderBottomLeftStyle.bottom = "0"
+  rfidBorderBottomLeftStyle.left = "0"
+
+
+
+  if (visual) {
+    rfidBorderStyle.borderColor = "white";
+    rfidBorderTopLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderTopRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderBottomRightStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+    rfidBorderBottomLeftStyle.filter = "brightness(10) drop-shadow( 0 0 2px rgba(255, 255, 255, 1))";
+  }
+  if (chosenRfidShape === "sharp") {
+    rfidBorderTopLeftStyle.borderRadius = "0";
+    rfidBorderTopRightStyle.borderRadius = "0";
+    rfidBorderBottomRightStyle.borderRadius = "0";
+    rfidBorderBottomLeftStyle.filborderRadiuster = "0";
+  }
+  if (chosenRfidShape === "round") {
+    rfidBorderTopLeftStyle.borderRadius = `${3 * sc}px 0 0 0`;
+    rfidBorderTopRightStyle.borderRadius = `0 ${3 * sc}px 0 0`;
+    rfidBorderBottomRightStyle.borderRadius = `0 0 ${3 * sc}px 0`;
+    rfidBorderBottomLeftStyle.borderRadius = `0 0 0 ${3 * sc}px`;
+  }
+
+
+  if (rfidType !== 0) {
+    rfidBorderTopLeftStyle.width = `${(((chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`;
+    rfidBorderTopRightStyle.width = `${(((chosenModel.lcdScreen.lcdWidth * 0.5) - 5) * sc)}px`;
+  }
+
 
   const lcdIconStyle = {};
   lcdIconStyle.height = `${7 * sc}px`;
@@ -1296,6 +1531,17 @@ const PanelPreview = ({
   autoResizeInputStyle.display = "inline-grid";
   autoResizeInputStyle.alignItems = "center";
   autoResizeInputStyle.justifyItems = "center";
+
+  const autoResizeRfidInputStyle = {};
+  autoResizeRfidInputStyle.fontSize = `${rfidTextFontSize * sc}px`
+  autoResizeRfidInputStyle.lineHeight = `${rfidTextFontSize * sc}px`
+  autoResizeRfidInputStyle.height = `${rfidTextFontSize * 1.44 * sc}px`;
+  autoResizeRfidInputStyle.width = `${rfidTextFontSize * 2 * sc}px`;
+  autoResizeRfidInputStyle.transition = "400ms ease";
+  autoResizeRfidInputStyle.position = "absolute";
+  autoResizeRfidInputStyle.display = "inline-grid";
+  autoResizeRfidInputStyle.alignItems = "center";
+  autoResizeRfidInputStyle.justifyItems = "center";
 
   const textStyle = {};
   textStyle.backgroundColor = "transparent";
@@ -1331,6 +1577,14 @@ const PanelPreview = ({
   if (visual) {
     textStyle.color = "white";
     textStyle.textShadow = "0 0 5px rgba(255, 255, 255, 1)";
+  }
+  const textRfidStyle = {};
+  textRfidStyle.fontSize = `${rfidTextFontSize * sc}px`
+  textRfidStyle.lineHeight = `${rfidTextFontSize * sc}px`
+  textRfidStyle.height = `${rfidTextFontSize * 1.45 * sc}px`;
+
+  if (overDescriptions) {
+    textRfidStyle.color = chosenColor.iconColor;
   }
 
 
@@ -1410,33 +1664,34 @@ const PanelPreview = ({
     setFrameTitles(false)
     const modeltimeout = setTimeout(() => {
       setHideAll(true)
+
+      const modelSource = chosenModel.lcdScreen.lcdType === "rfid" ? chosenModel.dotLocationUnlocked : chosenModel.dotLocation
+
       chosenModel.dotLocation.forEach(element => {
         tempArr.push({
-          flag: element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
+          flag: element, lockedForKeyboard: false, cannotRemoveStatusIcon: false, statusIconExist: !!element, lastDroppedDot: null, lastDroppedIcon: null, lastDroppedSlashUp: null, lastDroppedSlashDown: null,
           selectedDot: false, selected: false, selectedUp: false, selectedDown: false, rotationDot: 0, rotationIcon: 0, rotationUp: 0, rotationDown: 0,
           textUp: "", fontUp: null, fontUpWeight: null, textDown: "", fontDown: null, fontDownWeight: null, singleFrameTemp: false, singleFrame: false,
-          splitIconProportions: 0
+          splitIconProportions: 0, highlightedForKeyboard: false
         })
       });
-      changeIconHolders(tempArr);
-
       const arrNewFrame = [];
       const arrNewFrameHide = [];
       const arrNewFrameChange = [];
       const arrTempFrame = { textX: 0, textY: 0, frameArr: [] };
 
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrame.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameHide.push(element)
       });
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrNewFrameChange.push(element)
       });
 
 
-      chosenModel.dotLocation.forEach(element => {
+      modelSource.forEach(element => {
         arrTempFrame.frameArr.push({
           flag: element,
           rtl: 0, rtr: 0, rbr: 0, rbl: 0,
@@ -1451,8 +1706,12 @@ const PanelPreview = ({
       changeFrameText("")
       changeFrameHolders([])
       changeFramesBackEnd([])
-
-
+      updateOwnLogo(null)
+      setRfidType(0)
+      setRfidText('')
+      setRfidTextFont(null)
+      setRfidTextFontSize(5)
+      setRfidTextFontWeight('')
 
       const copyWarnings = warnings.filter(warning => warning.code === 7)
       updateWarnings(copyWarnings)
@@ -1463,7 +1722,7 @@ const PanelPreview = ({
       if (chosenModel.lcdScreen.lcdType === "slide") {
         const copyIconsBackEnd = []
 
-        const universalIconArr = [
+        const universalIconAndNoDotsArr = [
           {
             icon: Minusuni,
             number: 1,
@@ -1526,7 +1785,7 @@ const PanelPreview = ({
           },
         ]
 
-        universalIconArr.forEach(element => {
+        universalIconAndNoDotsArr.forEach(element => {
           const toDataURL = svg => fetch(svg)
             .then(response => response.blob())
             .then(blob => new Promise((resolve, reject) => {
@@ -1549,13 +1808,20 @@ const PanelPreview = ({
               changeIconsBackEnd(copyIconsBackEnd)
             })
         })
+        changeIconHolders(tempArr);
+        changeRfidBackEnd([])
+
+      } else if (chosenModel.lcdScreen.lcdType === "rfid") {
+        fillR14(tempArr)
       } else {
+        changeIconHolders(tempArr);
         changeIconsBackEnd([])
+        changeRfidBackEnd([])
       }
       // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
       changePanelTextBackEnd([])
-      setTextFrame(false)
-      chosenModel.lcdScreen ? setLcdShow(true) : setLcdShow(false)
+      setTextFrame(false);
+      chosenModel.lcdScreen?.lcdType === "slide" || chosenModel.lcdScreen?.lcdType === "noslide" ? setLcdShow(true) : setLcdShow(false);
     }, 300);
     return () => clearTimeout(modeltimeout);
   }
@@ -1571,27 +1837,30 @@ const PanelPreview = ({
     setAlertAnswer(null)
     showRemoveIcons(false)
     const copyArr = iconHolders;
+    const copyFrontendArrayForBackend = iconHolders;
     copyArr.forEach((el) => {
-      el.lastDroppedDot = null;
-      el.lastDroppedIcon = null;
-      el.lastDroppedSlashUp = null;
-      el.lastDroppedSlashDown = null;
-      el.selectedDot = false;
-      el.selected = false;
-      el.selectedUp = false;
-      el.selectedDown = false;
-      el.rotationIcon = false;
-      el.rotationUp = 0;
-      el.rotationDown = 0;
-      el.rotationDot = false;
-      el.splitIconProportions = 0;
+      if (!el.lockedForKeyboard) {
+        el.lastDroppedDot = null;
+        el.lastDroppedIcon = null;
+        el.lastDroppedSlashUp = null;
+        el.lastDroppedSlashDown = null;
+        el.selectedDot = false;
+        el.selected = false;
+        el.selectedUp = false;
+        el.selectedDown = false;
+        el.rotationIcon = false;
+        el.rotationUp = 0;
+        el.rotationDown = 0;
+        el.rotationDot = false;
+        el.splitIconProportions = 0;
+      }
     })
     changeIconHolders(copyArr)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     if (chosenModel.lcdScreen.lcdType === "slide") {
       const copyIconsBackEnd = []
 
-      const universalIconArr = [
+      const universalIconAndNoDotsArr = [
         {
           icon: Minusuni,
           number: 1,
@@ -1653,8 +1922,30 @@ const PanelPreview = ({
           type: 3
         },
       ]
+      copyFrontendArrayForBackend.forEach((element, index) => {
+        if (!element.statusIconExist && element.flag) {
+          let numberBackEnd = null
+          if (chosenModel.panelRotation) {
+            if (index % 3 === 0) {
+              numberBackEnd = index + 3
+            } else if (index % 3 === 2) {
+              numberBackEnd = index - 1
+            } else {
+              numberBackEnd = index + 1
+            }
+          } else {
+            numberBackEnd = index + 1
+          }
+          universalIconAndNoDotsArr.push({
+            icon: noDotUni,
+            number: numberBackEnd,
+            type: 3
+          })
+        }
+      })
 
-      universalIconArr.forEach(element => {
+
+      universalIconAndNoDotsArr.forEach(element => {
         const toDataURL = svg => fetch(svg)
           .then(response => response.blob())
           .then(blob => new Promise((resolve, reject) => {
@@ -1678,7 +1969,54 @@ const PanelPreview = ({
           })
       })
     } else {
-      changeIconsBackEnd([])
+      const copyIconsBackEnd = []
+      const noDotsArr = []
+      copyFrontendArrayForBackend.forEach((element, index) => {
+        if (!element.statusIconExist && element.flag) {
+          let numberBackEnd = null
+          if (chosenModel.panelRotation) {
+            if (index % 3 === 0) {
+              numberBackEnd = index + 3
+            } else if (index % 3 === 2) {
+              numberBackEnd = index - 1
+            } else {
+              numberBackEnd = index + 1
+            }
+          } else {
+            numberBackEnd = index + 1
+          }
+          noDotsArr.push({
+            icon: noDotUni,
+            number: numberBackEnd,
+            type: 3
+          })
+        }
+      })
+
+
+      noDotsArr.forEach(element => {
+        const toDataURL = svg => fetch(svg)
+          .then(response => response.blob())
+          .then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result)
+            reader.onerror = reject
+            reader.readAsDataURL(blob)
+          }))
+
+        toDataURL(element.icon)
+          .then(svgBackEnd => {
+            let recordIcon = {
+              number: element.number,
+              type: element.type,
+              rotation: 0,
+              proportion: 0,
+              svg: svgBackEnd
+            }
+            copyIconsBackEnd.push(recordIcon)
+            changeIconsBackEnd(copyIconsBackEnd)
+          })
+      })
     }
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
@@ -1887,8 +2225,6 @@ const PanelPreview = ({
   const handleSwitchSplitIconProportionsGlobal = () => {
     const copyArr = iconHolders;
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
-    console.log("iconHolders", iconHolders)
-    console.log("iconsBackEnd", iconsBackEnd)
     copyArr.forEach((el) => {
       if (globalProportions === 0) {
         el.splitIconProportions = 1
@@ -1917,7 +2253,6 @@ const PanelPreview = ({
     const copyIconsBackEnd = iconsBackEnd //---BACKEND
 
     copyArr.forEach((el, index) => {
-      console.log("test", copyIconsBackEnd.findIndex(icon => icon.number === index + 1 && icon.type === 1))
       if (el.selectedUp || el.selectedDown) {
         if (el.splitIconProportions === 0) {
           el.splitIconProportions = 1
@@ -2156,8 +2491,17 @@ const PanelPreview = ({
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   };
 
+  const handleChangeTextRfid = (text) => {
+    setRfidText(checkCharracters(text.target.value))
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].text = text.target.value
+    changeRfidBackEnd(rfidBackendCopy)
+  };
 
-  const handleChangeFontDown = (index) => {
+
+
+  const handleChangeFontDown = (e, index) => {
+    e.stopPropagation();
     const copyArr = iconHolders;
     copyArr[index].fontDown = chosenTextFont
     copyArr[index].fontDownWeight = chosenTextWeight
@@ -2166,8 +2510,6 @@ const PanelPreview = ({
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if ((element.number === index + 1) && element.type === 0) {
-        // element.font = chosenTextFont
-        // element.fontWeight = chosenTextWeight
         element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
       }
     })
@@ -2176,7 +2518,8 @@ const PanelPreview = ({
   }
 
 
-  const handleChangeFontUp = (index) => {
+  const handleChangeFontUp = (e, index) => {
+    e.stopPropagation();
     const copyArr = iconHolders;
     copyArr[index].fontUp = chosenTextFont
     copyArr[index].fontUpWeight = chosenTextWeight
@@ -2195,6 +2538,17 @@ const PanelPreview = ({
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
+  const handleChangeFontRfid = (e) => {
+    e.stopPropagation();
+    setRfidTextFont(chosenTextFont)
+    setRfidTextFontWeight(chosenTextWeight)
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+    changeRfidBackEnd(rfidBackendCopy)
+
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+  }
 
 
 
@@ -2207,16 +2561,22 @@ const PanelPreview = ({
       el.fontDownWeight = chosenTextWeight;
     })
     changeIconHolders(copyArr)
+    setRfidTextFont(chosenTextFont)
+    setRfidTextFontWeight(chosenTextWeight)
     filterWarnings(3)
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
-      // element.font = chosenTextFont
-      // element.fontWeight = chosenTextWeight
       element.font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont
     })
     changePanelTextBackEnd(copyPanelTextBackEnd)
+
+
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].font = chosenTextWeight === "700" && !chosenTextFont.includes("-bold") ? `${chosenTextFont}-bold` : chosenTextFont;
+    changeRfidBackEnd(rfidBackendCopy)
+
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
 
   }
@@ -2240,6 +2600,7 @@ const PanelPreview = ({
     setIsFocusedInputSide(null)
     setIsFocusedInputFrame(false)
     setIsFocusedInputName(false)
+    setIsFocusedInputRfid(false)
   }
 
 
@@ -2252,13 +2613,42 @@ const PanelPreview = ({
       setIsFocusedInputSide(null)
       setIsFocusedInputFrame(false)
       setIsFocusedInputName(false)
+      setIsFocusedInputRfid(false)
     }
   }
 
   const handleFocusInput = (index, side) => {
     setIsFocusedInputIndex(index)
     setIsFocusedInputSide(side)
+    setIsFocusedInputRfid(false)
   }
+
+  const handleFocusInputRfid = () => {
+    setIsFocusedInputRfid(true)
+    setIsFocusedInputIndex(null)
+    setIsFocusedInputSide(null)
+    setIsFocusedInputFrame(false)
+    setIsFocusedInputName(false)
+  }
+
+  const handleRfidTextSmaller = (e) => {
+    e.stopPropagation()
+    // +++RFID---------------------------------------------------------------------+++
+    setRfidTextFontSize(rfidTextFontSize - 0.5)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].fontsize = rfidTextFontSize - 0.5
+    changeRfidBackEnd(rfidBackendCopy)
+
+  }
+  const handleRfidTextBigger = (e) => {
+    e.stopPropagation()
+    // +++RFID---------------------------------------------------------------------+++
+    setRfidTextFontSize(rfidTextFontSize + 0.5)
+    const rfidBackendCopy = rfidBackEnd
+    rfidBackendCopy[0].fontsize = rfidTextFontSize + 0.5
+    changeRfidBackEnd(rfidBackendCopy)
+  }
+
 
 
   const handleClearInput = (index, side) => {
@@ -2299,12 +2689,36 @@ const PanelPreview = ({
     changeIconHolders(copyArr)
     setIsFocusedInputIndex(null)
     setIsFocusedInputSide(null)
+    setIsFocusedInputRfid(false)
 
     changePanelTextBackEnd(copyPanelTextBackEnd)
     // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
   }
 
+  const handleClearInputRfid = (side) => {
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    // const copyPanelTextBackEnd = panelTextBackEnd
 
+    // let numberBackEnd = null
+    // if (chosenModel.panelRotation) {
+    //   if (index % 3 === 0) {
+    //     numberBackEnd = index + 3
+    //   } else if (index % 3 === 2) {
+    //     numberBackEnd = index - 1
+    //   } else {
+    //     numberBackEnd = index + 1
+    //   }
+    // } else {
+    //   numberBackEnd = index + 1
+    // }
+
+    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
+    // changePanelTextBackEnd(copyPanelTextBackEnd)
+
+    setRfidText("")
+    setIsFocusedInputRfid(false)
+    // ----------------------------------------------------------------------------------------------------------------/BACKEND---------------------
+  }
 
 
 
@@ -2646,7 +3060,7 @@ const PanelPreview = ({
         }
       }
 
-      if (chosenModel.lcdScreen !== false) {
+      if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && index < 9) {
             for (let j = 0; j < 9; j++) {
@@ -2918,7 +3332,7 @@ const PanelPreview = ({
       }
 
 
-      if (chosenModel.lcdScreen !== false) {
+      if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s") {
             for (let j = 0; j < 9; j++) {
@@ -2967,6 +3381,21 @@ const PanelPreview = ({
           if (index === 3) {
             copyArrChange[3] = "r"
             copyArrChange[4] = "r"
+          }
+        }
+      }
+      if (chosenModel.type === "M_DOT_R14") {
+        if (copyArr[0] === "s") {
+          if (index === 1 || index === 2) {
+            copyArrChange[1] = "r"
+            copyArrChange[2] = "r"
+          }
+        }
+
+        if (copyArr[2] === "s") {
+          if (index === 0) {
+            copyArrChange[0] = "r"
+            copyArrChange[1] = "r"
           }
         }
       }
@@ -3097,7 +3526,6 @@ const PanelPreview = ({
     setNewFrameChange(arrNewFrameChange);
     overFrameReRender()
   });
-
 
   // const handleFrameClick = useCallback((index) => {
   const handleFrameClick = (index) => {
@@ -3400,7 +3828,7 @@ const PanelPreview = ({
       }
 
 
-      if (chosenModel.lcdScreen !== false) {
+      if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && index < 9) {
             for (let j = 0; j < 9; j++) {
@@ -3645,7 +4073,7 @@ const PanelPreview = ({
         }
 
 
-        if (chosenModel.lcdScreen !== false) {
+        if (chosenModel.lcdScreen !== false && chosenModel.type !== "M_DOT_R14") {
           for (let i = 0; i < 9; i++) {
             if (copyArr[i] === "s") {
               for (let j = 0; j < 9; j++) {
@@ -3701,6 +4129,20 @@ const PanelPreview = ({
               copyArr[3] = 1
               copyArr[4] = 0
             }
+          }
+        }
+      } else if (chosenModel.type === "M_DOT_R14") {
+        if (copyArr[0] === "s") {
+          if (index === 1 || index === 2) {
+            copyArr[1] = 0
+            copyArr[2] = 1
+          }
+        }
+
+        if (copyArr[2] === "s") {
+          if (index === 0 || index === 1) {
+            copyArr[0] = 1
+            copyArr[1] = 0
           }
         }
       } else if (chosenModel.type === "MDOT_4") {
@@ -4151,18 +4593,31 @@ const PanelPreview = ({
     changeFramesShapeToSharp()
     setAllFramesSharpRound(prev => !prev)
     changeFrameShape("sharp")
+    if (chosenModel.type === "M_DOT_R14") {
+      changeRfidShape("sharp")
+      const rfidBackendCopy = rfidBackEnd
+      rfidBackendCopy[0].cornerRadious = 0
+      changeRfidBackEnd(rfidBackendCopy)
+    }
 
     const copyFrameBackEnd = framesBackEnd
     copyFrameBackEnd.forEach(frame => {
       frame.cornerRadious = 0
     })
     changeFramesBackEnd(copyFrameBackEnd)
+
   }
 
   const handleChangeFramesToRound = () => {
     changeFramesShapeToRound()
     setAllFramesSharpRound(prev => !prev)
     changeFrameShape("round")
+    if (chosenModel.type === "M_DOT_R14") {
+      changeRfidShape("round")
+      const rfidBackendCopy = rfidBackEnd
+      rfidBackendCopy[0].cornerRadious = 1
+      changeRfidBackEnd(rfidBackendCopy)
+    }
 
     const copyFrameBackEnd = framesBackEnd
     copyFrameBackEnd.forEach(frame => {
@@ -4268,10 +4723,13 @@ const PanelPreview = ({
   }
 
   const printPdf = () => {
+    console.log("123>>> printPdf")
     setAlertAnswer(null)
     setDownloading(true)
+    let frontEndDataNoAlerts = frontEndData
+    frontEndDataNoAlerts.visual.alertAnswer = null
     let dataToSend = {
-      frontEndData,
+      frontEndData: frontEndDataNoAlerts,
       backEndData,
       show: true,
       hide: false
@@ -4280,85 +4738,94 @@ const PanelPreview = ({
     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
     fetchWithTimeout(frontEndDataB64)
   }
+  console.log("123>>> alertAnswer", alertAnswer)
 
 
   const handlePrintPdf = () => {
+    console.log("123>>> handlePrintPdf")
+
     if (panelName === "") {
       setNoPanelName(true)
     } else if (!allIcons) {
       showAlert(8);
+    } else if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      showAlert(17);
+    } else if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
+      showAlert(18);
+    } else if (tooLongTextFrameArray.length) {
+      showAlert(19);
     } else {
       printPdf()
-      // setDownloading(true)
-      // let dataToSend = {
-      //   frontEndData,
-      //   backEndData,
-      //   show: true,
-      //   hide: false
-      // }
-      // let frontEndDataStr = JSON.stringify(dataToSend);
-      // let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
-      // fetchWithTimeout(frontEndDataB64)
     }
   }
 
-
-
-
-
-  const debugFetchWithTimeout = (frontEndDataB64) => {
-    let ctrl = new AbortController()
-    let signal = ctrl.signal
-
-
-    let headers = new Headers();
-    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-    headers.append('Access-Control-Allow-Credentials', 'true');
-
-    let serverTimeout = setTimeout(() => {
-      ctrl.abort()
-      setDownloading(false)
-      clearTimeout(serverTimeout)
-    }, 8000)
-
-    fetch("https://kreator.ampio.pl/generatepdf", {
-      signal,
-      method: "POST",
-      body: JSON.stringify({ backEndData, frontEndDataB64 }),
-      headers: headers
-    })
-      .then(res => res.blob())
-      .then(blob => {
-        let fileName = chosenModel.name + "_" + panelName + ".pdf"
-        saveAs(blob, fileName);
-        setDownloading(false)
-        clearTimeout(serverTimeout)
-      })
-      .catch(error => {
-        setDownloading(false)
-        console.log(error)
-        clearTimeout(serverTimeout)
-      })
-  }
-
-  const handlePrintPdfDebug = () => {
-
-    if (panelName === "") {
-      setNoPanelName(true)
+  const handleTryPrintPdfAfterNoAllIconsConfirm = () => {
+    setAlertAnswer(null)
+    if ((((rfidInput?.clientWidth) / sc) > 60) && rfidType === 2) {
+      showAlert(17);
+    } else if (tooLongTextDownArray.length || tooLongTextUpArray.length) {
+      showAlert(18);
+    } else if (tooLongTextFrameArray.length) {
+      showAlert(19);
     } else {
-      setDownloading(true)
-      let dataToSend = {
-        frontEndData,
-        backEndData,
-        show: true,
-        hide: false
-      }
-      let frontEndDataStr = JSON.stringify(dataToSend);
-      let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
-
-      debugFetchWithTimeout(frontEndDataB64)
+      printPdf()
     }
   }
+
+  // const debugFetchWithTimeout = (frontEndDataB64) => {
+  //   let ctrl = new AbortController()
+  //   let signal = ctrl.signal
+
+
+  //   let headers = new Headers();
+  //   headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  //   headers.append('Access-Control-Allow-Credentials', 'true');
+
+  //   let serverTimeout = setTimeout(() => {
+  //     ctrl.abort()
+  //     setDownloading(false)
+  //     clearTimeout(serverTimeout)
+  //   }, 8000)
+
+  //   // fetch("https://kreator.ampio.pl/generatepdf", {//stary url do debugowania 
+  //   fetch("https://23f5e1973b5a048ffaaa0bd0183b5f87.ampio.pl/generatepdf", {
+  //     signal,
+  //     method: "POST",
+  //     body: JSON.stringify({ backEndData, frontEndDataB64 }),
+  //     headers: headers
+  //   })
+  //     .then(res => res.blob())
+  //     .then(blob => {
+  //       let fileName = chosenModel.name + "_" + panelName + ".pdf"
+  //       saveAs(blob, fileName);
+  //       setDownloading(false)
+  //       clearTimeout(serverTimeout)
+  //     })
+  //     .catch(error => {
+  //       setDownloading(false)
+  //       console.log(error)
+  //       clearTimeout(serverTimeout)
+  //     })
+  // }
+
+  // const handlePrintPdfDebug = () => {
+
+  //   if (panelName === "") {
+  //     setNoPanelName(true)
+  //   } else {
+  //     setDownloading(true)
+  //     let dataToSend = {
+  //       frontEndData,
+  //       backEndData,
+  //       show: true,
+  //       hide: false
+  //     }
+  //     let frontEndDataStr = JSON.stringify(dataToSend);
+  //     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
+
+  //     debugFetchWithTimeout(frontEndDataB64)
+  //   }
+  // }
 
 
 
@@ -4405,25 +4872,6 @@ const PanelPreview = ({
   }
 
 
-  // const handleBack = () => {
-  // hideCreator(false)
-  // handleClearAll()
-
-  // const dahsboardTimeout = setTimeout(() => {
-  //   showDashboard(true)
-  //   // handleClearAll()
-  //   changePanelName("")
-  //   changePanelNameBackEnd("")
-  //   resetColor()
-  //   resetPanelColorBackEnd()
-  //   resetTab("model")
-  //   resetModel()
-  //   updateFavoriteIcons([])
-  //   updateOwnIcons([])
-  // }, 400);
-  // return () => clearTimeout(dahsboardTimeout);
-  // }
-
   const goBack = () => {
     setAlertAnswer(null)
     hideCreator(false)
@@ -4446,15 +4894,119 @@ const PanelPreview = ({
     }, 400);
     return () => clearTimeout(dahsboardTimeout);
   }
+  const fillR14 = (copyArr) => {
+    let kyeboardKeyNumber = 0
+    const keyboardArrayForBackend = []
+    // let copyIconsBackEnd = []
 
+    for (let i = 9; i < 21; i++) {
+      keyboardArrayForBackend.push(
+        {
+          icon: keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber].default,
+          number: i + 1,
+          type: 0
+        },
+        {
+          icon: noDotUni,
+          number: i + 1,
+          type: 3
+        }
+      )
+      copyArr[i].lastDroppedIcon = { image: keyboardsSets[0]?.listOfIcons[kyeboardKeyNumber] }
+      copyArr[i].statusIconExist = false;
+      copyArr[i].cannotRemoveStatusIcon = false;
+      copyArr[i].lastDroppedSlashUp = null;
+      copyArr[i].lastDroppedSlashDown = null;
+      copyArr[i].lockedForKeyboard = true;
+      kyeboardKeyNumber = kyeboardKeyNumber + 1
+    }
+    changeIconHolders(copyArr)
+    handleAddKeyboardBackend(keyboardArrayForBackend)
+    setRfidType(0)
+    setRfidText('')
+    setRfidTextFont(null)
+    setRfidTextFontSize(5)
+    setRfidTextFontWeight('')
+    changeRfidShape("sharp")
+    changeRfidBackEnd([{
+      cornerRadious: 0,
+      svg: null,
+      text: "",
+      font: "Calibri-bold",
+      fontsize: 5
+    }])
+  }
 
+  const handleAddKeyboardBackend = (keyboardArrayForBackend) => {
+    let copyIconsBackEnd = []
+    // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
+    keyboardArrayForBackend.forEach(element => {
+      const toDataURL = svg => fetch(svg)
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        }))
+
+      toDataURL(element.icon)
+        .then(svgBackEnd => {
+          let recordIcon = {
+            number: element.number,
+            type: element.type,
+            rotation: 0,
+            svg: svgBackEnd,
+            proportion: 0
+          }
+          copyIconsBackEnd.push(recordIcon)
+        }).then(changeIconsBackEnd(copyIconsBackEnd))
+    })
+    // changeIconsBackEnd(copyIconsBackEnd) zmienione na then
+  }
+  const handleClickOutside = () => {
+    setIsFocusedInputRfid(false)
+    setIsFocusedInputIndex(null)
+    setIsFocusedInputSide(null)
+    // setIsFocusedInputFrame(false)
+    // setIsFocusedInputName(false)
+  }
+
+  const checkInputsWidth = () => {
+    const tempTooLongTextDownArray = []
+    const tempTooLongTextUpArray = []
+    iconHolders.forEach((element, index) => {
+      if (element.flag === 1) {
+        if ((((document.querySelector(`#icon_input_down_${index}`)?.clientWidth) / sc) > (15 + 5.2))) {
+          tempTooLongTextDownArray.push(index)
+        }
+        if ((((document.querySelector(`#icon_input_up_${index}`)?.clientWidth) / sc) > (15 + 5.2))) {
+          tempTooLongTextUpArray.push(index)
+        }
+      }
+    })
+    setTooLongTextDownArray(tempTooLongTextDownArray)
+    setTooLongTextUpArray(tempTooLongTextUpArray)
+  }
+
+  const checkFrameInputsWidth = () => {
+    const tempTooLongTextFrameArray = []
+    frameHolders.forEach((element, index) => {
+      if ((((document.querySelector(`#frame_input_${index}`)?.clientWidth) / sc) > ((element?.frameInfo?.columns * 15) + 5.2))) {
+        tempTooLongTextFrameArray.push(index)
+      }
+    })
+    setTooLongTextFrameArray(tempTooLongTextFrameArray)
+  }
 
   return (
     <>
       {fullScreen &&
         <PanelPreviewFullScreen />
       }
-      <div className="panelpreview_container" style={panelPreviewStyle}>
+      <div className="panelpreview_container" style={panelPreviewStyle}
+        onClick={handleClickOutside}
+      >
         <div className="preview_container" >
           <Warning />
           <div className="preview_top">
@@ -4520,6 +5072,7 @@ const PanelPreview = ({
                               )} >
 
                           {el !== 0 && showFramBlackLight &&
+                            // !el.lockedForKeyboard &&
                             <div style={el === 1 ? { ...frameCellStyle } :
                               chosenColor.hex !== "#30a32c" ?
                                 { ...frameCellStyle, backgroundColor: "rgba(40, 167, 69, 0.5)" }
@@ -4700,53 +5253,79 @@ const PanelPreview = ({
                             )}
                             {(frame.framePrint.text !== "" && !frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
-                                <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
-                                  { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
-                                  <input className="text_input_frame"
-                                    autoComplete="off"
-                                    type="text"
-                                    maxLength="16"
-                                    style={(chosenColor.RAL === "RAL 9003" && visual) ?
-                                      {
-                                        ...textStyleFrame,
-                                        fontFamily: frame.framePrint.frameFont,
-                                        fontWeight: frame.framePrint.frameFontWeight,
-                                        backgroundColor: "rgb(233,233,233)",
-                                        border: "none",
+                                <div style={{
+                                  ...textIconWrapperBorderStyle,
+                                  width: `${frame?.frameInfo?.columns * 15 * sc}px`,
+                                  top: `${(frame.framePrint.textY - 2.5) * sc}px`,
+                                  left: `${frame.framePrint.textX * sc}px`,
+                                  overflow: tooLongTextFrameArray?.includes(i) ? "hidden" : "visible",
+                                  borderLeft: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  borderRight: tooLongTextFrameArray?.includes(i) ? "3px solid rgb(220, 53, 69)" : "none"
+                                }}>
+                                  <div style={!visual ?
+                                    {
+                                      ...autoResizeInputStyle,
+                                      // top: `${frame.framePrint.textY * sc}px`, 
+                                      // left: `${frame.framePrint.textX * sc}px`, 
+                                      top: `${2.5 * sc}px`,
+                                      transition: "0s"
+                                    } :
+                                    {
+                                      ...autoResizeInputStyle,
+                                      //  top: `${frame.framePrint.textY * sc}px`, 
+                                      //  left: `${frame.framePrint.textX * sc}px`, 
+                                      top: `${2.5 * sc}px`,
+                                      transition: "0.4s ease"
+                                    }}>
+                                    <input className="text_input_frame"
+                                      id={`frame_input_${i}`}
+                                      autoComplete="off"
+                                      type="text"
+                                      maxLength="16"
+                                      style={(chosenColor.RAL === "RAL 9003" && visual) ?
+                                        {
+                                          ...textStyleFrame,
+                                          fontFamily: frame.framePrint.frameFont,
+                                          fontWeight: frame.framePrint.frameFontWeight,
+                                          backgroundColor: "rgb(233,233,233)",
+                                          border: "none",
+                                        }
+                                        :
+                                        {
+                                          ...textStyleFrame,
+                                          fontFamily: frame.framePrint.frameFont,
+                                          fontWeight: frame.framePrint.frameFontWeight,
+                                          backgroundColor: chosenColor.hex,
+                                          border: "none",
+                                        }
                                       }
-                                      :
-                                      {
-                                        ...textStyleFrame,
-                                        fontFamily: frame.framePrint.frameFont,
-                                        fontWeight: frame.framePrint.frameFontWeight,
-                                        backgroundColor: chosenColor.hex,
-                                        border: "none",
-                                      }
-                                    }
-                                    disabled={true}
-                                    value={frame.framePrint.text}
-                                  />
-                                  <span style={{
-                                    fontFamily: frame.framePrint.frameFont,
-                                    fontWeight: frame.framePrint.frameFontWeight,
-                                    gridArea: '1 / 1 / 2 / 2',
-                                    visibility: 'hidden',
-                                    whiteSpace: "pre",
-                                    margin: `0 ${1.5 * sc}px`
-                                  }}>
-                                    {frame.framePrint.text}
-                                  </span>
+                                      disabled={true}
+                                      value={frame.framePrint.text}
+                                    />
+                                    <span style={{
+                                      fontFamily: frame.framePrint.frameFont,
+                                      fontWeight: frame.framePrint.frameFontWeight,
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      visibility: 'hidden',
+                                      whiteSpace: "pre",
+                                      margin: `0 ${1.5 * sc}px`
+                                    }}>
+                                      {frame.framePrint.text}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             }
                             {(frame.framePrint.text !== "" && frame.framePrint.over) &&
                               <div style={{ position: "absolute", width: "100%" }}>
+
                                 <div style={!visual ? { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0s" } :
                                   { ...autoResizeInputStyle, top: `${frame.framePrint.textY * sc}px`, left: `${frame.framePrint.textX * sc}px`, transition: "0.4s ease" }}>
                                   <input className="text_input_frame"
+                                    id={`frame_input_${i}`}
                                     type="text"
                                     autoComplete="off"
-                                    maxLength="16"
+                                    maxLength="40"
                                     style={
                                       {
                                         ...textStyleFrame,
@@ -4860,95 +5439,123 @@ const PanelPreview = ({
                           }
                         </div>
                       )}
-
                       {textFrame && chosenTab === "frame" && chosenColor.RAL !== "SMOKED_GLASS" && frameTitleFlag &&
                         <div style={{ zIndex: "999", position: "absolute", width: "100%" }}>
                           <div style={{ transition: "0.4s ease", position: "absolute", width: "100%" }}>
                             <form onSubmit={handleSubmit}>
-                              <div style={{ ...autoResizeInputStyle, top: `${tempFrame.textY * sc}px`, left: `${tempFrame.textX * sc}px`, transition: "0s" }}>
-
-
-                                <input className="text_input_frame"
-                                  type="text"
-                                  autoComplete="off"
-                                  maxLength="16"
-                                  style={(isFocusedInputFrame) ?
-                                    (
-                                      (chosenColor.hex !== "#30a32c") ? {
-                                        ...textStyleFrame,
-                                        fontFamily: chosenFrameFont,
-                                        fontWeight: chosenFrameFontWeight,
-                                        border: "2px dashed rgb(40, 167, 69)",
-                                        backgroundColor: chosenColor.hex,
-                                      } :
-                                        {
+                              <div style={{
+                                ...textIconWrapperBorderStyle,
+                                width: `${frameHoldersTemp?.frameInfo?.columns * 15 * sc}px`,
+                                top: `${(tempFrame.textY - 2.5) * sc}px`,
+                                left: `${tempFrame.textX * sc}px`,
+                                overflow: isFocusedInputFrame ? "visible" : "hidden",
+                              }}>
+                                <div style={{
+                                  position: "absolute",
+                                  width: "3px",
+                                  height: "100%",
+                                  left: "0",
+                                  borderLeft: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 15) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  zIndex: "999999"
+                                }} />
+                                <div style={{
+                                  position: "absolute",
+                                  width: "3px",
+                                  height: "100%",
+                                  right: "0",
+                                  borderRight: (document.querySelector("#frame_input_temp")?.clientWidth / sc) > ((frameHoldersTemp?.frameInfo?.columns * 15) + 5.2) ? "3px solid rgb(220, 53, 69)" : "none",
+                                  zIndex: "999999"
+                                }} />
+                                <div style={{
+                                  ...autoResizeInputStyle,
+                                  top: `${2.5 * sc}px`,
+                                  // top: `${tempFrame.textY * sc}px`, 
+                                  // left: `${tempFrame.textX * sc}px`, 
+                                  transition: "0s"
+                                }}>
+                                  <input className="text_input_frame"
+                                    id={`frame_input_temp`}
+                                    type="text"
+                                    autoComplete="off"
+                                    maxLength={`${(frameHoldersTemp?.frameInfo?.columns * 10) + 10}`}
+                                    style={(isFocusedInputFrame) ?
+                                      (
+                                        (chosenColor.hex !== "#30a32c") ? {
                                           ...textStyleFrame,
                                           fontFamily: chosenFrameFont,
                                           fontWeight: chosenFrameFontWeight,
-                                          border: "2px dashed rgb(32, 114, 30)",
+                                          border: "2px dashed rgb(40, 167, 69)",
                                           backgroundColor: chosenColor.hex,
-                                        }
-                                    )
-                                    : {
-                                      ...textStyleFrame,
-                                      fontFamily: chosenFrameFont,
-                                      fontWeight: chosenFrameFontWeight,
-                                      backgroundColor: chosenColor.hex,
-                                    }}
-                                  disabled={chosenTab !== "frame" && true}
-                                  onMouseOver={showFrameBorder}
-                                  onMouseLeave={hideFrameBorder}
-                                  value={frameText}
-                                  onChange={(text) => handleChangeTextFrame(text)}
-                                  onFocus={() => setIsFocusedInputFrame(true)}
-                                  onKeyDown={handleKeyPress}
-                                />
-                                <span style={{
-                                  gridArea: '1 / 1 / 2 / 2',
-                                  visibility: 'hidden',
-                                  fontFamily: chosenFrameFont,
-                                  fontWeight: chosenFrameFontWeight,
-                                  padding: "0 8px",
-                                  whiteSpace: "pre",
-                                  margin: `0 ${1.5 * sc}px`
-                                }}>
-                                  {frameText}
-                                </span>
+                                        } :
+                                          {
+                                            ...textStyleFrame,
+                                            fontFamily: chosenFrameFont,
+                                            fontWeight: chosenFrameFontWeight,
+                                            border: "2px dashed rgb(32, 114, 30)",
+                                            backgroundColor: chosenColor.hex,
+                                          }
+                                      )
+                                      : {
+                                        ...textStyleFrame,
+                                        fontFamily: chosenFrameFont,
+                                        fontWeight: chosenFrameFontWeight,
+                                        backgroundColor: chosenColor.hex,
+                                      }}
+                                    disabled={chosenTab !== "frame" && true}
+                                    onMouseOver={showFrameBorder}
+                                    onMouseLeave={hideFrameBorder}
+                                    value={frameText}
+                                    onChange={(text) => handleChangeTextFrame(text)}
+                                    onFocus={() => setIsFocusedInputFrame(true)}
+                                    onKeyDown={handleKeyPress}
+                                  />
+                                  <span style={{
+                                    gridArea: '1 / 1 / 2 / 2',
+                                    visibility: 'hidden',
+                                    fontFamily: chosenFrameFont,
+                                    fontWeight: chosenFrameFontWeight,
+                                    padding: "0 8px",
+                                    whiteSpace: "pre",
+                                    margin: `0 ${1.5 * sc}px`
+                                  }}>
+                                    {frameText}
+                                  </span>
 
 
-                                {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
-                                  <input type="image" src={Submitinput} alt="submitinput"
-                                    style={{
-                                      height: `${3.6 * sc}px`,
-                                      width: `${3.6 * sc}px`,
-                                      transform: "translate(75%, -50%)",
-                                      gridArea: '1 / 1 / 2 / 2',
-                                    }}
-                                  />
-                                }
-                                {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
-                                  <input type="image" src={Submitinputdark} alt="submitinput"
-                                    style={{
-                                      height: `${3.6 * sc}px`,
-                                      width: `${3.6 * sc}px`,
-                                      transform: "translate(75%, -50%)",
-                                      gridArea: '1 / 1 / 2 / 2',
-                                    }}
-                                  />
-                                }
+                                  {(isFocusedInputFrame && chosenColor.hex !== "#30a32c") &&
+                                    <input type="image" src={Submitinput} alt="submitinput"
+                                      style={{
+                                        height: `${3.6 * sc}px`,
+                                        width: `${3.6 * sc}px`,
+                                        transform: "translate(75%, -50%)",
+                                        gridArea: '1 / 1 / 2 / 2',
+                                      }}
+                                    />
+                                  }
+                                  {(isFocusedInputFrame && chosenColor.hex === "#30a32c") &&
+                                    <input type="image" src={Submitinputdark} alt="submitinput"
+                                      style={{
+                                        height: `${3.6 * sc}px`,
+                                        width: `${3.6 * sc}px`,
+                                        transform: "translate(75%, -50%)",
+                                        gridArea: '1 / 1 / 2 / 2',
+                                      }}
+                                    />
+                                  }
 
-                                {isFocusedInputFrame &&
-                                  <img src={Clearinput} alt="clearinput"
-                                    style={{
-                                      height: `${3.6 * sc}px`,
-                                      width: `${3.6 * sc}px`,
-                                      transform: "translate(200%, -50%)",
-                                      gridArea: '1 / 1 / 2 / 2',
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={handleClearInputFrame}
-                                  />
-                                }
+                                  {isFocusedInputFrame &&
+                                    <img src={Clearinput} alt="clearinput"
+                                      style={{
+                                        height: `${3.6 * sc}px`,
+                                        width: `${3.6 * sc}px`,
+                                        transform: "translate(200%, -50%)",
+                                        gridArea: '1 / 1 / 2 / 2',
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={handleClearInputFrame}
+                                    />
+                                  }
+                                </div>
                               </div>
                             </form>
                           </div>
@@ -4984,6 +5591,10 @@ const PanelPreview = ({
                         fontDown,
                         fontDownWeight,
                         lastDroppedDot,
+                        statusIconExist,
+                        lockedForKeyboard,
+                        cannotRemoveStatusIcon,
+                        highlightedForKeyboard,
                         lastDroppedIcon,
                         lastDroppedSlashUp,
                         lastDroppedSlashDown,
@@ -5012,171 +5623,204 @@ const PanelPreview = ({
                               )}>
                           {flag === 1 &&
                             <>
-                              <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
-                                <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : {
-                                  transform: "rotate(90deg)",
-                                  transformOrigin: `center ${10.4 * sc}px`,
-                                  transition: "0.4s ease"
-                                }}>
-                                  {textUpOff &&
-                                    <form onSubmit={handleSubmit}>
-                                      <div style={!chosenModel.panelRotation ?
-                                        { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
-                                        :
-                                        { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
-                                        <input className="text_input"
-                                          type="text"
-                                          autoComplete="off"
-                                          maxLength="16"
-                                          style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
-                                            (
-                                              (chosenColor.hex !== "#30a32c") ? {
-                                                ...textStyle,
-                                                ...textUpStyle,
-                                                fontFamily: fontUp,
-                                                fontWeight: fontUpWeight,
-                                                border: "2px solid rgb(40, 167, 69)"
-                                              } :
-                                                {
-                                                  ...textStyle,
-                                                  ...textUpStyle,
-                                                  fontFamily: fontUp,
-                                                  fontWeight: fontUpWeight,
-                                                  border: "2px solid rgb(32, 114, 30)",
-                                                }
-                                            )
-                                            : {
-                                              ...textStyle,
-                                              ...textUpStyle,
-                                              fontFamily: fontUp,
-                                              fontWeight: fontUpWeight,
-                                            }}
-                                          disabled={chosenTab !== "text" && true}
-                                          onMouseOver={showBorder}
-                                          onMouseLeave={hideBorder}
-                                          value={textUp}
-                                          onChange={(text) => handleChangeTextUp(index, text)}
-                                          onClick={() => handleChangeFontUp(index)}
-                                          onFocus={() => { handleFocusInput(index, "up") }}
-                                          onKeyDown={handleKeyPress}
-                                        />
-                                        <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
-                                          {textUp}
-                                        </span>
+                              {!lockedForKeyboard &&
+                                <>
+                                  <div className="text_box" style={chosenTab === "text" ? (isFocusedInputIndex === index) ? { zIndex: "99999" } : { zIndex: "999" } : { zIndex: "0" }}>
+                                    <div className="text_box" style={!chosenModel.panelRotation ? { transition: "0.4s ease" } : {
+                                      transform: "rotate(90deg)",
+                                      transformOrigin: `center ${10.4 * sc}px`,
+                                      transition: "0.4s ease"
+                                    }}>
+                                      {textUpOff &&
+                                        <form onSubmit={handleSubmit}>
+                                          <div style={{
+                                            ...textIconWrapperBorderStyle,
+                                            width: `${15 * sc}px`,
+                                            // top: `${(14.35 - 1) * sc}px`,
+                                            top: !chosenModel.panelRotation ? `${(-1.5 - 1) * sc}px` : `${(2.85 - 1) * sc}px`,
+                                            overflow: !(isFocusedInputIndex === index && isFocusedInputSide === "up") && tooLongTextUpArray?.includes(index) ? "hidden" : "visible",
+                                            borderLeft: tooLongTextUpArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none",
+                                            borderRight: tooLongTextUpArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none"
+                                          }}>
+                                            {/* <div style={!chosenModel.panelRotation ?
+                                            { ...autoResizeInputStyle, top: `${-1.5 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }
+                                            :
+                                            { ...autoResizeInputStyle, top: `${2.85 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}> */}
+                                            <div style={{ ...autoResizeInputStyle, top: `${1 * sc}px`, fontFamily: fontUp, fontWeight: fontUpWeight }}>
+                                              <input className="text_input"
+                                                id={`icon_input_up_${index}`}
+                                                type="text"
+                                                autoComplete="off"
+                                                maxLength="16"
+                                                style={(isFocusedInputIndex === index && isFocusedInputSide === "up") ?
+                                                  (
+                                                    (chosenColor.hex !== "#30a32c") ? {
+                                                      ...textStyle,
+                                                      ...textUpStyle,
+                                                      fontFamily: fontUp,
+                                                      fontWeight: fontUpWeight,
+                                                      border: "2px solid rgb(40, 167, 69)"
+                                                    } :
+                                                      {
+                                                        ...textStyle,
+                                                        ...textUpStyle,
+                                                        fontFamily: fontUp,
+                                                        fontWeight: fontUpWeight,
+                                                        border: "2px solid rgb(32, 114, 30)",
+                                                      }
+                                                  )
+                                                  : {
+                                                    ...textStyle,
+                                                    ...textUpStyle,
+                                                    fontFamily: fontUp,
+                                                    fontWeight: fontUpWeight,
+                                                  }}
+                                                disabled={chosenTab !== "text" && true}
+                                                onMouseOver={showBorder}
+                                                onMouseLeave={hideBorder}
+                                                value={textUp}
+                                                onChange={(text) => handleChangeTextUp(index, text)}
+                                                onClick={(e) => handleChangeFontUp(e, index)}
+                                                onFocus={() => { handleFocusInput(index, "up") }}
+                                                onKeyDown={handleKeyPress}
+                                              />
+                                              <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
+                                                {textUp}
+                                              </span>
 
-                                        {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
-                                          <input type="image" src={Submitinput} alt="submitinput"
-                                            style={{
-                                              height: `${3.6 * sc}px`,
-                                              width: `${3.6 * sc}px`,
-                                              transform: "translateX(75%)",
-                                              gridArea: '1 / 1 / 2 / 2',
+                                              {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex !== "#30a32c") &&
+                                                <input type="image" src={Submitinput} alt="submitinput"
+                                                  style={{
+                                                    height: `${3.6 * sc}px`,
+                                                    width: `${3.6 * sc}px`,
+                                                    transform: "translateX(75%)",
+                                                    gridArea: '1 / 1 / 2 / 2',
 
-                                            }}
-                                          />
-                                        }
-                                        {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
-                                          <input type="image" src={Submitinputdark} alt="submitinput"
-                                            style={{
-                                              height: `${3.6 * sc}px`,
-                                              width: `${3.6 * sc}px`,
-                                              transform: "translateX(75%)",
-                                              gridArea: '1 / 1 / 2 / 2',
-                                            }}
-                                          />
-                                        }
-                                        {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
-                                          <img src={Clearinput} alt="clearinput"
-                                            style={{
-                                              height: `${3.6 * sc}px`,
-                                              width: `${3.6 * sc}px`,
-                                              transform: "translate(200%, 0%)",
-                                              gridArea: '1 / 1 / 2 / 2',
-                                              cursor: "pointer",
-                                            }}
-                                            onClick={() => { handleClearInput(index, "up") }}
-                                          />
-                                        }
-                                      </div>
-                                    </form>
-                                  }
-                                  <form onSubmit={handleSubmit}>
-                                    <div style={{ ...autoResizeInputStyle, top: `${14.35 * sc}px`, fontFamily: fontDown, fontWeight: fontDownWeight }}>
-                                      <input className="text_input"
-                                        type="text"
-                                        autoComplete="off"
-                                        maxLength="16"
-                                        style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
-                                          (
-                                            (chosenColor.hex !== "#30a32c") ? {
-                                              ...textStyle,
-                                              fontFamily: fontDown,
-                                              fontWeight: fontDownWeight,
-                                              border: "2px solid rgb(40, 167, 69)"
-                                            } :
-                                              {
-                                                ...textStyle,
-                                                fontFamily: fontDown,
-                                                fontWeight: fontDownWeight,
-                                                border: "2px solid rgb(32, 114, 30)"
+                                                  }}
+                                                />
                                               }
-                                          )
-                                          : {
-                                            ...textStyle,
-                                            fontFamily: fontDown,
-                                            fontWeight: fontDownWeight
-                                          }}
-                                        disabled={chosenTab !== "text" && true}
-                                        onMouseOver={showBorder}
-                                        onMouseLeave={hideBorder}
-                                        value={textDown}
-                                        onChange={(text) => handleChangeTextDown(index, text)}
-                                        onClick={() => handleChangeFontDown(index)}
-                                        onFocus={() => { handleFocusInput(index, "down") }}
-                                        onKeyDown={handleKeyPress}
-                                      />
-                                      <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
-                                        {textDown}
-                                      </span>
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
-                                        <input type="image" src={Submitinput} alt="submitinput"
-                                          style={{
-                                            height: `${3.6 * sc}px`,
-                                            width: `${3.6 * sc}px`,
-                                            transform: "translateX(75%)",
-                                            gridArea: '1 / 1 / 2 / 2',
-                                          }}
-                                        />
+                                              {(isFocusedInputIndex === index && isFocusedInputSide === "up" && chosenColor.hex === "#30a32c") &&
+                                                <input type="image" src={Submitinputdark} alt="submitinput"
+                                                  style={{
+                                                    height: `${3.6 * sc}px`,
+                                                    width: `${3.6 * sc}px`,
+                                                    transform: "translateX(75%)",
+                                                    gridArea: '1 / 1 / 2 / 2',
+                                                  }}
+                                                />
+                                              }
+                                              {isFocusedInputIndex === index && isFocusedInputSide === "up" &&
+                                                <img src={Clearinput} alt="clearinput"
+                                                  style={{
+                                                    height: `${3.6 * sc}px`,
+                                                    width: `${3.6 * sc}px`,
+                                                    transform: "translate(200%, 0%)",
+                                                    gridArea: '1 / 1 / 2 / 2',
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => { handleClearInput(index, "up") }}
+                                                />
+                                              }
+                                            </div>
+                                          </div>
+                                        </form>
                                       }
-                                      {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
-                                        <input type="image" src={Submitinputdark} alt="submitinput"
-                                          style={{
-                                            height: `${3.6 * sc}px`,
-                                            width: `${3.6 * sc}px`,
-                                            transform: "translateX(75%)",
-                                            gridArea: '1 / 1 / 2 / 2',
-                                          }}
-                                        />
-                                      }
-                                      {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
-                                        <img src={Clearinput} alt="clearinput"
-                                          style={{
-                                            height: `${3.6 * sc}px`,
-                                            width: `${3.6 * sc}px`,
-                                            transform: "translate(200%, 0%)",
-                                            gridArea: '1 / 1 / 2 / 2',
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() => { handleClearInput(index, "down") }}
-                                        />
-                                      }
+                                      <form onSubmit={handleSubmit}>
+                                        <div style={{
+                                          ...textIconWrapperBorderStyle,
+                                          width: `${15 * sc}px`,
+                                          top: `${(14.35 - 1) * sc}px`,
+                                          overflow: !(isFocusedInputIndex === index && isFocusedInputSide === "down") && tooLongTextDownArray?.includes(index) ? "hidden" : "visible",
+                                          borderLeft: tooLongTextDownArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none",
+                                          borderRight: tooLongTextDownArray?.includes(index) ? "3px solid rgb(220, 53, 69)" : "none"
+                                        }}>
+                                          <div style={{
+                                            ...autoResizeInputStyle,
+                                            // top: `${14.35 * sc}px`,
+                                            top: `${1 * sc}px`,
+                                            fontFamily: fontDown, fontWeight: fontDownWeight
+                                          }}>
+                                            <input className="text_input"
+                                              id={`icon_input_down_${index}`}
+                                              type="text"
+                                              autoComplete="off"
+                                              maxLength="16"
+                                              style={(isFocusedInputIndex === index && isFocusedInputSide === "down") ?
+                                                (
+                                                  (chosenColor.hex !== "#30a32c") ? {
+                                                    ...textStyle,
+                                                    fontFamily: fontDown,
+                                                    fontWeight: fontDownWeight,
+                                                    border: "2px solid rgb(40, 167, 69)"
+                                                  } :
+                                                    {
+                                                      ...textStyle,
+                                                      fontFamily: fontDown,
+                                                      fontWeight: fontDownWeight,
+                                                      border: "2px solid rgb(32, 114, 30)"
+                                                    }
+                                                )
+                                                : {
+                                                  ...textStyle,
+                                                  fontFamily: fontDown,
+                                                  fontWeight: fontDownWeight
+                                                }}
+                                              disabled={chosenTab !== "text" && true}
+                                              onMouseOver={showBorder}
+                                              onMouseLeave={hideBorder}
+                                              value={textDown}
+                                              onChange={(text) => handleChangeTextDown(index, text)}
+                                              onClick={(e) => handleChangeFontDown(e, index)}
+                                              onFocus={() => { handleFocusInput(index, "down") }}
+                                              onKeyDown={handleKeyPress}
+                                            />
+                                            <span style={{ gridArea: '1 / 1 / 2 / 2', visibility: 'hidden', padding: "0 15px", whiteSpace: "pre" }}>
+                                              {textDown}
+                                            </span>
+                                            {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex !== "#30a32c") &&
+                                              <input type="image" src={Submitinput} alt="submitinput"
+                                                style={{
+                                                  height: `${3.6 * sc}px`,
+                                                  width: `${3.6 * sc}px`,
+                                                  transform: "translateX(75%)",
+                                                  gridArea: '1 / 1 / 2 / 2',
+                                                }}
+                                              />
+                                            }
+                                            {(isFocusedInputIndex === index && isFocusedInputSide === "down" && chosenColor.hex === "#30a32c") &&
+                                              <input type="image" src={Submitinputdark} alt="submitinput"
+                                                style={{
+                                                  height: `${3.6 * sc}px`,
+                                                  width: `${3.6 * sc}px`,
+                                                  transform: "translateX(75%)",
+                                                  gridArea: '1 / 1 / 2 / 2',
+                                                }}
+                                              />
+                                            }
+                                            {isFocusedInputIndex === index && isFocusedInputSide === "down" &&
+                                              <img src={Clearinput} alt="clearinput"
+                                                style={{
+                                                  height: `${3.6 * sc}px`,
+                                                  width: `${3.6 * sc}px`,
+                                                  transform: "translate(200%, 0%)",
+                                                  gridArea: '1 / 1 / 2 / 2',
+                                                  cursor: "pointer",
+                                                }}
+                                                onClick={() => { handleClearInput(index, "down") }}
+                                              />
+                                            }
+                                          </div>
+                                        </div>
+                                      </form>
                                     </div>
-                                  </form>
-                                </div>
-                              </div>
-
+                                  </div>
+                                </>}
                               <IconHolder
                                 index={index}
+                                statusIconExist={statusIconExist}
+                                cannotRemoveStatusIcon={cannotRemoveStatusIcon}
+                                lockedForKeyboard={lockedForKeyboard}
+                                highlightedForKeyboard={highlightedForKeyboard}
                                 lastDroppedDot={lastDroppedDot}
                                 lastDroppedIcon={lastDroppedIcon}
                                 lastDroppedSlashUp={lastDroppedSlashUp}
@@ -5196,9 +5840,181 @@ const PanelPreview = ({
                                 visual={visual}
                                 splitIconProportions={splitIconProportions}
                               />
+                              {lockedForKeyboard &&
+                                <div key={index}
+                                  style={
+                                    ((index + 2) % 3 === 0) ?
+                                      (
+                                        ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                          : { ...cellStyle, width: `${chosenModel.centerCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                      )
+                                      : (
+                                        ((index > iconHolders.length - 4) ? { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.lastRowHeight * sc}px` }
+                                          : { ...cellStyle, width: `${chosenModel.sideCellWidth * sc}px`, height: `${chosenModel.rowHeight * sc}px` })
+                                      )} />
+                              }
                             </>}
                         </div>
                       )}
+
+
+                      {(rfid) &&
+                        <div className="lcd" style={{ ...rfidStyle }}
+                        >
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderTopLeftStyle }} />
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderTopRightStyle }} />
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderBottomRightStyle }} />
+                          <div style={{ ...rfidBorderStyle, ...rfidBorderBottomLeftStyle }} />
+
+                          < img src={Rfid_icon} alt="rfid" className="rfid_icon"
+                            style={{
+                              ...universalIconStyle,
+                              ...rfidIconStyle
+                            }}
+                          />
+                          < img src={ownLogo} alt="rfid" className="rfid_icon"
+                            style={{
+                              ...universalIconStyle,
+                              ...rfidIconStyle,
+                              ...ownLogoStyle,
+                              top: "50%"
+                            }}
+                          />
+
+                          <form onSubmit={handleSubmit}
+                            style={{
+                              transition: "0.4s ease",
+                              opacity: rfidType === 2 ? "1" : "0"
+                            }}
+
+                          >
+                            <div
+                              style={{
+                                ...rfidWrapperBorderStyle,
+                                overflow: isFocusedInputRfid ? "visible" : "hidden"
+                              }}
+                            >
+                              <div style={{
+                                ...autoResizeRfidInputStyle,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                fontFamily: rfidTextFont,
+                                fontWeight: rfidTextFontWeight,
+                              }}>
+
+                                <input
+                                  className="text_rfid_input"
+                                  id="text_rfid_input"
+                                  type="text"
+                                  autoComplete="off"
+                                  maxLength="20"
+                                  style={(isFocusedInputRfid) ?
+                                    (
+                                      (chosenColor.hex !== "#30a32c") ? {
+                                        ...textStyle,
+                                        ...textRfidStyle,
+                                        fontFamily: rfidTextFont,
+                                        fontWeight: rfidTextFontWeight,
+                                        border: "2px solid rgb(40, 167, 69)"
+                                      } :
+                                        {
+                                          ...textStyle,
+                                          ...textRfidStyle,
+                                          fontFamily: rfidTextFont,
+                                          fontWeight: rfidTextFontWeight,
+                                          border: "2px solid rgb(32, 114, 30)",
+                                        }
+                                    )
+                                    : {
+                                      ...textStyle,
+                                      ...textRfidStyle,
+                                      fontFamily: rfidTextFont,
+                                      fontWeight: rfidTextFontWeight,
+                                    }}
+                                  disabled={(chosenTab !== "text" || rfidType !== 2)}
+                                  onMouseOver={showBorder}
+                                  onMouseLeave={hideBorder}
+                                  value={rfidText}
+                                  onChange={(text) => handleChangeTextRfid(text)}
+                                  onClick={(e) => handleChangeFontRfid(e)}
+                                  onFocus={() => handleFocusInputRfid()}
+
+                                  onKeyDown={handleKeyPress}
+                                />
+                                <span
+                                  style={{
+                                    gridArea: '1 / 1 / 2 / 2',
+                                    visibility: 'hidden',
+                                    padding: "0 15px", whiteSpace: "pre"
+                                  }}
+                                >
+                                  {rfidText}
+                                </span>
+
+                                {isFocusedInputRfid && rfidTextFontSize > 2.5 &&
+                                  <img src={Resizeinput} alt="resizeinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: rfidTextFontSize >= 10 ? "translate(75%, 0%)" : "translate(75%, 75%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => { handleRfidTextSmaller(e) }}
+                                  />
+                                }
+                                {isFocusedInputRfid && rfidTextFontSize < 10 &&
+                                  <img src={Resizeinput} alt="resizeinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: rfidTextFontSize <= 2.5 ? "translate(75%, 0%) rotate(180deg)" : "translate(75%, -75%) rotate(180deg)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => { handleRfidTextBigger(e) }}
+                                  />
+                                }
+
+
+                                {(isFocusedInputRfid && chosenColor.hex !== "#30a32c") &&
+                                  <input type="image" src={Submitinput} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translateX(200%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+
+                                    }}
+                                  />
+                                }
+                                {(isFocusedInputRfid && chosenColor.hex === "#30a32c") &&
+                                  <input type="image" src={Submitinputdark} alt="submitinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translateX(200%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                    }}
+                                  />
+                                }
+                                {isFocusedInputRfid &&
+                                  <img src={Clearinput} alt="clearinput"
+                                    style={{
+                                      height: `${3.6 * sc}px`,
+                                      width: `${3.6 * sc}px`,
+                                      transform: "translate(325%, 0%)",
+                                      gridArea: '1 / 1 / 2 / 2',
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => { handleClearInputRfid() }}
+                                  />
+                                }
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      }
 
 
                       {(lcdShow && !visual) && <div className="lcd" style={{ ...lcdStyle, borderColor: chosenColor.iconColor }} />}
@@ -5257,6 +6073,7 @@ const PanelPreview = ({
                       }
                     </>
                   }
+
                 </div>
               </div>
 
@@ -5412,104 +6229,105 @@ const PanelPreview = ({
                     {animations ? <span>{t("ANIMATION_OFF")}</span> : <span>{t("ANIMATION_OFF")}</span>}
                   </div>
                   <ReactTooltip id="animation_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
-
-
-
-
-                  <div className="side_box" data-for="proportions_tooltip" data-tip={t("PROPORTIONS_TOOLTIP")}>
-                    <img src={globalProportions === 0 ? PropoportionsAllTo7030 : globalProportions === 1 ? PropoportionsAllTo3070 : globalProportions === 2 ? PropoportionsAllTo5050 : PropoportionsAllReset}
-                      alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportionsGlobal} />
-                    {globalProportions === 3 ? <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL_RESET")}</span> : <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL")}</span>}
-                  </div>
-                  {!areThereAnySplit &&
-                    <ReactTooltip id="proportions_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
-                  }
-
-                  {isAnySplitSelected !== 3 ?
-                    <div className="side_box" >
-                      <img
-                        src={isAnySplitSelected === 0 ? PropoportionsTo7030 : isAnySplitSelected === 1 ? PropoportionsTo3070 : PropoportionsTo5050}
-                        alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportions} />
-                      <span>{t("SIDE_ICON_PROPORTIONS")}</span>
-                    </div>
-                    :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("PROPORTIONS_SINGLE_TOOLTIP")}>
-                      <img
-                        src={PropoportionsTo7030}
-                        alt="proportions" className="side_icon" />
-                      <span>{t("SIDE_ICON_PROPORTIONS")}</span>
-                    </div>
-                  }
-
-
-                  {areThereAnyIcons ?
-                    <div className="side_box">
-                      <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
-                        onMouseOver={() => showRemoveIcons(true)}
-                        onMouseLeave={handleHideRemoveIcons}
-                      />
-                      <span>{t("DALETE_ALL_ICONS")}</span>
-                    </div>
-                    :
-                    <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
-                      <img src={Clearallicons} alt="clearallicons" className="side_icon" />
-                      <span>{t("DALETE_ALL_ICONS")}</span>
-                    </div>
-                  }
-
-                  {isAnySelected ?
+                  {chosenSubtab !== "status_icons" && chosenSubtab !== "keyboards" &&
                     <>
-                      <div className="side_box">
-                        <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
-                          onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
-                        <span>{t("DALETE_SELECTED_ICON")}</span>
-                      </div>
 
-                      <div className="side_box">
-                        <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
-                        <span>{t("ROTATE_RIGHT")}</span>
+                      <div className="side_box" data-for="proportions_tooltip" data-tip={t("PROPORTIONS_TOOLTIP")}>
+                        <img src={globalProportions === 0 ? PropoportionsAllTo7030 : globalProportions === 1 ? PropoportionsAllTo3070 : globalProportions === 2 ? PropoportionsAllTo5050 : PropoportionsAllReset}
+                          alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportionsGlobal} />
+                        {globalProportions === 3 ? <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL_RESET")}</span> : <span>{t("SIDE_ICON_PROPORTIONS_GLOBAL")}</span>}
                       </div>
-                      <div className="side_box">
-                        <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
-                        <span>{t("ROTATE_LEFT")}</span>
-                      </div>
-                    </>
-                    :
-                    <>
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                        <img src={Clear} alt="clear" className="side_icon" />
-                        <span>{t("DALETE_SELECTED_ICON")}</span>
-                      </div>
+                      {!areThereAnySplit &&
+                        <ReactTooltip id="proportions_tooltip" place="left" type="error" effect="float" className='tooltip_custom' delayShow={400} />
+                      }
 
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                        <img src={Rotateright} alt="rotateright" className="side_icon" />
-                        <span>{t("ROTATE_RIGHT")}</span>
-                      </div>
-                      <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
-                        <img src={Rotateleft} alt="rotateleft" className="side_icon" />
-                        <span>{t("ROTATE_LEFT")}</span>
-                      </div>
+                      {isAnySplitSelected !== 3 ?
+                        <div className="side_box" >
+                          <img
+                            src={isAnySplitSelected === 0 ? PropoportionsTo7030 : isAnySplitSelected === 1 ? PropoportionsTo3070 : PropoportionsTo5050}
+                            alt="proportions" className="side_icon" onClick={handleSwitchSplitIconProportions} />
+                          <span>{t("SIDE_ICON_PROPORTIONS")}</span>
+                        </div>
+                        :
+                        <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("PROPORTIONS_SINGLE_TOOLTIP")}>
+                          <img
+                            src={PropoportionsTo7030}
+                            alt="proportions" className="side_icon" />
+                          <span>{t("SIDE_ICON_PROPORTIONS")}</span>
+                        </div>
+                      }
+
+
+                      {areThereAnyIcons ?
+                        <div className="side_box">
+                          <img src={Clearallicons} alt="clearallicons" className="side_icon" onClick={() => showAlert(4)}
+                            onMouseOver={() => showRemoveIcons(true)}
+                            onMouseLeave={handleHideRemoveIcons}
+                          />
+                          <span>{t("DALETE_ALL_ICONS")}</span>
+                        </div>
+                        :
+                        <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("ADD_ICONS_TOOLTIP")}>
+                          <img src={Clearallicons} alt="clearallicons" className="side_icon" />
+                          <span>{t("DALETE_ALL_ICONS")}</span>
+                        </div>
+                      }
+
+                      {isAnySelected ?
+                        <>
+                          <div className="side_box">
+                            <img src={Clear} alt="clear" className="side_icon" onClick={handleClearIcon}
+                              onMouseOver={() => showRemoveIcon(true)} onMouseLeave={() => showRemoveIcon(false)} />
+                            <span>{t("DALETE_SELECTED_ICON")}</span>
+                          </div>
+
+                          <div className="side_box">
+                            <img src={Rotateright} alt="rotateright" className="side_icon" onClick={handleRotateRight} />
+                            <span>{t("ROTATE_RIGHT")}</span>
+                          </div>
+                          <div className="side_box">
+                            <img src={Rotateleft} alt="rotateleft" className="side_icon" onClick={handleRotateLeft} />
+                            <span>{t("ROTATE_LEFT")}</span>
+                          </div>
+                        </>
+                        :
+                        <>
+                          <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                            <img src={Clear} alt="clear" className="side_icon" />
+                            <span>{t("DALETE_SELECTED_ICON")}</span>
+                          </div>
+
+                          <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                            <img src={Rotateright} alt="rotateright" className="side_icon" />
+                            <span>{t("ROTATE_RIGHT")}</span>
+                          </div>
+                          <div className="side_box" style={{ filter: "grayscale(100%)", cursor: "not-allowed" }} data-tip={t("SELECT_ICON_TOOLTIP")}>
+                            <img src={Rotateleft} alt="rotateleft" className="side_icon" />
+                            <span>{t("ROTATE_LEFT")}</span>
+                          </div>
+                        </>
+                      }
+                      <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
+                      {/* <div className="side_box" >
+
+                        {!downloading &&
+                          <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} style={{ cursor: "default" }} />
+                        }
+                        {downloading &&
+                          <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" style={{ filter: "invert(29%) sepia(6%) saturate(152%) hue-rotate(131deg) brightness(92%) contrast(90%)" }} />
+                        }
+                        {downloading ?
+                          <span>DEBUGGING</span>
+                          :
+                          <span
+                            // style={{ color: "red" }}>{t("DEBUG")}</span>
+                          style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
+                        }
+                      </div> */}
                     </>
                   }
-                  <ReactTooltip place="left" type="error" effect="float" className='tooltip_custom' />
-                  <div className="side_box" >
-
-                    {!downloading &&
-                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" onClick={handlePrintPdfDebug} style={{ cursor: "default" }} />
-                    }
-                    {downloading &&
-                      <img src={Savetopdfdebug} alt="savetopdf" className="side_icon" style={{ filter: "invert(29%) sepia(6%) saturate(152%) hue-rotate(131deg) brightness(92%) contrast(90%)" }} />
-                    }
-                    {/* {downloading ?
-                      <span>DEBUGGING</span>
-                      :
-                      <span
-                        // style={{ color: "rgb(73, 75, 75)" }}>{t("DEBUG")}</span>
-                        style={{ color: "#3f4141" }}>{t("DEBUG")}</span>
-                    } */}
-                  </div>
-
                 </>
+
               }
               {chosenTab === "text" &&
                 <>
@@ -5670,12 +6488,14 @@ const mapStateToProps = state => ({
   chosenColor: state.frontEndData.color.color,
   chosenCut: state.frontEndData.color.cut,
   chosenTab: state.frontEndData.tab.tab,
+  chosenSubtab: state.frontEndData.tab.subtab,
   chosenModel: state.frontEndData.model.chosenModel,
   resetAllAfterModelChangeFlag: state.frontEndData.model.resetAllAfterModelChangeFlag,
   chosenFrameFont: state.frontEndData.frame.chosenFrameFont,
   chosenFrameFontWeight: state.frontEndData.frame.chosenFrameFontWeight,
   chosenFrameFontInfo: state.frontEndData.frame.chosenFrameFontInfo,
   chosenFrameShape: state.frontEndData.frame.chosenFrameShape,
+  chosenRfidShape: state.frontEndData.frame.chosenRfidShape,
   addNewFrameState: state.frontEndData.frame.addNewFrame,
   removeFrameState: state.frontEndData.frame.removeFrame,
   lastRemovedFrameIndex: state.frontEndData.frame.lastRemovedFrameIndex,
@@ -5714,6 +6534,14 @@ const mapStateToProps = state => ({
   ownIcons: state.frontEndData.icon.ownIcons,
   ownIconsRender: state.frontEndData.icon.ownIconsRender,
   languageRender: state.frontEndData.visual.languageRender,
+  ownLogo: state.frontEndData.icon.ownLogo,
+  rfidType: state.frontEndData.icon.rfidType,
+  rfidText: state.frontEndData.icon.rfidText,
+  rfidTextFont: state.frontEndData.icon.rfidTextFont,
+  rfidTextFontWeight: state.frontEndData.icon.rfidTextFontWeight,
+  rfidTextFontSize: state.frontEndData.icon.rfidTextFontSize,
+
+  rfidBackEnd: state.backEndData.rfid,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -5722,6 +6550,7 @@ const mapDispatchToProps = dispatch => ({
   changeFrameHoldersTemp: (income) => dispatch(actionsFrame.frameHoldersTemp(income)),
   changeFrameText: (income) => dispatch(actionsFrame.changeFrameText(income)),
   changeFrameShape: shape => dispatch(actionsFrame.changeFrameShape(shape)),
+  changeRfidShape: shape => dispatch(actionsFrame.changeRfidShape(shape)),
   changeFramesShapeToSharp: (income) => dispatch(actionsFrame.changeFramesShapeToSharp(income)),
   changeFramesShapeToRound: (income) => dispatch(actionsFrame.changeFramesShapeToRound(income)),
   overFrameAll: (income) => dispatch(actionsFrame.overFrameAll(income)),
@@ -5762,6 +6591,7 @@ const mapDispatchToProps = dispatch => ({
   resetPanelColorBackEnd: (income) => dispatch(actionsBackEnd.resetPanelColor(income)),
   resetPanelCutBackEnd: (income) => dispatch(actionsBackEnd.resetPanelCut(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
+  changeRfidBackEnd: (income) => dispatch(actionsBackEnd.changeRfid(income)),
   changeFramesBackEnd: (income) => dispatch(actionsBackEnd.changeFrames(income)),
   changePanelTypeBackEnd: (income) => dispatch(actionsBackEnd.changePanelType(income)),
 
@@ -5778,6 +6608,13 @@ const mapDispatchToProps = dispatch => ({
   updateFavoriteIcons: icon => dispatch(actionsIcon.updateFavoriteIcons(icon)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income)),
+  updateOwnLogo: (income) => dispatch(actionsIcon.updateOwnLogo(income)),
+  setRfidType: (income) => dispatch(actionsIcon.setRfidType(income)),
+  setRfidText: (income) => dispatch(actionsIcon.setRfidText(income)),
+  setRfidTextFont: (income) => dispatch(actionsIcon.setRfidTextFont(income)),
+  setRfidTextFontWeight: (income) => dispatch(actionsIcon.setRfidTextFontWeight(income)),
+  setRfidTextFontSize: (income) => dispatch(actionsIcon.setRfidTextFontSize(income)),
+
 })
 
 
