@@ -283,7 +283,7 @@
   "RFID_TEXT": "Own text",
   "OWN_LOGO_INSTRUCTION_BOLD_1": "In order to add own logo, upload it from your drive",
   "OWN_LOGO_INSTRUCTION_NORMAL_1": "You can add SVG files that are no bigger than 100kB. In order for the logo to display properly, it should be black, have the ratio of 2:1 and a transparent background. Any text contained in the logo must be converted to curves.",
-  "OWN_LOGO_INSTRUCTION_NORMAL_2": "Uploaded file will automatically fill in the whole logo area, whose dimensions are 40 mm x 20 mm. Please bear this in mind when designing the SCG file, if you want to obtain a smaller design.",
+  "OWN_LOGO_INSTRUCTION_NORMAL_2": "Uploaded file will automatically fill in the whole logo area, whose dimensions are 40 mm x 20 mm. Please bear this in mind when designing the SVG file, if you want to obtain a smaller design.",
   "WARNING_9_TOO_LONG_RFID_TEXT": "Text in the RFID reader is too long. Shorten it to save the panel to a PDF file.",
   "TOO_LONG_RFID_TEXT_ALERT": "Text in the RFID reader is too long. Shorten it to save the panel to a PDF file.",
   "TITLE_INSTRUCTION_BOLD": "In order to add captions below or above the icon, click on a selected field. The text font is the one selcted in the bottom section.",
@@ -291,7 +291,7 @@
   "RFID_FONT_INSTRUCTION_NORMAL": "The maximum text length is 20 characters and it must fit inside the RFID reader's frame.",
   "FONT_INSTRUCTION_BOLD": "Selected font will be applied after clicking on the text field.",
   "FONT_HEADER": "Font",
-  "WARNING_2_LONG_DESCRIPTIONS": "",
-  "WARNING_5_LONG_FRAME_TITLE": "",
+  "WARNING_2_LONG_DESCRIPTIONS": "Captions are too long. Shorten them to save the panel design to a PDF file.",
+  "WARNING_5_LONG_FRAME_TITLE": "The frame title is too long. Shorten it to save the panel design to a PDF file.",
   "NEW": "New"
 }

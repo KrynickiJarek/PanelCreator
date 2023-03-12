@@ -233,7 +233,6 @@ export const IconEditor = ({
   }
 
   const handleAddKeyboardBackend = (keyboardArrayForBackend, copyIconsBackEnd) => {
-    console.log("111 copyIconsBackEnd", copyIconsBackEnd)
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     keyboardArrayForBackend.forEach(element => {
       const toDataURL = svg => fetch(svg)
@@ -728,8 +727,8 @@ export const IconEditor = ({
                         chosenModel.type === "M_DOT_R14") &&
                         <>
                           <p className="instruction_bold">{t("KEYBOARD_INSTRUCTION_BOLD_3")}</p>
-                          <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_2")}<span style={{ ...greenStyle }} />
-                            {t("KEYBOARD_INSTRUCTION_NORMAL_3")}</p>
+                          <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_2")}
+                            {t("KEYBOARD_INSTRUCTION_NORMAL_3")} <span style={{ ...greenStyle }} />.</p>
 
                           <p className="instruction">{t("KEYBOARD_INSTRUCTION_NORMAL_4")}</p>
 

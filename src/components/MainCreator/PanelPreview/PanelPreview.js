@@ -4725,8 +4725,10 @@ const PanelPreview = ({
   const printPdf = () => {
     setAlertAnswer(null)
     setDownloading(true)
+    let frontEndDataNoAlerts = frontEndData
+    frontEndDataNoAlerts.visual.alertAnswer = null
     let dataToSend = {
-      frontEndData,
+      frontEndData: frontEndDataNoAlerts,
       backEndData,
       show: true,
       hide: false
