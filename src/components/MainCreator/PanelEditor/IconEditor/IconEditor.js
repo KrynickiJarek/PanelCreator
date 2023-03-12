@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux"
 import actionsVisual from "../../PanelPreview/duck/actions"
 import actions from "../../PanelEditor/duck/actions.js"
-<<<<<<< HEAD
-import actionsIcon from "../../PanelEditor/IconEditor/duck/actions.js"
-=======
 import actionsIcon from "../../PanelEditor/IconEditor/duck/actions"
 import actionsBackEnd from "../../duck/actions"
->>>>>>> keyboard
 import "./IconEditor.scss"
 import { t } from "../../../../i18n";
 
@@ -808,12 +804,9 @@ const mapDispatchToProps = dispatch => ({
   toggleVisual: (income) => dispatch(actionsVisual.toggleVisual(income)),
   showAlert: (income) => dispatch(actionsVisual.showAlert(income)),
   updateOwnIcons: (income) => dispatch(actionsIcon.updateOwnIcons(income)),
-<<<<<<< HEAD
-=======
   changeIconHolders: (income) => dispatch(actionsIcon.changeIconHolders(income)),
   changeIconsBackEnd: (income) => dispatch(actionsBackEnd.changeIcons(income)),
   setAlertAnswer: (income) => dispatch(actionsVisual.setAlertAnswer(income))
->>>>>>> keyboard
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(IconEditor)

@@ -430,8 +430,6 @@ const availablePanels = [
     picture: (require("../../../../assets/panelpictures/mdotm18univ.jpg")).default,
     info: "MDOT_M18_UNIVERSAL_INFO",
     link: "MDOT_M18_UNIVERSAL_LINK",
-<<<<<<< HEAD
-=======
   }, {
     type: "M_DOT_R14",
     name: "mdot_r14",
@@ -479,7 +477,6 @@ const availablePanels = [
     picture: (require("../../../../assets/panelpictures/mdotr14.jpg")).default,
     info: "M-DOT-R14_INFO",
     link: "M-DOT-R14_LINK",
->>>>>>> keyboard
   }
   // , {
   //   type: "M-DOT-R14",
