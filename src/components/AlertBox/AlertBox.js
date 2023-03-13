@@ -11,7 +11,6 @@ import "./AlertBox.scss"
 const AlertBox = ({ alert, removeAlert, setAlertAnswer, showRemoveIcons }) => {
 
   useEffect(() => {
-    // console.log('useEffect removeAlert')
     removeAlert()
     // return () => {
     // removeAlert()

@@ -827,8 +827,6 @@ const PanelPreview = ({
     // }
 
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
-    // console.log("chosenTextFont", chosenTextFont)
-    // console.log("chosenTextWeight", chosenTextWeight)
     const copyPanelTextBackEnd = panelTextBackEnd
     copyPanelTextBackEnd.forEach(element => {
       if (element.number === isFocusedInputIndex + 1) {
@@ -2650,11 +2648,10 @@ const PanelPreview = ({
   }
 
 
-
   const handleClearInput = (index, side) => {
     // ----------------------------------------------------------------------------------------------------------------BACKEND---------------------
     const copyPanelTextBackEnd = panelTextBackEnd
-
+    const backendType = side === 'up' ? 1 : 0;
     let numberBackEnd = null
     if (chosenModel.panelRotation) {
       if (index % 3 === 0) {
@@ -2668,7 +2665,12 @@ const PanelPreview = ({
       numberBackEnd = index + 1
     }
 
-    let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd)
+    // let recordTextIndex = copyPanelTextBackEnd.map(item => item.number).indexOf(numberBackEnd) //stara niedziałająca wersja
+    let recordTextIndex = copyPanelTextBackEnd?.map(el => {
+      if (el?.type === backendType) {
+        return el?.number
+      } else return null
+    })?.indexOf(numberBackEnd)
 
     const copyArr = iconHolders;
     if (side === "up") {
@@ -3385,6 +3387,7 @@ const PanelPreview = ({
         }
       }
       if (chosenModel.type === "M_DOT_R14") {
+
         if (copyArr[0] === "s") {
           if (index === 1 || index === 2) {
             copyArrChange[1] = "r"
@@ -3400,6 +3403,7 @@ const PanelPreview = ({
         }
       }
       if (chosenModel.type === "MDOT_4") {
+
         for (let i = 0; i < 9; i++) {
           if (copyArr[i] === "s" && i % 3 === 0 && copyArr[i + 3] !== "s" && copyArr[i - 3] !== "s") {
             if (index === i + 1 || index === i + 2) {
@@ -4130,19 +4134,19 @@ const PanelPreview = ({
               copyArr[4] = 0
             }
           }
-        }
-      } else if (chosenModel.type === "M_DOT_R14") {
-        if (copyArr[0] === "s") {
-          if (index === 1 || index === 2) {
-            copyArr[1] = 0
-            copyArr[2] = 1
+        } else if (chosenModel.type === "M_DOT_R14") {
+          if (copyArr[0] === "s") {
+            if (index === 1 || index === 2) {
+              copyArr[1] = 0
+              copyArr[2] = 1
+            }
           }
-        }
 
-        if (copyArr[2] === "s") {
-          if (index === 0 || index === 1) {
-            copyArr[0] = 1
-            copyArr[1] = 0
+          if (copyArr[2] === "s") {
+            if (index === 0 || index === 1) {
+              copyArr[0] = 1
+              copyArr[1] = 0
+            }
           }
         }
       } else if (chosenModel.type === "MDOT_4") {
@@ -4723,7 +4727,6 @@ const PanelPreview = ({
   }
 
   const printPdf = () => {
-    console.log("123>>> printPdf")
     setAlertAnswer(null)
     setDownloading(true)
     let frontEndDataNoAlerts = frontEndData
@@ -4738,12 +4741,7 @@ const PanelPreview = ({
     let frontEndDataB64 = Buffer.from(frontEndDataStr).toString("base64")
     fetchWithTimeout(frontEndDataB64)
   }
-  console.log("123>>> alertAnswer", alertAnswer)
-
-
   const handlePrintPdf = () => {
-    console.log("123>>> handlePrintPdf")
-
     if (panelName === "") {
       setNoPanelName(true)
     } else if (!allIcons) {
@@ -4998,7 +4996,6 @@ const PanelPreview = ({
     })
     setTooLongTextFrameArray(tempTooLongTextFrameArray)
   }
-
   return (
     <>
       {fullScreen &&
